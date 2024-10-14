@@ -3,9 +3,9 @@ import { collectionName } from '../config/config.js';
 
 // GET all items
 export async function getAllItems(req, res) {
-    const query = parseInt(req.params.query) || {};
-    const page = parseInt(req.params.page) || 1;
-    const limit = parseInt(req.params.limit) || 10;
+    const query = req.query.query ? JSON.parse(req.query.query) : {};
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
     try {

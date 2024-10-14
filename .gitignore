@@ -2,12 +2,14 @@
 node_modules/
 package-lock.json
 **/node_modules/
+**/.next/
 **/build/
 **/dist/
 **/package-lock.json
 
 # Env
 **/.env
+**/.env.local
 
 # IDEs and editors
 .idea/

@@ -25,7 +25,10 @@ describe('MongoDB CRUD Testing', function() {
     });
 
     it('getAllItems should return the correct number of items for the given page and limit', async function() {
-        const req = { params: { page: '2', limit: '5' } };
+        const limit = 5
+        const req = { 
+            query: { page: '2', limit: limit, query: JSON.stringify({}) },
+         };
         let responseData = null;
         const res = {
             status: function() { return this; },
@@ -35,7 +38,7 @@ describe('MongoDB CRUD Testing', function() {
         await getAllItems(req, res);
 
         // Assert that 5 items are returned for page 2 with a limit of 5
-        strictEqual(responseData.length, 5);
+        strictEqual(responseData.length, limit);
         strictEqual(responseData[0]._id, '1003530');
     });
 
