@@ -88,10 +88,10 @@ const ListingsAndReviews = ({ query = '{}' }) => {
                                         alt="green iguana"
                                     />
                                     <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant="h5" component="div">
+                                        <Typography variant="h6" component="div">
                                             {item.name}
                                         </Typography>
-                                        <Typography color="text.secondary">
+                                        <Typography variant="subtitle2" color="text.secondary">
                                             {item.summary}
                                         </Typography>
                                     </CardContent>

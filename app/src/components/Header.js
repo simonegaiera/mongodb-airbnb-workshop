@@ -13,7 +13,7 @@ function Header() {
           src="/static/images/mongodb-logo.png" 
           sx={{ marginRight: 2 }} 
         />
-        <Typography variant="h6" component="div">
+        <Typography variant="h5" component="div">
           Listing And Reviews
         </Typography>
       </Toolbar>

@@ -74,20 +74,20 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets }) => {
 
   return (
     <Box p={2}>
-      <Typography variant="h4" gutterBottom>Faceted Search</Typography>
+      <Typography variant="h5" gutterBottom>Faceted Search</Typography>
       <Divider />
       <Box mt={2}>
-        <Typography variant="h5" gutterBottom>Amenities</Typography>
+        <Typography variant="h6" gutterBottom>Amenities</Typography>
         {renderCheckboxes('amenities', facets.amenities.buckets)}
       </Box>
       <Divider />
       <Box mt={2}>
-        <Typography variant="h5" gutterBottom>Property Types</Typography>
+        <Typography variant="h6" gutterBottom>Property Types</Typography>
         {renderCheckboxes('propertyType', facets.property_type.buckets)}
       </Box>
       <Divider />
       <Box mt={2}>
-        <Typography variant="h5" gutterBottom>Beds</Typography>
+        <Typography variant="h6" gutterBottom>Beds</Typography>
         {renderCheckboxes('beds', facets.beds.buckets)}
       </Box>
     </Box>
