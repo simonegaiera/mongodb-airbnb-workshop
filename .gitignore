@@ -1,0 +1,25 @@
+# Node
+node_modules/
+package-lock.json
+**/node_modules/
+**/build/
+**/dist/
+**/package-lock.json
+
+# Env
+**/.env
+
+# IDEs and editors
+.idea/
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/*
+
+# System files
+.DS_Store
+Thumbs.db
