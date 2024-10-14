@@ -1,0 +1,6 @@
+import '../utils/loadEnvironment.js';
+
+export const port = process.env.PORT || 3000;
+export const mongodbUri = process.env.MONGODB_URI;
+export const databaseName = 'sample_airbnb';
+export const collectionName = 'listingsAndReviews';
