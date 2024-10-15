@@ -1,17 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import ListingsAndReviews from '@/components/ListingAndReviews';
-import Filters from '@/components/Filters';
+import FacetComponent from '@/components/Facet';
+import AutocompleteComponent from '@/components/AutocompleteSearch';
+import ListingsAndReviewsSearch from '@/components/ListingAndReviewsSearch';
 
 export default function Home() {
   const [selectedFacets, setSelectedFacets] = useState({
     amenities: [],
-    propertyType: "",
-    beds: ""
+    propertyType: [],
+    beds: []
   });
+  const [autocompleteQuery, setAutocompleteQuery] = useState('');
 
   return (
     <Container maxWidth="lg">
@@ -29,7 +31,7 @@ export default function Home() {
             mr: 2 // Margin right for spacing
           }}
         >
-          <Filters
+          <FacetComponent
             selectedFacets={selectedFacets}
             setSelectedFacets={setSelectedFacets}
           />
@@ -39,8 +41,17 @@ export default function Home() {
             flex: '1 1 70%', // Adjust the width as needed
           }}
         >
+          <Box sx={{ mt: 2 }}>
+            <AutocompleteComponent
+              query={autocompleteQuery}
+              setQuery={setAutocompleteQuery}
+            />
+          </Box>
           <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
-            <ListingsAndReviews filters={selectedFacets} />
+            <ListingsAndReviewsSearch
+              facetsQuery={selectedFacets}
+              searchQuery={autocompleteQuery}
+            />
           </Box>
         </Box>
       </Box>

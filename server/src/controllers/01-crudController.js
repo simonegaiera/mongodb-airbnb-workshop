@@ -114,3 +114,59 @@ export async function deleteItem(req, res) {
         res.status(500).json({ message: error.message });
     }
 };
+
+// GET distinct items
+export async function getDistinct(req, res) {
+    const field = req.query.field || '';
+
+    if (!field || field === '') {
+        return res.status(400).json({ message: 'field parameter is required' });
+    }
+
+    try {
+        const items = await db.collection(collectionName)
+            .distinct(field);
+
+        res.status(200).json(items);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Filters item
+export async function getFilters(req, res) {
+    if (!req.body) {
+        return res.status(400).json({ message: 'Body is required' });
+    }
+
+    const { page, limit, filters } = req.body;
+    const { amenities, property_type, beds } = filters;
+    const query = {};
+
+    // Adding amenities to the query if available
+    if (amenities && amenities.length > 0) {
+        query.amenities = { $in: amenities };
+    }
+
+    // Adding property_type to the query if available
+    if (property_type) {
+        query.property_type = property_type;
+    }
+
+    // Adding beds to the query if available
+    if (beds) {
+        const [minBeds, maxBeds] = beds.split('-').map(Number);
+        query.beds = { $gte: minBeds, $lte: maxBeds };
+    }
+
+    try {
+        const result = await db.collection(collectionName).find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .toArray();
+
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}

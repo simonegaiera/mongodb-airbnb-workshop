@@ -65,7 +65,7 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets }) => {
                 onChange={handleCheckboxChange(category, bucket._id)}
               />
             }
-            label={`${bucket._id} (${bucket.count})`}
+            label={`${bucket._id}: ${bucket.count}`}
           />
         ))}
       </FormControl>

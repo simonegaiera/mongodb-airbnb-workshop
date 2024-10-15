@@ -5,7 +5,7 @@ import {
     Pagination, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 
-const ListingsAndReviews = ({ filters = {} }) => {
+const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
     const [limit, setLimit] = useState(9);
     const [hasMore, setHasMore] = useState(true);
 
-    const stockImageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg";
+    const stockImageUrl = "/static/images/mongodb-logo.png";
 
     const isValidURL = (url) => {
     try {
@@ -23,16 +23,16 @@ const ListingsAndReviews = ({ filters = {} }) => {
         return false;
     }
     };
-
-    const fetchData = async (page, limit, filters) => {
+    
+    const fetchData = async (page, limit, facetsQuery, searchQuery) => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/filter`, {
+            const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/search`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ page, limit, filters })
+                body: JSON.stringify({ page, limit, facetsQuery, searchQuery })
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -48,8 +48,8 @@ const ListingsAndReviews = ({ filters = {} }) => {
     };
 
     useEffect(() => {
-        fetchData(page, limit, filters);
-    }, [page, limit, filters]);
+        fetchData(page, limit, facetsQuery, searchQuery);
+    }, [page, limit, facetsQuery, searchQuery]);
 
     if (loading) {
         return (
@@ -155,12 +155,13 @@ const ListingsAndReviews = ({ filters = {} }) => {
     );
 };
 
-ListingsAndReviews.propTypes = {
-    filters: PropTypes.shape({
+ListingsAndReviewsSearch.propTypes = {
+    facetsQuery: PropTypes.shape({
         amenities: PropTypes.arrayOf(PropTypes.string),
-        propertyType: PropTypes.string,
-        beds: PropTypes.string
-    })
+        propertyType: PropTypes.arrayOf(PropTypes.string),
+        beds: PropTypes.arrayOf(PropTypes.string)
+    }),
+    searchQuery: PropTypes.string
 };
 
-export default ListingsAndReviews;
+export default ListingsAndReviewsSearch;

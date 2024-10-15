@@ -2,10 +2,9 @@ import { connectToDatabase, db } from "../src/utils/database.js";
 import { collectionName } from '../src/config/config.js';
 import assert from 'assert';
 import { strictEqual } from 'assert';
-import { getAutocomplete, getFacet } from '../src/controllers/searchController.js'; 
+import { getAutocomplete, getFacet } from '../src/controllers/03-searchController.js'; 
 
 describe('MongoDB Search Tests', function() {
-    const indexName = 'default';
     
     before(async function() {
         try {
@@ -17,6 +16,8 @@ describe('MongoDB Search Tests', function() {
     
     it('verify that the search index exists', async function() {
         try {
+            const indexName = 'default';
+
             const collection = db.collection(collectionName);
             const cursor = await collection.listSearchIndexes(indexName);
 

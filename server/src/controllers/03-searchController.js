@@ -16,7 +16,8 @@ export async function getAutocomplete(req, res) {
                 'index': 'default', 
                 'autocomplete': {
                   'query': query, 
-                  'path': 'name'
+                  'path': 'name',
+                  'fuzzy': {}
                 }
               }
             }, {
@@ -74,4 +75,29 @@ export async function getFacet(req, res) {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+export async function getSearchItems(req, res) {
+  // const { facetsQuery, searchQuery, limit } = req.body;
+  // const { amenities, property_type, beds } = facetsQuery;
+
+  try {
+      const pipeline = [
+        {
+          '$match': {
+            'name': {
+              '$exists': true
+            }
+          }
+        }, {
+          '$limit': 36
+        }
+      ]
+
+      const item = await db.collection(collectionName).aggregate(pipeline).toArray();
+
+      res.status(201).json(item);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
 };
