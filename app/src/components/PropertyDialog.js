@@ -12,7 +12,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newReview, setNewReview] = useState({
     reviewer_name: '',
-    comment: ''
+    comments: ''
   });
   const [reviewsToShow, setReviewsToShow] = useState(5);
 
@@ -132,7 +132,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
         throw new Error('Network response was not ok');
       }
       await fetchPropertyData(); // Refresh property data after new review is added
-      setNewReview({ reviewer_name: '', comment: '' }); // Reset the review form
+      setNewReview({ reviewer_name: '', comments: '' }); // Reset the review form
     } catch (err) {
       console.error("Failed to submit review:", err); // Log error to console
     } finally {
@@ -200,9 +200,9 @@ const PropertyDialog = ({ id, open, onClose }) => {
                   margin="normal"
                 />
                 <TextField
-                  name="comment"
+                  name="comments"
                   label="Comment"
-                  value={newReview.comment}
+                  value={newReview.comments}
                   onChange={handleReviewInputChange}
                   fullWidth
                   multiline
