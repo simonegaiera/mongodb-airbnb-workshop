@@ -156,7 +156,17 @@ const PropertyDialog = ({ id, open, onClose }) => {
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ flex: 1 }}>
               {renderField('Name', 'name', propertyData.name || '')}
-              <Box component="img" src={propertyData.images?.picture_url} alt={propertyData.name} sx={{ width: '100%', borderRadius: 1, marginBottom: 2 }} />
+              <Box 
+                component="img" 
+                src={propertyData.images?.picture_url} 
+                alt={propertyData.name} 
+                sx={{ 
+                  maxHeight: 250, // Set max-height to keep it small 
+                  objectFit: 'contain', // Maintain aspect ratio
+                  borderRadius: 1, 
+                  marginBottom: 2 
+                }} 
+              />
               {renderField('Street', 'address.street', propertyData.address?.street || '')}
               {renderField('City', 'address.city', propertyData.address?.city || '')}
               {renderField('Host Name', 'host.host_name', propertyData.host?.host_name || '')}
