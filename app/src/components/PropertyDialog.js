@@ -10,28 +10,34 @@ const PropertyDialog = ({ id, open, onClose }) => {
   const [editField, setEditField] = useState(null);
   const [tempValue, setTempValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newReview, setNewReview] = useState({
+    reviewer_name: '',
+    comment: ''
+  });
+  const [reviewsToShow, setReviewsToShow] = useState(5);
+
+  const fetchPropertyData = async () => {
+    if (id && open) {
+      setLoading(true);
+      setError(false);
+      try {
+        const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setPropertyData(data);
+        setReviewsToShow(5); // Reset the review count on opening
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    const fetchPropertyData = async () => {
-      if (id && open) {
-        setLoading(true);
-        setError(false);
-        try {
-          const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          setPropertyData(data);
-        } catch (err) {
-          console.error(err);
-          setError(true);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
     fetchPropertyData();
   }, [id, open]);
 
@@ -55,15 +61,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      setPropertyData((prev) => ({
-        ...prev,
-        [name.split('.')[0]]: name.includes('.') 
-          ? {
-              ...prev[name.split('.')[0]], 
-              [name.split('.')[1]]: isNaN(value) ? value : Number(value),
-            } 
-          : isNaN(value) ? value : Number(value),
-      }));
+      await fetchPropertyData(); // Refresh property data after successful update
     } catch (err) {
       console.error(err);
     } finally {
@@ -78,7 +76,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
   };
 
   const handleKeyDown = (e, name) => {
-    if ( e.key === 'Enter' ) {
+    if (e.key === 'Enter') {
       handleSubmit(name, tempValue);
     }
   };
@@ -112,6 +110,40 @@ const PropertyDialog = ({ id, open, onClose }) => {
     </Box>
   );
 
+  const handleReviewInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewReview((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleReviewSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReview),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      await fetchPropertyData(); // Refresh property data after new review is added
+      setNewReview({ reviewer_name: '', comment: '' }); // Reset the review form
+    } catch (err) {
+      console.error("Failed to submit review:", err); // Log error to console
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const showMoreReviews = () => {
+    setReviewsToShow((prev) => prev + 5);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>Property Details</DialogTitle>
@@ -136,7 +168,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
             <Box sx={{ flex: 1 }}>
               <Typography variant="h6" gutterBottom>Reviews</Typography>
               {propertyData.reviews && propertyData.reviews.length > 0 ? (
-                propertyData.reviews.map((review, index) => (
+                propertyData.reviews.slice(0, reviewsToShow).map((review, index) => (
                   <Box key={index} sx={{ marginBottom: 2 }}>
                     <Typography variant="body2" gutterBottom><strong>{review.reviewer_name}</strong>: {review.comments}</Typography>
                   </Box>
@@ -144,6 +176,39 @@ const PropertyDialog = ({ id, open, onClose }) => {
               ) : (
                 <Typography variant="body2" gutterBottom>No reviews available.</Typography>
               )}
+              {propertyData.reviews && propertyData.reviews.length > reviewsToShow && (
+                <Button onClick={showMoreReviews}>Add More</Button>
+              )}
+              <Box mt={2}>
+                <Typography variant="h6" gutterBottom>Add a Review</Typography>
+                <TextField
+                  name="reviewer_name"
+                  label="Reviewer Name"
+                  value={newReview.reviewer_name}
+                  onChange={handleReviewInputChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  name="comment"
+                  label="Comment"
+                  value={newReview.comment}
+                  onChange={handleReviewInputChange}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  margin="normal"
+                />
+                <Button 
+                  onClick={handleReviewSubmit} 
+                  color="primary" 
+                  variant="contained" 
+                  disabled={isSubmitting}
+                  sx={{ mt: 2 }}
+                >
+                  Submit
+                </Button>
+              </Box>
             </Box>
           </Box>
         )}

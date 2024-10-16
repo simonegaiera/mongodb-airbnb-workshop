@@ -18,7 +18,7 @@ router.post('/autocomplete', getAutocomplete);
 router.get('/facet', getFacet);
 router.post('/search', getSearchItems);
 
-router.put('/:id/review/', insertReview);
+router.post('/:id/reviews', insertReview);
 router.get('/:id', getOneItem);
 router.patch('/:id', updateValue);
 
