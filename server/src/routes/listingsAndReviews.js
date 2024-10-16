@@ -12,7 +12,7 @@ router.delete('/', deleteItem);
 router.get('/distinct', getDistinct);
 router.post('/filter', getFilters);
 
-router.get('/priceStats', getPriceStatistics);
+router.get('/statistics', getPriceStatistics);
 
 router.post('/autocomplete', getAutocomplete);
 router.get('/facet', getFacet);

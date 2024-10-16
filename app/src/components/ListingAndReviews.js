@@ -147,7 +147,13 @@ const ListingsAndReviews = ({ filters = {} }) => {
                                             {item.name}
                                         </Typography>
                                         <Typography variant="subtitle2" color="text.secondary">
-                                            {item.summary}
+                                            Beds: {item.beds}
+                                        </Typography>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            Price: {item.price.$numberDecimal}
+                                        </Typography>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            Rating: {item.review_scores.review_scores_rating}
                                         </Typography>
                                     </CardContent>
                                 </Card>

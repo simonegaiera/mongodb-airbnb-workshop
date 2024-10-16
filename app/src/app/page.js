@@ -5,6 +5,8 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import ListingsAndReviews from '@/components/ListingAndReviews';
 import Filters from '@/components/Filters';
+import ListingStatistics from '@/components/ListingStatistics';
+import { Typography } from '@mui/material';
 
 export default function Home() {
   const [selectedFacets, setSelectedFacets] = useState({
@@ -25,8 +27,10 @@ export default function Home() {
       >
         <Box
           sx={{
-            flex: '1 1 30%', // Adjust the width as needed
-            mr: 2 // Margin right for spacing
+            flexGrow: 0,
+            flexShrink: 0,
+            flexBasis: '30%', // 30% width
+            mr: 2, // Margin right for spacing
           }}
         >
           <Filters
@@ -36,10 +40,21 @@ export default function Home() {
         </Box>
         <Box
           sx={{
-            flex: '1 1 70%', // Adjust the width as needed
+            flexGrow: 0,
+            flexShrink: 0,
+            flexBasis: '70%', // 70% width
           }}
         >
           <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
+          <Typography variant="h6" align="left" gutterBottom>
+                Statistics
+            </Typography>
+            <ListingStatistics />
+          </Box>
+          <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
+          <Typography variant="h6" align="left" gutterBottom>
+                Listings
+            </Typography>
             <ListingsAndReviews filters={selectedFacets} />
           </Box>
         </Box>

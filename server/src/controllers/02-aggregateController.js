@@ -18,7 +18,7 @@ export async function getPriceStatistics(req, res) {
                 avgPrice: { $avg: '$price' }
               }
             },
-            { $sort: { _id: 1 } }
+            { $sort: {_id : 1 } }
           ]        
 
         const item = await db.collection(collectionName).aggregate(pipeline).toArray();
