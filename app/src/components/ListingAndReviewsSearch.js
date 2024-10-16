@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Container, Box, Typography, Card, CardMedia, CardContent, CircularProgress,
-    Pagination, Select, MenuItem, FormControl, InputLabel
+    Container,
+    Box,
+    Typography,
+    Card,
+    CardMedia,
+    CardContent,
+    CircularProgress,
+    Pagination,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel
 } from '@mui/material';
+import PropertyDialog from './PropertyDialog';
 
 const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
     const [data, setData] = useState([]);
@@ -12,18 +23,20 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(9);
     const [hasMore, setHasMore] = useState(true);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState(null);
 
     const stockImageUrl = "/static/images/mongodb-logo.png";
 
     const isValidURL = (url) => {
-    try {
-        new URL(url);
-        return true;
-    } catch (e) {
-        return false;
-    }
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
+        }
     };
-    
+
     const fetchData = async (page, limit, facetsQuery, searchQuery) => {
         setLoading(true);
         try {
@@ -80,6 +93,16 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
         setPage(1); // Reset to the first page when limit changes
     };
 
+    const handleClick = (itemId) => {
+        setSelectedItemId(itemId);
+        setDialogOpen(true);
+    };
+
+    const handleClose = () => {
+        setDialogOpen(false);
+        setSelectedItemId(null);
+    };
+
     return (
         <Container>
             <Box sx={{ padding: 2 }}>
@@ -113,9 +136,14 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
                                         height="140"
                                         image={item.images && isValidURL(item.images.picture_url) ? item.images.picture_url : stockImageUrl}
                                         alt={item.name || 'Stock Image'}
-                                        />
+                                    />
                                     <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant="h6" component="div">
+                                        <Typography
+                                            variant="h6"
+                                            component="div"
+                                            onClick={() => handleClick(item._id)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
                                             {item.name}
                                         </Typography>
                                         <Typography variant="subtitle2" color="text.secondary">
@@ -151,6 +179,10 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
                     </Select>
                 </FormControl>
             </Box>
+
+            {selectedItemId !== null && (
+                <PropertyDialog id={selectedItemId} open={dialogOpen} onClose={handleClose} />
+            )}
         </Container>
     );
 };
