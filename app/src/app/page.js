@@ -16,21 +16,27 @@ export default function Home() {
   });
 
   return (
-    <Container maxWidth="lg">
+    <Container
+      maxWidth="xl"
+      sx={{
+        overflow: 'hidden' // Ensure no overflowing content
+      }}
+    >
       <Box
         sx={{
           my: 4,
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'flex-start',
+          flexWrap: 'wrap' // Allow wrapping if space is not sufficient
         }}
       >
         <Box
           sx={{
             flexGrow: 0,
-            flexShrink: 0,
-            flexBasis: '30%', // 30% width
-            mr: 2, // Margin right for spacing
+            flexShrink: 1, // Allow shrinking if needed
+            flexBasis: '30%',
+            maxWidth: '30%' // Ensure it does not exceed 30%
           }}
         >
           <Filters
@@ -38,22 +44,25 @@ export default function Home() {
             setSelectedFacets={setSelectedFacets}
           />
         </Box>
+
         <Box
           sx={{
             flexGrow: 0,
-            flexShrink: 0,
-            flexBasis: '70%', // 70% width
+            flexShrink: 1, // Allow shrinking if needed
+            flexBasis: '70%',
+            maxWidth: '70%', // Ensure it does not exceed 70%
+            overflow: 'hidden' // Prevent content spilling out
           }}
         >
-          <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
-          <Typography variant="h6" align="left" gutterBottom>
-                Statistics
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6" align="left" gutterBottom>
+              Statistics
             </Typography>
             <ListingStatistics />
           </Box>
-          <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
-          <Typography variant="h6" align="left" gutterBottom>
-                Listings
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6" align="left" gutterBottom>
+              Listings
             </Typography>
             <ListingsAndReviews filters={selectedFacets} />
           </Box>

@@ -12,7 +12,8 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel
+    InputLabel,
+    Tooltip
 } from '@mui/material';
 import PropertyDialog from './PropertyDialog';
 
@@ -147,8 +148,29 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
                                             {item.name}
                                         </Typography>
                                         <Typography variant="subtitle2" color="text.secondary">
-                                            {item.summary}
+                                            Property Type: {item.property_type}
                                         </Typography>
+                                        <Typography variant="subtitle2" color="text.secondary">
+                                            Beds: {item.beds}
+                                        </Typography>
+                                        <Tooltip
+                                            title={
+                                                <Box>
+                                                    {item.amenities.map((amenity, amenityIndex) => (
+                                                        <Typography key={amenityIndex} variant="body2">{amenity}</Typography>
+                                                    ))}
+                                                </Box>
+                                            }
+                                            placement="right"
+                                        >
+                                            <Typography
+                                                variant="subtitle2"
+                                                color="text.secondary"
+                                                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                            >
+                                                Amenities
+                                            </Typography>
+                                        </Tooltip>
                                     </CardContent>
                                 </Card>
                             </Box>

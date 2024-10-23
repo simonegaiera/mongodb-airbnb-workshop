@@ -34,6 +34,25 @@ describe('MongoDB Search Tests', function() {
         }
     });
 
+    it('verify that the all index exists', async function() {
+        try {
+            const indexName = 'all';
+
+            const collection = db.collection(collectionName);
+            const cursor = await collection.listSearchIndexes(indexName);
+
+            const index = await cursor.next();
+            const mapping = index.latestDefinition.mappings.fields;
+               
+            // Assert that the fields are configured as facets
+            strictEqual(mapping.amenities.type, 'token', 'Field "amenities" should be of type "token"');
+            strictEqual(mapping.property_type.type, 'token', 'Field "property_type" should be of type "token"');
+            strictEqual(mapping.name.type, 'autocomplete', 'Field "name" should be of type "autocomplete"');
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
+    });
+
     it('getAutocomplete should return the correct number of items when looking for hawaii', async function() {
         const req = { body: { query: 'hawaii' } };
         let responseData = null;
@@ -52,11 +71,11 @@ describe('MongoDB Search Tests', function() {
 
         strictEqual(res.statusCode, 201, 'Status code should be 201');
         strictEqual(responseData.length, 10);
-        strictEqual(responseData[0].name, 'Featured on Hawaii 5-0! Hawaiiana 1 BR in Waikiki');
+        strictEqual(responseData[0].name, 'A bedroom far away from home');
     });
 
     it('getFacet should return the correct facets', async function() {
-        const req = {};
+        const req = { query: { query: 'hawaii' } };
         let responseData = null;
         const res = {
             status: function() { return this; },

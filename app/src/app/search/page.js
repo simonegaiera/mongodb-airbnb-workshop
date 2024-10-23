@@ -25,20 +25,23 @@ export default function Home() {
           alignItems: 'flex-start',
         }}
       >
+        {autocompleteQuery && (
+          <Box
+            sx={{
+              flex: '1 1 30%', // Adjust the width as needed
+              mr: 2 // Margin right for spacing
+            }}
+          >
+            <FacetComponent
+              selectedFacets={selectedFacets}
+              setSelectedFacets={setSelectedFacets}
+              autocompleteQuery={autocompleteQuery} // Pass autocompleteQuery as a prop
+            />
+          </Box>
+        )}
         <Box
           sx={{
-            flex: '1 1 30%', // Adjust the width as needed
-            mr: 2 // Margin right for spacing
-          }}
-        >
-          <FacetComponent
-            selectedFacets={selectedFacets}
-            setSelectedFacets={setSelectedFacets}
-          />
-        </Box>
-        <Box
-          sx={{
-            flex: '1 1 70%', // Adjust the width as needed
+            flex: autocompleteQuery ? '1 1 70%' : '1 1 100%', // Adjust the width based on query
           }}
         >
           <Box sx={{ mt: 2 }}>

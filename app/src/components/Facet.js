@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import {
-  Box, CircularProgress, Typography, List,
-  ListItem, Divider, FormControl, FormControlLabel,
-  Checkbox
+  Box, CircularProgress, Typography, Divider,
+  FormControl, FormControlLabel, Checkbox
 } from '@mui/material';
 
-const FacetComponent = ({ selectedFacets, setSelectedFacets }) => {
+const FacetComponent = ({ selectedFacets, setSelectedFacets, autocompleteQuery }) => {
   const [facets, setFacets] = useState(null);
 
   useEffect(() => {
     const fetchFacets = async () => {
       try {
-        const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/facet`);
+        const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/facet?query=${autocompleteQuery}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -22,8 +21,10 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets }) => {
       }
     };
 
-    fetchFacets();
-  }, []);
+    if (autocompleteQuery) { // Only fetch facets if there's an autocompleteQuery
+      fetchFacets();
+    }
+  }, [autocompleteQuery]);  // Re-fetch facets when autocompleteQuery changes
 
   const handleCheckboxChange = (category, value) => (event) => {
     setSelectedFacets((prevState) => {

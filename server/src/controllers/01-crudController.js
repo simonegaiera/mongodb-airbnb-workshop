@@ -76,7 +76,7 @@ export async function updateValue(req, res) {
     }
 };
 
-// PUSH a new item
+// POST a new item
 export async function insertReview(req, res) {
     const { id } = req.params;
     const newReview = req.body;
