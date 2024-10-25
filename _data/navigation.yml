@@ -13,10 +13,10 @@ docs:
         url: /#workshop-overview
   - title: Getting Started
     children:
-    - title: Environment Preparation - Atlas
-      url: /#environment-preparation-atlas
-    - title: Environment Preparation - Codespace
-      url: /#environment-preparation-codespace
+      - title: Environment Preparation - Atlas
+        url: /#environment-preparation-atlas
+      - title: Environment Preparation - Codespace
+        url: /#environment-preparation-codespace
   - title: Exercises
     children:
       - title: CRUD Operations
@@ -27,7 +27,7 @@ docs:
         url: /#atlas-search
   - title: Test and Resources
     children:
-    - title: Test Your Results
-      url: /#test-your-results
-    - title: Resources
-      url: /#resources
+      - title: Test Your Results
+        url: /#test-your-results
+      - title: Resources
+        url: /#resources
