@@ -6,11 +6,7 @@ remote_theme: mmistakes/minimal-mistakes@master
 plugins:
   - jekyll-include-cache
 classes: wide
-defaults:
-  - scope:
-      path: ""
-      type: docs
-    values:
-      sidebar:
-        nav: "docs"
-
+sidebar:
+  nav:
+    - main
+    - docs
