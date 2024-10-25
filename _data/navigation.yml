@@ -2,9 +2,6 @@ main:
   - title: Home
     url: /#introduction
 sidebar:
-  nav: "docs"
-
-docs:
   - title: Getting Started
     children:
       - title: Introduction
