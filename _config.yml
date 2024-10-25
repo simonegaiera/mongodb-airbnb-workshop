@@ -6,4 +6,6 @@ remote_theme: mmistakes/minimal-mistakes@master
 plugins:
   - jekyll-include-cache
 sidebar:
-  nav: sidebar-definition
+  nav:
+    - main
+    - docs
