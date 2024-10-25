@@ -2,5 +2,27 @@ main:
   - title: Home
     url: /#introduction
 docs:
-  - title: Home
-    url: /#introduction
+  - title: Getting Started
+    children:
+      - title: "Workshop Overview"
+        url: /#workshop-overview
+  - title: Getting Started
+    children:
+      - title: "Environment Preparation - Atlas"
+        url: /#environment-preparation-atlas
+      - title: "Environment Preparation - Codespace"
+        url: /#environment-preparation-codespace
+  - title: Exercises
+    children:
+      - title: "CRUD Operations"
+        url: /#crud-operations
+      - title: "MongoDB Aggregations"
+        url: /#mongodb-aggregations
+      - title: "Atlas Search"
+        url: /#atlas-search
+  - title: Test and Resources
+    children:
+      - title: "Test Your Results"
+        url: /#test-your-results
+      - title: "Resources"
+        url: /#resources
