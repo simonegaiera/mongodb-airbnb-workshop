@@ -5,14 +5,29 @@ main:
 docs:
   - title: Getting Started
     children:
-      - title: "Quick-Start Guide"
+      - title: "Workshop Overview"
         url: /docs/quick-start-guide/
-      - title: "Structure"
+
+  - title: Environment Preparation
+    children:
+      - title: "Environment Preparation on Atlas"
         url: /docs/structure/
-      - title: "Installation"
+      - title: "Environment Preparation on Codespace"
         url: /docs/installation/
-      - title: "Upgrading"
-        url: /docs/upgrading/
+
+  - title: Exercises
+    children:
+      - title: "CRUD Operations"
+        url: /docs/structure/
+      - title: "MongoDB Aggregations"
+        url: /docs/installation/
+
+  - title: Test and Resources
+    children:
+      - title: "Test Your Results"
+        url: /docs/structure/
+      - title: "Resources"
+        url: /docs/installation/
 
 # docs:
 #   - title: Getting Started
