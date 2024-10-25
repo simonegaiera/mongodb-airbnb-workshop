@@ -1,7 +1,8 @@
 main:
   - title: Home
     url: /#introduction
-sidebar:
+
+sidebar-definition:
   - title: Getting Started
     children:
       - title: Introduction
