@@ -1,0 +1,18 @@
+- name: Introduction
+  link: /#introduction
+- name: Workshop Overview
+  link: /#workshop-overview
+- name: Environment Preparation
+  link: /#environment-preparation
+- name: CRUD Operations
+  link: /#crud-operations
+- name: MongoDB Aggregations
+  link: /#mongodb-aggregations
+- name: Atlas Search
+  link: /#atlas-search
+- name: Test Your Results
+  link: /#test-your-results
+- name: Resources
+  link: /#resources
+- name: Contact
+  link: /#contact
