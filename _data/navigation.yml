@@ -4,25 +4,44 @@ main:
 docs:
   - title: Getting Started
     children:
-      - title: "Workshop Overview"
-        url: /#workshop-overview
-  - title: Getting Started
+      - title: "Quick-Start Guide"
+        url: /docs/quick-start-guide/
+      - title: "Structure"
+        url: /docs/structure/
+      - title: "Installation"
+        url: /docs/installation/
+      - title: "Upgrading"
+        url: /docs/upgrading/
+
+  - title: Customization
     children:
-      - title: "Environment Preparation - Atlas"
-        url: /#environment-preparation-atlas
-      - title: "Environment Preparation - Codespace"
-        url: /#environment-preparation-codespace
-  - title: Exercises
+      - title: "Configuration"
+        url: /docs/configuration/
+      - title: "Navigation"
+        url: /docs/navigation/
+      - title: "UI Text"
+        url: /docs/ui-text/
+      - title: "Authors"
+        url: /docs/authors/
+      - title: "Layouts"
+        url: /docs/layouts/
+
+  - title: Content
     children:
-      - title: "CRUD Operations"
-        url: /#crud-operations
-      - title: "MongoDB Aggregations"
-        url: /#mongodb-aggregations
-      - title: "Atlas Search"
-        url: /#atlas-search
-  - title: Test and Resources
+      - title: "Working with Posts"
+        url: /docs/posts/
+      - title: "Working with Pages"
+        url: /docs/pages/
+      - title: "Working with Collections"
+        url: /docs/collections/
+      - title: "Helpers"
+        url: /docs/helpers/
+      - title: "Utility Classes"
+        url: /docs/utility-classes/
+
+  - title: Extras
     children:
-      - title: "Test Your Results"
-        url: /#test-your-results
-      - title: "Resources"
-        url: /#resources
+      - title: "Stylesheets"
+        url: /docs/stylesheets/
+      - title: "JavaScript"
+        url: /docs/javascript/
