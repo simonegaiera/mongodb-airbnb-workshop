@@ -3,24 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title }} - {{ site.title }}</title>
+  <title>{{ page.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 </head>
 <body>
-  <header>
-    <nav>
+  <div class="container">
+    <nav class="sidebar">
       <ul>
-        {% for item in site.data.navigation %}
-          <li><a href="{{ item.link }}">{{ item.name }}</a></li>
+        {% for section in site.data.navigation %}
+          <li><a href="{{ section.url }}">{{ section.title }}</a></li>
         {% endfor %}
       </ul>
     </nav>
-  </header>
-  <main>
-    {{ content }}
-  </main>
-  <footer>
-    <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}</p>
-  </footer>
+    <main class="content">
+      {{ content }}
+    </main>
+  </div>
 </body>
 </html>
