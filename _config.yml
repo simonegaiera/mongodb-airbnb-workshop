@@ -8,7 +8,7 @@ plugins:
 defaults:
   - scope:
       path: ""
-      type: docs
+      type: pages
     values:
       layout: single
       # author_profile: true
