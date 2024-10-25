@@ -1,12 +1,12 @@
 main:
   - title: Home
-    url: /#introduction
+    url: /
 
 docs:
   - title: Getting Started
     children:
       - title: "Workshop Overview"
-        url: /#workshop-overview
+        url: /
 
   - title: Environment Preparation
     children:
