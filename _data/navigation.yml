@@ -1,5 +1,5 @@
 main:
-  - Home: Introduction
+  - title: Home
     url: /#introduction
 sidebar:
   nav: "docs"
