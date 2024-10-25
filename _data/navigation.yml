@@ -1,0 +1,19 @@
+  main:
+    - title: Introduction
+      url: /#introduction
+    - title: Workshop Overview
+      url: /#workshop-overview
+    - title: Environment Preparation
+      url: /#environment-preparation
+    - title: CRUD Operations
+      url: /#crud-operations
+    - title: MongoDB Aggregations
+      url: /#mongodb-aggregations
+    - title: Atlas Search
+      url: /#atlas-search
+    - title: Test Your Results
+      url: /#test-your-results
+    - title: Resources
+      url: /#resources
+    - title: Contact
+      url: /#contact

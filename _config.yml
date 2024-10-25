@@ -2,23 +2,4 @@ title: MongoDB AirBnb Workshop
 description: Hands-on experience with MongoDB
 baseurl: "/mongodb-airbnb-workshop"
 url: "https://simonegaiera.github.io"
-remote_theme: zendesk/jekyll-theme-zendesk-garden@main
-sidebar:
-  - label: Introduction
-    children: /#introduction
-  - label: Workshop Overview
-    children: /#workshop-overview
-  - label: Environment Preparation
-    children: /#environment-preparation
-  - label: CRUD Operations
-    children: /#crud-operations
-  - label: MongoDB Aggregations
-    children: /#mongodb-aggregations
-  - label: Atlas Search
-    children: /#atlas-search
-  - label: Test Your Results
-    children: /#test-your-results
-  - label: Resources
-    children: /#resources
-  - label: Contact
-    children: /#contact
+remote_theme: mmistakes/minimal-mistakes@main

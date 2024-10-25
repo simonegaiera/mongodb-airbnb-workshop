@@ -12,7 +12,6 @@ Welcome to the MongoDB AirBnb Workshop! This workshop is designed to help you ge
 - [Atlas Search](#atlas-search)
 - [Test Your Results](#test-your-results)
 - [Resources](#resources)
-- [Contact](#contact)
 
 ## Introduction
 
@@ -29,7 +28,9 @@ The workshop will cover the following topics:
 
 ## Environment Preparation: Atlas
 
-Before you begin, you need to set up your environment. Follow these steps to prepare your environment:
+### Workshop: Validate your Atlas Cluster
+
+Before you begin, you need to be able to access your environment. Follow these steps to validate your environment:
 
 1. **MongoDB Atlas Connection String**: You will receive a connection string to connect to your MongoDB Atlas cluster.
 2. **Database Access**: You will be provided with a username and password to access the database.
@@ -45,7 +46,7 @@ To get started with the [mongodb-airbnb-workshop](https://github.com/simonegaier
 
 ### Step 1: Create a Codespace
 1. Navigate to the GitHub repository.
-2. Click on the "<> Code" button.
+2. Click on the **<> Code** button.
 3. Select **Codespace** and then click on **Create codespace**.
 
 Once the Codespace is ready, you will see two main folders:
@@ -134,13 +135,3 @@ By following these steps, you can confidently verify that your changes are corre
 - [MongoDB Documentation](https://docs.mongodb.com/)
 - [MongoDB Atlas Documentation](https://docs.atlas.mongodb.com/)
 - [MongoDB University](https://university.mongodb.com/)
-
-## Contact
-
-If you have any questions or need further assistance, feel free to reach out to our MongoDB Solutions Architect.
-
-Happy learning!
-
----
-
-This README provides a comprehensive guide to the MongoDB AirBnb Workshop. Follow the instructions carefully, and you'll be well on your way to mastering MongoDB!
