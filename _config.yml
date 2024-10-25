@@ -6,6 +6,8 @@ remote_theme: mmistakes/minimal-mistakes@master
 plugins:
   - jekyll-include-cache
 classes: wide
+layout: single
+author_profile: true
 sidebar:
   nav:
     - main
