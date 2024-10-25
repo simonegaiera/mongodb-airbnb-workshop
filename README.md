@@ -2,17 +2,6 @@
 
 Welcome to the MongoDB AirBnb Workshop! This workshop is designed to help you get hands-on experience with MongoDB by walking you through various basic operations and advanced features. By the end of this workshop, you will have a solid understanding of how to interact with MongoDB and leverage its powerful capabilities.
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Workshop Overview](#workshop-overview)
-- [Environment Preparation](#environment-preparation)
-- [CRUD Operations](#crud-operations)
-- [MongoDB Aggregations](#mongodb-aggregations)
-- [Atlas Search](#atlas-search)
-- [Test Your Results](#test-your-results)
-- [Resources](#resources)
-
 ## Introduction
 
 This workshop will cover the basic operations you can perform with MongoDB. Each section will require you to complete the code to achieve the desired result. The workshop is structured to provide you with a comprehensive understanding of MongoDB's core functionalities.
