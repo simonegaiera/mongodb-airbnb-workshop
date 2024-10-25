@@ -5,7 +5,15 @@ url: "https://simonegaiera.github.io"
 remote_theme: mmistakes/minimal-mistakes@master
 plugins:
   - jekyll-include-cache
-sidebar:
-  nav:
-    - main
-    - docs
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      read_time: false
+      comments: false
+      share: false
+      related: false
+      sidebar:
+        nav: "docs"
