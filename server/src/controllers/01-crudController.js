@@ -26,7 +26,11 @@ export async function getAllItems(req, res) {
 export async function getOneItem(req, res) {
     const { id } = req.params;
     try {
-        const item = await db.collection(collectionName).findOne({ _id: id });
+        const search = {
+            _id: id
+        }
+
+        const item = await db.collection(collectionName).findOne(search);
         if (!item) {
             return res.status(404).json({ message: 'Item not found' });
         }
