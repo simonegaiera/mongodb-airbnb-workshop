@@ -1,5 +1,5 @@
 ---
-title: "Hint: Atlas Search: Autocomplete"
+title: "Atlas Search: Autocomplete"
 permalink: /search/autocomplete/hint/
 layout: single
 ---
