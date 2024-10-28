@@ -35,9 +35,19 @@ docs:
     children:
       - title: "MongoDB Search"
         url: /#atlas-search
-      - title: "Hint: MongoDB Search"
-        url: /#atlas-search
-    
+      - title: "Index Creation"
+        url: /#index-creation
+      - title: "Hint: Index Creation"
+        url: /#hint-index-creation
+      - title: "Autocomplete"
+        url: /#autocomplete
+      - title: "Hint: Autocomplete"
+        url: /#hint-autocomplete
+      - title: "Facets"
+        url: /#facets
+      - title: "Hint: Facets"
+        url: /#hint-facets
+
   - title: Test and Resources
     children:
       - title: "Test Your Results"
