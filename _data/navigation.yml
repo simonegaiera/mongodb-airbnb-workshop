@@ -22,7 +22,7 @@ docs:
       - title: "CRUD Operations"
         url: /crud/
       - title: "Hint: CRUD Operations"
-        url: /crud/
+        url: /crud/hint/
 
   - title: MongoDB Indexes
     children:
@@ -43,7 +43,7 @@ docs:
       - title: "MongoDB Search"
         url: /search/
       - title: "Search Indexes"
-        url: /search/indexes/
+        url: /search/index/
       - title: "Hint: Search Indexes"
         url: /search/index/hint/
       - title: "Autocomplete"

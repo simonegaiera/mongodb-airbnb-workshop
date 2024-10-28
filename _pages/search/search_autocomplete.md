@@ -6,9 +6,7 @@ layout: single
 
 Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.
 
-## Autocomplete
-
-### Exercise: Autocomplete
+## Exercise: Autocomplete
 
 1. **Navigate to the File**: In the `controllers` folder open `03-searchController.js`.
 2. **Modify the Function**: Locate and modify the `getAutocomplete` function.

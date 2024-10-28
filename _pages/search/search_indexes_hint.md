@@ -1,6 +1,6 @@
 ---
 title: "Atlas Search: Indexes"
-permalink: /search/indexes/hint/
+permalink: /search/index/hint/
 layout: single
 ---
 
