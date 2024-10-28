@@ -27,7 +27,7 @@ docs:
   - title: MongoDB Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /aggregations
+        url: /aggregations/
       - title: "Exercise: Aggregations"
         url: /aggregations/#exercise-aggregations
       - title: "Hint: Aggregations"
@@ -61,6 +61,6 @@ docs:
   - title: Test and Resources
     children:
       - title: "Test Your Results"
-        url: /test
+        url: /test/
       - title: "Resources"
         url: /resources
