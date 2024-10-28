@@ -144,7 +144,7 @@ If you need more detailed instructions or additional information on how to creat
     - Limit the results to 10 entries.
     - Use the `$project` stage to include only the `name` field in the results.
 
-### Hint
+### Hint: Autocomplete
 
 For more detailed guidance on each step, refer to the following MongoDB documentation links:
 
@@ -175,7 +175,7 @@ For more detailed guidance on each step, refer to the following MongoDB document
     - In the `facets` section, add string facets for `amenities` and `property_type`.
     - In the `facets` section, add number facets for `beds` with boundaries from 0 to 9, and set the default to "Other".
 
-### Hint
+### Hint: Facets
 
 For more detailed guidance on each step, refer to the following MongoDB documentation links:
 
