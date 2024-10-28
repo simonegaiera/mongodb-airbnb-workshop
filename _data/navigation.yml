@@ -30,7 +30,7 @@ docs:
         url: /#mongodb-aggregations
       - title: "Exercise: Aggregations"
         url: /#exercise-aggregations
-      - title: "Hint: MongoDB Aggregations"
+      - title: "Hint: Aggregations"
         url: /#hint-aggregations
   
   - title: MongoDB Search

@@ -17,3 +17,5 @@ defaults:
       related: false
       sidebar:
         nav: "docs"
+atom_feed:
+  hide: true
