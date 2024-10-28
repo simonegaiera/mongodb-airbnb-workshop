@@ -28,39 +28,29 @@ docs:
     children:
       - title: "MongoDB Aggregations"
         url: /aggregations/
-      - title: "Exercise: Aggregations"
-        url: /aggregations/#exercise-aggregations
       - title: "Hint: Aggregations"
-        url: /aggregations/#hint-aggregations
+        url: /aggregations/hint/
   
   - title: MongoDB Search
     children:
       - title: "MongoDB Search"
-        url: /search/#atlas-search
+        url: /search/
       - title: "Index Creation"
-        url: /search/#index-creation
-      - title: "Exercise: Index Creation Default"
-        url: /search/#index-creation-default
-      - title: "Exercise: Index Creation All"
-        url: /search/#index-creation-all
+        url: /search/index/
       - title: "Hint: Index Creation"
-        url: /search/#hint-index-creation
+        url: /search/index/hint/
       - title: "Autocomplete"
-        url: /search/#autocomplete
-      - title: "Exercise: Autocomplete"
-        url: /search/#exercise-autocomplete
+        url: /search/autocomplete/
       - title: "Hint: Autocomplete"
-        url: /search/#hint-autocomplete
-      - title: "Facets"
-        url: /search/#facets
-      - title: "Exercise: Facets"
-        url: /search/#exercise-facets
-      - title: "Hint: Facets"
-        url: /search/#hint-facets
+        url: /search/autocomplete/hint/
+      - title: "Facet"
+        url: /search/facet/
+      - title: "Hint: Facet"
+        url: /search/facet/hint/
 
   - title: Test and Resources
     children:
       - title: "Test Your Results"
         url: /test/
       - title: "Resources"
-        url: /resources
+        url: /resources/

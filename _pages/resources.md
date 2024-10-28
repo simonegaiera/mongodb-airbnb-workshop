@@ -1,6 +1,6 @@
 ---
 title: "Resources"
-permalink: /resources
+permalink: /resources/
 layout: single
 ---
 
