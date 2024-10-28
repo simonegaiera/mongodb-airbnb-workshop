@@ -11,6 +11,7 @@ export async function getAutocomplete(req, res) {
 
     try {
         const pipeline = [
+            // TODO: Use the $search stage on the default index
             {
               '$search': {
                 'index': 'default', 
@@ -20,9 +21,13 @@ export async function getAutocomplete(req, res) {
                   'fuzzy': {}
                 }
               }
-            }, {
+            }, 
+            // TODO: Limit the results to 10 entries
+            {
               '$limit': 10
-            }, {
+            }, 
+            // TODO: Use the $project stage to include only the name field in the results
+            {
               '$project': {
                 'name': 1, 
                 '_id': 0
@@ -48,6 +53,7 @@ export async function getFacet(req, res) {
                   'index': 'default',
                   'facet': {
                       'operator': {
+                          // TODO: Use the $search stage with the autocomplete created before to filter on the facets
                           'autocomplete': {
                               'query': query,
                               'path': 'name',
@@ -55,14 +61,17 @@ export async function getFacet(req, res) {
                           }
                       },
                       'facets': {
+                          // TODO: Add string facets for amenities called ammenities
                           'amenities': {
                               'type': 'string',
                               'path': 'amenities'
                           },
+                          // TODO: Add string facets for property_type called property_type
                           'property_type': {
                               'type': 'string',
                               'path': 'property_type'
                           },
+                          // TODO: Add number facets for beds with boundaries from 0 to 9 and default as 'Other' called beds
                           'beds': {
                               'type': 'number',
                               'path': 'beds',
