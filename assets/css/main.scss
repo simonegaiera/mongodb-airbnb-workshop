@@ -5,6 +5,12 @@
 
 @media (min-width: 80em) {
     .page {
-        padding-inline-end: 0px;
+        padding-inline-end: 0px !important;
     }
-  }
+}
+
+@media (min-width: 64em) {
+    .page {
+        padding-inline-end: 0px !important;
+    }
+}
