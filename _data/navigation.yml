@@ -6,32 +6,32 @@ docs:
   - title: Getting Started
     children:
       - title: "Introduction"
-        url: /#introduction
+        url: /
       - title: "Workshop Overview"
-        url: /#workshop-overview
+        url: /overview
 
   - title: Environment Preparation
     children:
       - title: "Environment Preparation: Atlas"
-        url: /#environment-preparation-atlas
+        url: /env/#environment-preparation-atlas
       - title: "Environment Preparation: Codespace"
-        url: /#environment-preparation-codespace
+        url: /env/#environment-preparation-codespace
 
   - title: CRUD Operations
     children:
       - title: "CRUD Operations"
-        url: /#crud-operations
+        url: /crud
       - title: "Hint: CRUD Operations"
-        url: /#mongodb-aggregations
+        url: /crud/
 
   - title: MongoDB Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /#mongodb-aggregations
+        url: /aggregations
       - title: "Exercise: Aggregations"
-        url: /#exercise-aggregations
+        url: /aggregations/#exercise-aggregations
       - title: "Hint: Aggregations"
-        url: /#hint-aggregations
+        url: /aggregations/#hint-aggregations
   
   - title: MongoDB Search
     children:
@@ -61,6 +61,6 @@ docs:
   - title: Test and Resources
     children:
       - title: "Test Your Results"
-        url: /#test-your-results
+        url: /test
       - title: "Resources"
-        url: /#resources
+        url: /resources
