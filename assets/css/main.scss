@@ -3,13 +3,4 @@
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
-$max-width: calc(100vw - 200px);
-
-.page__footer-follow {
-    display: none !important;
-}
-
-.page__footer-copyright {
-    display: none !important;
-}
-  
+$max-width: 100%;
