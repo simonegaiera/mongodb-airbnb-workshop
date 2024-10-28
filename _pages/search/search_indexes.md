@@ -1,14 +1,12 @@
 ---
 title: "Atlas Search: Indexes"
-permalink: /search/indexes/
+permalink: /search/index/
 layout: single
 ---
 
 Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.
 
-## Exercise: Index Creation
-
-### Index Creation: Default
+## Exercise: Index Creation - Default
 
 **Objective** 
 The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. The index must be named `default`.
@@ -20,7 +18,7 @@ You need to create an index with the following field mappings:
 - `property_type` should be of type `stringFacet`
 - `name` should be of type `autocomplete`
 
-### Index Creation: All
+## Exercise: Index Creation - All
 
 **Objective**  
 The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. The index must be named `all`.

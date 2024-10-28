@@ -4,7 +4,7 @@ permalink: /index/
 layout: single
 ---
 
-## Index Creation: beds_1_property_type_1_room_type_1
+## Exercise: Index creation
 
 **Objective** 
 The goal of this exercise is to create a MongoDB index to optimize search queries and improve database performance. The resulting index name should be `beds_1_property_type_1_amenities_1`.
