@@ -17,3 +17,4 @@ defaults:
       related: false
       sidebar:
         nav: "docs"
+include: ["_pages"]
