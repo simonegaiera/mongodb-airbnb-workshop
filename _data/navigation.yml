@@ -5,8 +5,10 @@ main:
 docs:
   - title: Getting Started
     children:
+      - title: "Introduction"
+        url: /#introduction
       - title: "Workshop Overview"
-        url: /
+        url: /#workshop-overview
 
   - title: Environment Preparation
     children:
@@ -15,13 +17,27 @@ docs:
       - title: "Environment Preparation: Codespace"
         url: /#environment-preparation-codespace
 
-  - title: Exercises
+  - title: CRUD Operations
     children:
       - title: "CRUD Operations"
         url: /#crud-operations
-      - title: "MongoDB Aggregations"
+      - title: "Hint: CRUD Operations"
         url: /#mongodb-aggregations
 
+  - title: MongoDB Aggregations
+    children:
+      - title: "MongoDB Aggregations"
+        url: /#mongodb-aggregations
+      - title: "Hint: MongoDB Aggregations"
+        url: /#atlas-search
+  
+  - title: MongoDB Search
+    children:
+      - title: "MongoDB Search"
+        url: /#atlas-search
+      - title: "Hint: MongoDB Search"
+        url: /#atlas-search
+    
   - title: Test and Resources
     children:
       - title: "Test Your Results"
