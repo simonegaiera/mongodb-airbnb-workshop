@@ -27,7 +27,9 @@ docs:
   - title: MongoDB Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /#aggregations
+        url: /#mongodb-aggregations
+      - title: "Exercise: Aggregations"
+        url: /#exercise-aggregations
       - title: "Hint: MongoDB Aggregations"
         url: /#hint-aggregations
   
@@ -35,16 +37,24 @@ docs:
     children:
       - title: "MongoDB Search"
         url: /#atlas-search
-      - title: "Exercise: Index Creation"
+      - title: "Index Creation"
         url: /#index-creation
+      - title: "Exercise: Index Creation Default"
+        url: /#index-creation-default
+      - title: "Exercise: Index Creation All"
+        url: /#index-creation-all
       - title: "Hint: Index Creation"
         url: /#hint-index-creation
-      - title: "Exercise: Autocomplete"
+      - title: "Autocomplete"
         url: /#autocomplete
+      - title: "Exercise: Autocomplete"
+        url: /#exercise-autocomplete
       - title: "Hint: Autocomplete"
         url: /#hint-autocomplete
-      - title: "Exercise: Facets"
+      - title: "Facets"
         url: /#facets
+      - title: "Exercise: Facets"
+        url: /#exercise-facets
       - title: "Hint: Facets"
         url: /#hint-facets
 
