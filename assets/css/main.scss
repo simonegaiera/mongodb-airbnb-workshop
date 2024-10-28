@@ -4,10 +4,10 @@
 @import "minimal-mistakes"; // main partials
 
 .page__footer-follow {
-    display: none;
-  }
+    display: none !important;
+}
 
 .page__footer-copyright {
-display: none;
+    display: none !important;
 }
   
