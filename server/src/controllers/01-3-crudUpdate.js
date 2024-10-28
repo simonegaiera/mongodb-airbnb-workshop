@@ -20,9 +20,15 @@ export async function updateValue(req, res) {
     }
 
     try {
+        const key = [update.key]
+        const value = update.value
+
+        const search = { _id: id }
+        const update = { $set: { key : value } }
+
         const result = await db.collection(collectionName).updateOne(
-            { _id: id },
-            { $set: { [update.key]: update.value } }
+            search,
+            update
         );
 
         res.status(201).json(result);
@@ -45,9 +51,12 @@ export async function insertReview(req, res) {
     }
 
     try {
+        const search = { _id: id }
+        const update = { $push: { reviews: newReview } }
+
         const result = await db.collection(collectionName).updateOne(
-            { _id: id },
-            { $push: { reviews: newReview } }
+            search,
+            update
         );
 
         res.status(201).json(result);

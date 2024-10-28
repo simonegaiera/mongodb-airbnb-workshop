@@ -6,7 +6,8 @@ import { collectionName } from '../config/config.js';
 export async function deleteItem(req, res) {
     const { id } = req.params;
     try {
-        const result = await db.collection(collectionName).deleteOne({ _id: id });
+        const search = { _id: id }
+        const result = await db.collection(collectionName).deleteOne( search );
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Item not found' });
         }

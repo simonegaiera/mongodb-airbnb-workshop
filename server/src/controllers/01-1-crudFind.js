@@ -26,11 +26,10 @@ export async function getAllItems(req, res) {
 export async function getOneItem(req, res) {
     const { id } = req.params;
     try {
-        const search = {
-            _id: id
-        }
+        const search = { _id: id }
 
         const item = await db.collection(collectionName).findOne(search);
+
         if (!item) {
             return res.status(404).json({ message: 'Item not found' });
         }
@@ -49,8 +48,7 @@ export async function getDistinct(req, res) {
     }
 
     try {
-        const items = await db.collection(collectionName)
-            .distinct(field);
+        const items = await db.collection(collectionName).distinct(field);
 
         res.status(200).json(items);
     } catch (error) {
