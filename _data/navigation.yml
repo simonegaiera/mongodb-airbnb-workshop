@@ -8,7 +8,7 @@ docs:
       - title: "Introduction"
         url: /
       - title: "Workshop Overview"
-        url: /overview
+        url: /overview/
 
   - title: Environment Preparation
     children:
@@ -20,7 +20,7 @@ docs:
   - title: CRUD Operations
     children:
       - title: "CRUD Operations"
-        url: /crud
+        url: /crud/
       - title: "Hint: CRUD Operations"
         url: /crud/
 
