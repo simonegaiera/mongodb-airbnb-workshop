@@ -3,4 +3,8 @@
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
-$max-width: 100%;
+@media (min-width: 80em) {
+    .page {
+        padding-inline-end: 0px;
+    }
+  }
