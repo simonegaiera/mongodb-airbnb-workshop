@@ -97,6 +97,27 @@ This section will cover MongoDB's aggregation framework. You will learn how to u
 - **Sort**: Sort documents.
 - **Project**: Reshape documents.
 
+#### Exercise: Aggregations
+
+**Objective** 
+In this exercise, you will create an aggregation pipeline to analyze the average price of listings based on the number of beds. The pipeline will filter, group, and sort the data to provide meaningful insights.
+
+**Pipeline Definition**  
+You need to create a pipeline with the following:
+- **$match Stage**: Filter documents to include only those that have both `beds` and `price` fields.
+- **$group Stage**: Group the documents by the number of beds and calculate the average price for each group.
+- **$sort Stage**: Sort the grouped documents by the number of beds in ascending order.
+
+### Hint: Aggregations
+
+For more detailed guidance on each stage, refer to the following MongoDB documentation links:
+- **$match**: Learn how to filter documents in the aggregation pipeline.
+  [Match Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/)
+- **$group**: Understand how to group documents and perform aggregations.
+  [Group Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
+- **$sort**: Learn how to sort documents in the aggregation pipeline.
+  [Sort Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)
+
 ## Atlas Search
 
 Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.

@@ -27,23 +27,23 @@ docs:
   - title: MongoDB Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /#mongodb-aggregations
+        url: /#aggregations
       - title: "Hint: MongoDB Aggregations"
-        url: /#atlas-search
+        url: /#hint-aggregations
   
   - title: MongoDB Search
     children:
       - title: "MongoDB Search"
         url: /#atlas-search
-      - title: "Index Creation"
+      - title: "Exercise: Index Creation"
         url: /#index-creation
       - title: "Hint: Index Creation"
         url: /#hint-index-creation
-      - title: "Autocomplete"
+      - title: "Exercise: Autocomplete"
         url: /#autocomplete
       - title: "Hint: Autocomplete"
         url: /#hint-autocomplete
-      - title: "Facets"
+      - title: "Exercise: Facets"
         url: /#facets
       - title: "Hint: Facets"
         url: /#hint-facets
