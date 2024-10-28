@@ -4,7 +4,7 @@ permalink: /overview/
 layout: single
 ---
 
-# Introduction
+## Introduction
 
 In this workshop, you'll learn the fundamental operations you can perform with MongoDB. Each section will guide you through completing code snippets to achieve specific outcomes. The workshop is structured to give you a comprehensive understanding of MongoDB's core functionalities. To start, visit our [GitHub repository](https://github.com/simonegaiera/mongodb-airbnb-workshop).
 

@@ -4,8 +4,6 @@ permalink: /aggregations/
 layout: single
 ---
 
-# MongoDB Aggregations
-
 This section will cover MongoDB's aggregation framework. You will learn how to use various aggregation stages to process and analyze your data.
 
 - **Match**: Filter documents.
