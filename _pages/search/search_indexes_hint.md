@@ -1,5 +1,5 @@
 ---
-title: "Hint: Atlas Search: Indexes"
+title: "Atlas Search: Indexes"
 permalink: /search/indexes/hint/
 layout: single
 ---

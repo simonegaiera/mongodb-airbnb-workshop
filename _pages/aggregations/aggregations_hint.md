@@ -1,10 +1,10 @@
 ---
-title: "Hint: MongoDB Aggregations"
+title: "MongoDB Aggregations"
 permalink: /aggregations/hint/
 layout: single
 ---
 
-## Hint: Aggregations
+## Hint: MongoDB Aggregations
 
 For more detailed guidance on each stage, refer to the following MongoDB documentation links:
 - **$match**: Learn how to filter documents in the aggregation pipeline.

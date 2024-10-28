@@ -13,7 +13,7 @@ describe('MongoDB Index Tests', function() {
     });
 
     it('verify that the index exists', async function() {
-        const indexName = 'beds_1_property_type_1_room_type_1';
+        const indexName = 'beds_1_property_type_1_amenities_1';
         
         const collection = db.collection(collectionName);
         const indexes = await collection.indexes();
