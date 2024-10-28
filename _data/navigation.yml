@@ -36,27 +36,27 @@ docs:
   - title: MongoDB Search
     children:
       - title: "MongoDB Search"
-        url: /#atlas-search
+        url: /search/#atlas-search
       - title: "Index Creation"
-        url: /#index-creation
+        url: /search/#index-creation
       - title: "Exercise: Index Creation Default"
-        url: /#index-creation-default
+        url: /search/#index-creation-default
       - title: "Exercise: Index Creation All"
-        url: /#index-creation-all
+        url: /search/#index-creation-all
       - title: "Hint: Index Creation"
-        url: /#hint-index-creation
+        url: /search/#hint-index-creation
       - title: "Autocomplete"
-        url: /#autocomplete
+        url: /search/#autocomplete
       - title: "Exercise: Autocomplete"
-        url: /#exercise-autocomplete
+        url: /search/#exercise-autocomplete
       - title: "Hint: Autocomplete"
-        url: /#hint-autocomplete
+        url: /search/#hint-autocomplete
       - title: "Facets"
-        url: /#facets
+        url: /search/#facets
       - title: "Exercise: Facets"
-        url: /#exercise-facets
+        url: /search/#exercise-facets
       - title: "Hint: Facets"
-        url: /#hint-facets
+        url: /search/#hint-facets
 
   - title: Test and Resources
     children:

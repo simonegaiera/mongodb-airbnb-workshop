@@ -1,19 +1,20 @@
-# MongoDB AirBnb Workshop
+# MongoDB Airbnb Workshop
 
-Welcome to the MongoDB AirBnb Workshop! This workshop is designed to help you get hands-on experience with MongoDB by walking you through various basic operations and advanced features. By the end of this workshop, you will have a solid understanding of how to interact with MongoDB and leverage its powerful capabilities.
+Welcome to the MongoDB Airbnb Workshop! This hands-on workshop is designed to provide you with practical experience using MongoDB. By the end of this session, you'll have a solid grasp of how to interact with MongoDB and utilize its powerful features.
 
 ## Introduction
 
-This workshop will cover the basic operations you can perform with MongoDB. Each section will require you to complete the code to achieve the desired result. The workshop is structured to provide you with a comprehensive understanding of MongoDB's core functionalities.
-Github Link: [mongodb-airbnb-workshop](https://github.com/simonegaiera/mongodb-airbnb-workshop)
+In this workshop, you'll learn the fundamental operations you can perform with MongoDB. Each section will guide you through completing code snippets to achieve specific outcomes. The workshop is structured to give you a comprehensive understanding of MongoDB's core functionalities. To start, visit our [GitHub repository](https://github.com/simonegaiera/mongodb-airbnb-workshop).
 
 ## Workshop Overview
 
-The workshop will cover the following topics:
+The application is divided into a frontend and a backend. All modifications will be made on the backend, specifically within the controllers section. The workshop will cover the following topics:
 
-1. **CRUD Operations**: Learn how to Create, Read, Update, and Delete documents in MongoDB.
-2. **MongoDB Aggregations**: Understand how to use MongoDB's powerful aggregation framework to perform data analysis.
-3. **Atlas Search**: Explore how to use MongoDB Atlas Search to perform full-text search on your data.
+1. **CRUD Operations**: Master the basics of Creating, Reading, Updating, and Deleting documents in MongoDB.
+2. **MongoDB Aggregations**: Learn how to use MongoDB's powerful aggregation framework for data analysis.
+3. **Atlas Search**: Discover how to leverage MongoDB Atlas Search for full-text search capabilities on your data.
+
+Let's get started and dive into the world of MongoDB!
 
 ## Environment Preparation: Atlas
 
@@ -121,101 +122,6 @@ For more detailed guidance on each stage, refer to the following MongoDB documen
 - **$sort**: Learn how to sort documents in the aggregation pipeline.
   [Sort Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)
 
-## Atlas Search
-
-Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.
-
-### Exercise: Index Creation
-
-#### Index Creation: Default
-
-**Objective** 
-The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. The index must be named `default`.
-
-**Field Mappings**  
-You need to create an index with the following field mappings:
-- `amenities` should be of type `stringFacet`
-- `beds` should be of type `numberFacet`
-- `property_type` should be of type `stringFacet`
-- `name` should be of type `autocomplete`
-
-#### Index Creation: All
-
-**Objective**  
-The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. The index must be named `all`.
-
-**Field Mappings**  
-You need to create an index with the following field mappings:
-- `amenities` should be of type `token`
-- `property_type` should be of type `token`
-- `name` should be of type `autocomplete`
-
-### Hint: Index Creation
-If you need more detailed instructions or additional information on how to create and manage search indexes in MongoDB Atlas, check out the official MongoDB Atlas Search Documentation. It provides comprehensive guides, examples, and best practices to help you get the most out of Atlas Search.
-- [Manage Index](https://www.mongodb.com/docs/atlas/atlas-search/manage-indexes/)
-- [Define Fields Mapping](https://www.mongodb.com/docs/atlas/atlas-search/define-field-mappings/)
-
-### Autocomplete
-
-#### Exercise: Autocomplete
-
-1. **Navigate to the File**: In the `controllers` folder open `03-searchController.js`.
-2. **Modify the Function**: Locate and modify the `getAutocomplete` function.
-3. **Update the Pipeline Array**:
-    - Use the `$search` stage on the `default` index.
-    - Apply the `autocomplete` operator on the `name` field of the listing.
-    - Enable fuzzy search to handle typos and variations.
-    - Limit the results to 10 entries.
-    - Use the `$project` stage to include only the `name` field in the results.
-
-#### Hint: Autocomplete
-
-For more detailed guidance on each step, refer to the following MongoDB documentation links:
-
-- **Autocomplete**: Learn how to use the `autocomplete` operator to enhance search capabilities.
-  [Autocomplete Documentation](https://www.mongodb.com/docs/atlas/atlas-search/field-types/autocomplete-type/)
-  
-- **Create Query**: Understand how to construct search queries in MongoDB Atlas.
-  [Create Query Documentation](https://www.mongodb.com/docs/atlas/atlas-search/create-queries/)
-  
-- **Search**: Explore the `$search` aggregation stage to perform full-text searches.
-  [Search Documentation](https://www.mongodb.com/docs/atlas/atlas-search/aggregation-stages/search/)
-  
-- **Limit**: Learn how to limit the number of documents returned by a query.
-  [Limit Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
-  
-- **Project**: Understand how to use the `$project` stage to include or exclude specific fields.
-  [Project Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)
-
-### Facets
-
-#### Exercise: Facets
-
-1. **Navigate to the File**: In the `controllers` folder open `03-searchController.js`.
-2. **Modify the Function**: Locate and modify the `getFacet` function.
-3. **Update the Pipeline Array**:
-    - Use the `$search` stage with the `autocomplete` created before to filter on the facets.
-    - In the `facets` section, add string facets for `amenities` and `property_type`.
-    - In the `facets` section, add number facets for `beds` with boundaries from 0 to 9, and set the default to "Other".
-
-#### Hint: Facets
-
-For more detailed guidance on each step, refer to the following MongoDB documentation links:
-
-- **Autocomplete**: Learn how to use the `autocomplete` operator to enhance search capabilities.
-  [Autocomplete Documentation](https://www.mongodb.com/docs/atlas/atlas-search/field-types/autocomplete-type/)
-  
-- **Create Query**: Understand how to construct search queries in MongoDB Atlas.
-  [Create Query Documentation](https://www.mongodb.com/docs/atlas/atlas-search/create-queries/)
-  
-- **Search**: Explore the `$search` aggregation stage to perform full-text searches.
-  [Search Documentation](https://www.mongodb.com/docs/atlas/atlas-search/aggregation-stages/search/)
-  
-- **Facets**: Learn how to use facets to categorize search results.
-  [Facets Documentation](https://www.mongodb.com/docs/atlas/atlas-search/facets/)
-  
-- **Number Facets**: Understand how to create number facets with boundaries.
-  [Number Facets Documentation](https://www.mongodb.com/docs/atlas/atlas-search/facets/#number-facets)
 
 ## Test Your Results
 
