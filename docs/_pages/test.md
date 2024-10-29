@@ -2,6 +2,7 @@
 title: "Test Your Results"
 permalink: /test/
 layout: single
+classes: wide
 ---
 
 To ensure that your exercise is complete and all functions are working as expected, you can run the provided test suite. Follow these steps to test your results:

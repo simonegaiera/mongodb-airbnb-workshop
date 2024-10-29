@@ -2,6 +2,7 @@
 title: "Atlas Search: Facet"
 permalink: /search/facet/hint/
 layout: single
+classes: wide
 ---
 
 ### Hint: Facets

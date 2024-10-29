@@ -2,6 +2,7 @@
 title: "Indexes"
 permalink: /index/hint/
 layout: single
+classes: wide
 ---
 
 ## Hint: MongoDB Indexes

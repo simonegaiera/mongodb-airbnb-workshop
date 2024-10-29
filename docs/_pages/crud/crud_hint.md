@@ -2,6 +2,7 @@
 title: "CRUD Operations"
 permalink: /crud/hint/
 layout: single
+classes: wide
 ---
 
 In this section, you will learn how to perform basic CRUD operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
