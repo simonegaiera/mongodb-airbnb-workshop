@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { mongodbUri as uri, databaseName } from '../config/config.js';
 
-const client = new MongoClient(uri,  {
+export const client = new MongoClient(uri,  {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: false,

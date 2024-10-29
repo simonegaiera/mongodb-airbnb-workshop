@@ -5,13 +5,13 @@ import { collectionName } from '../config/config.js';
 // PATCH a new item
 export async function updateValue(req, res) {
     const { id } = req.params;
-    const update = req.body;
+    const doc = req.body;
 
-    if (!update) {
+    if (!doc) {
         return res.status(400).json({ message: 'Body is required' });
     }
 
-    if (Object.keys(update).length === 0 || !Object.values(update).some(value => value !== undefined && value !== null)) {
+    if (Object.keys(doc).length === 0 || !Object.values(doc).some(value => value !== undefined && value !== null)) {
         return res.status(400).json({ error: "Request body must contain at least one key-value pair" });
     }
 
@@ -19,12 +19,12 @@ export async function updateValue(req, res) {
         return res.status(400).json({ message: 'ID is required' });
     }
 
-    try {
-        const key = [update.key]
-        const value = update.value
+    const key = doc.key
+    const value = doc.value
 
+    try {
         const search = { _id: id }
-        const update = { $set: { key : value } }
+        const update = { $set: { [key] : value } }
 
         const result = await db.collection(collectionName).updateOne(
             search,
