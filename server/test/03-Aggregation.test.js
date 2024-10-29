@@ -2,7 +2,7 @@ import { connectToDatabase } from "../src/utils/database.js";
 import { strictEqual } from 'assert';
 import { getPriceStatistics } from '../src/controllers/02-aggregateController.js'; 
 
-describe('MongoDB Search Tests', function() {
+describe('MongoDB Aggregation Tests', function() {
     const indexName = 'default';
     
     before(async function() {
