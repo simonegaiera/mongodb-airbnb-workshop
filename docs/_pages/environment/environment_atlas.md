@@ -2,6 +2,7 @@
 title: "Environment Preparation: Atlas"
 permalink: /environment/atlas/
 layout: single
+classes: wide
 ---
 
 ## Environment Preparation: Atlas

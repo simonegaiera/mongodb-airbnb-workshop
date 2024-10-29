@@ -2,6 +2,7 @@
 title: "Environment Preparation: Codespace"
 permalink: /environment/codespace/
 layout: single
+classes: wide
 ---
 
 ## Environment Preparation: Codespace

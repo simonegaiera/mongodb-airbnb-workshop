@@ -18,4 +18,3 @@ defaults:
       sidebar:
         nav: "docs"
 include: ["_pages"]
-classes: wide

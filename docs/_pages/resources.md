@@ -2,6 +2,7 @@
 title: "Resources"
 permalink: /resources/
 layout: single
+classes: wide
 ---
 
 - [MongoDB Documentation](https://docs.mongodb.com/)

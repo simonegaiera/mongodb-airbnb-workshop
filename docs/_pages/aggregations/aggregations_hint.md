@@ -2,6 +2,7 @@
 title: "MongoDB Aggregations"
 permalink: /aggregations/hint/
 layout: single
+classes: wide
 ---
 
 ## Hint: MongoDB Aggregations

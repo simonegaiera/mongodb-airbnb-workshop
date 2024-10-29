@@ -2,6 +2,7 @@
 title: "Workshop Overview"
 permalink: /overview/
 layout: single
+classes: wide
 ---
 
 ## Introduction

@@ -2,6 +2,7 @@
 title: "Atlas Search: Indexes"
 permalink: /search/index/hint/
 layout: single
+classes: wide
 ---
 
 ### Hint: Index Creation

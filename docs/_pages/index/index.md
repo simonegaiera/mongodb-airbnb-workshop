@@ -2,6 +2,7 @@
 title: "Indexes"
 permalink: /index/
 layout: single
+classes: wide
 ---
 
 ## Exercise: Index creation
