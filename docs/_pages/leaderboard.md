@@ -5,6 +5,6 @@ layout: single
 classes: wide
 ---
 
-## Introduction
+## Who's winning?
 
-Navigate to the Leaderboard section to see who is winning!
+Check out the Leaderboard section to see the latest rankings and find out who's leading the pack!
