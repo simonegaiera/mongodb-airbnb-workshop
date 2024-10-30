@@ -10,53 +10,60 @@ export async function getSectionResults(req, res) {
         
         const pipeline = [
             {
-                $sort: {
-                    timestamp: -1
+              '$sort': {
+                'timestamp': -1
+              }
+            }, {
+              '$group': {
+                '_id': {
+                  'section': '$section', 
+                  'name': '$name'
+                }, 
+                'users': {
+                  '$push': {
+                    'username': '$username', 
+                    'timestamp': '$timestamp'
+                  }
                 }
-            },
-            {
-                $group: {
-                    _id: {
-                        section: "$section",
-                        name: "$name"
-                    },
-                    users: {
-                        $push: {
-                            username: "$username",
-                            timestamp: "$timestamp"
+              }
+            }, {
+              '$addFields': {
+                'users': {
+                  '$map': {
+                    'input': {
+                      '$range': [
+                        0, {
+                          '$size': '$users'
                         }
+                      ]
+                    }, 
+                    'as': 'index', 
+                    'in': {
+                      'username': {
+                        '$arrayElemAt': [
+                          '$users.username', '$$index'
+                        ]
+                      }, 
+                      'points': {
+                        '$subtract': [
+                          1000, {
+                            '$multiply': [
+                              '$$index', 10
+                            ]
+                          }
+                        ]
+                      }
                     }
+                  }
                 }
-            },
-            {
-                $addFields: {
-                    users: {
-                        $map: {
-                            input: {
-                                $range: [
-                                    0,
-                                    {
-                                        $size: "$users"
-                                    }
-                                ]
-                            },
-                            as: "index",
-                            in: {
-                                username: {
-                                    $arrayElemAt: [
-                                        "$users.username",
-                                        "$$index"
-                                    ]
-                                },
-                                points: {
-                                    $subtract: [100, "$$index"]
-                                }
-                            }
-                        }
-                    }
-                }
+              }
+            }, {
+              '$sort': {
+                '_id.section': 1, 
+                '_id.name': 1
+              }
             }
-        ]
+          ]
         
         const data = await collection.aggregate(pipeline).toArray();
         
