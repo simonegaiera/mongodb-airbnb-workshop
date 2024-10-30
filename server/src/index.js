@@ -2,6 +2,7 @@ import express, { json } from 'express';
 import cors from 'cors';
 import { port } from './config/config.js';
 import listingsAndReviews from './routes/listingsAndReviews.js';
+import results from './routes/results.js';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(json());
 
 // Define your routes here
 app.use('/api/listingsAndReviews', listingsAndReviews);
+app.use('/api/results', results);
 
 // Global error handling
 app.use((err, _req, res, next) => {

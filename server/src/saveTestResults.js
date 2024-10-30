@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import {  connectToDatabase, client } from "./utils/database.js";
-import { mongodbUri } from './config/config.js';
+import { mongodbUri, resultsDatabaseName, resultsCollectionName } from './config/config.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,8 +14,8 @@ const now = new Date()
 async function saveToDatabase(testsSaved) {
     try {
         await connectToDatabase();
-        const database = client.db('airbnb_workshop');
-        const collection = database.collection('results');
+        const database = client.db(resultsDatabaseName);
+        const collection = database.collection(resultsCollectionName);
         
         for (const test of testsSaved) {
             let result = await collection.findOne(test);

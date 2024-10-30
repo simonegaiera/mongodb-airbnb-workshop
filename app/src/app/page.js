@@ -19,7 +19,7 @@ export default function Home() {
     <Container
       maxWidth="xl"
       sx={{
-        overflow: 'hidden' // Ensure no overflowing content
+        overflow: 'hidden'
       }}
     >
       <Box

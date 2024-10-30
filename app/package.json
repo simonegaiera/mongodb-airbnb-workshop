@@ -19,6 +19,7 @@
     "eslint-config-next": "latest",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "recharts": "^2.13.2"
   }
 }

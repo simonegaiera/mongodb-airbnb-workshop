@@ -59,5 +59,7 @@ docs:
     children:
       - title: "Test Your Results"
         url: /test/
+      - title: "Leaderboard"
+        url: /leaderboard/
       - title: "Resources"
         url: /resources/
