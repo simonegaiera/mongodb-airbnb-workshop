@@ -19,8 +19,8 @@ In this exercise, you will create an aggregation pipeline to analyze the average
 
 **Pipeline Definition**  
 
-1. **Navigate to the File**: In the `controllers` folder open `02-aggregateController.js`.
-2. **Modify the Function**: Locate and modify the `getPriceStatistics` function.
+1. **Navigate to the File**: In the `lab` folder open `pipeline-1.lab.js`.
+2. **Modify the Function**: Locate and modify the `aggregationPipeline` function.
 3. **Update the Pipeline Array**:
     - **$match Stage**: Filter documents to include only those that have both `beds` and `price` fields.
     - **$group Stage**: Group the documents by the number of beds and calculate the average price for each group.

@@ -14,7 +14,7 @@ describe('MongoDB Search Tests', function() {
         }
     });
     
-    it('verify that the search index exists', async function() {
+    it('search-0: verify that the search index exists', async function() {
         try {
             const indexName = 'default';
 
@@ -34,7 +34,7 @@ describe('MongoDB Search Tests', function() {
         }
     });
 
-    it('verify that the all index exists', async function() {
+    it('search-0: verify that the all index exists', async function() {
         try {
             const indexName = 'all';
 
@@ -53,7 +53,7 @@ describe('MongoDB Search Tests', function() {
         }
     });
 
-    it('getAutocomplete should return the correct number of items when looking for hawaii', async function() {
+    it('search-1: autocompleteSearch should return the correct number of items when looking for hawaii', async function() {
         const req = { body: { query: 'hawaii' } };
         let responseData = null;
 
@@ -74,7 +74,7 @@ describe('MongoDB Search Tests', function() {
         strictEqual(responseData[0].name, 'A bedroom far away from home');
     });
 
-    it('getFacet should return the correct facets', async function() {
+    it('search-2: facetSearch should return the correct facets', async function() {
         const req = { query: { query: 'hawaii' } };
         let responseData = null;
         const res = {

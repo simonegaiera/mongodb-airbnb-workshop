@@ -13,7 +13,7 @@ describe('MongoDB Aggregation Tests', function() {
         }
     });
     
-    it('getPriceStatistics should return the correct avg', async function() {
+    it('pipeline-1: aggregationPipeline should return the correct avg', async function() {
         const req = {};
         let responseData = null;
 

@@ -2,7 +2,7 @@ import { strictEqual } from 'assert';
 import { connectToDatabase, db } from "../src/utils/database.js";
 import { collectionName } from '../src/config/config.js';
 
-import { getAllItems, getOneItem, getDistinct, getFilters, createItem, insertReview, updateValue, deleteItem  } from '../src/controllers/crudController.js';
+import { getAllItems, getOneItem, getDistinct, getFilters, insertItem, insertReview, updateValue, deleteItem  } from '../src/controllers/crudController.js';
 
 describe('MongoDB CRUD Testing', function() {
     let createdItemId;
@@ -25,7 +25,7 @@ describe('MongoDB CRUD Testing', function() {
         );
     });
 
-    it('getAllItems should return the correct number of items for the given page and limit', async function() {
+    it('crud-1: crudFind should return the correct number of items for the given page and limit', async function() {
         const limit = 5
         const req = { 
             query: { page: '2', limit: limit, query: JSON.stringify({}) },
@@ -43,7 +43,7 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(responseData[0]._id, '1003530');
     });
 
-    it('getOneItem should return exactly one result with _id set to "10006546"', async function() {
+    it('crud-2: crudOneDocument should return exactly one result with _id set to "10006546"', async function() {
         const req = { params: { id: '10006546' } };
         let responseData = null;
         const res = {
@@ -58,7 +58,7 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(Object.keys(responseData).length > 0, true, 'Response should not be empty');
     });
 
-    it('createItem should create a new item and return it', async function() {
+    it('crud-5: createItem should create a new item and return it', async function() {
         const req = {
             body: { name: 'Test Item', description: 'This is a test item' }
         };
@@ -75,7 +75,7 @@ describe('MongoDB CRUD Testing', function() {
         };
 
         // Call the function
-        await createItem(req, res);
+        await insertItem(req, res);
 
         // Assert that the response status code is 201
         strictEqual(res.statusCode, 201, 'Status code should be 201');
@@ -87,7 +87,7 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(responseData.acknowledged, true, 'insert should be acknowledged');
     });
 
-    it('deleteItem should delete an item successfully if it exists', async function() {
+    it('crud-6: crudDelete should delete an item successfully if it exists', async function() {
         const req = {
             params: { id: createdItemId}
         };
@@ -109,38 +109,8 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(responseData.message, 'Item deleted successfully', 'Response message should match');
     });
 
-    it('insertReview should create a new item and return it', async function() {
-        const req = {
-            params: { id: reviewItemId},
-            body: {
-                "_id": "0",
-                "reviewer_name": "test"
-            }
-        };
-        
-        let responseData = null;
-        const res = {
-            status: function(status) {
-                this.statusCode = status;
-                return this;
-            },
-            json: function(data) {
-                responseData = data;
-            }
-        };
 
-        // Call the function
-        await insertReview(req, res);
-
-        // Assert that the response status code is 201
-        strictEqual(res.statusCode, 201, 'Status code should be 201');
-
-        // Assert that the response contains the correct item data
-        strictEqual(responseData.acknowledged, true, 'update should be acknowledged');
-        strictEqual(responseData.modifiedCount, 1, 'modifiedCount should be 1');
-    });
-
-    it('updateValue should create a new item and return it', async function() {
+    it('crud-7: crudUpdateElement should create a new item and return it', async function() {
         const req = {
             params: { id: '10006546'},
             body: {
@@ -174,5 +144,35 @@ describe('MongoDB CRUD Testing', function() {
         await updateValue(req, res);
     });
 
+    it('crud-8: crudAddToArray should create a new item and return it', async function() {
+        const req = {
+            params: { id: reviewItemId},
+            body: {
+                "_id": "0",
+                "reviewer_name": "test"
+            }
+        };
+        
+        let responseData = null;
+        const res = {
+            status: function(status) {
+                this.statusCode = status;
+                return this;
+            },
+            json: function(data) {
+                responseData = data;
+            }
+        };
+
+        // Call the function
+        await insertReview(req, res);
+
+        // Assert that the response status code is 201
+        strictEqual(res.statusCode, 201, 'Status code should be 201');
+
+        // Assert that the response contains the correct item data
+        strictEqual(responseData.acknowledged, true, 'update should be acknowledged');
+        strictEqual(responseData.modifiedCount, 1, 'modifiedCount should be 1');
+    });
 
 });

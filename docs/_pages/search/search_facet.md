@@ -9,8 +9,8 @@ Learn how to use MongoDB Atlas Search to perform full-text search on your data. 
 
 ## Exercise: Facets
 
-1. **Navigate to the File**: In the `controllers` folder open `03-searchController.js`.
-2. **Modify the Function**: Locate and modify the `getFacet` function.
+1. **Navigate to the File**: In the `lab` folder open `search-2.lab.js`.
+2. **Modify the Function**: Locate and modify the `facetSearch` function.
 3. **Update the Pipeline Array**:
     - Use the `$search` stage with the `autocomplete` created before to filter on the facets.
     - In the `facets` section, add string facets for `amenities` and `property_type`.
