@@ -13,7 +13,7 @@ Before you begin, you need to be able to access your environment. Follow these s
 
 1. **MongoDB Atlas Connection String**: You will receive a connection string to connect to your MongoDB Atlas cluster.
 2. **Database Access**: You will be provided with a username and password to access the database.
-3. **Atlas Access Credentials**: Although not required, you may receive credentials to access MongoDB Atlas.
+3. **Atlas Access Credentials (Not Required)**: Although not required, you may receive credentials to access MongoDB Atlas.
 
 ### Self-Paced: Create an Atlas Cluster
 

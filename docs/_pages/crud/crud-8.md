@@ -21,4 +21,6 @@ In this exercise, you will be required to modify a document.
         - the `_id` as the `id`
         - the `review` we want to insert in the array field `reviews`
     - Insert the new review for the required document
-
+4. **Bonus**:
+    - Increment the `number_of_reviews`
+    - The bonus won't give more point, but only street cred.
