@@ -1,15 +1,12 @@
 import { Router } from 'express';
-import { getAllItems, getOneItem, getDistinct, getFilters } from '../controllers/01-1-crudFind.js';
-import { createItem } from '../controllers/01-2-crudInsert.js';
-import { insertReview, updateValue } from '../controllers/01-3-crudUpdate.js';
-import { deleteItem } from '../controllers/01-4-crudDelete.js';
-import { getPriceStatistics } from '../controllers/02-aggregateController.js';
-import { getAutocomplete, getFacet, getSearchItems } from '../controllers/03-searchController.js';
+import { getAllItems, getOneItem, getDistinct, getFilters, insertItem, insertReview, updateValue, deleteItem  } from '../controllers/crudController.js';
+import { getPriceStatistics } from '../controllers/aggregateController.js';
+import { getAutocomplete, getFacet, getSearchItems } from '../controllers/searchController.js';
 
 const router = Router();
 
 router.get('/', getAllItems);
-router.post('/', createItem);
+router.post('/', insertItem);
 router.delete('/', deleteItem);
 
 router.get('/distinct', getDistinct);
