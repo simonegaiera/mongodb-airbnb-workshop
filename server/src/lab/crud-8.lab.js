@@ -10,5 +10,5 @@ export async function crudAddToArray(id, review) {
         update
     );
 
-    return item
+    return result
 }
