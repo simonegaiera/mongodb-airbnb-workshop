@@ -155,7 +155,7 @@ const PropertyDialog = ({ id, open, onClose }) => {
         ) : (
             <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ flex: 1 }}>
-            {renderField('Name', 'name', propertyData.name || '')}
+            <Typography variant="h5" sx={{ flexGrow: 1, mb: 3 }}>{propertyData.name || ''}</Typography>
             <Box 
             component="img" 
             src={propertyData.images?.picture_url} 
@@ -170,13 +170,22 @@ const PropertyDialog = ({ id, open, onClose }) => {
             {renderField('Street', 'address.street', propertyData.address?.street || '')}
             {renderField('City', 'address.city', propertyData.address?.city || '')}
             {renderField('Host Name', 'host.host_name', propertyData.host?.host_name || '')}
-            {renderField('Accommodates', 'accommodates', propertyData.accommodates || '', 'number')}
-            {renderField('Bedrooms', 'bedrooms', propertyData.bedrooms || '', 'number')}
-            {renderField('Beds', 'beds', propertyData.beds || '', 'number')}
-            {renderField('Property Type', 'property_type', propertyData.property_type || '')}
+            
+            <Typography variant="body2" sx={{ my: 4 }}>
+            {`Accommodates: ${propertyData.accommodates || ''}`}
+            </Typography>
+            <Typography variant="body2" sx={{ my: 4 }}>
+            {`Bedrooms: ${propertyData.bedrooms || ''}`}
+            </Typography>
+            <Typography variant="body2" sx={{ my: 4 }}>
+            {`Beds: ${propertyData.beds || ''}`}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 4 }}>
+            {`Property Type: ${propertyData.property_type || ''}`}
+            </Typography>
             </Box>
             <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" gutterBottom>Reviews</Typography>
+            <Typography variant="h6" gutterBottom>{`Reviews: ${propertyData.number_of_reviews || ''}`}</Typography>
             {propertyData.reviews && propertyData.reviews.length > 0 ? (
                 propertyData.reviews.slice(0, reviewsToShow).map((review, index) => (
                     <Box key={index} sx={{ marginBottom: 2 }}>
