@@ -21,6 +21,22 @@ docs:
     children:
       - title: "CRUD Operations"
         url: /crud/
+      - title: "CRUD: Exercise 1"
+        url: /crud/1/
+      - title: "CRUD: Exercise 2"
+        url: /crud/2/
+      - title: "CRUD: Exercise 3"
+        url: /crud/3/
+      - title: "CRUD: Exercise 4"
+        url: /crud/4/
+      - title: "CRUD: Exercise 5"
+        url: /crud/5/
+      - title: "CRUD: Exercise 6"
+        url: /crud/6/
+      - title: "CRUD: Exercise 7"
+        url: /crud/7/
+      - title: "CRUD: Exercise 8"
+        url: /crud/8/
       - title: "Hint: CRUD Operations"
         url: /crud/hint/
 
