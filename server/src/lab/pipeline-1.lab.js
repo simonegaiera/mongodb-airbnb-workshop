@@ -23,7 +23,7 @@ export async function aggregationPipeline() {
         }
       ]        
 
-    const item = await db.collection(collectionName).aggregate(pipeline).toArray();
+    const item = await db.collection(collectionName).aggregate(pipeline);
 
-    return item
+    return item.toArray()
 }

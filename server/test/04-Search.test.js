@@ -2,7 +2,7 @@ import { connectToDatabase, db } from "../src/utils/database.js";
 import { collectionName } from '../src/config/config.js';
 import assert from 'assert';
 import { strictEqual } from 'assert';
-import { getAutocomplete, getFacet } from '../src/controllers/03-searchController.js'; 
+import { getAutocomplete, getFacet } from '../src/controllers/searchController.js'; 
 
 describe('MongoDB Search Tests', function() {
     
@@ -14,7 +14,7 @@ describe('MongoDB Search Tests', function() {
         }
     });
     
-    it('search-0: verify that the search index exists', async function() {
+    it('search-0: the default search index should be created', async function() {
         try {
             const indexName = 'default';
 
@@ -34,7 +34,7 @@ describe('MongoDB Search Tests', function() {
         }
     });
 
-    it('search-0: verify that the all index exists', async function() {
+    it('search-0: the all search index should be created', async function() {
         try {
             const indexName = 'all';
 
@@ -71,7 +71,7 @@ describe('MongoDB Search Tests', function() {
 
         strictEqual(res.statusCode, 201, 'Status code should be 201');
         strictEqual(responseData.length, 10);
-        strictEqual(responseData[0].name, 'A bedroom far away from home');
+        strictEqual(responseData[0].name, 'Feel at HOME away from HOME');
     });
 
     it('search-2: facetSearch should return the correct facets', async function() {

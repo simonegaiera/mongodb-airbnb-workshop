@@ -15,7 +15,7 @@ export async function getAllItems(req, res) {
     const skip = (page - 1) * limit;
     
     try {
-        const items = await crudFind(query, skip, limit).toArray();
+        const items = await crudFind(query, skip, limit);
         
         res.status(200).json(items);
     } catch (error) {

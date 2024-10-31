@@ -58,6 +58,24 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(Object.keys(responseData).length > 0, true, 'Response should not be empty');
     });
 
+    it('crud-3: crudDistinct should return distinct values', async function() {
+        const req = { 
+            query: { field: 'bedrooms'},
+         };
+
+        let responseData = null;
+        const res = {
+            status: function() { return this; },
+            json: function(data) { responseData = data; }
+        };
+
+        await getDistinct(req, res);
+
+        // Assert that the response contains one result with the correct _id
+        strictEqual(responseData.length, 13);
+        strictEqual(responseData[0], 0);
+    });
+
     it('crud-5: createItem should create a new item and return it', async function() {
         const req = {
             body: { name: 'Test Item', description: 'This is a test item' }
