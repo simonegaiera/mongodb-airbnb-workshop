@@ -1,6 +1,6 @@
 ---
 title: "MongoDB Aggregations"
-permalink: /aggregations/hint/
+permalink: /aggregations/1/hint/
 layout: single
 classes: wide
 ---

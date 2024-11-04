@@ -65,22 +65,24 @@ docs:
     children:
       - title: "MongoDB Aggregations"
         url: /aggregations/
-      - title: "Hint: Aggregations"
-        url: /aggregations/hint/
+      - title: "Aggregations: Exercise 1"
+        url: /aggregations/1/
+      - title: "Hint: Exercise 1"
+        url: /aggregations/1/hint/
   
   - title: MongoDB Search
     children:
       - title: "MongoDB Search"
         url: /search/
-      - title: "Search Indexes"
+      - title: "Search: Indexes"
         url: /search/index/
       - title: "Hint: Search Indexes"
         url: /search/index/hint/
-      - title: "Autocomplete"
+      - title: "Search: Autocomplete"
         url: /search/autocomplete/
       - title: "Hint: Autocomplete"
         url: /search/autocomplete/hint/
-      - title: "Facet"
+      - title: "Search: Facet"
         url: /search/facet/
       - title: "Hint: Facet"
         url: /search/facet/hint/
