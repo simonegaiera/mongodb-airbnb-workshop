@@ -23,22 +23,36 @@ docs:
         url: /crud/
       - title: "CRUD: Exercise 1"
         url: /crud/1/
+      - title: "Hint: Exercise 1"
+        url: /crud/1/hint/
       - title: "CRUD: Exercise 2"
         url: /crud/2/
+      - title: "Hint: Exercise 2"
+        url: /crud/2/hint/
       - title: "CRUD: Exercise 3"
         url: /crud/3/
+      - title: "Hint: Exercise 3"
+        url: /crud/3/hint/
       - title: "CRUD: Exercise 4"
         url: /crud/4/
+      - title: "Hint: Exercise 4"
+        url: /crud/4/hint/
       - title: "CRUD: Exercise 5"
         url: /crud/5/
+      - title: "Hint: Exercise 5"
+        url: /crud/5/hint/
       - title: "CRUD: Exercise 6"
         url: /crud/6/
+      - title: "Hint: Exercise 6"
+        url: /crud/6/hint/
       - title: "CRUD: Exercise 7"
         url: /crud/7/
+      - title: "Hint: Exercise 7"
+        url: /crud/7/hint/
       - title: "CRUD: Exercise 8"
         url: /crud/8/
-      - title: "Hint: CRUD Operations"
-        url: /crud/hint/
+      - title: "Hint: Exercise 8"
+        url: /crud/8/hint/
 
   - title: MongoDB Indexes
     children:
