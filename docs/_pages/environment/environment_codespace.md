@@ -38,6 +38,7 @@ Once the Codespace is ready, you will see two main folders:
    npm start
    ```
 6. Switch to the `PORTS` panel, and change the port visibility from `private` to `public`.
+![vscode-port-visibility](assets/images/vscode_port_visibility.png)
 
 ### Step 3: Configure the Web Appplication
 1. In the **app** folder, create a new file named `.env` using the environment template `.env.template`. Modify the `BASE_URL` with the `Forwarded address` from the previous step.
@@ -55,3 +56,4 @@ Once the Codespace is ready, you will see two main folders:
    ```
 5. A popup will appear asking if you want to open the application in your browser. Select **Open in browser**.
 6. Switch to the `PORTS` panel, and change the port visibility from `private` to `public`.
+![vscode-port-visibility](assets/images/vscode_port_visibility.png)
