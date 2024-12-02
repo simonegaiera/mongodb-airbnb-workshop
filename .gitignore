@@ -4,6 +4,7 @@ package-lock.json
 **/node_modules/
 **/.next/
 **/build/
+**/out/
 **/dist/
 **/package-lock.json
 
