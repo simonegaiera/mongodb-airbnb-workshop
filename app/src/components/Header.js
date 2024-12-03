@@ -50,7 +50,7 @@ function Header() {
       <Toolbar>
         <Avatar
           alt="Company Logo"
-          src="/static/images/mongodb-logo.png"
+          src={`${process.env.BASE_PATH}/static/images/mongodb-logo.png`}
           sx={{ marginRight: 2 }}
         />
         <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>

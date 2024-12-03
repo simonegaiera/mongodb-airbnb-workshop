@@ -27,7 +27,7 @@ const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
 
-    const stockImageUrl = "/static/images/mongodb-logo.png";
+    const stockImageUrl =`${process.env.BASE_PATH}/static/images/mongodb-logo.png`;
 
     const isValidURL = (url) => {
         try {
