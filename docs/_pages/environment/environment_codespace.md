@@ -41,7 +41,9 @@ Once the Codespace is ready, you will see two main folders:
 ![vscode-port-visibility](../../assets/images/vscode_port_visibility.png)
 
 ### Step 3: Configure the Web Appplication
-1. In the **app** folder, create a new file named `.env` using the environment template `.env.template`. Modify the `BASE_URL` with the `Forwarded address` from the previous step.
+1. In the **app** folder, create a new file named `.env` using the environment template `.env.template`. 
+   - Modify the `WORKSHOP_USER` with the username provided by your instructor.
+   - Modify the `BACKEND_URL` with the `Forwarded address` from the previous step.
 2. Open another terminal and navigate to the app directory:
    ```bash
    cd app

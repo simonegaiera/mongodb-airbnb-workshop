@@ -3,8 +3,10 @@
  */
 const nextConfig = {
     output: 'export',
+    basePath: process.env.WORKSHOP_USER || '',
     env: {
-        BASE_URL: process.env.BASE_URL,
+        BASE_URL: process.env.BACKEND_URL || '',
+        BASE_PATH: process.env.WORKSHOP_USER || '',
     },
   };
     
