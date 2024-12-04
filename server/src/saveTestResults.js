@@ -11,6 +11,26 @@ const __dirname = path.dirname(__filename);
 const regex = /mongodb\+srv:\/\/(.*?):.*?@(.*?)\./;
 const now = new Date()
 
+async function verifyIndex() {
+    try {
+        const indexName = 'timestamp_-1_section_1_name_1';
+
+        await connectToDatabase();
+        const database = client.db(resultsDatabaseName);
+        const collection = database.collection(resultsCollectionName);
+
+        const indexes = await collection.indexes();
+        const indexExists = indexes.some(index => index.name === indexName);
+
+        if (!indexExists) {
+            // console.log(`Creating index: ${indexName}`);
+            await collection.createIndex({ timestamp: -1, section: 1, name: 1 });
+        }
+    } catch (err) {
+        console.error(`Error saving to database: ${err}`);
+    }
+}
+
 async function saveToDatabase(testsSaved) {
     try {
         await connectToDatabase();
@@ -70,6 +90,7 @@ function runTests() {
     });
     
     mocha.on('close', async (code) => {
+        await verifyIndex()
         await saveToDatabase(testsSaved)
 
         if (code !== 0) {
