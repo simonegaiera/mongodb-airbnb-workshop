@@ -14,6 +14,8 @@ docs:
     children:
       - title: "Environment Preparation: Atlas"
         url: /environment/atlas/
+      - title: "Environment Preparation: VSCode Online"
+        url: /environment/vscodeonline/
       - title: "Environment Preparation: Codespace"
         url: /environment/codespace/
 
