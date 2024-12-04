@@ -17,7 +17,7 @@ classes: wide
    https://airbnb-workshop-customer.mongosa.com/username/
    ```
 
-### Step 1: MongoDB Extension
+### Step 2: MongoDB Extension
 1. Select the MongoDB extension on VSCode
 2. In the `CONNECTIONS` section, select the `+` option
 3. Select `Connect with Connection String` and copy the connection string:
@@ -26,7 +26,7 @@ classes: wide
    ```
 4. Verify that the connection was established
 
-### Step 2: Configure the Backend Server
+### Step 3: Configure the Backend Server
 1. In the **server** folder, create a new file named `.env` by using the provided environment template `.env.template`.
 2. Copy your MongoDB connection string into the `.env` file, replacing the placeholder:
    ```
