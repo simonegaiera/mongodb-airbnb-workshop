@@ -21,4 +21,4 @@ In this exercise, you will be required to modify a document.
         - the `_id` as the `id`
         - the name of the field you want to update `key`
         - the new value for the field you want to update `value`
-    - Modify the function to update the required document with the given value for the given field name
+    - Modify the function to update (`$set`) the required document with the given `value` for the given `key`
