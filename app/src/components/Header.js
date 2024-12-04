@@ -5,45 +5,24 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
-import { Switch, FormControlLabel, Tabs, Tab } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { Tabs, Tab } from '@mui/material';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 function Header() {
-  const [checked, setChecked] = useState(false);
   const [value, setValue] = useState(0);
-  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Set the correct state of the switch based on the current pathname
-    setChecked(window.location.pathname === '/search');
     // Set the correct tab value based on the current pathname
-    if (window.location.pathname === '/leaderboard') {
+    if (pathname === '/search') {
       setValue(1);
+    } else if (pathname === '/leaderboard') {
+      setValue(2);
     } else {
       setValue(0);
     }
-  }, []);
-
-  const handleChange = (event) => {
-    const isChecked = event.target.checked;
-    setChecked(isChecked);
-
-    if (isChecked) {
-      router.push('/search');
-    } else {
-      router.push('/');
-    }
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setValue(newValue);
-    if (newValue === 1) {
-      setChecked(false); // Uncheck the switch when selecting the leaderboard tab
-      router.push('/leaderboard');
-    } else {
-      router.push('/');
-    }
-  };
+  }, [pathname]);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#023430' }}>
@@ -57,27 +36,11 @@ function Header() {
           Listing And Reviews
         </Typography>
 
-        <Tabs value={value} onChange={handleTabChange} aria-label="navigation tabs"
-          sx={{ '.MuiTab-root': { color: 'white' } }}
-        >
-          <Tab label="Home" />
-          <Tab label="Leaderboard" />
+        <Tabs value={value} aria-label="navigation tabs" sx={{ '.MuiTab-root': { color: 'white' } }}>
+          <Tab label="Home" component={Link} href="/" />
+          <Tab label="Search" component={Link} href="/search" />
+          <Tab label="Leaderboard" component={Link} href="/leaderboard" />
         </Tabs>
-
-        {value !== 1 && (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={checked}
-                onChange={handleChange}
-                name="pageSwitch"
-                color="primary"
-              />
-            }
-            label="Enable Search"
-            labelPlacement="start"
-          />
-        )}
       </Toolbar>
     </AppBar>
   );
