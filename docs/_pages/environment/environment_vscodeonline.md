@@ -22,7 +22,7 @@ classes: wide
 2. In the `CONNECTIONS` section, select the `+` option
 3. Select `Connect with Connection String` and copy the connection string:
    ```
-   MONGODB_URI=mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+   mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
    ```
 4. Verify that the connection was established
 
