@@ -60,7 +60,7 @@ docs:
     children:
       - title: "Indexes"
         url: /index/
-      - title: "Hint: Index"
+      - title: "Hint: Indexes"
         url: /index/hint/
 
   - title: MongoDB Aggregations
