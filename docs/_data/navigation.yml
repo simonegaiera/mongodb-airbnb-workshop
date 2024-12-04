@@ -58,7 +58,7 @@ docs:
 
   - title: MongoDB Indexes
     children:
-      - title: "Index"
+      - title: "Indexes"
         url: /index/
       - title: "Hint: Index"
         url: /index/hint/
