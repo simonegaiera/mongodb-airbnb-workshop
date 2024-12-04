@@ -46,10 +46,12 @@ export async function getSectionResults(req, res) {
                                 }, 
                                 'points': {
                                     '$subtract': [
-                                        1000, {
-                                            '$multiply': [
-                                                '$$index', 10
-                                            ]
+                                        100, {
+                                            '$cond': {
+                                                'if': { '$lte': ['$$index', 10] },
+                                                'then': { '$multiply': ['$$index', 5] },
+                                                'else': 50
+                                            }
                                         }
                                     ]
                                 }
