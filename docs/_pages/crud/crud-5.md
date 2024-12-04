@@ -18,5 +18,5 @@ In this exercise, you will be required to insert a document.
 2. **Modify the Function**: Locate and modify the `crudCreateItem` function.
 3. **Update the Code**:
     - You are required to insert the document `item`
-    - The item is already formatted
+    - The variable `item` is already formatted
 
