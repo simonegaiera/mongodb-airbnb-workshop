@@ -15,7 +15,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
-    "@mui/x-charts": "^7.22.0",
+    "@mui/x-charts": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "next": "latest",
