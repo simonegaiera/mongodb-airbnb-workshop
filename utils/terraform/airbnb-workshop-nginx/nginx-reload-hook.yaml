@@ -1,0 +1,18 @@
+# airbnb-workshop-nginx/templates/nginx-reload-hook.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-nginx-reload"
+  labels:
+    app: "{{ .Release.Name }}-nginx-reload"
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: nginx-reload
+        image: busybox
+        command: ["sh", "-c", "sleep 5 && kubectl exec -n {{ .Release.Namespace }} nginx-pod -- nginx -s reload"]
+      restartPolicy: Never

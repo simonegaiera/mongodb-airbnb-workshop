@@ -1,0 +1,75 @@
+replicaCount: 1
+
+image:
+  repository: simonegaiera/airbnb-workshop-openvscode
+  pullPolicy: Always
+  tag: "latest"
+
+restartPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+labels:
+  app.kubernetes.io/name: airbnb-workshop-openvscode
+  app.kubernetes.io/instance: airbnb-workshop-openvscode
+
+selectorLabels:
+  app.kubernetes.io/name: airbnb-workshop-openvscode
+  app.kubernetes.io/instance: airbnb-workshop-openvscode
+
+service:
+  type: NodePort
+  ports:
+    - name: web
+      port: 3000
+      targetPort: 3000
+      nodePort: 30001
+    - name: api
+      port: 5000
+      targetPort: 5000
+      nodePort: 30002
+    - name: openvscode
+      port: 8000
+      targetPort: 8000
+      nodePort: 30003
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30004
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+
+resources:
+  requests:
+    cpu: 1
+    memory: 4Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
