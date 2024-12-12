@@ -1,7 +1,10 @@
 
 provider "aws" {
   region  = var.aws_zone
-  profile = "Solution-Architects.User-979559056307"
+  # profile = "Solution-Architects.User-979559056307"
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  token = var.aws_security_token
 }
 
 # Create a VPC

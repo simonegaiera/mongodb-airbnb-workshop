@@ -65,36 +65,58 @@ resource "aws_route53_record" "nginx-mongosa" {
   depends_on = [data.kubernetes_service.nginx_service]
 }
 
-# resource "kubernetes_job" "certbot_job" {
-#   metadata {
-#     name      = "certbot-installer"
-#     namespace = "default"
-#   }
-#   spec {
-#     template {
-#       metadata {
-#         name = "certbot-installer"
-#       }
-#       spec {
-#         container {
-#           name  = "certbot-installer"
-#           image = "bitnami/kubectl:latest"
-          
-#           # Replace <target-pod> with the actual name or selector for your NGINX pod(s)
-#           # and configure Certbot with appropriate flags.
-#           command = [
-#             "/bin/sh",
-#             "-c",
-#             <<EOF
-#             POD_NAME=$(kubectl get pods -l "app.kubernetes.io/instance=${helm_release.airbnb_workshop_nginx.name}" -o jsonpath='{.items[0].metadata.name}')
-#             kubectl exec $POD_NAME -- certbot --nginx --non-interactive --agree-tos -m ${var.domain_email} -d ${var.aws_route53_record_name}
-#             EOF
-#           ]
-#         }
-#         restart_policy = "Never"
-#       }
-#     }
-#   }
+terraform {
+  required_providers {
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
+    }
+  }
+}
 
-#    depends_on = [helm_release.airbnb_workshop_nginx]
-# }
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+resource "acme_registration" "reg" {
+  email_address = var.domain_email
+}
+
+resource "tls_private_key" "cert_private_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_cert_request" "req" {
+  private_key_pem = tls_private_key.cert_private_key.private_key_pem
+
+  subject {
+    common_name = var.aws_route53_record_name
+  }
+}
+
+resource "acme_certificate" "mongosa_cert" {
+  account_key_pem         = acme_registration.reg.account_key_pem
+  certificate_request_pem = tls_cert_request.req.cert_request_pem
+
+  dns_challenge {
+    provider = "route53"
+
+    config = {
+      AWS_ACCESS_KEY_ID     = var.aws_access_key
+      AWS_SECRET_ACCESS_KEY = var.aws_secret_key
+      AWS_SESSION_TOKEN     = var.aws_security_token
+      AWS_DEFAULT_REGION    = "us-east-1"
+    }
+  }
+
+  depends_on = [aws_route53_record.nginx-mongosa]
+}
+
+output "certificate_pem" {
+  value = acme_certificate.mongosa_cert.certificate_pem
+}
+
+output "private_key_pem" {
+  value = tls_private_key.cert_private_key.private_key_pem
+  sensitive = true
+}
