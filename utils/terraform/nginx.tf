@@ -64,3 +64,37 @@ resource "aws_route53_record" "nginx-mongosa" {
 
   depends_on = [data.kubernetes_service.nginx_service]
 }
+
+# resource "kubernetes_job" "certbot_job" {
+#   metadata {
+#     name      = "certbot-installer"
+#     namespace = "default"
+#   }
+#   spec {
+#     template {
+#       metadata {
+#         name = "certbot-installer"
+#       }
+#       spec {
+#         container {
+#           name  = "certbot-installer"
+#           image = "bitnami/kubectl:latest"
+          
+#           # Replace <target-pod> with the actual name or selector for your NGINX pod(s)
+#           # and configure Certbot with appropriate flags.
+#           command = [
+#             "/bin/sh",
+#             "-c",
+#             <<EOF
+#             POD_NAME=$(kubectl get pods -l "app.kubernetes.io/instance=${helm_release.airbnb_workshop_nginx.name}" -o jsonpath='{.items[0].metadata.name}')
+#             kubectl exec $POD_NAME -- certbot --nginx --non-interactive --agree-tos -m ${var.domain_email} -d ${var.aws_route53_record_name}
+#             EOF
+#           ]
+#         }
+#         restart_policy = "Never"
+#       }
+#     }
+#   }
+
+#    depends_on = [helm_release.airbnb_workshop_nginx]
+# }

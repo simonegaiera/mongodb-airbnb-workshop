@@ -15,3 +15,9 @@ variable "aws_route53_record_name" {
   type        = string
   default     = "airbnb-customer.mongosa.com"
 }
+
+variable "domain_email" {
+  description = "The name of the email for the specific customer."
+  type        = string
+  default     = "simone.gaiera@mongodb.com"
+}
