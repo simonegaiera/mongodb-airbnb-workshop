@@ -9,3 +9,9 @@ variable "aws_zone" {
   type        = string
   default     = "us-east-2"
 }
+
+variable "aws_route53_record_name" {
+  description = "The name of the Domain for the specific customer."
+  type        = string
+  default     = "airbnb-customer.mongosa.com"
+}

@@ -7,7 +7,7 @@ provider kubernetes {
 
 locals {
   nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {
-    server_name = "airbnb-customer.mongosa.com"
+    server_name = var.aws_route53_record_name
     proxy_pass  = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
   })
 
@@ -53,7 +53,7 @@ output "service_details" {
 
 resource "aws_route53_record" "nginx-mongosa" {
   zone_id = "Z07965531RSVTIG98HSJW"
-  name    = "airbnb-customer.mongosa.com"
+  name    = var.aws_route53_record_name
   type    = "A"
 
   alias {
