@@ -1,6 +1,4 @@
 server {
-    listen 80;
-    listen [::]:80;
     server_name ${server_name};
 
     location / {
@@ -50,4 +48,22 @@ server {
 
         rewrite ^/backend/(.*)$ /$1 break;
     }
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/mongosa_cert/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mongosa_cert/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    if ($host = ${server_name}.mongosa.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    listen [::]:80;
+    server_name ${server_name}.mongosa.com;
+    return 404; # managed by Certbot
 }
