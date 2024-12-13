@@ -1,6 +1,11 @@
 import { db } from "../utils/database.js";  
 import { collectionName } from '../config/config.js';  
 
+/**
+Use the $search stage with the autocomplete created before to filter on the facets.
+In the facets section, add string facets for amenities and property_type.
+In the facets section, add number facets for beds with boundaries from 0 to 9, and set the default to “Other”.
+*/
 export async function facetSearch(query) {
   const pipeline = [
     {
@@ -8,7 +13,6 @@ export async function facetSearch(query) {
         'index': 'default',
         'facet': {
           'operator': {
-            // TODO: Use the $search stage with the autocomplete created before to filter on the facets
             'autocomplete': {
               'query': query,
               'path': 'name',
@@ -16,17 +20,14 @@ export async function facetSearch(query) {
             }
           },
           'facets': {
-            // TODO: Add string facets for amenities called ammenities
             'amenities': {
               'type': 'string',
               'path': 'amenities'
             },
-            // TODO: Add string facets for property_type called property_type
             'property_type': {
               'type': 'string',
               'path': 'property_type'
             },
-            // TODO: Add number facets for beds with boundaries from 0 to 9 and default as 'Other' called beds
             'beds': {
               'type': 'number',
               'path': 'beds',

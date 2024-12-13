@@ -1,9 +1,15 @@
 import { db } from "../utils/database.js";  
 import { collectionName } from '../config/config.js';  
 
+/**
+Use the $search stage on the default index.
+Apply the autocomplete operator on the name field of the listing.
+Enable fuzzy search to handle typos and variations.
+Limit the results to 10 entries.
+Use the $project stage to include only the name field in the results.
+*/
 export async function autocompleteSearch(query) {
     const pipeline = [
-        // TODO: Use the $search stage on the default index
         {
           '$search': {
             'index': 'default', 
@@ -14,11 +20,9 @@ export async function autocompleteSearch(query) {
             }
           }
         }, 
-        // TODO: Limit the results to 10 entries
         {
           '$limit': 10
         }, 
-        // TODO: Use the $project stage to include only the name field in the results
         {
           '$project': {
             'name': 1, 
