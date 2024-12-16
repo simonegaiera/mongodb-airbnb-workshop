@@ -64,8 +64,12 @@ resource "tls_private_key" "request_key" {
 resource "tls_cert_request" "prod_request" {
   private_key_pem = tls_private_key.request_key.private_key_pem
   subject {
-    common_name  = var.aws_route53_record_name
+    common_name = "*.${var.aws_route53_record_name}"
   }
+  dns_names = [
+    "${var.aws_route53_record_name}",
+    "*.${var.aws_route53_record_name}"
+  ]
 }
 
 resource "acme_certificate" "mongosa_cert" {
@@ -92,14 +96,14 @@ resource "acme_certificate" "mongosa_cert" {
 #   sensitive = true
 # }
 
-locals {
-  nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {
-    server_name = var.aws_route53_record_name
-    proxy_pass  = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
-  })
+# locals {
+#   nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {
+#     server_name = var.aws_route53_record_name
+#     proxy_pass  = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
+#   })
 
-  depends_on = [data.kubernetes_service.openvscode_service]
-}
+#   depends_on = [data.kubernetes_service.openvscode_service, data.kubernetes_service.openvscode_services]
+# }
 
 resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
@@ -113,7 +117,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
 
   set {
     name  = "nginx.config"
-    value = local.nginx_config
+    value = local.combined_nginx_config
   }
 
   set_sensitive {
@@ -125,7 +129,11 @@ resource "helm_release" "airbnb_workshop_nginx" {
     value = tls_private_key.request_key.private_key_pem
   }
 
-  depends_on = [acme_certificate.mongosa_cert, data.kubernetes_service.openvscode_service]
+  depends_on = [
+    acme_certificate.mongosa_cert, 
+    data.kubernetes_service.openvscode_service, 
+    data.kubernetes_service.openvscode_services
+  ]
 }
 
 output "nginx_service_name" {
