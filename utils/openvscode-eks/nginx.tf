@@ -125,7 +125,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
     value = tls_private_key.request_key.private_key_pem
   }
 
-  depends_on = [acme_certificate.mongosa_cert]
+  depends_on = [acme_certificate.mongosa_cert, data.kubernetes_service.openvscode_service]
 }
 
 output "nginx_service_name" {
