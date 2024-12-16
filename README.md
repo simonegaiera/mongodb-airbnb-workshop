@@ -6,5 +6,5 @@ Welcome to the MongoDB Airbnb Workshop! This hands-on workshop is designed to pr
 ## MongoDB Workshop
 You can find the instructions here: [mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/).
 
-## MongoDB SA Atlas Prep
-To configure the Atlas enviroment follow the instruction in the `util` folder: [util](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils).
+## MongoDB Environment Preparation
+To configure the Atlas enviroment follow the instruction in the [utils](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils) folder.
