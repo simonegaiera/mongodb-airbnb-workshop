@@ -83,14 +83,14 @@ resource "acme_certificate" "mongosa_cert" {
   depends_on = [null_resource.wait_for_dns]
 }
 
-output "mongosa_cert" {
-  value = acme_certificate.mongosa_cert.certificate_pem
-}
+# output "mongosa_cert" {
+#   value = acme_certificate.mongosa_cert.certificate_pem
+# }
 
-output "mongosa_key" {
-  value = tls_private_key.request_key.private_key_pem
-  sensitive = true
-}
+# output "mongosa_key" {
+#   value = tls_private_key.request_key.private_key_pem
+#   sensitive = true
+# }
 
 locals {
   nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {

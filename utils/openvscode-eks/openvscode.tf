@@ -21,13 +21,13 @@ resource "helm_release" "airbnb_workshop_openvscode" {
   ]
 }
 
-output "openvscode_service_name" {
-  value = helm_release.airbnb_workshop_openvscode.name
-}
+# output "openvscode_service_name" {
+#   value = helm_release.airbnb_workshop_openvscode.name
+# }
 
-output "openvscode_service_namespace" {
-  value = helm_release.airbnb_workshop_openvscode.namespace
-}
+# output "openvscode_service_namespace" {
+#   value = helm_release.airbnb_workshop_openvscode.namespace
+# }
 
 data "kubernetes_service" "openvscode_service" {
   metadata {
@@ -38,6 +38,6 @@ data "kubernetes_service" "openvscode_service" {
   depends_on = [helm_release.airbnb_workshop_openvscode]
 }
 
-output "openvscode_service_external_ip" {
-  value = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
-}
+# output "openvscode_service_external_ip" {
+#   value = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
+# }
