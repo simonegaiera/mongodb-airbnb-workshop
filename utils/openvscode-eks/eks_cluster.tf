@@ -205,8 +205,8 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = aws_subnet.eks_subnet[*].id
 
   scaling_config {
-    desired_size = 2
-    max_size     = 3
+    desired_size = 4
+    max_size     = 10
     min_size     = 1
   }
 
@@ -227,10 +227,10 @@ resource "aws_eks_node_group" "node_group" {
   ]
 }
 
-output "cluster_endpoint" {
-  value = aws_eks_cluster.eks_cluster.endpoint
-}
+# output "cluster_endpoint" {
+#   value = aws_eks_cluster.eks_cluster.endpoint
+# }
 
-output "cluster_certificate_authority_data" {
-  value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
-}
+# output "cluster_certificate_authority_data" {
+#   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
+# }

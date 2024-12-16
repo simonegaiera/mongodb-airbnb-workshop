@@ -4,6 +4,6 @@
 **/terraform*.*
 **/variables.tf
 
-user_list.csv
+user_list.*
 .venv/
 .env

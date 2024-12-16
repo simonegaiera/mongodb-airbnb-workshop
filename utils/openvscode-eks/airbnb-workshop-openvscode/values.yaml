@@ -30,24 +30,24 @@ selectorLabels:
   app.kubernetes.io/instance: airbnb-workshop-openvscode
 
 service:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: web
       port: 3000
       targetPort: 3000
-      nodePort: 30001
+      # nodePort: 30001
     - name: api
       port: 5000
       targetPort: 5000
-      nodePort: 30002
+      # nodePort: 30002
     - name: openvscode
       port: 8000
       targetPort: 8000
-      nodePort: 30003
+      # nodePort: 30003
     - name: http
       port: 8080
       targetPort: 8080
-      nodePort: 30004
+      # nodePort: 30004
 
 ingress:
   enabled: false
@@ -57,10 +57,11 @@ ingress:
       paths: []
   tls: []
 
-resources:
-  requests:
-    cpu: 1
-    memory: 4Gi
+resources: {}
+# resources:
+#   requests:
+#     cpu: 1
+#     memory: 4Gi
 
 autoscaling:
   enabled: true
