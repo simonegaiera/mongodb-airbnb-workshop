@@ -1,12 +1,9 @@
 server {
     server_name ${server_name};
 
-    location / {
-        proxy_pass http://${proxy_pass}:8000;
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection upgrade;
-        proxy_set_header Accept-Encoding gzip;
+    location /health {
+        access_log off;
+        return 200 'OK';
     }
 
     location /vscode/ {
@@ -51,19 +48,48 @@ server {
 
     listen [::]:443 ssl ipv6only=on;
     listen 443 ssl;
-    ssl_certificate /etc/letsencrypt/live/mongosa_cert/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/mongosa_cert/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    ssl_certificate     /etc/nginx/ssl/tls.crt;
+    ssl_certificate_key /etc/nginx/ssl/tls.key;
+
+    # ssl_certificate /etc/letsencrypt/live/mongosa_cert/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/mongosa_cert/privkey.pem;
+    # include /etc/letsencrypt/options-ssl-nginx.conf;
+    # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
 }
 
 server {
     if ($host = ${server_name}.mongosa.com) {
         return 301 https://$host$request_uri;
-    } # managed by Certbot
+    }
 
     listen 80;
     listen [::]:80;
     server_name ${server_name}.mongosa.com;
-    return 404; # managed by Certbot
+    # return 404;
+
+    location /health {
+        access_log off;
+        return 200 'OK';
+    }
+
+    location /vscode/ {
+        proxy_pass http://${proxy_pass}:8000/;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
+        rewrite ^/vscode/(.*)$ /$1 break;
+    }
+    location /frontend/ {
+        proxy_pass http://${proxy_pass}:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        rewrite ^/frontend/(.*)$ /$1 break;
+    }
 }

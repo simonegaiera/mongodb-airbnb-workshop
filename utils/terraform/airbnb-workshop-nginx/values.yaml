@@ -37,7 +37,15 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  port: 80
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+      name: https
 
 ingress:
   enabled: false
@@ -69,11 +77,11 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /health
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /health
     port: http
 
 autoscaling:
@@ -89,12 +97,17 @@ volumes:
   - name: nginx-config-volume
     configMap:
       name: airbnb-workshop-nginx-config
+  - name: nginx-tls
+    secret:
+      secretName: nginx-tls
 
 # Additional volumeMounts on the output Deployment definition.
 # volumeMounts: []
 volumeMounts:
   - name: nginx-config-volume
     mountPath: /etc/nginx/conf.d
+  - name: nginx-tls
+    mountPath: "/etc/nginx/ssl"
 
 
 nodeSelector: {}
@@ -105,3 +118,17 @@ affinity: {}
 
 nginx:
   config: ""
+
+secret:
+  enabled: true
+  name: nginx-tls
+  namespace: default
+  data:
+    tls.crt: |-
+      -----BEGIN CERTIFICATE-----
+      # Your certificate content here
+      -----END CERTIFICATE-----
+    tls.key: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      # Your private key content here
+      -----END RSA PRIVATE KEY-----

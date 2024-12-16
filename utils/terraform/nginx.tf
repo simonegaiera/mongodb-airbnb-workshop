@@ -5,6 +5,76 @@ provider kubernetes {
   token                  = data.aws_eks_cluster_auth.eks_token.token
 }
 
+terraform {
+  required_providers {
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+resource "acme_registration" "reg" {
+  email_address = var.domain_email
+}
+
+data "aws_route53_zone" "mongosa_com" {
+  name         = var.aws_route53_hosted_zone
+  private_zone = false
+}
+
+resource "aws_route53_record" "acme_challenge" {
+  zone_id = data.aws_route53_zone.mongosa_com.zone_id
+  name    = var.aws_route53_record_name
+  type    = "TXT"
+  ttl     = 60
+  records = [var.aws_route53_record_name]
+}
+
+resource "null_resource" "wait_for_dns" {
+  provisioner "local-exec" {
+    command = "sleep 60"
+  }
+
+  depends_on = [aws_route53_record.acme_challenge]
+}
+
+resource "tls_private_key" "cert_private_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_cert_request" "req" {
+  private_key_pem = tls_private_key.cert_private_key.private_key_pem
+
+  subject {
+    common_name = var.aws_route53_record_name
+  }
+}
+
+resource "acme_certificate" "mongosa_cert" {
+  account_key_pem         = acme_registration.reg.account_key_pem
+  certificate_request_pem = tls_cert_request.req.cert_request_pem
+
+  dns_challenge {
+    provider = "route53"
+  }
+
+  depends_on = [null_resource.wait_for_dns]
+}
+
+output "mongosa_cert" {
+  value = acme_certificate.mongosa_cert.certificate_pem
+}
+
+output "mongosa_key" {
+  value = tls_private_key.cert_private_key.private_key_pem
+  sensitive = true
+}
+
 locals {
   nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {
     server_name = var.aws_route53_record_name
@@ -28,6 +98,17 @@ resource "helm_release" "airbnb_workshop_nginx" {
     name  = "nginx.config"
     value = local.nginx_config
   }
+
+  set_sensitive {
+    name  = "secret.data.tls.crt"
+    value = acme_certificate.mongosa_cert.certificate_pem
+  }
+  set_sensitive {
+    name  = "secret.data.tls.key"
+    value = tls_private_key.cert_private_key.private_key_pem
+  }
+
+  depends_on = [acme_certificate.mongosa_cert]
 }
 
 output "nginx_service_name" {
@@ -52,7 +133,7 @@ output "service_details" {
 }
 
 resource "aws_route53_record" "nginx-mongosa" {
-  zone_id = "Z07965531RSVTIG98HSJW"
+  zone_id = data.aws_route53_zone.mongosa_com.zone_id
   name    = var.aws_route53_record_name
   type    = "A"
 
@@ -63,60 +144,4 @@ resource "aws_route53_record" "nginx-mongosa" {
   }
 
   depends_on = [data.kubernetes_service.nginx_service]
-}
-
-terraform {
-  required_providers {
-    acme = {
-      source  = "vancluever/acme"
-      version = "~> 2.0"
-    }
-  }
-}
-
-provider "acme" {
-  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
-}
-
-resource "acme_registration" "reg" {
-  email_address = var.domain_email
-}
-
-resource "tls_private_key" "cert_private_key" {
-  algorithm = "RSA"
-}
-
-resource "tls_cert_request" "req" {
-  private_key_pem = tls_private_key.cert_private_key.private_key_pem
-
-  subject {
-    common_name = var.aws_route53_record_name
-  }
-}
-
-resource "acme_certificate" "mongosa_cert" {
-  account_key_pem         = acme_registration.reg.account_key_pem
-  certificate_request_pem = tls_cert_request.req.cert_request_pem
-
-  dns_challenge {
-    provider = "route53"
-
-    config = {
-      AWS_ACCESS_KEY_ID     = var.aws_access_key
-      AWS_SECRET_ACCESS_KEY = var.aws_secret_key
-      AWS_SESSION_TOKEN     = var.aws_security_token
-      AWS_DEFAULT_REGION    = "us-east-1"
-    }
-  }
-
-  depends_on = [aws_route53_record.nginx-mongosa]
-}
-
-output "certificate_pem" {
-  value = acme_certificate.mongosa_cert.certificate_pem
-}
-
-output "private_key_pem" {
-  value = tls_private_key.cert_private_key.private_key_pem
-  sensitive = true
 }
