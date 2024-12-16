@@ -1,0 +1,9 @@
+
+# Terraform
+**/.terraform*
+**/terraform*.*
+**/variables.tf
+
+user_list.csv
+.venv/
+.env

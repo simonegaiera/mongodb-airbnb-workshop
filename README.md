@@ -7,4 +7,4 @@ Welcome to the MongoDB Airbnb Workshop! This hands-on workshop is designed to pr
 You can find the instructions here: [mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/).
 
 ## MongoDB SA Atlas Prep
-To configure the Atlas enviroment follow the instruction here: [developer-day-terraform](https://github.com/simonegaiera/developer_day_terraform).
+To configure the Atlas enviroment follow the instruction in the `util` folder: [util](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils).

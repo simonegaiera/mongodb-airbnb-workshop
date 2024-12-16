@@ -12,11 +12,6 @@ package-lock.json
 **/.env
 **/.env.local
 
-# Terraform
-**/.terraform*
-**/terraform*.*
-**/variables.tf
-
 # IDEs and editors
 .idea/
 .vscode/
