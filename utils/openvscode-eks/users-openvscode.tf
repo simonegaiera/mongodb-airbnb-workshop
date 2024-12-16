@@ -79,6 +79,6 @@ locals {
   ))
 }
 
-output "combined_nginx_output" {
-  value = local.combined_nginx_config
-}
+# output "combined_nginx_output" {
+#   value = local.combined_nginx_config
+# }
