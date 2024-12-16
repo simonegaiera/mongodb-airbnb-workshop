@@ -170,3 +170,17 @@ resource "aws_route53_record" "nginx-mongosa" {
 
   depends_on = [data.kubernetes_service.nginx_service]
 }
+
+resource "aws_route53_record" "nginx-mongosa-wildcard" {
+  zone_id = data.aws_route53_zone.mongosa_com.zone_id
+  name    = "*.${var.aws_route53_record_name}"
+  type    = "A"
+
+  alias {
+    name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
+    zone_id                = "Z3AADJGX6KTTL2"
+    evaluate_target_health = true
+  }
+
+  depends_on = [data.kubernetes_service.nginx_service]
+}
