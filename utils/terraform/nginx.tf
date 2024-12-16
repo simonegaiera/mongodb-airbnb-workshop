@@ -15,11 +15,14 @@ terraform {
 }
 
 provider "acme" {
-  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
-}
+  # let's encrypt staging
+  # server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 
-resource "acme_registration" "reg" {
-  email_address = var.domain_email
+  # let's encrypt production
+  server_url = "https://acme-v02.api.letsencrypt.org/directory"
+
+  # zerossl production
+  #server_url = "https://acme.zerossl.com/v2/DV90"
 }
 
 data "aws_route53_zone" "mongosa_com" {
@@ -43,24 +46,38 @@ resource "null_resource" "wait_for_dns" {
   depends_on = [aws_route53_record.acme_challenge]
 }
 
-resource "tls_private_key" "cert_private_key" {
+resource "tls_private_key" "acme_account_key" {
   algorithm = "RSA"
+  rsa_bits  = 2048
 }
 
-resource "tls_cert_request" "req" {
-  private_key_pem = tls_private_key.cert_private_key.private_key_pem
+resource "acme_registration" "account" {
+  account_key_pem = tls_private_key.acme_account_key.private_key_pem
+  email_address   = var.domain_email
+}
 
+resource "tls_private_key" "request_key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "tls_cert_request" "prod_request" {
+  private_key_pem = tls_private_key.request_key.private_key_pem
   subject {
-    common_name = var.aws_route53_record_name
+    common_name  = var.aws_route53_record_name
   }
 }
 
 resource "acme_certificate" "mongosa_cert" {
-  account_key_pem         = acme_registration.reg.account_key_pem
-  certificate_request_pem = tls_cert_request.req.cert_request_pem
+  account_key_pem         = acme_registration.account.account_key_pem
+  certificate_request_pem = tls_cert_request.prod_request.cert_request_pem
 
   dns_challenge {
     provider = "route53"
+
+    config = {
+      AWS_DEFAULT_REGION = "us-east-1"
+    }
   }
 
   depends_on = [null_resource.wait_for_dns]
@@ -71,7 +88,7 @@ output "mongosa_cert" {
 }
 
 output "mongosa_key" {
-  value = tls_private_key.cert_private_key.private_key_pem
+  value = tls_private_key.request_key.private_key_pem
   sensitive = true
 }
 
@@ -105,7 +122,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
   }
   set_sensitive {
     name  = "secret.data.tls.key"
-    value = tls_private_key.cert_private_key.private_key_pem
+    value = tls_private_key.request_key.private_key_pem
   }
 
   depends_on = [acme_certificate.mongosa_cert]
