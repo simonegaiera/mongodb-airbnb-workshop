@@ -6,6 +6,14 @@ server {
         return 200 'OK';
     }
 
+    location / {
+        proxy_pass http://${proxy_pass}:8000/;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
+    }
+
     location /vscode/ {
         proxy_pass http://${proxy_pass}:8000/;
         proxy_set_header Host $host;
@@ -24,6 +32,16 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
 
         rewrite ^/frontend/(.*)$ /$1 break;
+    }
+
+    location /sgaiera/frontend/ {
+        proxy_pass http://${proxy_pass}:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        rewrite ^/sgaiera/frontend/(.*)$ /$1 break;
     }
 
     location /react/ {
@@ -52,13 +70,6 @@ server {
     ssl_certificate     /etc/nginx/ssl/tls.crt;
     ssl_certificate_key /etc/nginx/ssl/tls.key;
 
-    # ssl_certificate /etc/letsencrypt/live/mongosa_cert/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/mongosa_cert/privkey.pem;
-    # include /etc/letsencrypt/options-ssl-nginx.conf;
-    # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-
-    ssl_protocols       TLSv1.2 TLSv1.3;
-    ssl_ciphers         HIGH:!aNULL:!MD5;
 }
 
 server {
@@ -76,20 +87,4 @@ server {
         return 200 'OK';
     }
 
-    location /vscode/ {
-        proxy_pass http://${proxy_pass}:8000/;
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection upgrade;
-        proxy_set_header Accept-Encoding gzip;
-        rewrite ^/vscode/(.*)$ /$1 break;
-    }
-    location /frontend/ {
-        proxy_pass http://${proxy_pass}:8080/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        rewrite ^/frontend/(.*)$ /$1 break;
-    }
 }
