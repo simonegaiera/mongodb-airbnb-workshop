@@ -20,9 +20,6 @@ provider "acme" {
 
   # let's encrypt production
   server_url = "https://acme-v02.api.letsencrypt.org/directory"
-
-  # zerossl production
-  #server_url = "https://acme.zerossl.com/v2/DV90"
 }
 
 data "aws_route53_zone" "mongosa_com" {
@@ -130,8 +127,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
   }
 
   depends_on = [
-    acme_certificate.mongosa_cert, 
-    data.kubernetes_service.openvscode_service, 
+    acme_certificate.mongosa_cert,
     data.kubernetes_service.openvscode_services
   ]
 }
