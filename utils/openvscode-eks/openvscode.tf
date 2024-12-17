@@ -29,9 +29,65 @@ resource "helm_release" "user_openvscode" {
     file("${path.module}/airbnb-workshop-openvscode/values.yaml")
   ]
 
+  set {
+    name  = "openvscode.user"
+    value = local.user_ids[count.index]
+  }
+
+  # Set the Persistent Volume Claim
+  set {
+    name  = "volumes[0].name"
+    value = "openvscode-volume-${local.user_ids[count.index]}"
+  }
+
+  set {
+    name  = "volumes[0].persistentVolumeClaim.claimName"
+    value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-pvc"
+  }
+  
+  set {
+    name  = "volumeMounts[0].name"
+    value = "openvscode-volume-${local.user_ids[count.index]}"
+  }
+
+  set {
+    name  = "volumeMounts[0].mountPath"
+    value = "/home/workspace/mongodb-airbnb-workshop"
+  }
+
+  set {
+    name  = "volumeMounts[0].readOnly"
+    value = "false"
+  }
+
+  # Set the configmap
+    set {
+    name  = "volumes[1].name"
+    value = "openvscode-configmap-${local.user_ids[count.index]}"
+  }
+
+  set {
+    name  = "volumes[1].configMap.name"
+    value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-configmap"
+  }
+
+  set {
+    name  = "volumes[1].configMap.defaultMode"
+    value = "775"
+  }
+  
+  set {
+    name  = "volumeMounts[1].name"
+    value = "openvscode-configmap-${local.user_ids[count.index]}"
+  }
+
+  set {
+    name  = "volumeMounts[1].mountPath"
+    value = "/home/workspace/utils"
+  }
+
   depends_on = [ aws_eks_node_group.node_group ]
 }
-
 
 data "kubernetes_service" "openvscode_services" {
   count = length(local.user_ids)

@@ -197,6 +197,11 @@ resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "ebs_csid_policy" {
+  role       = aws_iam_role.node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
 # Create EKS Node Group
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = var.cluster_name
@@ -234,3 +239,21 @@ resource "aws_eks_node_group" "node_group" {
 # output "cluster_certificate_authority_data" {
 #   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
 # }
+
+resource "helm_release" "aws_ebs_csi_driver" {
+  name       = "aws-ebs-csi-driver"
+  namespace  = "kube-system"
+  repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
+  chart      = "aws-ebs-csi-driver"
+  version    = "2.9.0"
+
+  set {
+    name  = "controller.serviceAccount.create"
+    value = "true"
+  }
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.node_group
+  ]
+}

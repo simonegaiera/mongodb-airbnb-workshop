@@ -5,8 +5,6 @@ image:
   pullPolicy: Always
   tag: "latest"
 
-restartPolicy: Always
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -68,6 +66,13 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 1
   targetCPUUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+openvscode:
+  user: ""
 
 nodeSelector: {}
 
