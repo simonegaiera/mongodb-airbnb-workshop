@@ -98,8 +98,7 @@ data "kubernetes_service" "openvscode_services" {
 
   depends_on = [
     aws_eks_cluster.eks_cluster,
-    aws_eks_node_group.node_group,
-    helm_release.aws_ebs_csi_driver
+    aws_eks_node_group.node_group
   ]
 }
 
