@@ -71,10 +71,10 @@ resource "helm_release" "user_openvscode" {
     value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-configmap"
   }
 
-  set {
-    name  = "volumes[1].configMap.defaultMode"
-    value = "775"
-  }
+  # set {
+  #   name  = "volumes[1].configMap.defaultMode"
+  #   value = "775"
+  # }
   
   set {
     name  = "volumeMounts[1].name"
@@ -96,7 +96,11 @@ data "kubernetes_service" "openvscode_services" {
     namespace = helm_release.user_openvscode[count.index].namespace
   }
 
-  depends_on = [helm_release.user_openvscode]
+  depends_on = [
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.node_group,
+    helm_release.aws_ebs_csi_driver
+  ]
 }
 
 # output "cluster_ips" {

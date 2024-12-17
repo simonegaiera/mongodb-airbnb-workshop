@@ -229,6 +229,7 @@ resource "aws_eks_node_group" "node_group" {
     aws_iam_role_policy_attachment.eks_node_policy,
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.eks_registry_policy,
+    aws_iam_role_policy_attachment.ebs_csid_policy,
   ]
 }
 
@@ -245,11 +246,16 @@ resource "helm_release" "aws_ebs_csi_driver" {
   namespace  = "kube-system"
   repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
   chart      = "aws-ebs-csi-driver"
-  version    = "2.9.0"
+  version    = "2.38.1"
 
   set {
     name  = "controller.serviceAccount.create"
     value = "true"
+  }
+
+  set {
+    name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = aws_iam_role.node_role.arn
   }
 
   depends_on = [
