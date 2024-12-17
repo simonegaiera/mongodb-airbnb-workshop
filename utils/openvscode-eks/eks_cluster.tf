@@ -139,6 +139,11 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
+  role       = aws_iam_role.eks_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+}
+
 # Create the EKS Cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
@@ -149,7 +154,10 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids         = aws_subnet.eks_subnet[*].id
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_iam_role_policy_attachment.eks_vpc_resource_controller
+  ]
 
   tags = {
     Name       = var.cluster_name
@@ -159,6 +167,65 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 }
 
+# aws_iam_openid_connect_provider
+provider "tls" {}
+
+data "tls_certificate" "oidc" {
+  url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  url             = aws_eks_cluster.eks_cluster.identity.0.oidc.0.issuer
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
+}
+
+data "aws_iam_policy_document" "ebs_csi_driver_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+    }
+
+    actions = [
+      "sts:AssumeRoleWithWebIdentity",
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${aws_iam_openid_connect_provider.eks.url}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${aws_iam_openid_connect_provider.eks.url}:sub"
+      values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+
+  }
+}
+
+resource "aws_iam_role" "ebs_csi_driver" {
+  name               = "ebs-csi-driver"
+  assume_role_policy = data.aws_iam_policy_document.ebs_csi_driver_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEBSCSIDriverPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.ebs_csi_driver.name
+}
+
+resource "aws_eks_addon" "ebs_csi_driver" {
+  cluster_name             = aws_eks_cluster.eks_cluster.name
+  addon_name               = "aws-ebs-csi-driver"
+  addon_version            = "v1.29.1-eksbuild.1"
+  service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
+}
+
+
 # IAM Role for EKS Node Group
 resource "aws_iam_role" "node_role" {
   name = "eks-node-role"
@@ -167,7 +234,7 @@ resource "aws_iam_role" "node_role" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
+        Action = ["sts:AssumeRole"]
         Effect = "Allow"
         Principal = {
           Service = "ec2.amazonaws.com"
@@ -241,25 +308,25 @@ resource "aws_eks_node_group" "node_group" {
 #   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
 # }
 
-resource "helm_release" "aws_ebs_csi_driver" {
-  name       = "aws-ebs-csi-driver"
-  namespace  = "kube-system"
-  repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
-  chart      = "aws-ebs-csi-driver"
-  version    = "2.38.1"
+# resource "helm_release" "aws_ebs_csi_driver" {
+#   name       = "aws-ebs-csi-driver"
+#   namespace  = "kube-system"
+#   repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
+#   chart      = "aws-ebs-csi-driver"
+#   version    = "2.38.1"
 
-  set {
-    name  = "controller.serviceAccount.create"
-    value = "true"
-  }
+#   set {
+#     name  = "controller.serviceAccount.create"
+#     value = "true"
+#   }
 
-  set {
-    name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.node_role.arn
-  }
+#   set {
+#     name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+#     value = aws_iam_role.node_role.arn
+#   }
 
-  depends_on = [
-    aws_eks_cluster.eks_cluster,
-    aws_eks_node_group.node_group
-  ]
-}
+#   depends_on = [
+#     aws_eks_cluster.eks_cluster,
+#     aws_eks_node_group.node_group
+#   ]
+# }
