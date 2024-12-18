@@ -10,7 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.volumeSize | quote }}
-  # selector:
-  #   matchLabels:
-  #     app: {{ include "airbnb-workshop-openvscode.fullname" . }}-pv
   volumeName: {{ include "airbnb-workshop-openvscode.fullname" . }}-pv

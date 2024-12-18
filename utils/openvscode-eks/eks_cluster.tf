@@ -7,6 +7,8 @@ provider "aws" {
 # Create a VPC
 resource "aws_vpc" "eks_vpc" {
   cidr_block = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
   tags = {
     Name = "${var.cluster_name}-eks-vpc"
@@ -167,65 +169,6 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 }
 
-# aws_iam_openid_connect_provider
-# provider "tls" {}
-
-# data "tls_certificate" "oidc" {
-#   url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
-# }
-
-# resource "aws_iam_openid_connect_provider" "eks" {
-#   url             = aws_eks_cluster.eks_cluster.identity.0.oidc.0.issuer
-#   client_id_list  = ["sts.amazonaws.com"]
-#   thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
-# }
-
-# data "aws_iam_policy_document" "ebs_csi_driver_assume_role" {
-#   statement {
-#     effect = "Allow"
-
-#     principals {
-#       type        = "Federated"
-#       identifiers = [aws_iam_openid_connect_provider.eks.arn]
-#     }
-
-#     actions = [
-#       "sts:AssumeRoleWithWebIdentity",
-#     ]
-
-#     condition {
-#       test     = "StringEquals"
-#       variable = "${aws_iam_openid_connect_provider.eks.url}:aud"
-#       values   = ["sts.amazonaws.com"]
-#     }
-
-#     condition {
-#       test     = "StringEquals"
-#       variable = "${aws_iam_openid_connect_provider.eks.url}:sub"
-#       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
-#     }
-
-#   }
-# }
-
-# resource "aws_iam_role" "ebs_csi_driver" {
-#   name               = "ebs-csi-driver"
-#   assume_role_policy = data.aws_iam_policy_document.ebs_csi_driver_assume_role.json
-# }
-
-# resource "aws_iam_role_policy_attachment" "AmazonEBSCSIDriverPolicy" {
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-#   role       = aws_iam_role.ebs_csi_driver.name
-# }
-
-# resource "aws_eks_addon" "ebs_csi_driver" {
-#   cluster_name             = aws_eks_cluster.eks_cluster.name
-#   addon_name               = "aws-ebs-csi-driver"
-#   addon_version            = "v1.29.1-eksbuild.1"
-#   service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
-# }
-
-
 # IAM Role for EKS Node Group
 resource "aws_iam_role" "node_role" {
   name = "eks-node-role"
@@ -269,6 +212,11 @@ resource "aws_iam_role_policy_attachment" "ebs_csid_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "efs_client_policy" {
+  role       = aws_iam_role.node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess"
+}
+
 # Create EKS Node Group
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = var.cluster_name
@@ -297,6 +245,7 @@ resource "aws_eks_node_group" "node_group" {
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.eks_registry_policy,
     aws_iam_role_policy_attachment.ebs_csid_policy,
+    aws_iam_role_policy_attachment.efs_client_policy
   ]
 }
 
@@ -306,27 +255,4 @@ resource "aws_eks_node_group" "node_group" {
 
 # output "cluster_certificate_authority_data" {
 #   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
-# }
-
-# resource "helm_release" "aws_ebs_csi_driver" {
-#   name       = "aws-ebs-csi-driver"
-#   namespace  = "kube-system"
-#   repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
-#   chart      = "aws-ebs-csi-driver"
-#   version    = "2.38.1"
-
-#   set {
-#     name  = "controller.serviceAccount.create"
-#     value = "true"
-#   }
-
-#   set {
-#     name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-#     value = aws_iam_role.node_role.arn
-#   }
-
-#   depends_on = [
-#     aws_eks_cluster.eks_cluster,
-#     aws_eks_node_group.node_group
-#   ]
 # }
