@@ -34,6 +34,11 @@ resource "helm_release" "user_openvscode" {
     value = local.user_ids[count.index]
   }
 
+  set {
+    name  = "nfsServer"
+    value = "${aws_efs_file_system.efs.id}.efs.${var.aws_zone}.amazonaws.com"
+  }
+
   # Set the Persistent Volume Claim
   set {
     name  = "volumes[0].name"
@@ -86,7 +91,10 @@ resource "helm_release" "user_openvscode" {
     value = "/home/workspace/utils"
   }
 
-  depends_on = [ aws_eks_node_group.node_group ]
+  depends_on = [ 
+    aws_eks_node_group.node_group,
+    aws_efs_mount_target.efs_mt
+  ]
 }
 
 data "kubernetes_service" "openvscode_services" {
@@ -97,8 +105,7 @@ data "kubernetes_service" "openvscode_services" {
   }
 
   depends_on = [
-    aws_eks_cluster.eks_cluster,
-    aws_eks_node_group.node_group
+    helm_release.user_openvscode
   ]
 }
 

@@ -71,6 +71,10 @@ volumes: []
 
 volumeMounts: []
 
+nfsServer: ""
+volumeSize: 5Gi
+volumeClaimSize: 100Mi
+
 openvscode:
   user: ""
 
