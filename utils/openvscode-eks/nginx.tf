@@ -88,20 +88,6 @@ resource "acme_certificate" "mongosa_cert" {
 #   value = acme_certificate.mongosa_cert.certificate_pem
 # }
 
-# output "mongosa_key" {
-#   value = tls_private_key.request_key.private_key_pem
-#   sensitive = true
-# }
-
-# locals {
-#   nginx_config = templatefile("${path.module}/airbnb-customer-nginx.conf.tpl", {
-#     server_name = var.aws_route53_record_name
-#     proxy_pass  = data.kubernetes_service.openvscode_service.spec[0].cluster_ip
-#   })
-
-#   depends_on = [data.kubernetes_service.openvscode_service, data.kubernetes_service.openvscode_services]
-# }
-
 resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
