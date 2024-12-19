@@ -54,7 +54,7 @@ spec:
           # lifecycle:
           #   postStart:
           #     exec:
-          #       command: ["sh", "-c", "nginx -s reload"]
+          #       command: ["sh", "-c", "/home/workspace/utils/startup.sh"]
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
