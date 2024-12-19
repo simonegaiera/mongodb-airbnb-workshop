@@ -86,17 +86,7 @@ EOT
       security_context {
         privileged = true
       }
-
-      # volume_mount {
-      #   name       = "temp-nfs"
-      #   mount_path = "/mnt/efs"
-      # }
     }
-
-    # volume {
-    #   name = "temp-nfs"
-    #   empty_dir {}
-    # }
 
     restart_policy = "Never"
   }

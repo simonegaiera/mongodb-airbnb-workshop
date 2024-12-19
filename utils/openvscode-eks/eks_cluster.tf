@@ -140,6 +140,8 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids         = aws_subnet.eks_subnet[*].id
   }
 
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy,
     aws_iam_role_policy_attachment.eks_vpc_resource_controller
@@ -240,3 +242,30 @@ resource "aws_eks_node_group" "node_group" {
 # output "cluster_certificate_authority_data" {
 #   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
 # }
+
+resource "helm_release" "metrics_server" {
+  name       = "metrics-server"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
+  chart      = "metrics-server"
+  version    = "3.12.2"
+  namespace  = "kube-system"
+
+  set {
+    name  = "args[0]"
+    value = "--kubelet-preferred-address-types=InternalIP"
+  }
+
+  set {
+    name  = "args[1]"
+    value = "--kubelet-insecure-tls"
+  }
+
+  set {
+    name  = "args[2]"
+    value = "--metric-resolution=30s"
+  }
+
+  # Optional settings
+  timeout           = 600
+  create_namespace  = true
+}
