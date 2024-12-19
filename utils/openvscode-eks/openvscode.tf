@@ -168,11 +168,6 @@ resource "helm_release" "user_openvscode" {
     name  = "volumes[1].configMap.name"
     value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-configmap"
   }
-
-  # set {
-  #   name  = "volumes[1].configMap.defaultMode"
-  #   value = "775"
-  # }
   
   set {
     name  = "volumeMounts[1].name"

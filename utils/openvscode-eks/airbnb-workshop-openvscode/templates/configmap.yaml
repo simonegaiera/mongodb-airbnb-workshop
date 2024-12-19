@@ -11,3 +11,5 @@ data:
     {{ .Values.openvscode.aws_route53_record_name | nindent 4 }}
   startup.sh: |-
     {{ .Files.Get "files/startup.sh" | nindent 4 }}
+  user_operations.sh: |-
+    {{ .Files.Get "files/user_operations.sh" | nindent 4 }}
