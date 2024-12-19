@@ -1,6 +1,6 @@
 
 provider "aws" {
-  region  = var.aws_zone
+  region  = var.aws_region
   # profile = "Solution-Architects.User-979559056307"
 }
 
@@ -72,33 +72,17 @@ resource "aws_security_group" "eks_sg" {
     cidr_blocks = ["104.30.134.189/32"]
   }
 
-  # Add ingress rules for additional ports
-  ingress {
-    from_port   = 30001
-    to_port     = 30001
-    protocol    = "tcp"
-    cidr_blocks = ["104.30.134.189/32"]
+  egress {
+    from_port   = 53
+    to_port     = 53
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-
-  ingress {
-    from_port   = 30002
-    to_port     = 30002
+  egress {
+    from_port   = 53
+    to_port     = 53
     protocol    = "tcp"
-    cidr_blocks = ["104.30.134.189/32"]
-  }
-
-  ingress {
-    from_port   = 30003
-    to_port     = 30003
-    protocol    = "tcp"
-    cidr_blocks = ["104.30.134.189/32"]
-  }
-
-  ingress {
-    from_port   = 30004
-    to_port     = 30004
-    protocol    = "tcp"
-    cidr_blocks = ["104.30.134.189/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

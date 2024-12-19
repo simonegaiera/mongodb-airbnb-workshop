@@ -4,7 +4,7 @@ variable "cluster_name" {
   default     = "airbnb-workshop-eks"
 }
 
-variable "aws_zone" {
+variable "aws_region" {
   description = "The zone name of the EKS cluster."
   type        = string
   default     = "us-east-2"

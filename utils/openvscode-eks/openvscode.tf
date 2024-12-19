@@ -18,6 +18,104 @@ locals {
   user_ids = keys(data.external.user_data.result)
 }
 
+resource "kubernetes_pod" "efs_initializer" {
+  metadata {
+    name = "efs-initializer"
+  }
+
+  spec {
+    container {
+      image = "amazonlinux:2"
+      name  = "efs-setup"
+
+      command = [
+        "sh",
+        "-c",
+<<-EOT
+  # Confirm current user
+  echo "Running as user: $(whoami)"
+
+  # Install NFS tools
+  echo "Installing nfs-utils..."
+  if yum install -y nfs-utils; then
+    echo "nfs-utils installed successfully."
+  else
+    echo "Failed to install nfs-utils."
+    exit 1
+  fi
+
+  # Prepare for EFS mount
+  echo "Creating directory /mnt/efs..."
+  mkdir -p /mnt/efs
+
+  # Check and mount the EFS
+  echo "Checking mountpoint for EFS..."
+  # Define your EFS address variable
+  efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
+  # Echo the EFS address
+  echo "EFS Address: $efs"
+  if ! grep -qs '/mnt/efs ' /proc/mounts; then
+      echo "Mounting EFS..."
+      mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
+      if [ $? -eq 0 ]; then
+          echo "EFS mounted successfully."
+      else
+          echo "Failed to mount EFS."
+          exit 1
+      fi
+  else
+      echo "EFS is already mounted."
+  fi
+
+  # Create user directories
+  echo "Creating user directories..."
+  for user_id in $(echo " ${join(" ", local.user_ids)} "); do
+    echo "Creating directory for user ID: $user_id"
+    mkdir -p /mnt/efs/airbnb-workshop-openvscode-$user_id
+    if [ $? -eq 0 ]; then
+      echo "Directory /mnt/efs/airbnb-workshop-openvscode-$user_id created successfully."
+    else
+      echo "Failed to create directory /mnt/efs/airbnb-workshop-openvscode-$user_id."
+    fi
+  done
+
+  echo "Script execution completed."
+EOT
+      ]
+
+      security_context {
+        privileged = true
+      }
+
+      # volume_mount {
+      #   name       = "temp-nfs"
+      #   mount_path = "/mnt/efs"
+      # }
+    }
+
+    # volume {
+    #   name = "temp-nfs"
+    #   empty_dir {}
+    # }
+
+    restart_policy = "Never"
+  }
+
+  depends_on = [ aws_efs_mount_target.efs_mt ]
+}
+
+resource "null_resource" "wait_for_efs_folders" {
+  provisioner "local-exec" {
+    command = "sleep 120"
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  depends_on = [ kubernetes_pod.efs_initializer ]
+}
+
 resource "helm_release" "user_openvscode" {
   count      = length(local.user_ids)
   name       = "airbnb-workshop-openvscode-${local.user_ids[count.index]}"
@@ -35,8 +133,13 @@ resource "helm_release" "user_openvscode" {
   }
 
   set {
+    name  = "openvscode.aws_route53_record_name"
+    value = var.aws_route53_record_name
+  }
+
+  set {
     name  = "nfsServer"
-    value = "${aws_efs_file_system.efs.id}.efs.${var.aws_zone}.amazonaws.com"
+    value = "${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
   }
 
   # Set the Persistent Volume Claim
@@ -93,7 +196,8 @@ resource "helm_release" "user_openvscode" {
 
   depends_on = [ 
     aws_eks_node_group.node_group,
-    aws_efs_mount_target.efs_mt
+    aws_efs_mount_target.efs_mt,
+    null_resource.wait_for_efs_folders
   ]
 }
 
