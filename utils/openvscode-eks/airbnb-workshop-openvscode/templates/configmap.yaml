@@ -8,6 +8,6 @@ data:
   user.conf: |
     {{ .Values.openvscode.user | nindent 4 }}
   aws_route53_record_name.conf: |
-    {{ .Values.openvscode.aws_route53_record_name.user | nindent 4 }}
+    {{ .Values.openvscode.aws_route53_record_name | nindent 4 }}
   startup.sh: |-
     {{ .Files.Get "files/startup.sh" | nindent 4 }}

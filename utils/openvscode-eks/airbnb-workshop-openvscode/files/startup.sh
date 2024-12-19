@@ -1,5 +1,8 @@
 #!/bin/bash  
 
+# Set ownership for the cloned repository
+chown -R openvscode-server:openvscode-server /home/workspace/mongodb-airbnb-workshop
+
 # Check if the repository exists and update or clone accordingly
 if [ -d /home/workspace/mongodb-airbnb-workshop/.git ]; then  
     echo 'Repository exists. Pulling latest changes...';  
@@ -26,5 +29,13 @@ WORKSHOP_USER=/${USERNAME}
 BACKEND_URL=https://${USERNAME}.${URL}/backend
 EOL
 
-# Set ownership for the cloned repository
-chown -R openvscode-server:openvscode-server /home/workspace/mongodb-airbnb-workshop
+sudo -u openvscode-server bash <<EOF
+cd /home/workspace/mongodb-airbnb-workshop/app
+npm install --legacy-peer-deps
+npm run build
+EOF
+
+sudo -u openvscode-server bash <<EOF
+cd /home/workspace/mongodb-airbnb-workshop/server
+npm install --legacy-peer-deps
+EOF
