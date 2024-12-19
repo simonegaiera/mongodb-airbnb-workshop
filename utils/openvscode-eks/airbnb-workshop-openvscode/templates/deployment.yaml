@@ -54,7 +54,16 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["sh", "-c", "cp /home/workspace/utils/startup.sh /tmp/startup.sh && chmod +x /tmp/startup.sh && /tmp/startup.sh"]
+                command:
+                  - "bash"
+                  - "-c"
+                  - |
+                    echo "Starting script execution" >> /tmp/startup.log && \
+                    cp /home/workspace/utils/startup.sh /tmp/startup.sh 2>> /tmp/startup.log && \
+                    echo "Copied file" >> /tmp/startup.log && \
+                    chmod +x /tmp/startup.sh 2>> /tmp/startup.log && \
+                    echo "Set permissions" >> /tmp/startup.log && \
+                    /tmp/startup.sh >> /tmp/startup.log 2>&1 &
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
