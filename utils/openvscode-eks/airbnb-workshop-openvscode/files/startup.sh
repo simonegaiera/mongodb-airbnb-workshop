@@ -43,3 +43,5 @@ chown -R openvscode-server:openvscode-server /home/workspace/mongodb-airbnb-work
 # Directly call the function within sudo
 echo "Starting operations as user openvscode-server"
 sudo -u openvscode-server bash -c "$(declare -f run_as_openvscode_user); run_as_openvscode_user"
+
+echo "Script executed successfully"
