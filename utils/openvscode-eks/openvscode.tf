@@ -99,9 +99,9 @@ resource "null_resource" "wait_for_efs_folders" {
     command = "sleep 120"
   }
 
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
 
   depends_on = [ kubernetes_pod.efs_initializer ]
 }
