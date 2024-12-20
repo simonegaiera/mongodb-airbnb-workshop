@@ -38,6 +38,8 @@ resource "aws_internet_gateway" "eks_igw" {
   tags = {
     Name = "${var.cluster_name}-eks-igw"
   }
+
+  depends_on = [ aws_vpc.eks_vpc ]
 }
 
 # Create a route table
@@ -52,6 +54,8 @@ resource "aws_route_table" "eks_route_table" {
   tags = {
     Name = "${var.cluster_name}-eks-route-table"
   }
+
+  depends_on = [ aws_internet_gateway.eks_igw ]
 }
 
 # Associate the subnets with the route table
@@ -59,6 +63,8 @@ resource "aws_route_table_association" "eks_subnet_assoc" {
   count = 2
   subnet_id      = element(aws_subnet.eks_subnet.*.id, count.index)
   route_table_id = aws_route_table.eks_route_table.id
+
+  depends_on = [ aws_route_table.eks_route_table ]
 }
 
 # Create security groups
@@ -95,6 +101,8 @@ resource "aws_security_group" "eks_sg" {
   tags = {
     Name = "${var.cluster_name}-eks-sg"
   }
+
+  depends_on = [ aws_vpc.eks_vpc ]
 }
 
 # IAM Role for EKS Cluster
