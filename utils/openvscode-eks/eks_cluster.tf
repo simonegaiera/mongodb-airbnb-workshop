@@ -193,10 +193,10 @@ resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_iam_role_policy_attachment" "ebs_csid_policy" {
-  role       = aws_iam_role.node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-}
+# resource "aws_iam_role_policy_attachment" "ebs_csid_policy" {
+#   role       = aws_iam_role.node_role.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+# }
 
 resource "aws_iam_role_policy_attachment" "efs_client_policy" {
   role       = aws_iam_role.node_role.name
@@ -230,7 +230,7 @@ resource "aws_eks_node_group" "node_group" {
     aws_iam_role_policy_attachment.eks_node_policy,
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.eks_registry_policy,
-    aws_iam_role_policy_attachment.ebs_csid_policy,
+    # aws_iam_role_policy_attachment.ebs_csid_policy,
     aws_iam_role_policy_attachment.efs_client_policy
   ]
 }
