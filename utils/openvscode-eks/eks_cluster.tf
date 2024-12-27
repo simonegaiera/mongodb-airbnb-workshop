@@ -281,7 +281,10 @@ resource "helm_release" "metrics_server" {
   timeout           = 600
   create_namespace  = true
 
-  depends_on = [ aws_eks_node_group.node_group ]
+  depends_on = [ 
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.node_group
+  ]
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_autoscaler_policy" {

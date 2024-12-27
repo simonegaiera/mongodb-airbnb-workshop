@@ -58,8 +58,10 @@ resource "helm_release" "prometheus" {
   }
 
   depends_on = [ 
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.node_group,
     helm_release.metrics_server
-   ]
+  ]
 }
 
 data "kubernetes_service" "grafana" {
@@ -67,6 +69,10 @@ data "kubernetes_service" "grafana" {
     name      = "prometheus-grafana"
     namespace = "monitoring"
   }
+
+  depends_on = [ 
+    helm_release.prometheus 
+  ]
 }
 
 data "kubernetes_secret" "grafana" {
@@ -74,9 +80,9 @@ data "kubernetes_secret" "grafana" {
     name      = "prometheus-grafana"
     namespace = "monitoring"
   }
+
+  depends_on = [
+    helm_release.prometheus
+  ]
 }
 
-output "raw_admin_password" {
-  value     = data.kubernetes_secret.grafana.data["admin-password"]
-  sensitive = true
-}
