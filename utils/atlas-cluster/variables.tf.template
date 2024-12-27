@@ -13,13 +13,13 @@ variable "private_key" {
 variable "project_name" {
   description = "The Atlas Project ID used to create the cluster"
   type        = string
-  default     = "MongoDB-Workshop"
+  default     = "MongoDB-Workshop-Customer"
 }
 
 variable "cluster_name" {
   description = "The Atlas Project cluster name"
   type        = string
-  default     = "developer-day"
+  default     = "mongodb-airbnb-workshop"
 }
 
 variable "sample_database_name" {

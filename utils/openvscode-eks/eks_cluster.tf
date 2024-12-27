@@ -1,7 +1,7 @@
 
 provider "aws" {
   region  = var.aws_region
-  # profile = "Solution-Architects.User-979559056307"
+  profile = "Solution-Architects.User-979559056307"
 }
 
 # Create a VPC
@@ -29,6 +29,8 @@ resource "aws_subnet" "eks_subnet" {
   tags = {
     Name = "${var.cluster_name}-eks-subnet-${count.index}"
   }
+
+  depends_on = [ aws_vpc.eks_vpc ]
 }
 
 # Create an Internet Gateway
@@ -57,7 +59,8 @@ resource "aws_route_table" "eks_route_table" {
 
   depends_on = [ 
     aws_internet_gateway.eks_igw,
-    aws_vpc.eks_vpc
+    aws_vpc.eks_vpc,
+    aws_subnet.eks_subnet
   ]
 }
 
@@ -67,19 +70,15 @@ resource "aws_route_table_association" "eks_subnet_assoc" {
   subnet_id      = element(aws_subnet.eks_subnet.*.id, count.index)
   route_table_id = aws_route_table.eks_route_table.id
 
-  depends_on = [ aws_route_table.eks_route_table ]
+  depends_on = [ 
+    aws_route_table.eks_route_table,
+    aws_subnet.eks_subnet
+  ]
 }
 
 # Create security groups
 resource "aws_security_group" "eks_sg" {
   vpc_id = aws_vpc.eks_vpc.id
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["104.30.134.189/32"]
-  }
 
   egress {
     from_port   = 53
@@ -145,6 +144,11 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
+  # version  = "1.31"
+
+  # access_config {
+  #   authentication_mode = "API_AND_CONFIG_MAP"
+  # }
 
   vpc_config {
     security_group_ids = [aws_security_group.eks_sg.id]
@@ -164,10 +168,6 @@ resource "aws_eks_cluster" "eks_cluster" {
     "owner"     = "simone.gaiera"
     "purpose"   = "training"
   }
-}
-
-output "eks_oidc_issuer_url" {
-  value = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
 }
 
 # IAM Role for EKS Node Group
@@ -287,44 +287,9 @@ resource "helm_release" "metrics_server" {
   depends_on = [ aws_eks_node_group.node_group ]
 }
 
-data "aws_caller_identity" "current" {}
-
-resource "aws_iam_role" "cluster_autoscaler_role" {
-  name = "cluster-autoscaler-role"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "eks.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      },
-      {
-        Effect = "Allow",
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}"
-        },
-        Action = "sts:AssumeRoleWithWebIdentity",
-        Condition = {
-          StringEquals = {
-            "${replace(aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:cluster-autoscaler"
-          }
-        }
-      }
-    ]
-  })
-
-  depends_on = [
-    aws_eks_node_group.node_group,
-  ]
-}
-
 resource "aws_iam_role_policy_attachment" "cluster_autoscaler_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-  role       = aws_iam_role.cluster_autoscaler_role.name
+  role       = aws_iam_role.node_role.name
 }
 
 resource "helm_release" "cluster_autoscaler" {
@@ -332,8 +297,7 @@ resource "helm_release" "cluster_autoscaler" {
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
-
-  # This is your existing inline values YAML
+  
   values = [
     <<EOF
     autoDiscovery:
@@ -341,17 +305,17 @@ resource "helm_release" "cluster_autoscaler" {
     awsRegion: "${var.aws_region}"
     rbac:
       serviceAccount:
-        name: "cluster-autoscaler"
+        create: true
+        name: cluster-autoscaler
+        annotations:
+          eks.amazonaws.com/role-arn: ${aws_iam_role.node_role.arn}
     extraArgs:
-      skip-nodes-with-local-storage: false
+      cloud-provider: aws
       expander: least-waste
+      skip-nodes-with-local-storage: false
+      node-group-auto-discovery: asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${var.cluster_name}
     EOF
   ]
-
-  set {
-    name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.cluster_autoscaler_role.arn
-  }
 
   set {
     name  = "autoscalingGroups[0].name"
@@ -367,11 +331,10 @@ resource "helm_release" "cluster_autoscaler" {
     name  = "autoscalingGroups[0].maxSize"
     value = 10
   }
-  
+
   depends_on = [
     aws_eks_node_group.node_group,
-    aws_iam_role.cluster_autoscaler_role,
-    aws_iam_role.node_role
+    aws_iam_role.node_role,
+    aws_iam_role_policy_attachment.cluster_autoscaler_policy
   ]
 }
-
