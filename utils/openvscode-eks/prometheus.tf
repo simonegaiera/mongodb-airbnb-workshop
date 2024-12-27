@@ -46,4 +46,9 @@ resource "helm_release" "prometheus" {
     name  = "grafana.service.type"
     value = "LoadBalancer"
   }
+
+  depends_on = [ 
+    helm_release.metrics_server,
+    helm_release.cluster_autoscaler
+   ]
 }

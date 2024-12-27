@@ -91,7 +91,10 @@ EOT
     restart_policy = "Never"
   }
 
-  depends_on = [ aws_efs_mount_target.efs_mt ]
+  depends_on = [ 
+    aws_efs_mount_target.efs_mt,
+    aws_eks_node_group.node_group
+  ]
 }
 
 resource "null_resource" "wait_for_efs_folders" {
@@ -103,7 +106,9 @@ resource "null_resource" "wait_for_efs_folders" {
   #   always_run = "${timestamp()}"
   # }
 
-  depends_on = [ kubernetes_pod.efs_initializer ]
+  depends_on = [ 
+    kubernetes_pod.efs_initializer 
+  ]
 }
 
 resource "helm_release" "user_openvscode" {

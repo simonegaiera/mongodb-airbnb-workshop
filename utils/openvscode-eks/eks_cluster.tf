@@ -143,6 +143,8 @@ resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
 
+  version = "1.32"
+
   vpc_config {
     security_group_ids = [aws_security_group.eks_sg.id]
     subnet_ids         = aws_subnet.eks_subnet[*].id
@@ -219,7 +221,7 @@ resource "aws_eks_node_group" "node_group" {
   subnet_ids      = aws_subnet.eks_subnet[*].id
 
   scaling_config {
-    desired_size = 4
+    desired_size = 2
     max_size     = 10
     min_size     = 1
   }
@@ -276,4 +278,58 @@ resource "helm_release" "metrics_server" {
   # Optional settings
   timeout           = 600
   create_namespace  = true
+
+  depends_on = [ aws_eks_node_group.node_group ]
+}
+
+resource "aws_iam_role_policy_attachment" "autoscaling_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
+  role       = aws_iam_role.node_role.name
+}
+
+resource "helm_release" "cluster_autoscaler" {
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+
+  values = [
+    <<EOF
+    autoDiscovery:
+      clusterName: "${var.cluster_name}"
+    awsRegion: "${var.aws_region}"
+    rbac:
+      serviceAccount:
+        name: "cluster-autoscaler"
+    extraArgs:
+      skip-nodes-with-local-storage: false
+      expander: least-waste
+    EOF
+  ]
+
+  set {
+    name  = "rbac.serviceAccount.annotations.eks.amazonaws.com/role-arn"
+    value = aws_iam_role.node_role.arn
+  }
+
+  set {
+    name  = "autoscalingGroups[0].name"
+    value = "eks-node-group-${var.cluster_name}"
+  }
+
+  set {
+    name  = "autoscalingGroups[0].minSize"
+    value = 1
+  }
+  
+  set {
+    name  = "autoscalingGroups[0].maxSize"
+    value = 10
+  }
+
+  depends_on = [
+    aws_eks_node_group.node_group,
+    aws_iam_role_policy_attachment.autoscaling_full_access,
+    aws_iam_role.node_role
+  ]
 }
