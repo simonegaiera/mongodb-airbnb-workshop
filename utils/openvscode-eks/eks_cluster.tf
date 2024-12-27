@@ -59,8 +59,7 @@ resource "aws_route_table" "eks_route_table" {
 
   depends_on = [ 
     aws_internet_gateway.eks_igw,
-    aws_vpc.eks_vpc,
-    aws_subnet.eks_subnet
+    aws_vpc.eks_vpc
   ]
 }
 
@@ -144,11 +143,11 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
-  # version  = "1.31"
+  version  = "1.31"
 
-  # access_config {
-  #   authentication_mode = "API_AND_CONFIG_MAP"
-  # }
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
 
   vpc_config {
     security_group_ids = [aws_security_group.eks_sg.id]
@@ -159,7 +158,11 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy,
-    aws_iam_role_policy_attachment.eks_vpc_resource_controller
+    aws_iam_role_policy_attachment.eks_vpc_resource_controller,
+    aws_internet_gateway.eks_igw,
+    aws_iam_role.eks_role,
+    aws_security_group.eks_sg,
+    aws_subnet.eks_subnet
   ]
 
   tags = {
@@ -208,11 +211,6 @@ resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-# resource "aws_iam_role_policy_attachment" "ebs_csid_policy" {
-#   role       = aws_iam_role.node_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-# }
-
 resource "aws_iam_role_policy_attachment" "efs_client_policy" {
   role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess"
@@ -245,7 +243,6 @@ resource "aws_eks_node_group" "node_group" {
     aws_iam_role_policy_attachment.eks_node_policy,
     aws_iam_role_policy_attachment.eks_cni_policy,
     aws_iam_role_policy_attachment.eks_registry_policy,
-    # aws_iam_role_policy_attachment.ebs_csid_policy,
     aws_iam_role_policy_attachment.efs_client_policy
   ]
 }
