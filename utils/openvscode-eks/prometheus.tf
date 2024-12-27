@@ -47,8 +47,36 @@ resource "helm_release" "prometheus" {
     value = "LoadBalancer"
   }
 
+    set {
+    name  = "grafana.adminUser"
+    value = "admin"
+  }
+  
+  set {
+    name  = "grafana.adminPassword"
+    value = "password"
+  }
+
   depends_on = [ 
-    helm_release.metrics_server,
-    helm_release.cluster_autoscaler
+    helm_release.metrics_server
    ]
+}
+
+data "kubernetes_service" "grafana" {
+  metadata {
+    name      = "prometheus-grafana"
+    namespace = "monitoring"
+  }
+}
+
+data "kubernetes_secret" "grafana" {
+  metadata {
+    name      = "prometheus-grafana"
+    namespace = "monitoring"
+  }
+}
+
+output "raw_admin_password" {
+  value     = data.kubernetes_secret.grafana.data["admin-password"]
+  sensitive = true
 }

@@ -187,7 +187,8 @@ resource "helm_release" "user_openvscode" {
   depends_on = [ 
     aws_eks_node_group.node_group,
     aws_efs_mount_target.efs_mt,
-    null_resource.wait_for_efs_folders
+    null_resource.wait_for_efs_folders,
+    helm_release.prometheus
   ]
 }
 
@@ -222,6 +223,11 @@ locals {
     server_name = var.aws_route53_record_name
   })
 
+  monitoring_nginx_config = templatefile("${path.module}/airbnb-customer-nginx-ssl-monitoring.conf.tpl", {
+    server_name = "monitoring.${var.aws_route53_record_name}",
+    proxy_pass  = lookup(data.kubernetes_service.grafana.spec[0], "cluster_ip", "default-ip")
+  })
+
   # Generate a list of Nginx configuration blocks for each user ID
   nginx_user_configs = [
     for i in range(length(local.user_ids)) : templatefile("${path.module}/airbnb-customer-nginx-ssl.conf.tpl", {
@@ -230,14 +236,10 @@ locals {
     })
   ]
 
-
   # Combine the base config with user configs and MongoDB config
   combined_nginx_config = join("\n\n", concat(
     [local.base_nginx_config],
+    [local.monitoring_nginx_config],
     local.nginx_user_configs
   ))
 }
-
-# output "combined_nginx_output" {
-#   value = local.combined_nginx_config
-# }
