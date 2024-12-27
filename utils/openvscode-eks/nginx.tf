@@ -114,7 +114,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
 
   depends_on = [
     acme_certificate.mongosa_cert,
-    data.kubernetes_service.openvscode_services
+    tls_private_key.request_key
   ]
 }
 
@@ -146,7 +146,7 @@ resource "aws_route53_record" "nginx-mongosa" {
 
   alias {
     name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = "Z3AADJGX6KTTL2"
+    zone_id                = var.aws_elb_hosted_zone_id[var.aws_region]
     evaluate_target_health = true
   }
 
@@ -160,7 +160,7 @@ resource "aws_route53_record" "nginx-mongosa-wildcard" {
 
   alias {
     name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = "Z3AADJGX6KTTL2"
+    zone_id                = var.aws_elb_hosted_zone_id[var.aws_region]
     evaluate_target_health = true
   }
 
