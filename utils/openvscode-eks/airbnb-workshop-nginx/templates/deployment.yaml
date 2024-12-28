@@ -55,6 +55,18 @@ spec:
             postStart:
               exec:
                 command: ["sh", "-c", "nginx -s reload"]
+        - name: reload-watcher
+          image: alpine:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "apk add --no-cache inotify-tools && \
+                  while inotifywait -e modify /etc/nginx/conf.d/*; do \
+                  echo 'Configuration change detected. Reloading NGINX...'; \
+                  nginx -s reload; \
+                  done"]
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/conf.d    
+
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
