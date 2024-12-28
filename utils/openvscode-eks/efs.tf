@@ -39,7 +39,8 @@ resource "aws_efs_mount_target" "efs_mt" {
   
   depends_on = [   
     aws_efs_file_system.efs,  
-    aws_security_group.efs_sg,  
+    aws_security_group.efs_sg,
+    aws_subnet.eks_subnet
   ]  
 }
 

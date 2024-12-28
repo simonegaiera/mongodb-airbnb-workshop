@@ -1,3 +1,21 @@
+data "aws_eks_cluster_auth" "cluster_auth" {
+  name = aws_eks_cluster.eks_cluster.name
+}
+
+provider "kubernetes" {
+  host                   = aws_eks_cluster.eks_cluster.endpoint
+  cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster_auth.token
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = aws_eks_cluster.eks_cluster.endpoint
+    cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.cluster_auth.token
+  }
+}
+
 resource "helm_release" "prometheus" {
   name       = "prometheus"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -47,7 +65,7 @@ resource "helm_release" "prometheus" {
     value = "LoadBalancer"
   }
 
-    set {
+  set {
     name  = "grafana.adminUser"
     value = "admin"
   }
@@ -57,10 +75,8 @@ resource "helm_release" "prometheus" {
     value = "password"
   }
 
-  depends_on = [ 
-    aws_eks_cluster.eks_cluster,
-    aws_eks_node_group.node_group,
-    helm_release.metrics_server
+  depends_on = [
+    aws_eks_node_group.node_group
   ]
 }
 
@@ -85,4 +101,3 @@ data "kubernetes_secret" "grafana" {
     helm_release.prometheus
   ]
 }
-
