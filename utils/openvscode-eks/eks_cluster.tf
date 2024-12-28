@@ -107,14 +107,14 @@ resource "aws_security_group" "eks_sg" {
 }
 
 # IAM Role for EKS Cluster
-resource "aws_iam_role" "eks_role" {
-  name = "eks-cluster-role"
+resource "aws_iam_role" "cluster" {
+  name = "${var.cluster_name}-eks-cluster-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
+        Action = ["sts:AssumeRole", "sts:TagSession"]
         Effect = "Allow"
         Principal = {
           Service = "eks.amazonaws.com"
@@ -124,64 +124,30 @@ resource "aws_iam_role" "eks_role" {
   })
 
   tags = {
-    Name = "${var.cluster_name}-eks-role"
+    Name = "${var.cluster_name}-eks-cluster-role"
   }
 }
 
 # Attach EKS Policy to the Cluster Role
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
-  role       = aws_iam_role.eks_role.name
+  role       = aws_iam_role.cluster.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
 resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
-  role       = aws_iam_role.eks_role.name
+  role       = aws_iam_role.cluster.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-}
-
-# Create the EKS Cluster
-resource "aws_eks_cluster" "eks_cluster" {
-  name     = var.cluster_name
-  role_arn = aws_iam_role.eks_role.arn
-  version  = "1.31"
-
-  access_config {
-    authentication_mode = "API_AND_CONFIG_MAP"
-  }
-
-  vpc_config {
-    security_group_ids = [aws_security_group.eks_sg.id]
-    subnet_ids         = aws_subnet.eks_subnet[*].id
-  }
-
-  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_cluster_policy,
-    aws_iam_role_policy_attachment.eks_vpc_resource_controller,
-    aws_internet_gateway.eks_igw,
-    aws_iam_role.eks_role,
-    aws_security_group.eks_sg,
-    aws_subnet.eks_subnet
-  ]
-
-  tags = {
-    Name       = var.cluster_name
-    "expire-on" = "2025-01-01"
-    "owner"     = "simone.gaiera"
-    "purpose"   = "training"
-  }
 }
 
 # IAM Role for EKS Node Group
 resource "aws_iam_role" "node_role" {
-  name = "eks-node-role"
+  name ="${var.cluster_name}-eks-node-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = ["sts:AssumeRole"]
+        Action = ["sts:AssumeRole", "sts:TagSession"]
         Effect = "Allow"
         Principal = {
           Service = "ec2.amazonaws.com"
@@ -208,12 +174,56 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
 
 resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
   role       = aws_iam_role.node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "efs_client_policy" {
   role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "node_autoscaler_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
+  role       = aws_iam_role.node_role.name
+}
+
+# Create the EKS Cluster
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = var.cluster_name
+  role_arn = aws_iam_role.cluster.arn
+
+  # upgrade_policy {
+  #   support_type = "STANDARD"
+  # } 
+
+  vpc_config {
+    endpoint_private_access = true
+    endpoint_public_access  = true
+
+    security_group_ids = [aws_security_group.eks_sg.id]
+    subnet_ids         = aws_subnet.eks_subnet[*].id
+  }
+
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_iam_role_policy_attachment.eks_vpc_resource_controller,
+    aws_iam_role_policy_attachment.eks_node_policy,
+    aws_iam_role_policy_attachment.eks_cni_policy,
+    aws_iam_role_policy_attachment.eks_registry_policy,
+    aws_iam_role_policy_attachment.efs_client_policy,
+    aws_internet_gateway.eks_igw,
+    aws_security_group.eks_sg,
+    aws_subnet.eks_subnet
+  ]
+
+  tags = {
+    Name       = var.cluster_name
+    "expire-on" = "2025-01-01"
+    "owner"     = "simone.gaiera"
+    "purpose"   = "training"
+  }
 }
 
 # Create EKS Node Group
@@ -281,41 +291,43 @@ resource "helm_release" "metrics_server" {
   timeout           = 600
   create_namespace  = true
 
-  depends_on = [ 
-    aws_eks_cluster.eks_cluster,
+  depends_on = [
     aws_eks_node_group.node_group
   ]
 }
 
-resource "aws_iam_role_policy_attachment" "cluster_autoscaler_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-  role       = aws_iam_role.node_role.name
-}
-
+# TODO: autoscaler not working
 resource "helm_release" "cluster_autoscaler" {
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
+  version    = "9.43.3"
   namespace  = "kube-system"
-  
-  values = [
-    <<EOF
-    autoDiscovery:
-      clusterName: "${var.cluster_name}"
-    awsRegion: "${var.aws_region}"
-    rbac:
-      serviceAccount:
-        create: true
-        name: cluster-autoscaler
-        annotations:
-          eks.amazonaws.com/role-arn: ${aws_iam_role.node_role.arn}
-    extraArgs:
-      cloud-provider: aws
-      expander: least-waste
-      skip-nodes-with-local-storage: false
-      node-group-auto-discovery: asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${var.cluster_name}
-    EOF
-  ]
+
+  # set {
+  #   name  = "autoDiscovery.clusterName"
+  #   value = "${var.cluster_name}"
+  # }
+
+  set {
+    name  = "awsRegion"
+    value = "${var.aws_region}"
+  }
+
+  set {
+    name  = "rbac.serviceAccount.create"
+    value = "false"
+  }
+
+  set {
+    name  = "extraArgs.expander"
+    value = "least-waste"
+  }
+
+  set {
+    name  = "extraArgs.skip-nodes-with-local-storage"
+    value = "false"
+  }
 
   set {
     name  = "autoscalingGroups[0].name"
@@ -332,9 +344,18 @@ resource "helm_release" "cluster_autoscaler" {
     value = 10
   }
 
+  set {
+    name  = "serviceMonitor.enabled"
+    value = "true"
+  }
+
+  # set {
+  #   name  = "extraArgs.v"
+  #   value = "8"
+  # }
+
   depends_on = [
     aws_eks_node_group.node_group,
-    aws_iam_role.node_role,
-    aws_iam_role_policy_attachment.cluster_autoscaler_policy
+    helm_release.prometheus
   ]
 }

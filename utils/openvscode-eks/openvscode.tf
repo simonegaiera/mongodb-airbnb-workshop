@@ -1,14 +1,3 @@
-provider "helm" {
-  kubernetes {
-    host                   = aws_eks_cluster.eks_cluster.endpoint
-    cluster_ca_certificate = base64decode(aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.eks_token.token
-  }
-}
-
-data "aws_eks_cluster_auth" "eks_token" {
-  name = var.cluster_name
-}
 
 data "external" "user_data" {
   program = ["python3", "${path.module}/parse_users.py", "${path.module}/user_list.csv"]
@@ -93,7 +82,7 @@ EOT
 
   depends_on = [ 
     aws_efs_mount_target.efs_mt,
-    aws_eks_node_group.node_group
+    helm_release.prometheus
   ]
 }
 
@@ -184,11 +173,11 @@ resource "helm_release" "user_openvscode" {
     value = "/home/workspace/utils"
   }
 
-  depends_on = [ 
-    aws_eks_node_group.node_group,
+  depends_on = [
     aws_efs_mount_target.efs_mt,
     null_resource.wait_for_efs_folders,
-    helm_release.prometheus
+    helm_release.prometheus,
+    helm_release.cluster_autoscaler
   ]
 }
 
