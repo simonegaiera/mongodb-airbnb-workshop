@@ -1,7 +1,7 @@
 
 provider "aws" {
   region  = var.aws_region
-  profile = "Solution-Architects.User-979559056307"
+  # profile = "Solution-Architects.User-979559056307"
 }
 
 # Create a VPC
