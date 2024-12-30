@@ -67,11 +67,11 @@ variable "mongo_db_major_version" {
 variable "mongodb_atlas_database_username" {
   description = "MongoDB Atlas DB username"
   type        = string
-  default     = "developer_day"
+  default     = "admin"
 }
 
 variable "mongodb_atlas_database_user_password" {
   description = "MongoDB Atlas DB password"
   type        = string
-  default     = "developer_day123"
+  default     = "MongoGameDay123"
 }

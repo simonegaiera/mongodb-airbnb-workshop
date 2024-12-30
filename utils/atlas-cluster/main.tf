@@ -42,6 +42,7 @@ resource "mongodbatlas_cluster" "create-cluster" {
   }
   cloud_backup = true
   pit_enabled = true
+
   auto_scaling_disk_gb_enabled = var.auto_scaling_disk_gb_enabled
   mongo_db_major_version       = var.mongo_db_major_version
   provider_name               = var.atlas_provider_name
@@ -50,9 +51,9 @@ resource "mongodbatlas_cluster" "create-cluster" {
   depends_on = [ mongodbatlas_project.project ]
 }
 
-output "connection_strings" {
-  value = ["${mongodbatlas_cluster.create-cluster.connection_strings}"]
-}
+# output "connection_strings" {
+#   value = ["${mongodbatlas_cluster.create-cluster.connection_strings}"]
+# }
 
 resource "mongodbatlas_project_ip_access_list" "all" {
   project_id = mongodbatlas_project.project.id
@@ -114,7 +115,7 @@ resource "local_file" "env_file" {
   filename = ".env"
   content  = <<EOF
 # AIRBNB
-MONGO_CONNECTION_STRING=mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_cluster.create-cluster.connection_strings.standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority&appName=PoV-Proof
+MONGO_CONNECTION_STRING = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_cluster.create-cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
 MONGO_DATABASE_NAME=${var.sample_database_name}
 
 # PUBLIC KEYS AND SECRETS
@@ -141,7 +142,11 @@ resource "null_resource" "install_requirements" {
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py"
+    command = "python3 ${path.module}/populate_database_airnbnb.py ${path.module}/user_list.csv 2>&1"
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
   }
 
   # Ensure that this script runs after the requirements are installed
@@ -149,6 +154,7 @@ resource "null_resource" "run_script" {
     null_resource.install_requirements,
     mongodbatlas_project.project,
     mongodbatlas_database_user.user-main,
+    mongodbatlas_database_user.users,
     mongodbatlas_project_ip_access_list.all
   ]
 }

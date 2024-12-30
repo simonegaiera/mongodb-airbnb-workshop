@@ -8,21 +8,20 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi  
 from dotenv import load_dotenv  
 import certifi  
-from parse_users import parse_csv  # Importing parse_csv from parse_users module
+from parse_users import parse_csv
 
 def load_env_variables():  
     """Load environment variables from .env file."""  
     dotenv_path = '.env'  
     if not os.path.exists(dotenv_path):  
-        print(f"Error: .env file not found at path {dotenv_path}", file=sys.stderr)  
+        print(f"Error: .env file not found at path {dotenv_path}", file=sys.stderr)
         sys.exit(1)  
   
     load_dotenv(dotenv_path)  
   
     required_variables = [  
         'MONGO_CONNECTION_STRING',  
-        'MONGO_DATABASE_NAME',  
-        'TERRAFORM_VARIABLE_FILE_NAME',
+        'MONGO_DATABASE_NAME',
         'PUBLIC_KEY',
         'PRIVATE_KEY',
         'PROJECT_ID',
@@ -39,25 +38,25 @@ def get_client():
     client = MongoClient(os.getenv('MONGO_CONNECTION_STRING'), server_api=ServerApi('1'), tlsCAFile=certifi.where())
     try:  
         client.admin.command('ping')  
-        print("Pinged your deployment. You successfully connected to MongoDB!")  
+        print("Pinged your deployment. You successfully connected to MongoDB!", flush=True)
         return client  
     except Exception as e:  
-        print(f"Error connecting to MongoDB: {e}", file=sys.stderr)  
+        print(f"Error connecting to MongoDB: {e}", file=sys.stderr)
         sys.exit(1)  
   
 def load_sample_dataset():  
     """Load a sample dataset into MongoDB Atlas."""  
-    atlas_auth = HTTPDigestAuth(os.getenv('public_key'), os.getenv('private_key'))  
+    atlas_auth = HTTPDigestAuth(os.getenv('PUBLIC_KEY'), os.getenv('PRIVATE_KEY'))  
     atlas_v2_headers = {  
         "Accept": "application/vnd.atlas.2023-02-01+json",  
         "Content-Type": "application/json"
     }  
   
-    load_url = f'https://cloud.mongodb.com/api/atlas/v2/groups/{os.getenv("project_id")}/sampleDatasetLoad/{os.getenv("cluster_name")}'  
+    load_url = f'https://cloud.mongodb.com/api/atlas/v2/groups/{os.getenv("PROJECT_ID")}/sampleDatasetLoad/{os.getenv("CLUSTER_NAME")}'  
     response = requests.post(load_url, headers=atlas_v2_headers, auth=atlas_auth)  
   
     if response.status_code == 201:  
-        print('Sample data loading initiated...')  
+        print('Sample data loading initiated...', flush=True)
         dataset_id = response.json().get('_id')  
         wait_for_loading(atlas_auth, atlas_v2_headers, dataset_id)  
     else:  
@@ -67,7 +66,7 @@ def wait_for_loading(auth, headers, dataset_id):
     """Poll the loading status of the sample dataset."""  
     loading = True  
     while loading:  
-        status_url = f'https://cloud.mongodb.com/api/atlas/v2/groups/{os.getenv("project_id")}/sampleDatasetLoad/{dataset_id}'  
+        status_url = f'https://cloud.mongodb.com/api/atlas/v2/groups/{os.getenv("PROJECT_ID")}/sampleDatasetLoad/{dataset_id}'  
         loaded_response = requests.get(status_url, headers=headers, auth=auth)  
   
         if loaded_response.status_code != 200:  
@@ -76,20 +75,20 @@ def wait_for_loading(auth, headers, dataset_id):
         state = loaded_response.json().get('state')  
         if state != 'WORKING':  
             loading = False  
-            print('Sample data loaded successfully!')  
+            print('Sample data loaded successfully!', flush=True)
         else:  
-            print("Loading dataset still running...")  
+            print("Loading dataset still running...", flush=True)
             time.sleep(30)  
   
 def handle_error(response):  
     """Handle errors from API responses."""  
-    print(f'ERROR {response.status_code}! {response.json()}', file=sys.stderr)  
+    print(f'ERROR {response.status_code}! {response.json()}', file=sys.stderr)
     sys.exit(1)  
   
-def create_user_collection(db_name, client, collections_list):  
+def create_user_collection(db_name, client, common_database, collections_list):  
     """Create user collections in the specified database."""  
     for collection in collections_list:  
-        client[db_name][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])  
+        client[common_database][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])  
   
 def main():  
     load_env_variables()  
@@ -99,28 +98,27 @@ def main():
     databases = client.list_database_names()  
   
     if common_database in databases:  
-        print(f"Database '{common_database}' exists.")  
+        print(f"Database '{common_database}' exists.", flush=True)  
     else:  
-        print(f"Database '{common_database}' does not exist. Creating.")  
+        print(f"Database '{common_database}' does not exist. Creating.", flush=True)  
         load_sample_dataset()  
   
     # Use parse_csv to get the user identifiers
-    users_map = parse_csv('./user_list.csv')
+    filename = sys.argv[1]
+    users_map = parse_csv(filename)
 
     # Since parse_csv returns a dictionary, get the keys to form a list of users
     users = list(users_map.keys())
-
-    # Append common_database to the list of users
-    users.append(common_database)  
   
     collections_list = client[common_database].list_collection_names()  
+    print(f"Existing collections in '{common_database}': {collections_list}", flush=True)
   
     for database in users:  
         if database in databases:  
-            print(f"Database '{database}' exists.")  
+            print(f"Database '{database}' exists.", flush=True)
         else:  
-            print(f"Database '{database}' does not exist. Creating.")  
-            create_user_collection(database, client, collections_list)  
+            print(f"Database '{database}' does not exist. Creating.", flush=True)  
+            create_user_collection(database, client, common_database, collections_list)  
   
 if __name__ == "__main__":  
     main()  
