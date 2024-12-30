@@ -1,10 +1,32 @@
-# MongoDB Airbnb Workshop
+# MongoDB Airbnb Workshop 🌐  
 
-Welcome to the MongoDB Airbnb Workshop! This hands-on workshop is designed to provide you with practical experience using MongoDB. By the end of this session, you'll have a solid grasp of how to interact with MongoDB and utilize its powerful features.
+Welcome to the **MongoDB Airbnb Workshop**! This interactive session is designed to help you explore MongoDB's powerful features with hands-on exercises. By the end of this workshop, you’ll gain practical experience and a deeper understanding of how MongoDB can be leveraged for real-world applications.  
 
+---
 
-## MongoDB Workshop
-You can find the instructions here: [mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/).
+## 🔗 Workshop Instructions  
+All the instructions you'll need can be found in the workshop guide:  
+👉 **[mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/)**  
 
-## MongoDB Environment Preparation
-To configure the Atlas enviroment follow the instruction in the [utils](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils) folder.
+---
+
+## 🛠️ Environment Setup (For MongoDB SAs Only)  
+
+MongoDB **SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
+
+- **Set up an Atlas Cluster**:  
+  Instructions available here:  
+  ➡️ **[atlas-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/atlas-cluster)**  
+
+- **Set up an EKS Cluster**:  
+  Instructions available here:  
+  ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/openvscode-eks)**  
+
+### Note for Participants:  
+The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
+
+---
+
+Prepare to unleash the full potential of MongoDB! 🚀 Explore, collaborate, and build something amazing.
+
+Happy learning! 💻✨  
