@@ -175,6 +175,7 @@ resource "helm_release" "user_openvscode" {
 
   depends_on = [
     aws_efs_mount_target.efs_mt,
+    kubernetes_pod.efs_initializer,
     null_resource.wait_for_efs_folders,
     helm_release.prometheus,
     helm_release.cluster_autoscaler
