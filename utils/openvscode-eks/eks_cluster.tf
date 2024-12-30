@@ -182,9 +182,9 @@ resource "aws_iam_role_policy_attachment" "efs_client_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "node_autoscaler_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-  role       = aws_iam_role.node_role.name
+locals {
+  current_timestamp = timestamp()
+  expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
 }
 
 # Create the EKS Cluster
@@ -220,9 +220,9 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   tags = {
     Name       = var.cluster_name
-    "expire-on" = "2025-01-01"
-    "owner"     = "simone.gaiera"
-    "purpose"   = "training"
+    "expire-on" = local.expire_timestamp
+    "owner"     = var.domain_email
+    "purpose"   = "gameday"
   }
 }
 
@@ -243,9 +243,6 @@ resource "aws_eks_node_group" "node_group" {
 
   tags = {
     Name        = "eks-node-group-${var.cluster_name}"
-    "expire-on" = "2025-01-01"
-    "owner"     = "simone.gaiera"
-    "purpose"   = "training"
   }
 
   depends_on = [
@@ -296,12 +293,53 @@ resource "helm_release" "metrics_server" {
   ]
 }
 
+# Define Custom IAM Policy
+resource "aws_iam_policy" "custom_autoscaling_policy" {
+  name        = "${var.cluster_name}-autoscaling-policy"
+  description = "Custom policy for additional auto-scaling and EC2 actions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeScalingActivities",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:GetInstanceTypesFromInstanceRequirements",
+          "eks:DescribeNodegroup"
+        ]
+        Resource = ["*"]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup"
+        ]
+        Resource = ["*"]
+      }
+    ]
+  })
+}
+
+# Attach Custom IAM Policy to the Node Role
+resource "aws_iam_role_policy_attachment" "custom_autoscaling_policy_attachment" {
+  role       = aws_iam_role.node_role.name
+  policy_arn = aws_iam_policy.custom_autoscaling_policy.arn
+}
+
 # TODO: autoscaler not working
 resource "helm_release" "cluster_autoscaler" {
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.43.3"
+  version    = "9.44.0"
   namespace  = "kube-system"
 
   # set {
@@ -317,6 +355,11 @@ resource "helm_release" "cluster_autoscaler" {
   set {
     name  = "rbac.serviceAccount.create"
     value = "false"
+  }
+
+  set {
+    name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = aws_iam_role.node_role.arn
   }
 
   set {
@@ -356,6 +399,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   depends_on = [
     aws_eks_node_group.node_group,
+    aws_iam_role_policy_attachment.custom_autoscaling_policy_attachment,
     helm_release.prometheus
   ]
 }
