@@ -19,4 +19,4 @@ defaults:
         nav: "docs"
 include: ["_pages"]
 header:
-  logo: "/assets/images/logo.png"
+  logo: "assets/images/logo.png"
