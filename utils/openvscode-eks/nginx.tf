@@ -86,7 +86,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
   chart      = "./airbnb-workshop-nginx"
-  version    = "0.1.0"
+  version    = "0.2.0"
 
   values = [
     file("${path.module}/airbnb-workshop-nginx/values.yaml")

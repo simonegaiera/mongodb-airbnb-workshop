@@ -1,40 +1,65 @@
-# GameDay Environment Setup
+# GameDay Environment Setup Guide
 
-Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth setup process.
+Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth setup process for your environment.
 
 ## Preparation Steps
 
 ### Step 1: Collect the User List
 
-- Create a file named `user_list.csv` using the provided template.
-- Ensure the file includes all users relevant to your project.
-- A mandatory field in this file is `email`.
+1. **Create a CSV File**: 
+   - Name your file `user_list.csv` and use the provided template as a guide.
+   - Ensure the file includes all users relevant to your project.
+   - The `email` field is mandatory and must be filled in for each user.
 
 ### Step 2: Python3 Setup
 
-- Verify that you have Python 3 installed on your laptop.
-- It's recommended to run your scripts within a virtual environment (venv). If not already setup, you can create and activate a virtual environment using the following commands:
+1. **Verify Python3 Installation**:
+   - Make sure Python 3 is installed on your laptop.
+   
+2. **Set Up a Virtual Environment**:
+   - It's recommended to run your scripts within a virtual environment (venv). If not already set up, you can create and activate it with these commands:
 
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate   # On macOS/Linux
-  venv\Scripts\activate      # On Windows
-  ```
+   ```bash
+   # Create a virtual environment
+   python3 -m venv venv
+
+   # Activate the virtual environment (macOS/Linux)
+   source venv/bin/activate
+
+   # Activate the virtual environment (Windows)
+   venv\Scripts\activate
+   ```
 
 ## Generate Terraform Configuration
 
 ### Step 3: Setup Terraform Variables
 
-1. Duplicate the `terraform.tfvars.template` file and rename the copy to `terraform.tfvars`.
-2. Open `terraform.tfvars` and update the settings to fit your specific needs.
-   - Ensure that the API Keys included have `Organization Project Creator` permissions.
+1. **Prepare the Variable File**:
+   - Duplicate the `terraform.tfvars.template` file and rename the copy to `terraform.tfvars`.
+
+2. **Configure Your Settings**:
+   - Open `terraform.tfvars` and update the settings to meet your specific needs. Ensure your AWS credentials are accessible programmatically or through the AWS CLI:
+
+   ```bash
+   export AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
+   export AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
+   export AWS_SESSION_TOKEN="YOUR_AWS_SESSION_TOKEN"
+   ```
 
 ### Step 4: Initialize and Apply Terraform
 
-- Run the following Terraform commands in sequence to initialize and apply your setup:
+1. **Run Terraform Commands**:
+   - Execute the following commands in your terminal to initialize and apply your Terraform configuration successfully:
 
-  ```bash
-  terraform init      # Initializes the Terraform working directory.
-  terraform plan      # Prepares an execution plan and shows what Terraform will do.
-  terraform apply     # Applies the changes required to reach the desired state.
-  ```
+   ```bash
+   # Initialize the Terraform working directory
+   terraform init
+
+   # Generate and display an execution plan
+   terraform plan
+
+   # Apply the changes required to reach the desired state
+   terraform apply
+   ```
+
+Following these steps will help ensure a smooth setup for your GameDay environment. Good luck, and enjoy your GameDay experience!
