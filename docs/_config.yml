@@ -18,3 +18,5 @@ defaults:
       sidebar:
         nav: "docs"
 include: ["_pages"]
+header:
+  logo: "/assets/images/logo.png"
