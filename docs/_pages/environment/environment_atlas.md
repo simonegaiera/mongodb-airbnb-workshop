@@ -1,5 +1,8 @@
-Certainly! Let's refine and correct the provided content for clarity and accuracy.
-
+---
+title: "Environment Preparation: Atlas"
+permalink: /environment/atlas/
+layout: single
+classes: wide
 ---
 
 ## Environment Preparation: Atlas

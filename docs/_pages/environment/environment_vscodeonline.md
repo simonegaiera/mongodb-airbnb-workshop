@@ -1,10 +1,14 @@
 ---
+title: "Environment Preparation: VSCode"
+permalink: /environment/vscodeonline/
+layout: single
+classes: wide
+---
+
 
 ### Environment Preparation: VSCode Online
 
 Optimizing your setup for smooth development with VSCode Online is straightforward. Follow this guide to configure your workspace and connect your application seamlessly to MongoDB.
-
----
 
 ### Step 1: Verify Environment
 
@@ -23,8 +27,6 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
      ```
    - Confirm that the frontend is accessible and functional.
 
----
-
 ### Step 2: Connect MongoDB Extension
 
 1. **Select MongoDB Extension:**
@@ -40,8 +42,6 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
 
 3. **Verify Connection:**
    - Ensure the MongoDB connection is established successfully, checking for any error messages.
-
----
 
 ### Step 3: Configure Backend Server
 
@@ -62,7 +62,5 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
 
 3. **Verify Server Functionality:**
    - Check for console logs indicating the server is running and connected to MongoDB.
-
----
 
 Following these steps will ensure your VSCode environment is ready for development, enabling you to efficiently work with your application and MongoDB. If you encounter any issues, consult with your SA for additional support. Happy coding!
