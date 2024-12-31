@@ -86,7 +86,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
   chart      = "./airbnb-workshop-nginx"
-  version    = "0.2.0"
+  version    = "0.1.1"
 
   values = [
     file("${path.module}/airbnb-workshop-nginx/values.yaml")
@@ -104,6 +104,77 @@ resource "helm_release" "airbnb_workshop_nginx" {
   set_sensitive {
     name  = "secret.data.tls.key"
     value = tls_private_key.request_key.private_key_pem
+  }
+
+  set {
+    name  = "volumes[0].name"
+    value = "nginx-config-volume"
+  }
+
+  set {
+    name  = "volumes[0].configMap.name"
+    value = "airbnb-workshop-nginx-configmap"
+  }
+
+  set {
+    name  = "volumes[1].name"
+    value = "nginx-tls"
+  }
+
+  set {
+    name  = "volumes[1].secret.secretName"
+    value = "nginx-tls"
+  }
+
+  set {
+    name  = "volumeMounts[0].name"
+    value = "nginx-config-volume"
+  }
+
+  set {
+    name  = "volumeMounts[0].mountPath"
+    value = "/etc/nginx/conf.d"
+  }
+
+  set {
+    name  = "volumeMounts[1].name"
+    value = "nginx-tls"
+  }
+
+  set {
+    name  = "volumeMounts[1].mountPath"
+    value = "/etc/nginx/ssl"
+  }
+
+  # Set the Persistent Volume Claim
+  set {
+    name  = "nfsServer"
+    value = "${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
+  }
+
+  set {
+    name  = "volumes[2].name"
+    value = "openvscode-workshop-user-data"
+  }
+
+  set {
+    name  = "volumes[2].persistentVolumeClaim.claimName"
+    value = "airbnb-workshop-nginx-pvc"
+  }
+
+  set {
+    name  = "volumeMounts[2].name"
+    value = "openvscode-workshop-user-data"
+  }
+
+  set {
+    name  = "volumeMounts[2].mountPath"
+    value = "/var/www/mongodb-airbnb-workshop"
+  }
+
+  set {
+    name  = "volumeMounts[2].readOnly"
+    value = "true"
   }
 
   depends_on = [

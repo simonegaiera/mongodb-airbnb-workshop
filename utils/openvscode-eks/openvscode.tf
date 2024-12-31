@@ -105,7 +105,7 @@ resource "helm_release" "user_openvscode" {
   name       = "airbnb-workshop-openvscode-${local.user_ids[count.index]}"
   repository = "local"
   chart      = "./airbnb-workshop-openvscode"
-  version    = "0.1.0"
+  version    = "0.1.2"
 
   values = [
     file("${path.module}/airbnb-workshop-openvscode/values.yaml")
@@ -202,7 +202,7 @@ output "user_cluster_map" {
   value = jsonencode(
       {
         for i in range(length(local.user_ids)) :
-        "${local.user_ids[i]}.${var.aws_route53_record_name}" => data.kubernetes_service.openvscode_services[i].spec[0].cluster_ip
+        "${local.user_ids[i]}.${var.aws_route53_record_name}" => data.kubernetes_service.openvscode_services[i].metadata[0].name
       }
   )
 }
@@ -222,7 +222,8 @@ locals {
   nginx_user_configs = [
     for i in range(length(local.user_ids)) : templatefile("${path.module}/airbnb-customer-nginx-ssl.conf.tpl", {
       server_name = "${local.user_ids[i]}.${var.aws_route53_record_name}",
-      proxy_pass  = lookup(data.kubernetes_service.openvscode_services[i].spec[0], "cluster_ip", "default-ip")
+      data_username = "${local.user_ids[i]}",
+      proxy_pass  = lookup(data.kubernetes_service.openvscode_services[i].metadata[0], "name", "default-ip")
     })
   ]
 

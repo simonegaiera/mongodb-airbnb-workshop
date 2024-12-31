@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "aibnb-workshop-nginx.fullname" . }}
+  name: {{ include "airbnb-workshop-nginx.fullname" . }}
   labels:
-    {{- include "aibnb-workshop-nginx.labels" . | nindent 4 }}
+    {{- include "airbnb-workshop-nginx.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -14,4 +14,4 @@ spec:
       name: {{ .name }}
   {{- end }}
   selector:
-    {{- include "aibnb-workshop-nginx.selectorLabels" . | nindent 4 }}
+    {{- include "airbnb-workshop-nginx.selectorLabels" . | nindent 4 }}

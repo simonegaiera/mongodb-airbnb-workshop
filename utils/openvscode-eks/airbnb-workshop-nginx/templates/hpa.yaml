@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "aibnb-workshop-nginx.fullname" . }}
+  name: {{ include "airbnb-workshop-nginx.fullname" . }}
   labels:
-    {{- include "aibnb-workshop-nginx.labels" . | nindent 4 }}
+    {{- include "airbnb-workshop-nginx.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "aibnb-workshop-nginx.fullname" . }}
+    name: {{ include "airbnb-workshop-nginx.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

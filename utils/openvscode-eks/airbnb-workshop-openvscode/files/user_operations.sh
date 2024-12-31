@@ -24,7 +24,9 @@ EOL
 
 echo "Installing and building the app"
 cd /home/workspace/mongodb-airbnb-workshop/app
+echo "Installing the app..."
 npm install --legacy-peer-deps || echo "npm install failed in app"
+echo "Building the app..."
 npm run build || echo "npm build failed in app"
 
 echo "Installing dependencies for the server"

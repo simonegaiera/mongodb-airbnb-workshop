@@ -92,23 +92,12 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-# volumes: []
-volumes:
-  - name: nginx-config-volume
-    configMap:
-      name: airbnb-workshop-nginx-config
-  - name: nginx-tls
-    secret:
-      secretName: nginx-tls
+volumes: []
 
-# Additional volumeMounts on the output Deployment definition.
-# volumeMounts: []
-volumeMounts:
-  - name: nginx-config-volume
-    mountPath: /etc/nginx/conf.d
-  - name: nginx-tls
-    mountPath: "/etc/nginx/ssl"
+volumeMounts: []
 
+nfsServer: ""
+volumeSize: 10Gi
 
 nodeSelector: {}
 
