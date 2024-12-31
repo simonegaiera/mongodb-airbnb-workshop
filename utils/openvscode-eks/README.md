@@ -62,7 +62,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
    terraform plan
 
    # Apply the changes required to reach the desired state
-   terraform apply
+   terraform apply -auto-approve
    ```
 
 ---
