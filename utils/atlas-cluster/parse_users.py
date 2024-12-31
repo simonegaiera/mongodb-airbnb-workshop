@@ -2,16 +2,16 @@ import csv
 import json
 import sys
 import re
+from collections import OrderedDict
 
 filename = sys.argv[1]
 
 def parse_csv(filename):
-    users_map = {}
+    users_map = OrderedDict()
     with open(filename, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             email_prefix = row['email'].split('@')[0]
-            # Remove non-alphanumeric characters
             sanitized_email_prefix = re.sub(r'[^a-zA-Z0-9]', '-', email_prefix)
             users_map[sanitized_email_prefix] = "user"
 

@@ -24,14 +24,4 @@ echo "Executing user-specific operations script"
 # Execute the user-specific operations script as the desired user
 sudo -u openvscode-server bash /tmp/user_operations.sh
 
-OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
-OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
-
-echo "Starting OpenVSCode Server Extension Installation"
-
-for ext in "gitpod.gitpod-theme" "mongodb.mongodb-vscode"; do
-    echo "Installing extension: ${ext}"
-    sudo -u openvscode-server ${OPENVSCODE} --install-extension "${ext}"
-done
-
 echo "Script executed successfully"

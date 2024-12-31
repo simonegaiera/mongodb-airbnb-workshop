@@ -13,3 +13,5 @@ data:
     {{ .Files.Get "files/startup.sh" | nindent 4 }}
   user_operations.sh: |-
     {{ .Files.Get "files/user_operations.sh" | nindent 4 }}
+  openvscode_extensions.sh: |-
+    {{ .Files.Get "files/openvscode_extensions.sh" | nindent 4 }}
