@@ -1,36 +1,26 @@
 server {
     server_name ${server_name};
 
-    location / {
-        proxy_pass http://${proxy_pass}:8000/;
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection upgrade;
-        proxy_set_header Accept-Encoding gzip;
+    location = /frontend {
+        return 301 /frontend/;
     }
-
-    location /vscode/ {
-        proxy_pass http://${proxy_pass}:8000/;
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection upgrade;
-        proxy_set_header Accept-Encoding gzip;
-
-        rewrite ^/vscode/(.*)$ /$1 break;
-    }
-
+    
     location /frontend/ {
-        proxy_pass http://${proxy_pass}:8080/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        alias /var/www/mongodb-airbnb-workshop/airbnb-workshop-openvscode-${data_username}/app/out/;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
 
-        rewrite ^/frontend/(.*)$ /$1 break;
+    location / {
+        proxy_pass http://${proxy_pass}:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
     }
 
     location /react/ {
-        proxy_pass http://${proxy_pass}:3000/;
+        proxy_pass http://${proxy_pass}:3001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

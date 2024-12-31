@@ -41,6 +41,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
    - Open `terraform.tfvars` and update the settings to meet your specific needs. Ensure your AWS credentials are accessible programmatically or through the AWS CLI:
 
    ```bash
+   aws sso login --profile Solution-Architects.User-979559056307
    export AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
    export AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
    export AWS_SESSION_TOKEN="YOUR_AWS_SESSION_TOKEN"
