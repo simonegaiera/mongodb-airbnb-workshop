@@ -58,13 +58,16 @@ resource "kubernetes_pod" "efs_initializer" {
 
   # Create user directories
   echo "Creating user directories..."
-  for user_id in $(echo " ${join(" ", local.user_ids)} "); do
-    echo "Creating directory for user ID: $user_id"
-    mkdir -p /mnt/efs/airbnb-workshop-openvscode-$user_id
+  for user_id in $(echo "${join(" ", local.user_ids)}"); do
+    # Truncate user_id to 53 characters if it's longer
+    truncated_user_id=$(echo "$user_id" | cut -c1-53)
+    
+    echo "Creating directory for user ID: $truncated_user_id"
+    mkdir -p /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id
     if [ $? -eq 0 ]; then
-      echo "Directory /mnt/efs/airbnb-workshop-openvscode-$user_id created successfully."
+      echo "Directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id created successfully."
     else
-      echo "Failed to create directory /mnt/efs/airbnb-workshop-openvscode-$user_id."
+      echo "Failed to create directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id."
     fi
   done
 
@@ -91,9 +94,9 @@ resource "null_resource" "wait_for_efs_folders" {
     command = "sleep 120"
   }
 
-  triggers = {
-    always_run = "${timestamp()}"
-  }
+  # triggers = {
+  #   always_run = "${timestamp()}"
+  # }
 
   depends_on = [ 
     kubernetes_pod.efs_initializer 
