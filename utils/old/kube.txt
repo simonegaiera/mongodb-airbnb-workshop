@@ -1,0 +1,75 @@
+aws sso login --profile Solution-Architects.User-979559056307
+
+aws eks update-kubeconfig --region us-east-2 --name airbnb-workshop-eks --profile Solution-Architects.User-979559056307
+
+aws eks describe-cluster --name airbnb-workshop-eks --query "cluster.identity.oidc.issuer" --region us-east-2 --profile Solution-Architects.User-979559056307
+
+kubectl run -i -t amazonlinux --image=amazonlinux:2 --restart=Never --rm
+kubectl run -i -t ubuntu --image=ubuntu --restart=Never --rm -- bash
+apt update && apt install -y curl
+
+
+kubectl get pods -n default -o wide
+kubectl logs airbnb-workshop-openvscode-64d49c6bf-w66vf -n default
+
+kubectl exec -it airbnb-workshop-openvscode-simone-gaiera-6b7d57f69-7tvnv -- /bin/bash
+kubectl exec -it airbnb-workshop-nginx-config-97c464948-2jl2b -c airbnb-workshop-nginx -- /bin/bash
+
+kubectl config get-contexts
+kubectl config use-context <context-name>
+kubectl cluster-info
+kubectl get nodes
+
+kubectl get pods -n monitoring -o wide
+kubectl get services -n monitoring -o wide
+kubectl logs prometheus-alertmanager-0 -n monitoring
+kubectl logs prometheus-grafana-6d96c9cf6f-27ncp -n monitoring
+kubectl logs prometheus-server-7c97f9d6b7-nkfd2 -c prometheus-server -n monitoring
+
+kubectl get secret prometheus-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
+kubectl get secret prometheus-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+
+
+kubectl get pods -n kube-system -o wide
+kubectl logs cluster-autoscaler-aws-cluster-autoscaler -n kube-system
+
+kubectl exec -it aws-node-wg2w7 -n kube-system -- /bin/bash
+
+eksctl utils associate-iam-oidc-provider --cluster <cluster_name> --approve
+
+kubectl get configmaps
+
+kubectl get services -o wide
+kubectl get nodes -o wide
+
+kubectl get secret nginx-tls -o yaml
+
+
+kubectl describe serviceaccount ebs-csi-controller-sa -n kube-system
+aws iam list-open-id-connect-providers
+
+
+kubectl describe pod airbnb-workshop-openvscode-64d49c6bf-w66vf
+kubectl describe service airbnb-workshop-openvscode-service
+
+
+curl -v http://a8c4d6de9d1544ab4975d321593f5904-972776210.us-east-2.elb.amazonaws.com
+
+curl -v http://airbnb-customer.mongosa.com/frontend/
+
+kubectl get pods --show-labels
+
+echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
+echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+apt-get update
+apt-get install -y less nano vim curl dnsutils
+
+nginx -s reload
+
+ssh -i "simone.gaiera.pem" ec2-user@ec2-3-133-147-224.us-east-2.compute.amazonaws.com
+
+https://oidc.eks.us-east-2.amazonaws.com/id/2C8411E26FC06D761D2685105AA3B902
+
+
+export TF_LOG=DEBUG
+unset TF_LOG
