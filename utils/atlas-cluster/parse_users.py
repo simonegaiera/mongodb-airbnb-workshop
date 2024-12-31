@@ -9,9 +9,9 @@ filename = sys.argv[1]
 def parse_csv(filename):
     users_map = OrderedDict()
     with open(filename, mode='r') as csvfile:
-        reader = csv.DictReader(csvfile)
+        reader = csv.DictReader(csvfile, skipinitialspace=True)
         for row in reader:
-            email_prefix = row['email'].split('@')[0]
+            email_prefix = row['email'].strip().split('@')[0]
             sanitized_email_prefix = re.sub(r'[^a-zA-Z0-9]', '-', email_prefix)
             users_map[sanitized_email_prefix] = "user"
 
