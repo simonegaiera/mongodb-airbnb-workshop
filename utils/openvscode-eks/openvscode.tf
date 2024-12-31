@@ -101,11 +101,12 @@ resource "null_resource" "wait_for_efs_folders" {
 }
 
 resource "helm_release" "user_openvscode" {
-  count      = length(local.user_ids)
-  name       = "airbnb-workshop-openvscode-${local.user_ids[count.index]}"
+  for_each = tomap({ for id in local.user_ids : id => id })
+
+  name       = "airbnb-workshop-openvscode-${each.value}"
   repository = "local"
   chart      = "./airbnb-workshop-openvscode"
-  version    = "0.1.2"
+  version    = "0.1.3"
 
   values = [
     file("${path.module}/airbnb-workshop-openvscode/values.yaml")
@@ -113,7 +114,7 @@ resource "helm_release" "user_openvscode" {
 
   set {
     name  = "openvscode.user"
-    value = local.user_ids[count.index]
+    value = each.value
   }
 
   set {
@@ -129,17 +130,17 @@ resource "helm_release" "user_openvscode" {
   # Set the Persistent Volume Claim
   set {
     name  = "volumes[0].name"
-    value = "openvscode-volume-${local.user_ids[count.index]}"
+    value = "openvscode-volume-${each.value}"
   }
 
   set {
     name  = "volumes[0].persistentVolumeClaim.claimName"
-    value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-pvc"
+    value = "airbnb-workshop-openvscode-${each.value}-pvc"
   }
   
   set {
     name  = "volumeMounts[0].name"
-    value = "openvscode-volume-${local.user_ids[count.index]}"
+    value = "openvscode-volume-${each.value}"
   }
 
   set {
@@ -155,17 +156,17 @@ resource "helm_release" "user_openvscode" {
   # Set the configmap
     set {
     name  = "volumes[1].name"
-    value = "openvscode-configmap-${local.user_ids[count.index]}"
+    value = "openvscode-configmap-${each.value}"
   }
 
   set {
     name  = "volumes[1].configMap.name"
-    value = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-configmap"
+    value = "airbnb-workshop-openvscode-${each.value}-configmap"
   }
   
   set {
     name  = "volumeMounts[1].name"
-    value = "openvscode-configmap-${local.user_ids[count.index]}"
+    value = "openvscode-configmap-${each.value}"
   }
 
   set {
@@ -183,28 +184,21 @@ resource "helm_release" "user_openvscode" {
 }
 
 data "kubernetes_service" "openvscode_services" {
-  count = length(local.user_ids)
+  for_each = tomap({ for id in local.user_ids : id => id })
   metadata {
-    name      = "airbnb-workshop-openvscode-${local.user_ids[count.index]}-service"
-    namespace = helm_release.user_openvscode[count.index].namespace
+    name      = "airbnb-workshop-openvscode-${each.value}-service"
+    namespace = helm_release.user_openvscode[each.key].namespace
   }
-
   depends_on = [
     helm_release.user_openvscode
   ]
 }
 
-# output "cluster_ips" {
-#   value = [for i in range(length(local.user_ids)) : data.kubernetes_service.openvscode_services[i].spec[0].cluster_ip]
-# }
-
 output "user_cluster_map" {
-  value = jsonencode(
-      {
-        for i in range(length(local.user_ids)) :
-        "${local.user_ids[i]}.${var.aws_route53_record_name}" => data.kubernetes_service.openvscode_services[i].metadata[0].name
-      }
-  )
+  value = jsonencode({
+    for user_id in local.user_ids :
+    "${user_id}.${var.aws_route53_record_name}" => lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
+  })
 }
 
 locals {
@@ -220,10 +214,10 @@ locals {
 
   # Generate a list of Nginx configuration blocks for each user ID
   nginx_user_configs = [
-    for i in range(length(local.user_ids)) : templatefile("${path.module}/airbnb-customer-nginx-ssl.conf.tpl", {
-      server_name = "${local.user_ids[i]}.${var.aws_route53_record_name}",
-      data_username = "${local.user_ids[i]}",
-      proxy_pass  = lookup(data.kubernetes_service.openvscode_services[i].metadata[0], "name", "default-ip")
+    for user_id in local.user_ids : templatefile("${path.module}/airbnb-customer-nginx-ssl.conf.tpl", {
+      server_name = "${user_id}.${var.aws_route53_record_name}",
+      data_username = "${user_id}",
+      proxy_pass = lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
     })
   ]
 
