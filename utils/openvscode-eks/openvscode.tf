@@ -91,9 +91,9 @@ resource "null_resource" "wait_for_efs_folders" {
     command = "sleep 120"
   }
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 
   depends_on = [ 
     kubernetes_pod.efs_initializer 
@@ -103,10 +103,10 @@ resource "null_resource" "wait_for_efs_folders" {
 resource "helm_release" "user_openvscode" {
   for_each = tomap({ for id in local.user_ids : id => id })
 
-  name       = "airbnb-workshop-openvscode-${each.value}"
+  name       = substr("airbnb-workshop-openvscode-${each.value}", 0, 53)
   repository = "local"
   chart      = "./airbnb-workshop-openvscode"
-  version    = "0.1.3"
+  version    = "0.1.4"
 
   values = [
     file("${path.module}/airbnb-workshop-openvscode/values.yaml")
@@ -135,7 +135,7 @@ resource "helm_release" "user_openvscode" {
 
   set {
     name  = "volumes[0].persistentVolumeClaim.claimName"
-    value = "airbnb-workshop-openvscode-${each.value}-pvc"
+    value = "${substr("airbnb-workshop-openvscode-${each.value}", 0, 53)}-pvc"
   }
   
   set {
@@ -161,7 +161,7 @@ resource "helm_release" "user_openvscode" {
 
   set {
     name  = "volumes[1].configMap.name"
-    value = "airbnb-workshop-openvscode-${each.value}-configmap"
+    value = "${substr("airbnb-workshop-openvscode-${each.value}", 0, 53)}-configmap"
   }
   
   set {
@@ -179,14 +179,15 @@ resource "helm_release" "user_openvscode" {
     kubernetes_pod.efs_initializer,
     null_resource.wait_for_efs_folders,
     helm_release.prometheus,
-    helm_release.cluster_autoscaler
+    helm_release.cluster_autoscaler,
+    aws_eks_node_group.node_group
   ]
 }
 
 data "kubernetes_service" "openvscode_services" {
   for_each = tomap({ for id in local.user_ids : id => id })
   metadata {
-    name      = "airbnb-workshop-openvscode-${each.value}-service"
+    name      = "${substr("airbnb-workshop-openvscode-${each.value}", 0, 53)}-service"
     namespace = helm_release.user_openvscode[each.key].namespace
   }
   depends_on = [

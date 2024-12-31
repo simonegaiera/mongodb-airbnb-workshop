@@ -78,15 +78,11 @@ resource "acme_certificate" "mongosa_cert" {
   depends_on = [null_resource.wait_for_dns]
 }
 
-# output "mongosa_cert" {
-#   value = acme_certificate.mongosa_cert.certificate_pem
-# }
-
 resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
   chart      = "./airbnb-workshop-nginx"
-  version    = "0.1.1"
+  version    = "0.1.4"
 
   values = [
     file("${path.module}/airbnb-workshop-nginx/values.yaml")
