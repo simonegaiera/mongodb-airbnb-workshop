@@ -8,7 +8,6 @@ kubectl run -i -t amazonlinux --image=amazonlinux:2 --restart=Never --rm
 kubectl run -i -t ubuntu --image=ubuntu --restart=Never --rm -- bash
 apt update && apt install -y curl
 
-
 kubectl get pods -n default -o wide
 kubectl logs airbnb-workshop-openvscode-64d49c6bf-w66vf -n default
 
