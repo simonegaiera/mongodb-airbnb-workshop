@@ -7,101 +7,190 @@ locals {
   user_ids = keys(data.external.user_data.result)
 }
 
-resource "kubernetes_pod" "efs_initializer" {
+# resource "kubernetes_pod" "efs_initializer" {
+#   metadata {
+#     name = "efs-initializer"
+#   }
+
+#   spec {
+#     container {
+#       image = "amazonlinux:2"
+#       name  = "efs-setup"
+
+#       command = [
+#         "sh",
+#         "-c",
+# <<-EOT
+#   # Confirm current user
+#   echo "Running as user: $(whoami)"
+
+#   # Install NFS tools
+#   echo "Installing nfs-utils..."
+#   if yum install -y nfs-utils; then
+#     echo "nfs-utils installed successfully."
+#   else
+#     echo "Failed to install nfs-utils."
+#     exit 1
+#   fi
+
+#   # Prepare for EFS mount
+#   echo "Creating directory /mnt/efs..."
+#   mkdir -p /mnt/efs
+
+#   # Check and mount the EFS
+#   echo "Checking mountpoint for EFS..."
+#   # Define your EFS address variable
+#   efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
+#   # Echo the EFS address
+#   echo "EFS Address: $efs"
+#   if ! grep -qs '/mnt/efs ' /proc/mounts; then
+#       echo "Mounting EFS..."
+#       mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
+#       if [ $? -eq 0 ]; then
+#           echo "EFS mounted successfully."
+#       else
+#           echo "Failed to mount EFS."
+#           exit 1
+#       fi
+#   else
+#       echo "EFS is already mounted."
+#   fi
+
+#   # Create user directories
+#   echo "Creating user directories..."
+#   for user_id in $(echo "${join(" ", local.user_ids)}"); do
+#     # Truncate user_id to 53 characters if it's longer
+#     truncated_user_id=$(echo "$user_id" | cut -c1-53)
+    
+#     echo "Creating directory for user ID: $truncated_user_id"
+#     mkdir -p /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id
+#     if [ $? -eq 0 ]; then
+#       echo "Directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id created successfully."
+#     else
+#       echo "Failed to create directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id."
+#     fi
+#   done
+
+#   echo "Script execution completed."
+# EOT
+#       ]
+
+#       security_context {
+#         privileged = true
+#       }
+#     }
+
+#     restart_policy = "Never"
+#   }
+
+#   depends_on = [ 
+#     aws_efs_mount_target.efs_mt,
+#     helm_release.prometheus
+#   ]
+# }
+
+resource "kubernetes_job" "efs_initializer" {
   metadata {
     name = "efs-initializer"
   }
 
   spec {
-    container {
-      image = "amazonlinux:2"
-      name  = "efs-setup"
+    template {
+      metadata {
+        labels = {
+          job-name = "efs-initializer"
+        }
+      }
 
-      command = [
-        "sh",
-        "-c",
+      spec {
+        container {
+          image = "amazonlinux:2"
+          name  = "efs-setup"
+
+          command = [
+            "sh",
+            "-c",
 <<-EOT
-  # Confirm current user
-  echo "Running as user: $(whoami)"
+# Confirm current user
+echo "Running as user: $(whoami)"
 
-  # Install NFS tools
-  echo "Installing nfs-utils..."
-  if yum install -y nfs-utils; then
-    echo "nfs-utils installed successfully."
-  else
-    echo "Failed to install nfs-utils."
-    exit 1
-  fi
+# Install NFS tools
+echo "Installing nfs-utils..."
+if yum install -y nfs-utils; then
+  echo "nfs-utils installed successfully."
+else
+  echo "Failed to install nfs-utils."
+  exit 1
+fi
 
-  # Prepare for EFS mount
-  echo "Creating directory /mnt/efs..."
-  mkdir -p /mnt/efs
+# Prepare for EFS mount
+echo "Creating directory /mnt/efs..."
+mkdir -p /mnt/efs
 
-  # Check and mount the EFS
-  echo "Checking mountpoint for EFS..."
-  # Define your EFS address variable
-  efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
-  # Echo the EFS address
-  echo "EFS Address: $efs"
-  if ! grep -qs '/mnt/efs ' /proc/mounts; then
-      echo "Mounting EFS..."
-      mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
-      if [ $? -eq 0 ]; then
-          echo "EFS mounted successfully."
-      else
-          echo "Failed to mount EFS."
-          exit 1
-      fi
-  else
-      echo "EFS is already mounted."
-  fi
-
-  # Create user directories
-  echo "Creating user directories..."
-  for user_id in $(echo "${join(" ", local.user_ids)}"); do
-    # Truncate user_id to 53 characters if it's longer
-    truncated_user_id=$(echo "$user_id" | cut -c1-53)
-    
-    echo "Creating directory for user ID: $truncated_user_id"
-    mkdir -p /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id
+# Check and mount the EFS
+echo "Checking mountpoint for EFS..."
+efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
+echo "EFS Address: $efs"
+if ! grep -qs '/mnt/efs ' /proc/mounts; then
+    echo "Mounting EFS..."
+    mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
     if [ $? -eq 0 ]; then
-      echo "Directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id created successfully."
+        echo "EFS mounted successfully."
     else
-      echo "Failed to create directory /mnt/efs/airbnb-workshop-openvscode-$truncated_user_id."
+        echo "Failed to mount EFS."
+        exit 1
     fi
-  done
+else
+    echo "EFS is already mounted."
+fi
 
-  echo "Script execution completed."
+echo "Creating user directories..."
+for user_id in $(echo "${join(" ", local.user_ids)}"); do
+  truncated_user_id=$(echo "airbnb-workshop-openvscode-$user_id" | cut -c1-53)
+  echo "Creating directory for user ID: $truncated_user_id"
+  mkdir -p /mnt/efs/$truncated_user_id
+  if [ $? -eq 0 ]; then
+    echo "Directory /mnt/efs/$truncated_user_id created successfully."
+  else
+    echo "Failed to create directory /mnt/efs/$truncated_user_id."
+  fi
+done
+
+echo "Script execution completed."
 EOT
-      ]
+          ]
 
-      security_context {
-        privileged = true
+          security_context {
+            privileged = true
+          }
+        }
+
+        restart_policy = "Never"
       }
     }
 
-    restart_policy = "Never"
+    backoff_limit = 0
   }
 
-  depends_on = [ 
+  depends_on = [
     aws_efs_mount_target.efs_mt,
     helm_release.prometheus
   ]
 }
 
-resource "null_resource" "wait_for_efs_folders" {
-  provisioner "local-exec" {
-    command = "sleep 120"
-  }
+# resource "null_resource" "wait_for_efs_folders" {
+#   provisioner "local-exec" {
+#     command = "sleep 120"
+#   }
 
-  # triggers = {
-  #   always_run = "${timestamp()}"
-  # }
+#   # triggers = {
+#   #   always_run = "${timestamp()}"
+#   # }
 
-  depends_on = [ 
-    kubernetes_pod.efs_initializer 
-  ]
-}
+#   depends_on = [ 
+#     kubernetes_job.efs_initializer 
+#   ]
+# }
 
 resource "helm_release" "user_openvscode" {
   for_each = tomap({ for id in local.user_ids : id => id })
@@ -179,8 +268,8 @@ resource "helm_release" "user_openvscode" {
 
   depends_on = [
     aws_efs_mount_target.efs_mt,
-    kubernetes_pod.efs_initializer,
-    null_resource.wait_for_efs_folders,
+    kubernetes_job.efs_initializer,
+    # null_resource.wait_for_efs_folders,
     helm_release.prometheus,
     helm_release.cluster_autoscaler,
     aws_eks_node_group.node_group
