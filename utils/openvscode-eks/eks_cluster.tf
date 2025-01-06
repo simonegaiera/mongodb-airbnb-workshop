@@ -339,7 +339,7 @@ resource "helm_release" "cluster_autoscaler" {
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.44.0"
+  version    = "9.45.0"
   namespace  = "kube-system"
 
   # set {
