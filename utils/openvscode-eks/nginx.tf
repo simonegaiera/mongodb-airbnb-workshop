@@ -82,7 +82,7 @@ resource "helm_release" "airbnb_workshop_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
   chart      = "./airbnb-workshop-nginx"
-  version    = "0.1.4"
+  version    = "0.1.5"
 
   values = [
     file("${path.module}/airbnb-workshop-nginx/values.yaml")
@@ -171,6 +171,27 @@ resource "helm_release" "airbnb_workshop_nginx" {
   set {
     name  = "volumeMounts[2].readOnly"
     value = "true"
+  }
+
+  # Set the util configmap
+  set {
+    name  = "volumes[3].name"
+    value = "airbnb-workshop-nginx-utils-configmap"
+  }
+
+  set {
+    name  = "volumes[3].configMap.name"
+    value = "airbnb-workshop-nginx-utils-configmap"
+  }
+  
+  set {
+    name  = "volumeMounts[3].name"
+    value = "airbnb-workshop-nginx-utils-configmap"
+  }
+
+  set {
+    name  = "volumeMounts[3].mountPath"
+    value = "/var/utils"
   }
 
   depends_on = [
