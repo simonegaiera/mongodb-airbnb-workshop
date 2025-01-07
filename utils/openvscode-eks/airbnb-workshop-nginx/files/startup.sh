@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NGINX_CONF="/etc/nginx/nginx.conf"
-SEARCH_STRING="server_names_hash_bucket_size 64;"
+SEARCH_STRING="server_names_hash_bucket_size 128;"
 
 # Check if the http block contains the directive
 if ! grep -qF "${SEARCH_STRING}" "${NGINX_CONF}"; then
