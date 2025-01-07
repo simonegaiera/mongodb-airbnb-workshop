@@ -246,7 +246,7 @@ resource "helm_release" "user_openvscode" {
   }
 
   # Set the configmap
-    set {
+  set {
     name  = "volumes[1].name"
     value = "openvscode-configmap-${each.value}"
   }

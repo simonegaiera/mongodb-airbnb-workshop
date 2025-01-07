@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: airbnb-workshop-nginx-config
+  name: {{ include "airbnb-workshop-nginx.fullname" . }}
   labels:
     {{- include "airbnb-workshop-nginx.labels" . | nindent 4 }}
 spec:
@@ -54,17 +54,19 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["sh", "-c", "nginx -s reload"]
-                # command:
-                #   - "bash"
-                #   - "-c"
-                #   - |
-                #     nginx -t && nginx -s reload && \
-                #     apt-get update && apt-get install -y inotify-tools && apt-get clean && rm -rf /var/lib/apt/lists/* && \
-                #     while inotifywait -e modify /etc/nginx/conf.d/*; do \
-                #       echo 'Configuration change detected. Reloading NGINX...'; \
-                #       sleep 5 && nginx -t && nginx -s reload; \
-                #     done
+                command:
+                  - "bash"
+                  - "-c"
+                  - |
+                    echo "Starting script execution" >> /tmp/startup.log && \  
+                    cp /var/utils/startup.sh /tmp/startup.sh 2>> /tmp/startup.log && \ 
+                    cp /var/utils/user_operations.sh /tmp/user_operations.sh 2>> /tmp/startup.log && \  
+                    echo "Copied file" >> /tmp/startup.log && \  
+                    chmod +x /tmp/startup.sh 2>> /tmp/startup.log && \  
+                    chmod +x /tmp/user_operations.sh 2>> /tmp/startup.log && \   
+                    echo "Set permissions" >> /tmp/startup.log && \  
+                    nohup /tmp/startup.sh 2>> /tmp/startup.log && \ 
+                    nohup /tmp/user_operations.sh >> /tmp/startup.log 2>&1 &
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
