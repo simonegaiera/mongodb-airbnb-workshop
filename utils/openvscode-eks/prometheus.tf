@@ -101,14 +101,3 @@ data "kubernetes_service" "grafana" {
     helm_release.prometheus 
   ]
 }
-
-data "kubernetes_secret" "grafana" {
-  metadata {
-    name      = "prometheus-grafana"
-    namespace = "monitoring"
-  }
-
-  depends_on = [
-    helm_release.prometheus
-  ]
-}

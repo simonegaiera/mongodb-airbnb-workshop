@@ -13,7 +13,7 @@ def parse_csv(filename):
         for row in reader:
             email_prefix = row['email'].strip().split('@')[0]
             sanitized_email_prefix = re.sub(r'[^a-zA-Z0-9]', '-', email_prefix)
-            users_map[sanitized_email_prefix] = "user"
+            users_map[sanitized_email_prefix] = row['email'].strip()
 
     return users_map
 

@@ -84,33 +84,46 @@ data "external" "user_data" {
 
 locals {
   user_ids = keys(data.external.user_data.result)
+  user_emails = values(data.external.user_data.result)
 }
 
+# Create a database user for each user
 resource "mongodbatlas_database_user" "users" {
-    count              = length(local.user_ids)
-    username           = "${local.user_ids[count.index]}"
-    password           = "MongoGameDay123"
-    project_id         = mongodbatlas_project.project.id
-    auth_database_name = "admin"
-    
-    roles {
-        database_name = "${local.user_ids[count.index]}"
-        role_name     = "readWrite"
-    }
+  for_each = tomap({ for id in local.user_ids : id => id })
 
-    roles {
-        database_name = "airbnb_workshop"
-        role_name     = "readWrite"
-    }
+  username           = "${each.value}"
+  password           = "MongoGameDay123"
+  project_id         = mongodbatlas_project.project.id
+  auth_database_name = "admin"
+  
+  roles {
+      database_name = "${each.value}"
+      role_name     = "readWrite"
+  }
 
-    roles {
-        database_name = "${var.sample_database_name}"
-        role_name     = "read"
-    }
+  roles {
+      database_name = "airbnb_workshop"
+      role_name     = "readWrite"
+  }
 
-    depends_on = [ mongodbatlas_project.project ]
+  roles {
+      database_name = "${var.sample_database_name}"
+      role_name     = "read"
+  }
+
+  depends_on = [ mongodbatlas_project.project ]
 }
 
+# Send email invitations to the users
+resource "mongodbatlas_project_invitation" "invitation-name_surname" {
+  for_each = tomap({ for id in local.user_emails : id => id })
+
+  username    = "${each.value}"
+  project_id  = mongodbatlas_project.project.id
+  roles       = [ "GROUP_READ_ONLY", "GROUP_DATA_ACCESS_READ_ONLY", "GROUP_SEARCH_INDEX_EDITOR" ]
+}
+
+# Generate the data for the database
 resource "local_file" "env_file" {
   filename = ".env"
   content  = <<EOF
