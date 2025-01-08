@@ -99,6 +99,24 @@ Sometimes, there is a known issue where the Kubernetes configuration does not ge
    }
    ```
 
+
+### Known Issue: `server_names_hash_bucket_size`
+
+If you encounter an error in Nginx related to `server_names_hash_bucket_size`, please follow these steps to resolve it:
+
+1. **Remove Users with Long Names**:
+   - Identify and remove any users with names longer than 64 bytes. These names can cause issues with the current configuration.
+
+2. **Re-run Terraform**:
+   - Execute your Terraform configuration again. This step will configure Nginx to load with an increased `server_names_hash_bucket_size`.
+
+3. **Re-add Users**:
+   - Once Nginx is properly configured, add the users back into your system.
+   - Execute your Terraform configuration once more to ensure all changes are applied.
+
+Following these steps should help you resolve the Nginx configuration error.
+
+
 ### Known Issue: Autoscaler Not Configured Yet
 
 Currently, the Kubernetes Cluster Autoscaler is not configured in the provided GameDay environment setup. This feature is planned for future releases. At present, scaling must be handled in Terraform.

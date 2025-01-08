@@ -312,15 +312,10 @@ resource "aws_iam_policy" "custom_autoscaling_policy" {
           "ec2:DescribeInstanceTypes",
           "ec2:DescribeLaunchTemplateVersions",
           "ec2:GetInstanceTypesFromInstanceRequirements",
-          "eks:DescribeNodegroup"
-        ]
-        Resource = ["*"]
-      },
-      {
-        Effect = "Allow"
-        Action = [
+          "eks:DescribeNodegroup",
           "autoscaling:SetDesiredCapacity",
-          "autoscaling:TerminateInstanceInAutoScalingGroup"
+          "autoscaling:TerminateInstanceInAutoScalingGroup",
+          "autoscaling:DescribeTags"
         ]
         Resource = ["*"]
       }
@@ -332,6 +327,18 @@ resource "aws_iam_policy" "custom_autoscaling_policy" {
 resource "aws_iam_role_policy_attachment" "custom_autoscaling_policy_attachment" {
   role       = aws_iam_role.node_role.name
   policy_arn = aws_iam_policy.custom_autoscaling_policy.arn
+}
+
+data "aws_autoscaling_groups" "node_group_asg" {
+  filter {
+    name   = "tag:eks:cluster-name"
+    values = [var.cluster_name]
+  }
+  
+  filter {
+    name   = "tag:eks:nodegroup-name"
+    values = ["eks-node-group-${var.cluster_name}"]
+  }
 }
 
 # TODO: autoscaler not working
@@ -354,7 +361,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "rbac.serviceAccount.create"
-    value = "false"
+    value = "true"
   }
 
   # set {
@@ -374,7 +381,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "autoscalingGroups[0].name"
-    value = "eks-node-group-${var.cluster_name}"
+    value = data.aws_autoscaling_groups.node_group_asg.names[0]
   }
 
   set {
