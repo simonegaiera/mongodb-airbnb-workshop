@@ -3,9 +3,9 @@ import { crudOneDocument } from "../lab/crud-2.lab.js";
 import { crudDistinct } from "../lab/crud-3.lab.js";
 import { crudFilter } from "../lab/crud-4.lab.js";
 import { crudCreateItem } from "../lab/crud-5.lab.js";
-import { crudDelete } from "../lab/crud-6.lab.js";
-import { crudUpdateElement } from "../lab/crud-7.lab.js";
-import { crudAddToArray } from "../lab/crud-8.lab.js";
+import { crudDelete } from "../lab/crud-8.lab.js";
+import { crudUpdateElement } from "../lab/crud-6.lab.js";
+import { crudAddToArray } from "../lab/crud-7.lab.js";
 
 // GET all items
 export async function getAllItems(req, res) {
@@ -62,10 +62,10 @@ export async function getFilters(req, res) {
     }
     
     const { page, limit, filters } = req.body;
-    const { amenities, propertyType, beds } = filters;
+    const { amenities, propertyType, beds, bounds } = filters;
     
     try {
-        const items = await crudFilter(amenities, propertyType, beds, page, limit);
+        const items = await crudFilter(amenities, propertyType, beds, bounds, page, limit);
         
         res.status(201).json(items);
     } catch (error) {
@@ -89,6 +89,7 @@ export async function insertItem(req, res) {
 // DELETE an item by ID
 export async function deleteItem(req, res) {
     const { id } = req.params;
+
     try {
         const result = await crudDelete(id)
 

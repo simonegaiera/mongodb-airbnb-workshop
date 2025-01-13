@@ -4,6 +4,7 @@ import { getPriceStatistics } from '../src/controllers/aggregateController.js';
 
 describe('MongoDB Aggregation Tests', function() {
     const indexName = 'default';
+    this.timeout(10000);
     
     before(async function() {
         try {

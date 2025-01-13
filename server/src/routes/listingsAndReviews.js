@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/', getAllItems);
 router.post('/', insertItem);
-router.delete('/', deleteItem);
 
 router.get('/distinct', getDistinct);
 router.post('/filter', getFilters);
@@ -21,5 +20,6 @@ router.post('/search', getSearchItems);
 router.post('/:id/reviews', insertReview);
 router.get('/:id', getOneItem);
 router.patch('/:id', updateValue);
+router.delete('/:id', deleteItem);
 
 export default router;

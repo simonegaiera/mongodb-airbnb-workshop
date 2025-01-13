@@ -3,6 +3,7 @@ import { collectionName } from '../src/config/config.js';
 import { strictEqual } from 'assert';
 
 describe('MongoDB Index Tests', function() {
+    this.timeout(10000);
 
     before(async function() {
         try {

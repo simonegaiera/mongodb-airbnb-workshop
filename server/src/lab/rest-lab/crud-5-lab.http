@@ -1,0 +1,8 @@
+POST http://localhost:5000/api/listingsAndReviews
+Content-Type: application/json
+
+{
+    "_id": "20000000",
+    "name": "sample listing",
+    "new": true
+}

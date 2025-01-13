@@ -4,18 +4,18 @@ import { collectionName } from '../config/config.js';
 /**
 The input for this function are:
 - the _id as the id
-- the name of the field you want to update key
-- the new value for the field you want to update value
-Modify the function to update ($set) the required document with the given value for the given key
- */
-export async function crudUpdateElement(id, key, value) {
+- the review we want to insert in the array field reviews
+Push the new review for the required document
+*/
+export async function crudAddToArray(id, review) {
     const search = { _id: id }
-    const update = { $set: { [key] : value } }
+    const update = { $push: { reviews: review } }
     
-    const result = await db.collection(collectionName).updateOne(
-        search,
-        update
-    );
+    const result = await db.collection(collectionName)
+        .updateOne(
+            search,
+            update
+        );
 
     return result
 }

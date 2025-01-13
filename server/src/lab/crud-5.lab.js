@@ -6,7 +6,8 @@ You are required to insert the document item
 The variable item is already formatted
 */
 export async function crudCreateItem(item) {
-    const result = await db.collection(collectionName).insertOne(item);
+    const result = await db.collection(collectionName)
+        .insertOne(item);
 
     return result
 }

@@ -1,0 +1,7 @@
+PATCH http://localhost:5000/api/listingsAndReviews/20000000
+Content-Type: application/json
+
+{
+    "key": "accommodates",
+    "value": 9
+}

@@ -31,7 +31,8 @@ export async function autocompleteSearch(query) {
         }
       ]
 
-    const item = await db.collection(collectionName).aggregate(pipeline);
+    const item = await db.collection(collectionName)
+      .aggregate(pipeline);
 
     return item.toArray()
 }

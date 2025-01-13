@@ -44,7 +44,8 @@ export async function facetSearch(query) {
   
   // console.log('Facet Pipeline:', JSON.stringify(pipeline, null, 2));
   
-  const item = await db.collection(collectionName).aggregate(pipeline);
+  const item = await db.collection(collectionName)
+    .aggregate(pipeline);
   
   return item.toArray()
 }

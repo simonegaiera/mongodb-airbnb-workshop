@@ -13,7 +13,7 @@ You are asked to complete the code to find all the documents for the specific qu
 Not all the query items are passed by the application at a given time
 If no query items are passed you should return all the document for the given page and limit
 */
-export async function crudFilter(amenities, propertyType, beds, page, limit) {    
+export async function crudFilter(amenities, propertyType, beds, bounds, page, limit) {    
     const query = {};
 
     // Adding amenities to the query if available
@@ -30,6 +30,14 @@ export async function crudFilter(amenities, propertyType, beds, page, limit) {
     if (beds) {
         const [minBeds, maxBeds] = beds.split('-').map(Number);
         query.beds = { $gte: minBeds, $lte: maxBeds };
+    }
+
+    if (bounds) {
+        query["address.location.coordinates"] = {
+            "$geoWithin": {
+                "$box": bounds
+            }
+        };
     }
     
     const items = await db.collection(collectionName)
