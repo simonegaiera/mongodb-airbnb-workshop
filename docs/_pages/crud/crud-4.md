@@ -1,5 +1,5 @@
 ---
-title: "CRUD Operations"
+title: "CRUD Operations: Find/Query"
 permalink: /crud/4/
 layout: single
 classes: wide

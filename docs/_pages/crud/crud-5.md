@@ -1,5 +1,5 @@
 ---
-title: "CRUD Operations"
+title: "CRUD Operations: Insert"
 permalink: /crud/5/
 layout: single
 classes: wide

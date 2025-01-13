@@ -1,5 +1,5 @@
 ---
-title: "CRUD Operations"
+title: "CRUD Operations: Delete"
 permalink: /crud/8/
 layout: single
 classes: wide
@@ -7,20 +7,15 @@ classes: wide
 
 In this section, you will learn how to perform basic find operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
 
-## Exercise: Insert an array field
+## Exercise: Delete one document
 
 **Objective** 
-In this exercise, you will be required to modify a document.
+In this exercise, you will be required to find documents given a query.
 
 **Pipeline Definition**  
 
-1. **Navigate to the File**: In the `lab` folder open `crud-8.lab.js`.
-2. **Modify the Function**: Locate and modify the `crudAddToArray` function.
+1. **Navigate to the File**: In the `lab` folder open `crud-6.lab.js`.
+2. **Modify the Function**: Locate and modify the `crudDelete` function.
 3. **Update the Code**:
-    - The input for this function are:
-        - the `_id` as the `id`
-        - the `review` we want to insert in the array field `reviews`
-    - Push the new review for the required document
-4. **Bonus**:
-    - Increment the `number_of_reviews`
-    - The bonus won't give more point, but only street cred.
+    - You are required to delete the document with `_id` equal to `id`
+
