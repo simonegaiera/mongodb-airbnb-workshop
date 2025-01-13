@@ -1,0 +1,7 @@
+POST http://localhost:5000/api/listingsAndReviews/20000000/reviews
+Content-Type: application/json
+
+{
+    "reviewer_name": "test",
+    "comments": "test"
+}

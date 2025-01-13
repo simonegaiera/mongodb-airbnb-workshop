@@ -1,0 +1,6 @@
+GET http://localhost:5000/api/listingsAndReviews/facet?query=hawaii
+Content-Type: application/json
+
+{
+    "query": "hawaii"
+}
