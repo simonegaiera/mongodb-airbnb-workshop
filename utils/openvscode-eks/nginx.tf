@@ -16,27 +16,6 @@ provider "acme" {
   server_url = "https://acme-v02.api.letsencrypt.org/directory"
 }
 
-data "aws_route53_zone" "mongosa_com" {
-  name         = var.aws_route53_hosted_zone
-  private_zone = false
-}
-
-resource "aws_route53_record" "acme_challenge" {
-  zone_id = data.aws_route53_zone.mongosa_com.zone_id
-  name    = var.aws_route53_record_name
-  type    = "TXT"
-  ttl     = 60
-  records = [var.aws_route53_record_name]
-}
-
-resource "null_resource" "wait_for_dns" {
-  provisioner "local-exec" {
-    command = "sleep 60"
-  }
-
-  depends_on = [aws_route53_record.acme_challenge]
-}
-
 resource "tls_private_key" "acme_account_key" {
   algorithm = "RSA"
   rsa_bits  = 2048
@@ -75,7 +54,10 @@ resource "acme_certificate" "mongosa_cert" {
     }
   }
 
-  depends_on = [null_resource.wait_for_dns]
+  depends_on = [
+    acme_registration.account,
+    tls_cert_request.prod_request
+  ]
 }
 
 resource "helm_release" "airbnb_workshop_nginx" {
