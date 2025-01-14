@@ -1,42 +1,31 @@
 import React from 'react';
-import { Container, Typography, Link, Box } from '@mui/material';
 
 function Footer() {
   return (
-    <Box component="footer" sx={{ padding: '1rem 0' }}>
-      <Container maxWidth="lg">
-        <Typography 
-          variant="body2" 
-          sx={{ color: '#023430' }} 
-          align="center"
-        >
-          {'© '}
-          <Link color="inherit" href="https://www.mongodb.com" sx={{ color: '#023430' }}>
+    <footer className="py-4">
+      {/* <div className="container mx-auto max-w-7xl">
+        <p className="text-center text-[#023430]">
+          © 
+          <a href="https://www.mongodb.com" className="text-[#023430] hover:underline">
             MongoDB
-          </Link>{' '}
+          </a>{' '}
           {new Date().getFullYear()}
-        </Typography>
-        <Box mt={2} textAlign="center">
-          <Link href="https://www.mongodb.com/blog" color="inherit" sx={{ color: '#023430' }}>
+        </p>
+        <div className="mt-4 text-center">
+          <a href="https://www.mongodb.com/blog" className="text-[#023430] hover:underline">
             Our Blog
-          </Link>{' | '}
-          <Link 
-            href="https://university.mongodb.com" 
-            color="inherit" 
-            sx={{ color: '#023430', marginLeft: 1, marginRight: 1 }}
-          >
+          </a>
+          <span className="mx-2 text-[#023430]">|</span>
+          <a href="https://university.mongodb.com" className="text-[#023430] hover:underline">
             MongoDB University
-          </Link>{' | '}
-          <Link 
-            href="https://www.linkedin.com/company/mongodb/" 
-            color="inherit" 
-            sx={{ color: '#023430', marginLeft: 1 }}
-          >
+          </a>
+          <span className="mx-2 text-[#023430]">|</span>
+          <a href="https://www.linkedin.com/company/mongodb/" className="text-[#023430] hover:underline">
             LinkedIn
-          </Link>
-        </Box>
-      </Container>
-    </Box>
+          </a>
+        </div>
+      </div> */}
+    </footer>
   );
 }
 

@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-    Container,
-    Box,
-    Typography,
-    Card,
-    CardMedia,
-    CardContent,
-    CircularProgress,
-    Pagination,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel
-} from '@mui/material';
+'use client';
+
+import React, { useEffect, useState, useCallback } from 'react';
+import ListingTile from './ListingTile';
 import PropertyDialog from './PropertyDialog';
 
 const ListingsAndReviews = ({ filters = {} }) => {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(9);
+    const [limit, setLimit] = useState(8);
     const [hasMore, setHasMore] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
@@ -37,7 +25,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
         }
     };
 
-    const fetchData = async (page, limit, filters) => {
+    const fetchData = async (page, limit, filters, append = false) => {
         setLoading(true);
         try {
             const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/filter`, {
@@ -50,9 +38,14 @@ const ListingsAndReviews = ({ filters = {} }) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            // console.log(filters);
             const result = await response.json();
-            setData(result);
-            setHasMore(result.length === limit); // Determine if there's more data to load
+            if (append) {
+                setData(prevData => [...prevData, ...result]);
+            } else {
+                setData(result);
+            }
+            setHasMore(result.length === limit);
             setLoading(false);
         } catch (error) {
             setError(error);
@@ -60,37 +53,39 @@ const ListingsAndReviews = ({ filters = {} }) => {
         }
     };
 
+    const handleScroll = useCallback(() => {
+        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+            if (hasMore && !loading) {
+                const nextPage = page + 1;
+                setPage(nextPage);
+                fetchData(nextPage, limit, filters, true);
+            }
+        }
+    }, [hasMore, loading, page, limit, filters]);
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
+
     useEffect(() => {
         fetchData(page, limit, filters);
-    }, [page, limit, filters]);
-
-    if (loading) {
-        return (
-            <Container>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <CircularProgress />
-                </Box>
-            </Container>
-        );
-    }
+    }, [filters, limit]); // Remove page from dependencies since we'll handle it manually
 
     if (error) {
         return (
-            <Container>
-                <Typography color="error">
+            <div className="container mx-auto">
+                <p className="text-red-500">
                     Unable to fetch data: {error.message}
-                </Typography>
-            </Container>
+                </p>
+            </div>
         );
     }
 
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
-
     const handleLimitChange = (event) => {
-        setLimit(event.target.value);
-        setPage(1); // Reset to the first page when limit changes
+        setLimit(Number(event.target.value));
+        setPage(1);
+        setData([]); // Clear existing data when changing limit
     };
 
     const handleClick = (itemId) => {
@@ -104,101 +99,47 @@ const ListingsAndReviews = ({ filters = {} }) => {
     };
 
     return (
-        <Container>
-            <Box sx={{ padding: 2 }}>
+        <div className="container mx-auto">
+            <div className="motion-delay-50 motion-delay-100 motion-delay-150 motion-delay-200 motion-delay-250 motion-delay-300 motion-delay-350 motion-delay-400 motion-delay-450 motion-delay-500"></div>
+            <div className="p-4">
                 {data && data.length > 0 ? (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            justifyContent: 'space-between',
-                            marginLeft: -1, // Adjust for spacing
-                            marginRight: -1 // Adjust for spacing
-                        }}
-                    >
-                        {data.map((item, index) => (
-                            <Box
-                                key={index}
-                                sx={{
-                                    flex: '1 0 calc(33.3333% - 16px)',
-                                    maxWidth: 'calc(33.3333% - 16px)',
-                                    paddingLeft: 1,
-                                    paddingRight: 1,
-                                    marginBottom: 2,
-                                    boxSizing: 'border-box',
-                                    display: 'flex', // Flexbox to allow stretching
-                                    flexDirection: 'column' // Columnar layout
-                                }}
-                            >
-                                <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={item.images && isValidURL(item.images.picture_url) ? item.images.picture_url : stockImageUrl}
-                                        alt={item.name || 'Stock Image'}
-                                    />
-                                    <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography
-                                            variant="h6"
-                                            component="div"
-                                            onClick={() => handleClick(item._id)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            {item.name}
-                                        </Typography>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Beds: {item.beds}
-                                        </Typography>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Price: {item.price.$numberDecimal}
-                                        </Typography>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Rating: {item.review_scores.review_scores_rating}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            </Box>
-                        ))}
-                    </Box>
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {data.map((item, index) => (
+                                <ListingTile key={index} sequence={index} item={item} index={index} handleClick={handleClick} isValidURL={isValidURL} stockImageUrl={stockImageUrl} />
+                            ))}
+                        </div>
+                        
+                        <div className="flex flex-col items-center mt-8 gap-4">
+                            {loading && (
+                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                            )}
+                        </div>
+                    </>
                 ) : (
-                    <Typography>No listings found.</Typography>
+                    loading ? (
+                        <></>
+                    ) : (
+                        <p className="text-center text-gray-600">No listings found.</p>
+                    )
                 )}
-            </Box>
+            </div>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '16px' }}>
-                <Pagination
-                    count={hasMore ? page + 1 : page} // Show next page only if there might be more data
-                    page={page}
-                    onChange={handlePageChange}
-                />
-                <FormControl variant="outlined" size="small" style={{ minWidth: 120, marginLeft: '16px' }}>
-                    <InputLabel id="limit-label">Limit</InputLabel>
-                    <Select
-                        labelId="limit-label"
-                        value={limit}
-                        onChange={handleLimitChange}
-                        label="Limit"
-                    >
-                        <MenuItem value={9}>9</MenuItem>
-                        <MenuItem value={18}>18</MenuItem>
-                        <MenuItem value={36}>36</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-
-            {selectedItemId !== null && (
-                <PropertyDialog id={selectedItemId} open={dialogOpen} onClose={handleClose} />
+            {selectedItemId !== null && dialogOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4">
+                        <button
+                            onClick={handleClose}
+                            className="float-right text-gray-500 hover:text-gray-700"
+                        >
+                            ✕
+                        </button>
+                        <PropertyDialog id={selectedItemId} open={dialogOpen} onClose={handleClose} />
+                    </div>
+                </div>
             )}
-        </Container>
+        </div>
     );
-};
-
-ListingsAndReviews.propTypes = {
-    filters: PropTypes.shape({
-        amenities: PropTypes.arrayOf(PropTypes.string),
-        propertyType: PropTypes.string,
-        beds: PropTypes.string
-    })
 };
 
 export default ListingsAndReviews;

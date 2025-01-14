@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Results from '@/components/Results';
 import ResultsSplit from '@/components/ResultsSplit';
+import { Container, CircularProgress, Box } from '@mui/material';
 
 const Leaderboard = () => {
   const [results, setResults] = useState(null);
@@ -20,23 +21,23 @@ const Leaderboard = () => {
 
   if (!results || !data) {
     return (
-      <div className="container mx-auto">
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
-      </div>
+      <Container>
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          <CircularProgress />
+        </Box>
+      </Container>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-7xl">
-      <div className="my-8">
+    <Container maxWidth="xl">
+      <Box my={2}>
         <Results results={results} />
-      </div>
-      <div>
+      </Box>
+      <Box>
         <ResultsSplit data={data} />
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Typography, Paper, List, ListItem, ListItemText, Checkbox, FormControlLabel, FormGroup, Button } from '@mui/material';
 
 const ResultsSplit = ({ data }) => {
   const [selectedSections, setSelectedSections] = useState([]);
@@ -8,10 +7,11 @@ const ResultsSplit = ({ data }) => {
   // Extract unique sections from the data
   const sections = [...new Set(data.map(item => item._id.section))];
 
-  const handleSectionChange = (event) => {
-    const { value, checked } = event.target;
+  const handleSectionChange = (section) => {
     setSelectedSections((prevSelected) =>
-      checked ? [...prevSelected, value] : prevSelected.filter((section) => section !== value)
+      prevSelected.includes(section) 
+        ? prevSelected.filter((s) => s !== section)
+        : [...prevSelected, section]
     );
   };
 
@@ -24,25 +24,26 @@ const ResultsSplit = ({ data }) => {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
+      <h1 className="text-3xl font-bold mb-4">
         Data
-      </Typography>
+      </h1>
 
-      <FormGroup row style={{ marginBottom: '16px' }}>
+      <div className="flex flex-wrap gap-4 mb-6">
         {sections.map((section) => (
-          <FormControlLabel
+          <label
             key={section}
-            control={
-              <Checkbox
-                checked={selectedSections.includes(section)}
-                onChange={handleSectionChange}
-                value={section}
-              />
-            }
-            label={section}
-          />
+            className="flex items-center space-x-2 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              checked={selectedSections.includes(section)}
+              onChange={() => handleSectionChange(section)}
+              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-gray-700">{section}</span>
+          </label>
         ))}
-      </FormGroup>
+      </div>
 
       {data
         .filter(item => selectedSections.length === 0 || selectedSections.includes(item._id.section))
@@ -51,22 +52,25 @@ const ResultsSplit = ({ data }) => {
           const usersToShow = item.users.slice(0, visibleCount);
 
           return (
-            <Paper key={index} style={{ marginBottom: '16px', padding: '16px' }}>
-              <Typography variant="h6">{item._id.section}</Typography>
-              <Typography variant="subtitle1">{item._id.name}</Typography>
-              <List>
+            <div key={index} className="bg-white rounded-lg shadow-md mb-6 p-6">
+              <h2 className="text-xl font-semibold">{item._id.section}</h2>
+              <h3 className="text-lg text-gray-600 mb-4">{item._id.name}</h3>
+              <ul className="space-y-2">
                 {usersToShow.map((user, idx) => (
-                  <ListItem key={idx}>
-                    <ListItemText primary={`${user.username}: ${user.points} points`} />
-                  </ListItem>
+                  <li key={idx} className="py-2 border-b border-gray-100 last:border-0">
+                    <span className="text-gray-800">{user.username}: {user.points} points</span>
+                  </li>
                 ))}
-              </List>
+              </ul>
               {item.users.length > visibleCount && (
-                <Button onClick={() => toggleShowMore(item._id.section)}>
+                <button 
+                  onClick={() => toggleShowMore(item._id.section)}
+                  className="mt-4 px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+                >
                   Show More
-                </Button>
+                </button>
               )}
-            </Paper>
+            </div>
           );
         })}
     </div>

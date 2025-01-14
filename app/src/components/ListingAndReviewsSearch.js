@@ -1,221 +1,159 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-    Container,
-    Box,
-    Typography,
-    Card,
-    CardMedia,
-    CardContent,
-    CircularProgress,
-    Pagination,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Tooltip
-} from '@mui/material';
+'use client';
+
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import PropertyDialog from './PropertyDialog';
+import ListingTile from './ListingTile';
 
-const ListingsAndReviewsSearch = ({ facetsQuery = {}, searchQuery = '' }) => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(9);
-    const [hasMore, setHasMore] = useState(true);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [selectedItemId, setSelectedItemId] = useState(null);
+const ListingsAndReviewsSearch = ({ 
+  facetsQuery = {}, 
+  searchQuery = '' 
+}) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(8);
+  const [hasMore, setHasMore] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  
 
-    const stockImageUrl =`${process.env.BASE_PATH}/static/images/mongodb-logo.png`;
+  const observer = useRef();
+  const lastElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
 
-    const isValidURL = (url) => {
-        try {
-            new URL(url);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    };
+  const stockImageUrl = `${process.env.BASE_PATH}/static/images/mongodb-logo.png`;
 
-    const fetchData = async (page, limit, facetsQuery, searchQuery) => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/search`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ page, limit, facetsQuery, searchQuery })
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            setData(result);
-            setHasMore(result.length === limit); // Determine if there's more data to load
-            setLoading(false);
-        } catch (error) {
-            setError(error);
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData(page, limit, facetsQuery, searchQuery);
-    }, [page, limit, facetsQuery, searchQuery]);
-
-    if (loading) {
-        return (
-            <Container>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <CircularProgress />
-                </Box>
-            </Container>
-        );
+  const isValidURL = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
     }
+  };
 
-    if (error) {
-        return (
-            <Container>
-                <Typography color="error">
-                    Unable to fetch data: {error.message}
-                </Typography>
-            </Container>
-        );
+  const fetchData = async (page, limit, facetsQuery, searchQuery) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/search`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ page, limit, facetsQuery, searchQuery })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (page === 1) {
+        setData(result);
+      } else {
+        setData(prevData => [...prevData, ...result]);
+      }
+      setHasMore(result.length === limit);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
     }
+  };
 
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
+  useEffect(() => {
+    fetchData(page, limit, facetsQuery, searchQuery);
+  }, [page, limit, facetsQuery, searchQuery]);
 
-    const handleLimitChange = (event) => {
-        setLimit(event.target.value);
-        setPage(1); // Reset to the first page when limit changes
-    };
-
-    const handleClick = (itemId) => {
-        setSelectedItemId(itemId);
-        setDialogOpen(true);
-    };
-
-    const handleClose = () => {
-        setDialogOpen(false);
-        setSelectedItemId(null);
-    };
-
+  if (loading && page === 1) {
     return (
-        <Container>
-            <Box sx={{ padding: 2 }}>
-                {data && data.length > 0 ? (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            justifyContent: 'space-between',
-                            marginLeft: -1, // Adjust for spacing
-                            marginRight: -1 // Adjust for spacing
-                        }}
-                    >
-                        {data.map((item, index) => (
-                            <Box
-                                key={index}
-                                sx={{
-                                    flex: '1 0 calc(33.3333% - 16px)',
-                                    maxWidth: 'calc(33.3333% - 16px)',
-                                    paddingLeft: 1,
-                                    paddingRight: 1,
-                                    marginBottom: 2,
-                                    boxSizing: 'border-box',
-                                    display: 'flex', // Flexbox to allow stretching
-                                    flexDirection: 'column' // Columnar layout
-                                }}
-                            >
-                                <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={item.images && isValidURL(item.images.picture_url) ? item.images.picture_url : stockImageUrl}
-                                        alt={item.name || 'Stock Image'}
-                                    />
-                                    <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography
-                                            variant="h6"
-                                            component="div"
-                                            onClick={() => handleClick(item._id)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            {item.name}
-                                        </Typography>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Property Type: {item.property_type}
-                                        </Typography>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Beds: {item.beds}
-                                        </Typography>
-                                        <Tooltip
-                                            title={
-                                                <Box>
-                                                    {item.amenities.map((amenity, amenityIndex) => (
-                                                        <Typography key={amenityIndex} variant="body2">{amenity}</Typography>
-                                                    ))}
-                                                </Box>
-                                            }
-                                            placement="right"
-                                        >
-                                            <Typography
-                                                variant="subtitle2"
-                                                color="text.secondary"
-                                                style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                                            >
-                                                Amenities
-                                            </Typography>
-                                        </Tooltip>
-                                    </CardContent>
-                                </Card>
-                            </Box>
-                        ))}
-                    </Box>
-                ) : (
-                    <Typography>No listings found.</Typography>
-                )}
-            </Box>
-
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '16px' }}>
-                <Pagination
-                    count={hasMore ? page + 1 : page} // Show next page only if there might be more data
-                    page={page}
-                    onChange={handlePageChange}
-                />
-                <FormControl variant="outlined" size="small" style={{ minWidth: 120, marginLeft: '16px' }}>
-                    <InputLabel id="limit-label">Limit</InputLabel>
-                    <Select
-                        labelId="limit-label"
-                        value={limit}
-                        onChange={handleLimitChange}
-                        label="Limit"
-                    >
-                        <MenuItem value={9}>9</MenuItem>
-                        <MenuItem value={18}>18</MenuItem>
-                        <MenuItem value={36}>36</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-
-            {selectedItemId !== null && (
-                <PropertyDialog id={selectedItemId} open={dialogOpen} onClose={handleClose} />
-            )}
-        </Container>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
     );
-};
+  }
 
-ListingsAndReviewsSearch.propTypes = {
-    facetsQuery: PropTypes.shape({
-        amenities: PropTypes.arrayOf(PropTypes.string),
-        propertyType: PropTypes.arrayOf(PropTypes.string),
-        beds: PropTypes.arrayOf(PropTypes.string)
-    }),
-    searchQuery: PropTypes.string
+  if (error) {
+    return (
+      <div className="text-red-500 text-center p-4">
+        Unable to fetch data: {error.message}
+      </div>
+    );
+  }
+
+  const handleLimitChange = (event) => {
+    setLimit(Number(event.target.value));
+    setPage(1);
+    setData([]);
+  };
+
+  const handleClick = (itemId) => {
+    setSelectedItemId(itemId);
+    setDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+    setSelectedItemId(null);
+  };
+
+  return (
+    <div className="container mx-auto px-4">
+      <div className="py-8">
+        {data && data.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {data.map((item, index) => {
+              if (data.length === index + 1) {
+                return (
+                  <div ref={lastElementRef} key={index}>
+                    <ListingTile 
+                      sequence={index} 
+                      item={item} 
+                      index={index} 
+                      handleClick={handleClick} 
+                      isValidURL={isValidURL} 
+                      stockImageUrl={stockImageUrl} 
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <ListingTile 
+                    key={index} 
+                    sequence={index} 
+                    item={item} 
+                    index={index} 
+                    handleClick={handleClick} 
+                    isValidURL={isValidURL} 
+                    stockImageUrl={stockImageUrl} 
+                  />
+                );
+              }
+            })}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No listings found.</p>
+        )}
+        {loading && page > 1 && (
+          <div className="flex justify-center mt-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
+      </div>
+
+
+      {selectedItemId && dialogOpen && (
+        <PropertyDialog id={selectedItemId} open={dialogOpen} onClose={handleClose} />
+      )}
+    </div>
+  );
 };
 
 export default ListingsAndReviewsSearch;

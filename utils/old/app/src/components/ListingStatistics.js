@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Typography } from '@mui/material';
 
 const ListingStatistics = () => {
     const [data, setData] = useState([]);
@@ -29,43 +30,43 @@ const ListingStatistics = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="flex justify-center items-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-            </div>
-        );
+        return <CircularProgress />;
     }
 
+    const greyShade1 = '#f5f5f5';  // Light grey
+    const greyShade2 = '#e0e0e0';  // Darker grey
+
     return (
-        <div className="overflow-x-auto">
-            <div className="bg-white shadow-md rounded-lg">
-                <table className="table-auto">
-                    <thead>
-                        <tr>
+        <div>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
                             {data.map((item, index) => (
-                                <th
+                                <TableCell
                                     key={item.id}
-                                    className={`px-3 py-2 text-center text-sm ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    style={{ backgroundColor: index % 2 === 0 ? greyShade1 : greyShade2, textAlign: "center" }}
                                 >
                                     {item.id}
-                                </th>
+                                </TableCell>
                             ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
                             {data.map((item, index) => (
-                                <td
+                                <TableCell
                                     key={item.id}
-                                    className={`px-3 py-2 text-center text-sm ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    align="center"
+                                    style={{ backgroundColor: index % 2 === 0 ? greyShade1 : greyShade2 }}
                                 >
                                     {item.value}
-                                </td>
+                                </TableCell>
                             ))}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 };

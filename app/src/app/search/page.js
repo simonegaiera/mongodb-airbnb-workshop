@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+import React, { useState } from 'react';
 import FacetComponent from '@/components/Facet';
 import AutocompleteComponent from '@/components/AutocompleteSearch';
 import ListingsAndReviewsSearch from '@/components/ListingAndReviewsSearch';
@@ -14,50 +12,34 @@ export default function Home() {
     beds: []
   });
   const [autocompleteQuery, setAutocompleteQuery] = useState('');
-
+  
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-        }}
-      >
+    <div className="container mx-auto px-4">
+      <div className="flex flex-row items-start">
         {autocompleteQuery && (
-          <Box
-            sx={{
-              flex: '1 1 30%', // Adjust the width as needed
-              mr: 2 // Margin right for spacing
-            }}
-          >
+          <div className="flex-[0_0_30%] mr-4 animate-slide-in w-2/3">
             <FacetComponent
               selectedFacets={selectedFacets}
               setSelectedFacets={setSelectedFacets}
-              autocompleteQuery={autocompleteQuery} // Pass autocompleteQuery as a prop
+              autocompleteQuery={autocompleteQuery}
             />
-          </Box>
+          </div>
         )}
-        <Box
-          sx={{
-            flex: autocompleteQuery ? '1 1 70%' : '1 1 100%', // Adjust the width based on query
-          }}
-        >
-          <Box sx={{ mt: 2 }}>
+        <div className={`${autocompleteQuery ? 'flex-[0_0_70%]' : 'flex-1'}`}>
+          <div className="mt-4">
             <AutocompleteComponent
               query={autocompleteQuery}
               setQuery={setAutocompleteQuery}
             />
-          </Box>
-          <Box sx={{ mt: 2 }}> {/* Margin top for spacing */}
+          </div>
+          <div className="mt-4">
             <ListingsAndReviewsSearch
               facetsQuery={selectedFacets}
               searchQuery={autocompleteQuery}
             />
-          </Box>
-        </Box>
-      </Box>
-    </Container>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

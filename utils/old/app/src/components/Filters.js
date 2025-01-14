@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import {
+  Box, CircularProgress, Typography, Divider,
+  FormControl, FormControlLabel, Checkbox, Radio, Button, RadioGroup
+} from '@mui/material';
 
 const Filters = ({ selectedFacets, setSelectedFacets }) => {
   const [amenities, setAmenities] = useState(null);
@@ -18,6 +22,7 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
         }
         const data = await response.json();
         
+        // Filter out null values
         const filteredData = data.filter(item => item !== null && item !== "");
 
         setter(filteredData);
@@ -65,10 +70,10 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
 
   if (!amenities || !propertyTypes) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-        <span className="ml-2">Loading...</span>
-      </div>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+        <Typography ml={2}>Loading...</Typography>
+      </Box>
     );
   }
 
@@ -76,33 +81,28 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
     const displayedBuckets = showAll ? buckets : buckets.slice(0, 5);
 
     return (
-      <div className="space-y-2">
+      <FormControl component="fieldset">
         {displayedBuckets.map((bucket) => (
-          <label key={bucket} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              checked={selectedFacets[category]?.includes(bucket) || false}
-              onChange={handleCheckboxChange(category, bucket)}
-            />
-            <span>{bucket}</span>
-          </label>
+          <FormControlLabel
+            key={bucket}
+            control={
+              <Checkbox
+                checked={selectedFacets[category]?.includes(bucket) || false}
+                onChange={handleCheckboxChange(category, bucket)}
+              />
+            }
+            label={bucket}
+          />
         ))}
         {buckets.length > 5 && (
-          <button 
-            onClick={() => setShowAll(!showAll)}
-            className="text-blue-600 hover:text-blue-800"
-          >
+          <Button onClick={() => setShowAll(!showAll)}>
             {showAll ? 'Show Less' : 'Show More'}
-          </button>
+          </Button>
         )}
-        <button 
-          onClick={clearSelection(category)} 
-          className="text-red-600 hover:text-red-800 ml-4"
-        >
+        <Button onClick={clearSelection(category)} color="secondary">
           Clear
-        </button>
-      </div>
+        </Button>
+      </FormControl>
     );
   };
 
@@ -110,57 +110,51 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
     const displayedBuckets = showAll ? buckets : buckets.slice(0, 5);
 
     return (
-      <div className="space-y-2">
-        {displayedBuckets.map((bucket) => (
-          <label key={bucket} className="flex items-center space-x-2">
-            <input
-              type="radio"
-              className="border-gray-300 text-blue-600 focus:ring-blue-500"
-              value={bucket}
-              checked={selectedFacets[category] === bucket}
-              onChange={(event) => handleRadioChange(category, event.target.value)(event)}
-              name={category}
-            />
-            <span>{bucket}</span>
-          </label>
-        ))}
-        {buckets.length > 5 && (
-          <button 
-            onClick={() => setShowAll(!showAll)}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            {showAll ? 'Show Less' : 'Show More'}
-          </button>
-        )}
-        <button 
-          onClick={clearSelection(category)} 
-          className="text-red-600 hover:text-red-800 ml-4"
+      <FormControl component="fieldset">
+        <RadioGroup
+          value={selectedFacets[category] || ""}
+          onChange={(event) => handleRadioChange(category, event.target.value)(event)}
         >
+          {displayedBuckets.map((bucket) => (
+            <FormControlLabel
+              key={bucket}
+              value={bucket}
+              control={<Radio />}
+              label={bucket}
+            />
+          ))}
+        </RadioGroup>
+        {buckets.length > 5 && (
+          <Button onClick={() => setShowAll(!showAll)}>
+            {showAll ? 'Show Less' : 'Show More'}
+          </Button>
+        )}
+        <Button onClick={clearSelection(category)} color="secondary">
           Clear
-        </button>
-      </div>
+        </Button>
+      </FormControl>
     );
   };
 
   return (
-    <div className="p-4 h-[80vh] overflow-y-auto relative z-[9999] bg-white">
-      <h2 className="text-2xl font-bold mb-4">Filters</h2>
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Amenities</h3>
+    <Box p={2}>
+      <Typography variant="h5" gutterBottom>Filters</Typography>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Amenities</Typography>
         {renderCheckboxes('amenities', amenities, showAllAmenities, setShowAllAmenities)}
-      </div>
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Property Types</h3>
+      </Box>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Property Types</Typography>
         {renderRadios('propertyType', propertyTypes, showAllPropertyTypes, setShowAllPropertyTypes)}
-      </div>
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Beds</h3>
+      </Box>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Beds</Typography>
         {renderRadios('beds', beds, showAllBeds, setShowAllBeds)}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

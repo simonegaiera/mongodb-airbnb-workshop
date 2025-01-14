@@ -1,22 +1,19 @@
 import * as React from 'react';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/theme';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import '@/app/globals.css';
 
 export default function RootLayout(props) {
   return (
     <html lang="en">
-      <body>
+        <head>
+          <link rel="shortcut icon" href={`${process.env.BASE_PATH}/favicon.ico`} />
+        </head>
+      <body className="min-h-screen flex flex-col vsc-initialized">
         <Header />
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {props.children}
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <main className="flex-grow">
+          {props.children}
+        </main>
         <Footer />
       </body>
     </html>

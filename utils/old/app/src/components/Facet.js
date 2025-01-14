@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import {
+  Box, CircularProgress, Typography, Divider,
+  FormControl, FormControlLabel, Checkbox
+} from '@mui/material';
 
 const FacetComponent = ({ selectedFacets, setSelectedFacets, autocompleteQuery }) => {
   const [facets, setFacets] = useState(null);
@@ -17,10 +21,10 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets, autocompleteQuery }
       }
     };
 
-    if (autocompleteQuery) { 
+    if (autocompleteQuery) { // Only fetch facets if there's an autocompleteQuery
       fetchFacets();
     }
-  }, [autocompleteQuery]); 
+  }, [autocompleteQuery]);  // Re-fetch facets when autocompleteQuery changes
 
   const handleCheckboxChange = (category, value) => (event) => {
     setSelectedFacets((prevState) => {
@@ -43,50 +47,51 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets, autocompleteQuery }
 
   if (!facets) {
     return (
-      <div className="flex justify-center items-center h-screen motion-preset-slide-right">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-        <span className="ml-2">Loading...</span>
-      </div>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+        <Typography ml={2}>Loading...</Typography>
+      </Box>
     );
   }
 
   const renderCheckboxes = (category, buckets) => {
     return (
-      <div className="flex flex-col space-y-2">
+      <FormControl component="fieldset">
         {buckets.map((bucket) => (
-          <label key={bucket._id} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              className="form-checkbox h-4 w-4 text-blue-600"
-              checked={selectedFacets[category].includes(bucket._id)}
-              onChange={handleCheckboxChange(category, bucket._id)}
-            />
-            <span className="text-gray-700">{`${bucket._id} (${bucket.count})`}</span>
-          </label>
+          <FormControlLabel
+            key={bucket._id}
+            control={
+              <Checkbox
+                checked={selectedFacets[category].includes(bucket._id)}
+                onChange={handleCheckboxChange(category, bucket._id)}
+              />
+            }
+            label={`${bucket._id} (${bucket.count})`}
+          />
         ))}
-      </div>
+      </FormControl>
     );
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Facets with Search</h2>
-      <hr className="border-gray-200 my-4" />
-      <div className="mt-4">
-        <h3 className="text-lg font-medium mb-2">Amenities</h3>
+    <Box p={2}>
+      <Typography variant="h5" gutterBottom>Facets with Search</Typography>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Amenities</Typography>
         {renderCheckboxes('amenities', facets.amenities.buckets)}
-      </div>
-      <hr className="border-gray-200 my-4" />
-      <div className="mt-4">
-        <h3 className="text-lg font-medium mb-2">Property Types</h3>
+      </Box>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Property Types</Typography>
         {renderCheckboxes('propertyType', facets.property_type.buckets)}
-      </div>
-      <hr className="border-gray-200 my-4" />
-      <div className="mt-4">
-        <h3 className="text-lg font-medium mb-2">Beds</h3>
+      </Box>
+      <Divider />
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom>Beds</Typography>
         {renderCheckboxes('beds', facets.beds.buckets)}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
