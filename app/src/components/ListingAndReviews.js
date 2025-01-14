@@ -9,7 +9,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(8);
+    const [limit, setLimit] = useState(12);
     const [hasMore, setHasMore] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
