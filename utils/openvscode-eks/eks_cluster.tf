@@ -339,6 +339,11 @@ data "aws_autoscaling_groups" "node_group_asg" {
     name   = "tag:eks:nodegroup-name"
     values = ["eks-node-group-${var.cluster_name}"]
   }
+
+  depends_on = [
+    aws_eks_node_group.node_group,
+    aws_iam_role_policy_attachment.custom_autoscaling_policy_attachment
+  ]
 }
 
 # TODO: autoscaler not working
@@ -407,6 +412,7 @@ resource "helm_release" "cluster_autoscaler" {
   depends_on = [
     aws_eks_node_group.node_group,
     aws_iam_role_policy_attachment.custom_autoscaling_policy_attachment,
+    data.aws_autoscaling_groups.node_group_asg,
     helm_release.prometheus
   ]
 }

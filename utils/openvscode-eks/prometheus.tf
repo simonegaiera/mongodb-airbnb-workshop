@@ -16,6 +16,19 @@ provider "helm" {
   }
 }
 
+# resource "null_resource" "update_kubeconfig" {
+#   triggers = {
+#     cluster_name = aws_eks_cluster.eks_cluster.name
+#   }
+#   provisioner "local-exec" {
+#     command = "aws eks update-kubeconfig --region ${var.aws_region} --name ${aws_eks_cluster.eks_cluster.name}"
+#   }
+
+#   depends_on = [
+#     aws_eks_cluster.eks_cluster
+#   ]
+# }
+
 # provider "kubernetes" {
 #   config_path = "~/.kube/config"
 # }
