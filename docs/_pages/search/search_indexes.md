@@ -34,9 +34,14 @@ The goal of this exercise is to create a MongoDB search index with specific fiel
 
 **Field Mappings**  
 You need to create an index with the following field mappings:
-- `amenities` should be of type `token`
-- `property_type` should be of type `token`
+- `amenities` should be of 
+    - Type `token`
+    - Value `none`
+- `property_type` should be of
+    - Type `token`
+    - Value `none`
 - `name` should be of type `autocomplete`
+    - Analyzer should be `lucene.english`
     - Max gram should be set to `7`
     - Min gram should be set to `3`
     - Tokenization is `edgeGram`
