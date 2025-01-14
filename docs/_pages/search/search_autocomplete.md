@@ -17,3 +17,10 @@ Learn how to use MongoDB Atlas Search to perform full-text search on your data. 
     - Enable fuzzy search to handle typos and variations.
     - Limit the results to 10 entries.
     - Use the `$project` stage to include only the `name` field in the results.
+
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `search-1-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

@@ -18,3 +18,10 @@ In this exercise, you will create an aggregation pipeline to analyze the average
     - **$match Stage**: Filter documents to include only those that have both `beds` and `price` fields.
     - **$group Stage**: Group the documents by the number of beds and calculate the average price for each group.
     - **$sort Stage**: Sort the grouped documents by the number of beds in ascending order.
+
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `pipeline-1-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

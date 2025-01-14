@@ -21,3 +21,9 @@ In this exercise, you will be required to find documents given a query.
     - Results should be sorted by `_id`
     - Define pagination, skipping the required `skip` pages, and limit results based on `limit`
 
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-1-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

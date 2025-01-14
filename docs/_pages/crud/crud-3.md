@@ -19,3 +19,9 @@ In this exercise, you will be required to find the unique values for a specific 
 3. **Update the Code**:
     - You are required to find all the distinct value based in field `field`
 
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-3-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

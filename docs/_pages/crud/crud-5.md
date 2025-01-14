@@ -20,3 +20,9 @@ In this exercise, you will be required to insert a document.
     - You are required to insert the document `item`
     - The variable `item` is already formatted
 
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-5-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.
