@@ -91,7 +91,7 @@ docs:
 
   - title: Test and Resources
     children:
-      - title: "Test Your Results"
+      - title: "Validate Your Results"
         url: /test/
       - title: "Leaderboard"
         url: /leaderboard/

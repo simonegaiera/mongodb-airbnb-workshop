@@ -1,5 +1,5 @@
 ---
-title: "Test Your Results"
+title: "Validate Your Results"
 permalink: /test/
 layout: single
 classes: wide
