@@ -28,3 +28,9 @@ In this exercise, you will be required to find documents given a query.
     - Not all the query items are passed by the application at a given time
     - If no query items are passed you should return all the document for the given page and limit
 
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-4-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

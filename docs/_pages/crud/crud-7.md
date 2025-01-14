@@ -24,3 +24,10 @@ In this exercise, you will be required to modify a document.
 4. **Bonus**:
     - Increment the `number_of_reviews`
     - The bonus won't give more point, but only street cred.
+
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-7-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.

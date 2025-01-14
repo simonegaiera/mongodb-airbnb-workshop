@@ -19,3 +19,9 @@ In this exercise, you will be required to find documents given a query.
 3. **Update the Code**:
     - You are required to delete the document with `_id` equal to `id`
 
+### Exercise: Testing API Calls
+
+1. Navigate to the directory: `server/lab/rest-lab`.
+2. Open the file named `crud-8-lab.http`.
+3. In the file, locate and click the `Send Request` link to execute the API call.
+4. Verify that the endpoint is returning the expected results.
