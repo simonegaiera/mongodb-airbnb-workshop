@@ -46,3 +46,7 @@ You need to create an index with the following field mappings:
     - Min gram should be set to `3`
     - Tokenization is `edgeGram`
     - Fold Diacritics should be set to `false`
+
+### Exercise: Execution
+If you don't have access to Compass or the Atlas interface you can use the MongoDB Extension.
+A MongoDB Playground was created for you to help you solve this Exercise.
