@@ -15,3 +15,7 @@ You need to create an index to include the following:
 - `beds`
 - `property_type`
 - `amenities`
+
+### Exercise: Execution
+If you don't have access to Compass or the Atlas interface you can use the MongoDB Extension.
+A MongoDB Playground was created for you to help you solve this Exercise.
