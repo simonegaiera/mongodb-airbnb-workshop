@@ -7,7 +7,7 @@ docs:
     children:
       - title: "Introduction"
         url: /
-      - title: "Workshop Overview"
+      - title: "GameDay Overview"
         url: /overview/
 
   - title: Environment Preparation
