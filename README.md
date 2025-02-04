@@ -1,10 +1,10 @@
-# MongoDB Airbnb Workshop 🌐  
+# MongoDB Airbnb GameDay 🌐  
 
-Welcome to the **MongoDB Airbnb Workshop**! This interactive session is designed to help you explore MongoDB's powerful features with hands-on exercises. By the end of this workshop, you’ll gain practical experience and a deeper understanding of how MongoDB can be leveraged for real-world applications.  
+Welcome to the **MongoDB Airbnb GameDay**! This interactive session is designed to help you explore MongoDB's powerful features with hands-on exercises. By the end of this workshop, you’ll gain practical experience and a deeper understanding of how MongoDB can be leveraged for real-world applications.  
 
 ---
 
-## 🔗 Workshop Instructions  
+## 🔗 GameDay Instructions  
 All the instructions you'll need can be found in the workshop guide:  
 👉 **[mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/)**  
 
