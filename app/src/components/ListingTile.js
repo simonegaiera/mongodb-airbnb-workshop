@@ -5,12 +5,16 @@ import Link from 'next/link';
 const ListingTile = ({ sequence, item, index, handleClick, isValidURL, stockImageUrl }) => {
 
   return (
-    <Link href={`${process.env.BASE_PATH}/rooms?id=${item._id}`}>
+    <Link href={`/rooms?id=${item._id}`}>
       <div className={"bg-white overflow-hidden motion-preset-fade motion-duration-2000 motion-delay-"+(sequence*50).toString()}>
         <div className="relative">
           <img
             className="w-full h-48 object-cover rounded-xl"
-            src={item.images && isValidURL(item.images.picture_url) ? item.images.picture_url : stockImageUrl}
+            src={
+              item?.images?.picture_url && isValidURL(item.images.picture_url)
+                ? item.images.picture_url
+                : stockImageUrl
+            }
             alt={item.name || 'Stock Image'}
             onError={(e) => {
               const randomNum = Math.floor(Math.random() * 5) + 1;

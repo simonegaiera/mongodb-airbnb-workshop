@@ -201,7 +201,7 @@ function RoomDetail() {
 
       <div className="aspect-w-16 aspect-h-9 mb-8">
         <img 
-          src={room.images.picture_url} 
+          src={room?.images?.picture_url || '/defaultImage.png'} 
           alt={room.name}
           className="object-cover rounded-lg w-full h-[60vh]"
         />
@@ -211,7 +211,7 @@ function RoomDetail() {
         <div className="md:col-span-2">
           <div className="border-b pb-6 mb-6">
             <h2 className="text-2xl font-semibold mb-2">
-              {room.room_type} hosted by {room.host.host_name}
+              {room.room_type} hosted by {room.host?.host_name || 'Unknown Host'}
             </h2>
             <div className="flex items-center gap-4">
               <span>{room.accommodates} guests</span>

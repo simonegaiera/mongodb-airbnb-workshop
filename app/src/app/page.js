@@ -44,7 +44,7 @@ export default function Home() {
 
   
   return (
-    <div className="container max-w-[1536px] overflow-hidden motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
+    <div className="container mx-auto px-4">
       
         <div className="mb-8">
           <div className="flex gap-4">

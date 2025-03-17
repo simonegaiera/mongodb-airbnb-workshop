@@ -19,10 +19,13 @@ const Header = () => {
             Stays
           </div>
           <div className="flex space-x-1">
-            <Link href={`${process.env.BASE_PATH}/search`} className={`px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]`}>
+            <Link href={`/`} className={`px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]`}>
+              Home
+            </Link>
+            <Link href={`/search`} className={`px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]`}>
               Search
             </Link>
-            <Link href={`${process.env.BASE_PATH}/leaderboard`} className={`px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]`}>
+            <Link href={`/leaderboard`} className={`px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]`}>
               Leaderboard
             </Link>
           </div>
