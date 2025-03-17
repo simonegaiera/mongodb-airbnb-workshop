@@ -1,5 +1,5 @@
-import { db } from "../../server/src/utils/database.js";  
-import { collectionName } from '../../server/src/config/config.js';  
+import { db } from "../utils/database.js";  
+import { collectionName } from '../config/config.js';  
 
 /**
 You are required to insert the document item
