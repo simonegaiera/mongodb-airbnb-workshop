@@ -93,13 +93,18 @@ export async function deleteItem(req, res) {
     const { id } = req.params;
     
     try {   
-        const result = await crudDelete(id)
+        const result = await crudDelete(id);
 
+        // Check if result is a Collection (has a property like collectionName) instead of a deletion result
+        if (result && result.collectionName) {
+            return res.status(500).json({ message: 'Unexpected result type from deletion operation' });
+        }
+        
         if (result && typeof result.deletedCount !== 'undefined') {
             if (result.deletedCount === 0) {
                 return res.status(404).json({ message: 'Item not found' });
             }
-            res.status(200).json({ message: 'Item deleted successfully' });
+            return res.status(200).json({ message: 'Item deleted successfully' });
         } else {
             return res.status(500).json({ message: 'Unexpected result from deletion operation' });
         }
