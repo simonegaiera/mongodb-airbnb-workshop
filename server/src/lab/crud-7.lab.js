@@ -9,7 +9,7 @@ Push the new review for the required document
 */
 export async function crudAddToArray(id, review) {
     const search = { _id: id }
-    const update = { $push: { reviews: review } }
+    const update = {  }
     
     const result = await db.collection(collectionName)
 
