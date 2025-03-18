@@ -25,3 +25,7 @@ In this exercise, you will create an aggregation pipeline to analyze the average
 2. Open the file named `pipeline-1-lab.http`.
 3. In the file, locate and click the `Send Request` link to execute the API call.
 4. Verify that the endpoint is returning the expected results.
+
+### Exercise: Frontend validation
+Select the checkmark "Show Statistics" to validate that the table gets populated.
+![pipeline-1-lab](../../assets/images/pipeline-1-lab.png)

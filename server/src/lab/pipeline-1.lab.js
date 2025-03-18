@@ -8,9 +8,7 @@ Update the Pipeline Array:
 - $sort Stage: Sort the grouped documents by the number of beds in ascending order.
 */
 export async function aggregationPipeline() {
-    const pipeline = [
-
-      ]        
+    const pipeline = []
 
     const item = await db.collection(collectionName)
       .aggregate(pipeline);
