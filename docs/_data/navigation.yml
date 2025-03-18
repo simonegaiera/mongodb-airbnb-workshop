@@ -75,14 +75,17 @@ docs:
       - title: "Hint: Exercise 8"
         url: /crud/8/hint/
 
-  - title: MongoDB Search
+  - title: MongoDB Search Indexes
     children:
       - title: "MongoDB Search"
         url: /search/
       - title: "Search: Indexes"
         url: /search/index/
-      - title: "Hint: Search Indexes"
-        url: /search/index/hint/
+
+  - title: MongoDB Search
+    children:
+      - title: "MongoDB Search"
+        url: /search/
       - title: "Search: Autocomplete"
         url: /search/autocomplete/
       - title: "Hint: Autocomplete"
