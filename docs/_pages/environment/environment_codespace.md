@@ -1,11 +1,11 @@
 ---
-title: "Environment Preparation: Codespace"
+title: "Environment Preparation: Codespace/VSCode"
 permalink: /environment/codespace/
 layout: single
 classes: wide
 ---
 
-## Environment Preparation: Codespace
+## Environment Preparation: Codespace/VSCode
 
 To get started with the [mongodb-airbnb-workshop](https://github.com/simonegaiera/mongodb-airbnb-workshop) repository, follow these steps to set up your Codespace environment:
 
@@ -61,3 +61,8 @@ Once the Codespace is ready, you will see two main folders:
 5. A popup will appear asking if you want to open the application in your browser. Select **Open in browser**.
 6. Switch to the `PORTS` panel, and change the port visibility from `private` to `public`.
 ![vscode-port-visibility](../../assets/images/vscode_port_visibility.png)
+
+### Step 4: Install Extension
+If you are using VSCode on your laptop, you can install the extensions:
+1. MongoDB for VS Code
+2. REST Client

@@ -16,7 +16,7 @@ docs:
         url: /environment/atlas/
       - title: "Environment Preparation: VSCode Online"
         url: /environment/vscodeonline/
-      - title: "Environment Preparation: Codespace"
+      - title: "Environment Preparation: Codespace/VSCode"
         url: /environment/codespace/
 
   - title: CRUD Operations
