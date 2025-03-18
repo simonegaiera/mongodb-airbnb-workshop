@@ -40,14 +40,14 @@ docs:
       - title: "Hint: Exercise 4"
         url: /crud/4/hint/
 
-  - title: MongoDB Indexes
+  - title: Indexes
     children:
       - title: "Indexes"
         url: /index/
       - title: "Hint: Indexes"
         url: /index/hint/
 
-  - title: MongoDB Aggregations
+  - title: Aggregations
     children:
       - title: "MongoDB Aggregations"
         url: /aggregations/
@@ -75,7 +75,7 @@ docs:
       - title: "Hint: Exercise 8"
         url: /crud/8/hint/
 
-  - title: MongoDB Search Indexes
+  - title: Search Indexes
     children:
       - title: "MongoDB Search"
         url: /search/
@@ -84,7 +84,7 @@ docs:
       - title: "Hint: Search Indexes"
         url: /search/index/hint/
 
-  - title: MongoDB Search
+  - title: Search
     children:
       - title: "MongoDB Search"
         url: /search/
