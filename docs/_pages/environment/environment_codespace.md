@@ -42,8 +42,10 @@ Once the Codespace is ready, you will see two main folders:
 
 ### Step 3: Configure the Web Appplication
 1. In the **app** folder, create a new file named `.env` using the environment template `.env.template`. 
-   - Modify the `WORKSHOP_USER` with the username provided by your instructor.
-   - Modify the `BACKEND_URL` with the `Forwarded address` from the previous step.
+   ```bash
+   WORKSHOP_USER=
+   BACKEND_URL=http://localhost:5000
+   ```
 2. Open another terminal and navigate to the app directory:
    ```bash
    cd app
