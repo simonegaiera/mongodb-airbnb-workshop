@@ -15,7 +15,6 @@ If no query items are passed you should return all the document for the given pa
 */
 export async function crudFilter(amenities, propertyType, beds, bounds, page, limit) {    
     const query = {};
-
     
     const items = await db.collection(collectionName)
         .find(query)

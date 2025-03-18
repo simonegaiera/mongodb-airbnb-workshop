@@ -27,3 +27,8 @@ In this exercise, you will be required to find documents given a query.
 2. Open the file named `crud-1-lab.http`.
 3. In the file, locate and click the `Send Request` link to execute the API call.
 4. Verify that the endpoint is returning the expected results.
+
+
+### Exercise: Frontend validation
+Refresh the homepage to confirm listings are visible. Scroll down to validate pagination.
+![crud-1-lab](../../assets/images/crud-1-lab.png)

@@ -25,3 +25,7 @@ In this exercise, you will be required to find the unique values for a specific 
 2. Open the file named `crud-3-lab.http`.
 3. In the file, locate and click the `Send Request` link to execute the API call.
 4. Verify that the endpoint is returning the expected results.
+
+### Exercise: Frontend validation
+Select "Filters" and confirm that results are displayed.
+![crud-3-lab](../../assets/images/crud-3-lab.png)

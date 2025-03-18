@@ -9,6 +9,6 @@ Define pagination, skipping the required skip pages, and limit results based on 
 export async function crudFind(query, skip, limit) {
 
     const items = await db.collection(collectionName)
-    
+
     return items.toArray()
 }
