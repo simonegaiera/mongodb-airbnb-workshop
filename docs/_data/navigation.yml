@@ -81,6 +81,8 @@ docs:
         url: /search/
       - title: "Search: Indexes"
         url: /search/index/
+      - title: "Hint: Search Indexes"
+        url: /search/index/hint/
 
   - title: MongoDB Search
     children:
