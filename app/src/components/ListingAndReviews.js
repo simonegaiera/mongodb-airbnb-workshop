@@ -25,20 +25,39 @@ const ListingsAndReviews = ({ filters = {} }) => {
         }
     };
 
+    const isEmptyFilters = (filters) => {
+        return Object.values(filters).every(value => {
+            if (Array.isArray(value)) {
+                return value.length === 0;
+            }
+            return !value;
+        });
+    };
+
     const fetchData = async (page, limit, filters, append = false) => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/filter`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ page, limit, filters })
-            });
+            let response;
+
+            if (isEmptyFilters(filters)) {
+                response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/?page=${page}&limit=${limit}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } else {
+                response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/filter`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ page, limit, filters })
+                });
+            }
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            // console.log(filters);
             const result = await response.json();
             if (append) {
                 setData(prevData => [...prevData, ...result]);
@@ -46,9 +65,9 @@ const ListingsAndReviews = ({ filters = {} }) => {
                 setData(result);
             }
             setHasMore(result.length === limit);
-            setLoading(false);
         } catch (error) {
             setError(error);
+        } finally {
             setLoading(false);
         }
     };
