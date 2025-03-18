@@ -67,7 +67,7 @@ export async function getFilters(req, res) {
     const { amenities, propertyType, beds, bounds } = filters;
     
     try {
-        const items = await crudFilter(amenities, propertyType, beds, page, bounds, limit);
+        const items = await crudFilter(amenities, propertyType, beds, bounds, page, limit);
         
         res.status(201).json(items);
     } catch (error) {

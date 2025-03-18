@@ -23,7 +23,7 @@ function RoomDetail() {
       fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${roomId}`)
         .then(response => response.json())
         .then(data => {
-          console.log(data);
+          // console.log(data);
           setRoom(data);
           setEditedTitle(data.name);
           setEditedDescription(data.description);
@@ -54,7 +54,7 @@ function RoomDetail() {
       }
 
       const updatedRoom = await response.json();
-      console.log(updatedRoom);
+      // console.log(updatedRoom);
       setRoom(prev => ({...prev, name: editedTitle}));
       setEditingTitle(false);
     } catch (error) {
@@ -88,7 +88,7 @@ function RoomDetail() {
   };
 
   const handleSubmitReview = () => {
-    console.log('Review submitted:', reviewText);
+    // console.log('Review submitted:', reviewText);
     setReviewText('');
     setShowCommentBox(false);
     fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}/reviews`, {
@@ -109,7 +109,7 @@ function RoomDetail() {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Review submitted:', data);
+      // console.log('Review submitted:', data);
       // Fetch updated room data to refresh reviews
       fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}`)
         .then(response => response.json())
@@ -231,7 +231,7 @@ function RoomDetail() {
                 className="w-16 h-16 rounded-full object-cover"
                 onError={(e) => {
                   e.target.src = `${process.env.BASE_PATH}/hostImageDefault.jpg`;
-                  console.log("Error loading image");
+                  // console.log("Error loading image");
                 }}
               />
               <div>

@@ -38,7 +38,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            console.log(filters);
+            // console.log(filters);
             const result = await response.json();
             if (append) {
                 setData(prevData => [...prevData, ...result]);

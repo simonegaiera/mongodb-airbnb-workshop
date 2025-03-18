@@ -19,7 +19,7 @@ const ListingTile = ({ sequence, item, index, handleClick, isValidURL, stockImag
             onError={(e) => {
               const randomNum = Math.floor(Math.random() * 5) + 1;
               e.target.src = `${process.env.BASE_PATH}/propertyImage${randomNum}.jpg`;
-              console.log("Error loading image");
+              // console.log("Error loading image");
             }}
           />
           <button className="absolute top-3 right-3 p-2 rounded-full bg-transparent">
