@@ -219,24 +219,23 @@ function RoomDetail() {
               <span>{room.bedrooms} bedroom</span>
               <span>·</span>
               <span>{room.beds} bed</span>
-              <span>·</span>
-              <span>{room.bathrooms.$numberDecimal} baths</span>
+              <span>{room.bathrooms?.$numberDecimal || room.bathrooms || 'N/A'} baths</span>
             </div>
           </div>
           <div className="border-b pb-6 mb-6">
             <h3 className="text-xl font-semibold mb-4">Meet your host</h3>
             <div className="flex items-center gap-4">
               <img 
-                src={room.host.host_picture_url} 
-                alt={room.host.host_name}
+                src={room.host?.host_picture_url || '/hostImageDefault.jpg'} 
+                alt={room.host?.host_name || 'Host image'}
                 className="w-16 h-16 rounded-full object-cover"
                 onError={(e) => {
-                  e.target.src = "/hostImageDefault.png";
+                  e.target.src = `${process.env.BASE_PATH}/hostImageDefault.jpg`;
                   console.log("Error loading image");
                 }}
               />
               <div>
-                <h4 className="font-semibold text-lg">{room.host.host_name}</h4>
+                <h4 className="font-semibold text-lg">{room.host?.host_name || 'Unknown Host'}</h4>
               </div>
             </div>
           </div>
@@ -276,7 +275,7 @@ function RoomDetail() {
           <div className="border-b pb-6 mb-6">
             <h3 className="text-xl font-semibold mb-4">What this place offers</h3>
             <div className="grid grid-cols-2 gap-4">
-              {room.amenities.map((amenity) => (
+              {room.amenities?.map((amenity) => (
                 <div key={amenity} className="flex items-center gap-2">
                   <span>✓</span>
                   <span>{amenity}</span>
@@ -312,7 +311,9 @@ function RoomDetail() {
                   </div>
                 )}
               </div> 
-              {[...room.reviews].sort((a, b) => new Date(b.date) - new Date(a.date)).map((review) => (
+              {(Array.isArray(room.reviews) ? room.reviews : [])
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map((review) => (
                 <div key={review._id} className="bg-gray-50 rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
@@ -348,7 +349,9 @@ function RoomDetail() {
           <div className="sticky top-8 border rounded-xl p-6 shadow-lg">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <span className="text-2xl font-bold">${room.price.$numberDecimal}</span>
+                <span className="text-2xl font-bold">
+                  ${room.price?.$numberDecimal || room.price || 'N/A'}
+                </span>
                 <span className="text-gray-500"> / night</span>
               </div>
               <div className="flex items-center">
