@@ -19,7 +19,7 @@ docs:
       - title: "Environment Preparation: Codespace/VSCode"
         url: /environment/codespace/
 
-  - title: CRUD Operations
+  - title: CRUD Operations (1)
     children:
       - title: "CRUD Operations"
         url: /crud/
@@ -39,6 +39,25 @@ docs:
         url: /crud/4/
       - title: "Hint: Exercise 4"
         url: /crud/4/hint/
+
+  - title: MongoDB Indexes
+    children:
+      - title: "Indexes"
+        url: /index/
+      - title: "Hint: Indexes"
+        url: /index/hint/
+
+  - title: MongoDB Aggregations
+    children:
+      - title: "MongoDB Aggregations"
+        url: /aggregations/
+      - title: "Aggregations: Exercise 1"
+        url: /aggregations/1/
+      - title: "Hint: Exercise 1"
+        url: /aggregations/1/hint/
+
+  - title: CRUD Operations (2)
+    children:
       - title: "CRUD: Exercise 5"
         url: /crud/5/
       - title: "Hint: Exercise 5"
@@ -56,22 +75,6 @@ docs:
       - title: "Hint: Exercise 8"
         url: /crud/8/hint/
 
-  - title: MongoDB Indexes
-    children:
-      - title: "Indexes"
-        url: /index/
-      - title: "Hint: Indexes"
-        url: /index/hint/
-
-  - title: MongoDB Aggregations
-    children:
-      - title: "MongoDB Aggregations"
-        url: /aggregations/
-      - title: "Aggregations: Exercise 1"
-        url: /aggregations/1/
-      - title: "Hint: Exercise 1"
-        url: /aggregations/1/hint/
-  
   - title: MongoDB Search
     children:
       - title: "MongoDB Search"
