@@ -141,30 +141,7 @@ describe('MongoDB CRUD Testing', function() {
         strictEqual(responseData.acknowledged, true, 'insert should be acknowledged');
     });
     
-    it('crud-6: crudDelete should delete an item successfully if it exists', async function() {
-        const req = {
-            params: { id: createdItemId}
-        };
-        
-        let responseData = null;
-        const res = {
-            status: function(status) {
-                this.statusCode = status;
-                return this;
-            },
-            json: function(data) {
-                responseData = data;
-            }
-        };
-        
-        await deleteItem(req, res);
-        
-        strictEqual(res.statusCode, 200, 'Status code should be 200');
-        strictEqual(responseData.message, 'Item deleted successfully', 'Response message should match');
-    });
-    
-    
-    it('crud-7: crudUpdateElement should create a new item and return it', async function() {
+    it('crud-6: crudUpdateElement should create a new item and return it', async function() {
         const req = {
             params: { id: '10006546'},
             body: {
@@ -198,7 +175,7 @@ describe('MongoDB CRUD Testing', function() {
         await updateValue(req, res);
     });
     
-    it('crud-8: crudAddToArray should create a new item and return it', async function() {
+    it('crud-7: crudAddToArray should create a new item and return it', async function() {
         const req = {
             params: { id: reviewItemId},
             body: {
@@ -227,6 +204,28 @@ describe('MongoDB CRUD Testing', function() {
         // Assert that the response contains the correct item data
         strictEqual(responseData.acknowledged, true, 'update should be acknowledged');
         strictEqual(responseData.modifiedCount, 1, 'modifiedCount should be 1');
+    });
+
+    it('crud-8: crudDelete should delete an item successfully if it exists', async function() {
+        const req = {
+            params: { id: createdItemId }
+        };
+        
+        let responseData = null;
+        const res = {
+            status: function(status) {
+                this.statusCode = status;
+                return this;
+            },
+            json: function(data) {
+                responseData = data;
+            }
+        };
+        
+        await deleteItem(req, res);
+        
+        strictEqual(res.statusCode, 200, 'Status code should be 200');
+        strictEqual(responseData.message, 'Item deleted successfully', 'Response message should match');
     });
     
 });

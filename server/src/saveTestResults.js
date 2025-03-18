@@ -17,13 +17,18 @@ async function verifyIndex() {
 
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
-        const collection = database.collection(resultsCollectionName);
 
+        // Check if the collection exists. If not, create it.
+        const collections = await database.listCollections({ name: resultsCollectionName }).toArray();
+        if (collections.length === 0) {
+            await database.createCollection(resultsCollectionName);
+        }
+
+        const collection = database.collection(resultsCollectionName);
         const indexes = await collection.indexes();
         const indexExists = indexes.some(index => index.name === indexName);
 
         if (!indexExists) {
-            // console.log(`Creating index: ${indexName}`);
             await collection.createIndex({ timestamp: -1, section: 1, name: 1 });
         }
     } catch (err) {

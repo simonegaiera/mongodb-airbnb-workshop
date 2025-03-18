@@ -95,10 +95,14 @@ export async function deleteItem(req, res) {
     try {   
         const result = await crudDelete(id)
 
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: 'Item not found' });
+        if (result && typeof result.deletedCount !== 'undefined') {
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ message: 'Item not found' });
+            }
+            res.status(200).json({ message: 'Item deleted successfully' });
+        } else {
+            return res.status(500).json({ message: 'Unexpected result from deletion operation' });
         }
-        res.status(200).json({ message: 'Item deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
