@@ -9,6 +9,8 @@ The input for this function are:
 Modify the function to update ($set) the required document with the given value for the given key
  */
 export async function crudUpdateElement(id, key, value) {
+    const search = {}
+    const update = {}
     
     const result = await db.collection(collectionName)
 

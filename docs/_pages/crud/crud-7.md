@@ -31,3 +31,7 @@ In this exercise, you will be required to modify a document.
 2. Open the file named `crud-7-lab.http`.
 3. In the file, locate and click the `Send Request` link to execute the API call.
 4. Verify that the endpoint is returning the expected results.
+
+### Exercise: Frontend validation
+Try to add a new review to the listings.
+![crud-7-lab](../../assets/images/crud-7-lab.png)

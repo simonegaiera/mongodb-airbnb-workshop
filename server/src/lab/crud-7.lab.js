@@ -8,8 +8,8 @@ The input for this function are:
 Push the new review for the required document
 */
 export async function crudAddToArray(id, review) {
-    const search = { _id: id }
-    const update = {  }
+    const search = {}
+    const update = {}
     
     const result = await db.collection(collectionName)
 
