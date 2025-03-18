@@ -75,7 +75,7 @@ describe('MongoDB Search Tests', function() {
 
         strictEqual(res.statusCode, 201, 'Status code should be 201');
         strictEqual(responseData.length, 10);
-        strictEqual(responseData[0].name, 'aOceanside Hawaii Apartment Studio Kitchen Parking');
+        strictEqual(responseData[0].name, 'A bedroom far away from home');
     });
 
     it('search-2: facetSearch should return the correct facets', async function() {

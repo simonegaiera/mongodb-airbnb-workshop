@@ -20,6 +20,7 @@ You need to create an index with the following field mappings:
 - `beds` should be of type `numberFacet`
 - `property_type` should be of type `stringFacet`
 - `name` should be of type `autocomplete`
+    - Analyzer should be `lucene.english`
     - Max gram should be set to `7`
     - Min gram should be set to `3`
     - Tokenization is `edgeGram`

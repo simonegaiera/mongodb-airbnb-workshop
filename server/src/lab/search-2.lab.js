@@ -7,12 +7,8 @@ In the facets section, add string facets for amenities and property_type.
 In the facets section, add number facets for beds with boundaries from 0 to 9, and set the default to “Other”.
 */
 export async function facetSearch(query) {
-  const pipeline = [
-
-  ];
-  
-  // console.log('Facet Pipeline:', JSON.stringify(pipeline, null, 2));
-  
+  const pipeline = [];
+    
   const item = await db.collection(collectionName)
     .aggregate(pipeline);
   
