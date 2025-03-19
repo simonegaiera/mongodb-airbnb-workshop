@@ -11,7 +11,6 @@ export async function aggregationPipeline() {
     const pipeline = []
 
     const item = await db.collection(collectionName)
-      .aggregate(pipeline);
 
     return item.toArray()
 }

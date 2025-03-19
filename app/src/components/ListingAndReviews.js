@@ -91,15 +91,15 @@ const ListingsAndReviews = ({ filters = {} }) => {
         fetchData(page, limit, filters);
     }, [filters, limit]); // Remove page from dependencies since we'll handle it manually
 
-    if (error) {
-        return (
-            <div className="container mx-auto">
-                <p className="text-red-500">
-                    Unable to fetch data: {error.message}
-                </p>
-            </div>
-        );
-    }
+    // if (error) {
+    //     return (
+    //         <div className="container mx-auto">
+    //             <p className="text-red-500">
+    //                 Unable to fetch data: {error.message}
+    //             </p>
+    //         </div>
+    //     );
+    // }
 
     const handleLimitChange = (event) => {
         setLimit(Number(event.target.value));
@@ -139,7 +139,11 @@ const ListingsAndReviews = ({ filters = {} }) => {
                     loading ? (
                         <></>
                     ) : (
-                        <p className="text-center text-gray-600">No listings found.</p>
+                        error ? (
+                            <p className="text-center text-gray-600">Unable to fetch data</p>
+                        ) : (
+                            <p className="text-center text-gray-600">No listings found.</p>
+                        )
                     )
                 )}
             </div>

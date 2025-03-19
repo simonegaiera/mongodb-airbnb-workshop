@@ -17,9 +17,6 @@ export async function crudFilter(amenities, propertyType, beds, bounds, page, li
     const query = {};
     
     const items = await db.collection(collectionName)
-        .find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
         
     return items.toArray();
 }

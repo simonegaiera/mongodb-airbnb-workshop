@@ -15,7 +15,7 @@ const ListingStatistics = () => {
                 // Process result to round average price to the nearest integer
                 const processedData = result.map(item => ({
                     id: item._id,
-                    value: Math.round(parseFloat(item.avgPrice.$numberDecimal)),
+                    value: Math.round(parseFloat(item.avgPrice?.$numberDecimal)),
                 }));
                 setData(processedData);
             } catch (error) {
@@ -39,13 +39,13 @@ const ListingStatistics = () => {
     return (
         <div className="overflow-x-auto">
             <div className="bg-white shadow-md rounded-lg">
-                <table className="table-auto">
-                    <thead>
+                <table className="min-w-full bg-white shadow-md rounded">
+                    <thead className="bg-gray-100">
                         <tr>
                             {data.map((item, index) => (
                                 <th
                                     key={item.id}
-                                    className={`px-3 py-2 text-center text-sm ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    className={`px-4 py-2 text-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
                                 >
                                     {item.id}
                                 </th>
@@ -57,7 +57,7 @@ const ListingStatistics = () => {
                             {data.map((item, index) => (
                                 <td
                                     key={item.id}
-                                    className={`px-3 py-2 text-center text-sm ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    className={`px-4 py-2 text-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
                                 >
                                     {item.value}
                                 </td>

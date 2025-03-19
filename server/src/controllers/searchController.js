@@ -39,66 +39,62 @@ export async function getSearchItems(req, res) {
     // Define the pipeline array for the MongoDB aggregation framework
     let pipeline = [];
     
-    if (searchQuery === '') {
-        pipeline.push({
-            '$match': {
-                'name': { '$ne': '' }
-            }
-        });
-    } else {
+    // Only add the search stage if searchQuery is not null or empty
+    if (searchQuery && searchQuery.trim() !== '') {
         let searchPipeline = {
             $search: {
                 index: "all",
                 compound: {
                     must: {
                         autocomplete: {
-                            'query': searchQuery, 
-                            'path': 'name',
-                            'fuzzy': {}
+                            query: searchQuery,
+                            path: 'name',
+                            fuzzy: {}
                         }
                     },
-                    filter: [
-                    ]
+                    filter: []
                 }
             }
-        }
+        };
         
         if (amenities.length > 0) {
-            searchPipeline['$search']['compound']['filter'] = { 
-                'in': {
+            searchPipeline.$search.compound.filter.push({ 
+                in: {
                     path: 'amenities',
                     value: amenities
                 }
-            };
+            });
         }
         if (propertyType.length > 0) {
-            searchPipeline['$search']['compound']['filter'] = { 
-                'in': {
+            searchPipeline.$search.compound.filter.push({ 
+                in: {
                     path: 'property_type',
                     value: propertyType
                 }
-            };
+            });
         }
         if (beds.length > 0) {
-            searchPipeline['$search']['compound']['filter'] = { 
-                'in': {
+            searchPipeline.$search.compound.filter.push({ 
+                in: {
                     path: 'beds',
                     value: beds
                 }
-            };
+            });
         }
         
-        pipeline.push(searchPipeline)
+        pipeline.push(searchPipeline);
+
+        // Pagination stages
+        pipeline.push({
+            '$skip': (page - 1) * limit
+        }, {
+            '$limit': limit
+        });
     }
     
-    // Pagination stages
-    pipeline.push({
-        '$skip': (page - 1) * limit
-    }, {
-        '$limit': limit
-    });
-    
+    // console.log('Search Query:', searchQuery);
     // console.log('Search Item Pipeline:', JSON.stringify(pipeline, null, 2));
+
     
     try {
         const items = await db.collection(collectionName).aggregate(pipeline).toArray();
