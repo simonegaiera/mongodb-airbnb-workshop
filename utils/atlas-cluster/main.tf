@@ -116,7 +116,7 @@ resource "mongodbatlas_database_user" "users" {
   }
 
   roles {
-      database_name = "airbnb_workshop"
+      database_name = "airbnb_gameday"
       role_name     = "readWrite"
   }
 

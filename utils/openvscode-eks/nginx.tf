@@ -60,7 +60,7 @@ resource "acme_certificate" "mongosa_cert" {
   ]
 }
 
-resource "helm_release" "airbnb_workshop_nginx" {
+resource "helm_release" "airbnb_gameday_nginx" {
   name       = "airbnb-workshop-nginx"
   repository = "local"
   chart      = "./airbnb-workshop-nginx"
@@ -183,20 +183,20 @@ resource "helm_release" "airbnb_workshop_nginx" {
 }
 
 output "nginx_service_name" {
-  value = helm_release.airbnb_workshop_nginx.name
+  value = helm_release.airbnb_gameday_nginx.name
 }
 
 output "nginx_service_namespace" {
-  value = helm_release.airbnb_workshop_nginx.namespace
+  value = helm_release.airbnb_gameday_nginx.namespace
 }
 
 data "kubernetes_service" "nginx_service" {
   metadata {
-    name      = helm_release.airbnb_workshop_nginx.name
-    namespace = helm_release.airbnb_workshop_nginx.namespace
+    name      = helm_release.airbnb_gameday_nginx.name
+    namespace = helm_release.airbnb_gameday_nginx.namespace
   }
 
-  depends_on = [helm_release.airbnb_workshop_nginx]
+  depends_on = [helm_release.airbnb_gameday_nginx]
 }
 
 output "service_details" {

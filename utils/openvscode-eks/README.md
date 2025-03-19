@@ -80,7 +80,7 @@ Sometimes, there is a known issue where the Kubernetes configuration does not ge
 2. **Update the Kubernetes Config**:  
    Update the Kubernetes configuration to ensure it uses the correct EKS cluster:  
    ```bash
-   aws eks update-kubeconfig --region us-east-2 --name airbnb-workshop-eks --profile Solution-Architects.User-979559056307
+   aws eks update-kubeconfig --region us-east-2 --name airbnb-gameday-eks --profile Solution-Architects.User-979559056307
    ```
 
 3. **Update Terraform Provider Configuration**:
