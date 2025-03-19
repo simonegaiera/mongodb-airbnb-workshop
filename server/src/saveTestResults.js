@@ -1,6 +1,8 @@
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { promises as fs } from 'fs';
+import XXH from 'xxhashjs'; 
 import {  connectToDatabase, client } from "./utils/database.js";
 import { mongodbUri, resultsDatabaseName, resultsCollectionName } from './config/config.js';
 
@@ -39,6 +41,7 @@ async function verifyIndex() {
 async function saveToDatabase(testsSaved) {
     try {
         await connectToDatabase();
+        const checksum = await createOutputChecksum()
         const database = client.db(resultsDatabaseName);
         const collection = database.collection(resultsCollectionName);
         
@@ -47,12 +50,35 @@ async function saveToDatabase(testsSaved) {
 
             if (!result) {
                 test.timestamp = now;
+                test.checksum = checksum;
                 await collection.insertOne(test);
             }
         }
 
     } catch (err) {
         console.error(`Error saving to database: ${err}`);
+    }
+}
+
+async function createOutputChecksum() {
+    try {
+        const testFolder = path.resolve(__dirname, '../test');
+        const files = await fs.readdir(testFolder);
+        const testFiles = files.filter(file => file.endsWith('.test.js')).sort();
+        let combinedContents = '';
+        for (const file of testFiles) {
+            const filePath = path.join(testFolder, file);
+            const content = await fs.readFile(filePath, 'utf-8');
+            combinedContents += content;
+        }
+        // Use xxhashjs for a fast non-cryptographic hash. Using seed 0xABCD.
+        const seed = 0xABCD;
+        const hash = XXH.h32(seed).update(combinedContents);
+        const checksum = hash.digest().toString(16);
+        return checksum;
+    } catch (err) {
+        console.error('Error generating checksum:', err);
+        throw err;
     }
 }
 
@@ -95,6 +121,7 @@ function runTests() {
     });
     
     mocha.on('close', async (code) => {
+        console.log('Tests completed. Saving results to the database...');
         await verifyIndex()
         await saveToDatabase(testsSaved)
 
