@@ -2,6 +2,7 @@ terraform {
   required_providers {
     mongodbatlas = {
       source = "mongodb/mongodbatlas"
+      version = "~> 1.29.0"
     }
   }
 }
@@ -30,34 +31,41 @@ resource "mongodbatlas_project" "project" {
 #
 # Create a Shared Tier Cluster
 #
-resource "mongodbatlas_cluster" "create-cluster" {
+resource "mongodbatlas_advanced_cluster" "cluster" {
   project_id   = mongodbatlas_project.project.id
   name         = var.cluster_name
   cluster_type = var.cluster_type
-
+  paused = false
+  backup_enabled = true
+  pit_enabled = true
+  mongo_db_major_version = var.mongo_db_major_version
+  
   replication_specs {
-    num_shards = 1
-    regions_config {
-      region_name     = var.cluster_region
-      electable_nodes = 3
-      priority        = 7
-      read_only_nodes = 0
+    region_configs {
+      electable_specs {
+        instance_size = var.atlas_provider_instance_size_name
+        node_count    = 3
+        # disk_size_gb = var.disk_size_gb
+      }
+      provider_name = var.atlas_provider_name
+      priority      = 7
+      region_name   = var.cluster_region
+      auto_scaling {
+        disk_gb_enabled = true
+      }
     }
   }
-  cloud_backup = true
-  pit_enabled = true
 
-  auto_scaling_disk_gb_enabled = var.auto_scaling_disk_gb_enabled
-  mongo_db_major_version       = var.mongo_db_major_version
-  provider_name               = var.atlas_provider_name
-  provider_instance_size_name = var.atlas_provider_instance_size_name
-  
+  advanced_configuration {
+    oplog_min_retention_hours = 6
+  }
+
   depends_on = [ mongodbatlas_project.project ]
 }
 
-# output "connection_strings" {
-#   value = ["${mongodbatlas_cluster.create-cluster.connection_strings}"]
-# }
+output "connection_strings" {
+  value = ["${mongodbatlas_cluster.cluster.connection_strings}"]
+}
 
 resource "mongodbatlas_project_ip_access_list" "all" {
   project_id = mongodbatlas_project.project.id
@@ -78,7 +86,9 @@ resource "mongodbatlas_database_user" "user-main" {
     database_name = "admin"
   }
 
-  depends_on = [ mongodbatlas_project.project ]
+  depends_on = [ 
+    mongodbatlas_project.project 
+  ]
 }
 
 
@@ -96,7 +106,7 @@ resource "mongodbatlas_database_user" "users" {
   for_each = tomap({ for id in local.user_ids : id => id })
 
   username           = "${each.value}"
-  password           = "MongoGameDay123"
+  password           = var.customer_user_password
   project_id         = mongodbatlas_project.project.id
   auth_database_name = "admin"
   
@@ -115,7 +125,9 @@ resource "mongodbatlas_database_user" "users" {
       role_name     = "read"
   }
 
-  depends_on = [ mongodbatlas_project.project ]
+  depends_on = [ 
+    mongodbatlas_project.project 
+  ]
 }
 
 # Send email invitations to the users
@@ -132,7 +144,7 @@ resource "local_file" "env_file" {
   filename = ".env"
   content  = <<EOF
 # AIRBNB
-MONGO_CONNECTION_STRING = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_cluster.create-cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+MONGO_CONNECTION_STRING = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
 MONGO_DATABASE_NAME=${var.sample_database_name}
 
 # PUBLIC KEYS AND SECRETS
@@ -144,6 +156,7 @@ EOF
 
   depends_on = [
     mongodbatlas_project.project,
+    mongodbatlas_advanced_cluster.cluster,
     mongodbatlas_database_user.user-main,
     mongodbatlas_project_ip_access_list.all
   ]
@@ -168,6 +181,7 @@ resource "null_resource" "run_script" {
 
   # Ensure that this script runs after the requirements are installed
   depends_on = [
+    mongodbatlas_advanced_cluster.cluster,
     null_resource.install_requirements,
     mongodbatlas_project.project,
     mongodbatlas_database_user.user-main,
