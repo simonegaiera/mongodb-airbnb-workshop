@@ -60,17 +60,13 @@ describe('MongoDB Search Tests', function() {
         const res = {
             status: function(status) {
                 this.statusCode = status;
-                // console.log('Status code:', status);
                 return this;
             },
             json: function(data) {
-                // console.log('Response data:', JSON.stringify(data, null, 2));
-                
                 responseData = data;
             }
         };
 
-        // console.log('Request:', JSON.stringify(req.body, null, 2));
         await getAutocomplete(req, res);
 
         strictEqual(res.statusCode, 201, 'Status code should be 201');
