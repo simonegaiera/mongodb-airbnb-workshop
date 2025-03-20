@@ -1,1 +1,8 @@
-GET http://localhost:5000/
+POST http://localhost:5000/api/listingsAndReviews/filter
+Content-Type: application/json
+
+{
+    "limit": 12,
+    "page": 1,
+    "filter": {"amenities": ["24-hour check-in"], "propertyType": "", "beds": ""}
+}
