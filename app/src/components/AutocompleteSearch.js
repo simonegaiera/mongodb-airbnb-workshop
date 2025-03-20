@@ -7,6 +7,7 @@ function AutocompleteComponent({ query, setQuery }) {
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const wrapperRef = useRef(null);
+    const debounceTimeout = useRef(null);
 
     useEffect(() => {
         if (query) {
@@ -46,7 +47,17 @@ function AutocompleteComponent({ query, setQuery }) {
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
-        setQuery(value);
+
+        // Clear the previous debounce timeout
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+
+        // Set a new debounce timeout
+        debounceTimeout.current = setTimeout(() => {
+            setQuery(value); // Update the query after the debounce delay
+        }, 300); // Adjust the delay as needed (300ms is common)
+        
         setIsOpen(true);
     };
 
