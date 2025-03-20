@@ -11,8 +11,9 @@ Learn how to use MongoDB Atlas Search to perform full-text search on your data. 
 
 **Objective** 
 The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. 
-    - The index must be named `default`.
-    - The index analyzer should be `lucene.english`.
+- Turn off dynamic mapping
+- The index must be named `default`.
+- The index analyzer should be `lucene.english`.
 
 **Field Mappings**  
 You need to create an index with the following field mappings:
@@ -30,8 +31,9 @@ You need to create an index with the following field mappings:
 
 **Objective**  
 The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. 
-    - The index must be named `all`.
-    - The index analyzer should be `lucene.english`.
+- Turn off dynamic mapping
+- The index must be named `default`.
+- The index analyzer should be `lucene.english`.
 
 **Field Mappings**  
 You need to create an index with the following field mappings:
