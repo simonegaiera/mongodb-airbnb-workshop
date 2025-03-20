@@ -31,7 +31,7 @@ describe('MongoDB Aggregation Tests', function() {
 
         strictEqual(responseData.length, 19, 'lenght should be 19');
         strictEqual(responseData[0]._id, 0, 'first result should contain the average for 0 beds');
-        strictEqual(responseData[0].avgPrice.toString(), '153.6206896551724137931034482758621', 'average is not correct');
+        strictEqual(responseData[0].price.toString(), '153.6206896551724137931034482758621', 'average is not correct');
     });
 
 });

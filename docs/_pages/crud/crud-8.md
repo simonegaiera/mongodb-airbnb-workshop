@@ -14,7 +14,7 @@ In this exercise, you will be required to find documents given a query.
 
 **Pipeline Definition**  
 
-1. **Navigate to the File**: In the `lab` folder open `crud-6.lab.js`.
+1. **Navigate to the File**: In the `lab` folder open `crud-8.lab.js`.
 2. **Modify the Function**: Locate and modify the `crudDelete` function.
 3. **Update the Code**:
     - You are required to delete the document with `_id` equal to `id`

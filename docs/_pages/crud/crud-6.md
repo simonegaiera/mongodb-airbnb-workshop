@@ -14,7 +14,7 @@ In this exercise, you will be required to modify a document.
 
 **Pipeline Definition**  
 
-1. **Navigate to the File**: In the `lab` folder open `crud-7.lab.js`.
+1. **Navigate to the File**: In the `lab` folder open `crud-6.lab.js`.
 2. **Modify the Function**: Locate and modify the `crudUpdateElement` function.
 3. **Update the Code**:
     - The input for this function are:
