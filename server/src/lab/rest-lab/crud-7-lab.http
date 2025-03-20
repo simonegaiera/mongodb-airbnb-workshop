@@ -1,7 +1,11 @@
-POST http://localhost:5000/api/listingsAndReviews/20000000/reviews
+POST http://localhost:5000/api/listingsAndReviews/10021707/reviews
 Content-Type: application/json
 
 {
+    "_id": "10021707",
+    "date": "2025-03-20T19:31:43.748Z",
+    "listing_id": "10021707",
+    "review_id": "10006546",
     "reviewer_name": "test",
-    "comments": "test"
+    "comments": "http test"
 }

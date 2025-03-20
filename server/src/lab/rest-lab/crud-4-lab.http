@@ -4,5 +4,5 @@ Content-Type: application/json
 {
     "limit": 12,
     "page": 1,
-    "filter": {"amenities": ["24-hour check-in"], "propertyType": "", "beds": ""}
+    "filters": {"amenities": ["24-hour check-in"], "propertyType": "Apartment", "beds": "1-2"}
 }
