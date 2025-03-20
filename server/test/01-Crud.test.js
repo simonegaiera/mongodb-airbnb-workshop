@@ -36,7 +36,7 @@ describe('MongoDB CRUD Testing', function() {
         const res = {
             status: function() { return this; },
             json: function(data) { 
-                console.log('Response data received:', data); // Log the data
+                // console.log('Response data received:', data);
                 responseData = data; 
             }
         };

@@ -90,7 +90,8 @@ function runTests() {
     let testsSaved = []
     let testSection = '';
 
-    const mocha = spawn('mocha', ['--exit', testFilesPath]);
+    // Use npx so that the local mocha installation is used
+    const mocha = spawn('npx', ['mocha', '--exit', testFilesPath]);
     
     mocha.stdout.on('data', (data) => {
         console.log(data.toString());
