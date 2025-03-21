@@ -10,3 +10,4 @@ export const databaseName = match ? match[1] : 'error';
 export const collectionName = 'listingsAndReviews';
 export const resultsDatabaseName = 'airbnb_gameday';
 export const resultsCollectionName = 'results';
+export const participantsCollectionName = 'participants';

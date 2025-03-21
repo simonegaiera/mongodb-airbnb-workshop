@@ -89,7 +89,19 @@ def create_user_collection(db_name, client, common_database, collections_list):
     """Create user collections in the specified database."""  
     for collection in collections_list:  
         client[common_database][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])  
-  
+
+def upsert_users(users_map, client, common_database):
+    collection = client[common_database]['participants']
+    
+    for user_id, user_data in users_map.items():
+        # Perform upsert
+        collection.update_one(
+            {'_id': user_id},
+            {'$set': {'name': user_data}},
+            upsert=True
+        )
+        print(f"Upserted user with _id: {user_id}", flush=True)
+
 def main():  
     load_env_variables()  
     common_database = os.getenv('MONGO_DATABASE_NAME')  
@@ -105,7 +117,11 @@ def main():
   
     # Use parse_csv to get the user identifiers
     filename = sys.argv[1]
-    users_map = parse_csv(filename)
+    option = 'name'
+    users_map = parse_csv(filename, option)
+
+    # Insert users in the collection
+    upsert_users(users_map, client, 'airbnb_gameday')
 
     # Since parse_csv returns a dictionary, get the keys to form a list of users
     users = list(users_map.keys())
