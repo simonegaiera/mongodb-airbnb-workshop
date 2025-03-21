@@ -58,7 +58,7 @@ const ResultsSplit = ({ data }) => {
               <ul className="space-y-2">
                 {usersToShow.map((user, idx) => (
                   <li key={idx} className="py-2 border-b border-gray-100 last:border-0">
-                    <span className="text-gray-800">{user.username}: {user.points} points</span>
+                    <span className="text-gray-800">{user.user ? `${user.user} (${user.username})` : user.username}: {user.points} points</span>
                   </li>
                 ))}
               </ul>
