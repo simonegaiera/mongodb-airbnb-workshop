@@ -18,7 +18,7 @@ In this exercise, you will create an aggregation pipeline to analyze the average
     - **$match Stage**: Filter documents to include only those that have both `beds` and `price` fields.
     - **$group Stage**: Group the documents by the number of beds and calculate the average price for each group.
     - **$sort Stage**: Sort the grouped documents by the number of beds in ascending order.
-    - The results should only contains two fields: `_id`, `price`
+    - **$project Stage**: The results should only contains two fields: `beds`, `price`
 
 ### Exercise: Testing API Calls
 

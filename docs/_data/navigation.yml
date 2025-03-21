@@ -12,11 +12,11 @@ docs:
 
   - title: Environment Preparation
     children:
-      - title: "Environment Preparation: Atlas"
+      - title: "Atlas Cluster"
         url: /environment/atlas/
-      - title: "Environment Preparation: VSCode Online"
+      - title: "IDE: VSCode Online"
         url: /environment/vscodeonline/
-      - title: "Environment Preparation: Codespace/VSCode"
+      - title: "IDE: Codespace/VSCode"
         url: /environment/codespace/
 
   - title: CRUD Operations (1)

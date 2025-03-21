@@ -14,7 +14,7 @@ const ListingStatistics = () => {
                 const result = await response.json();
                 // Process result to round average price to the nearest integer
                 const processedData = result.map(item => ({
-                    id: item._id,
+                    id: item.beds,
                     value: Math.round(parseFloat(item.price?.$numberDecimal)),
                 }));
                 setData(processedData);

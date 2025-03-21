@@ -16,4 +16,6 @@ For more detailed guidance on each stage, refer to the following MongoDB documen
   [Group Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 - **$sort**: Learn how to sort documents in the aggregation pipeline.
   [Sort Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)
+- **$Project**: Learn how to project documents in the aggregation pipeline.
+  [Project Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)
 
