@@ -19,7 +19,4 @@ For more detailed guidance on each step, refer to the following MongoDB document
   [Search Documentation](https://www.mongodb.com/docs/atlas/atlas-search/aggregation-stages/search/)
   
 - **Facets**: Learn how to use facets to categorize search results.
-  [Facets Documentation](https://www.mongodb.com/docs/atlas/atlas-search/facets/)
-  
-- **Number Facets**: Understand how to create number facets with boundaries.
-  [Number Facets Documentation](https://www.mongodb.com/docs/atlas/atlas-search/facets/#number-facets)
+  [Facets Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/)
