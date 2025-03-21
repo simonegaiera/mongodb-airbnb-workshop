@@ -9,10 +9,10 @@ Limit the results to 10 entries.
 Use the $project stage to include only the name field in the results.
 */
 export async function autocompleteSearch(query) {
-  const pipeline = []
+	const pipeline = []
 
-  const item = await db.collection(collectionName)
-    .aggregate(pipeline);
+    const item = await db.collection(collectionName)
+        .aggregate(pipeline);
 
-  return item.toArray()
+    return item.toArray()
 }

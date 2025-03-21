@@ -14,9 +14,9 @@ Learn how to use MongoDB Atlas Search to perform full-text search on your data. 
 3. **Update the Pipeline Array**:
     - Use the `$search` stage on the `default` index.
     - Apply the `autocomplete` operator on the `name` field of the listing.
-    - Enable fuzzy search to handle typos and variations.
+    - Enable `fuzzy` search to handle typos and variations.
     - Limit the results to 10 entries.
-    - Use the `$project` stage to include only the `name` field in the results.
+    - The result should nclude only the `name` field.
 
 ### Exercise: Testing API Calls
 

@@ -43,6 +43,8 @@ You need to create an index with the following field mappings:
 - `property_type` should be of
     - Type `token`
     - Value `none`
+- `beds` should be of
+    - Type `number`
 - `name` should be of type `autocomplete`
     - Analyzer should be `lucene.english`
     - Max gram should be set to `7`
