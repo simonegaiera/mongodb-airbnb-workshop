@@ -24,9 +24,7 @@ const ResultsSplit = ({ data }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4">
-        Data
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">Results</h1>
 
       <div className="flex flex-wrap gap-4 mb-6">
         {sections.map((section) => (

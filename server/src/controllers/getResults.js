@@ -132,7 +132,10 @@ export async function getSectionResults(req, res) {
         const sortedPointsArray = Object.entries(pointsByUsername).sort((a, b) => b[1] - a[1]);
         const sortedPointsByUsername = Object.fromEntries(sortedPointsArray);
         
+        const whoami = await database.collection(participantsCollectionName).findOne({ _id: databaseName }, { projection: { _id: 0, name: 1 } })
+
         const items = {
+            whoami: whoami ? whoami.name : databaseName,
             results: sortedPointsByUsername,
             data: data
         };
