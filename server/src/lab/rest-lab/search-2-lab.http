@@ -1,4 +1,4 @@
-GET http://localhost:5000/api/listingsAndReviews/facet?query=hawaii
+POST http://localhost:5000/api/listingsAndReviews/facet
 Content-Type: application/json
 
 {

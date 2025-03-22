@@ -6,7 +6,13 @@ const FacetComponent = ({ selectedFacets, setSelectedFacets, autocompleteQuery }
   useEffect(() => {
     const fetchFacets = async () => {
       try {
-        const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/facet?query=${autocompleteQuery}`);
+        const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/facet`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query: autocompleteQuery })
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

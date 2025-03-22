@@ -21,12 +21,16 @@ export async function getAutocomplete(req, res) {
 };
 
 export async function getFacet(req, res) {
-    const { query } = req.query;
+    const { query } = req.body;
+
+    if (!query) {
+        return res.status(400).json({ message: 'Query parameter is required' });
+    }
     
     try {
         const items = await facetSearch(query);
         
-        res.status(200).json(items);
+        res.status(201).json(items);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -43,7 +47,7 @@ export async function getSearchItems(req, res) {
     if (searchQuery && searchQuery.trim() !== '') {
         let searchPipeline = {
             $search: {
-                index: "all",
+                index: "default",
                 compound: {
                     must: {
                         autocomplete: {
@@ -91,10 +95,9 @@ export async function getSearchItems(req, res) {
             '$limit': limit
         });
     }
-    
-    // console.log('Search Query:', searchQuery);
-    // console.log('Search Item Pipeline:', JSON.stringify(pipeline, null, 2));
 
+    // console.log('Search Query:', searchQuery, page, limit, facetsQuery);
+    // console.log('Search Item Pipeline:', JSON.stringify(pipeline, null, 2));
     
     try {
         const items = await db.collection(collectionName).aggregate(pipeline).toArray();

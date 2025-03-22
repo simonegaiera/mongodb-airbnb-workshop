@@ -15,7 +15,7 @@ router.post('/filter', getFilters);
 router.get('/statistics', getPriceStatistics);
 
 router.post('/autocomplete', getAutocomplete);
-router.get('/facet', getFacet);
+router.post('/facet', getFacet);
 router.post('/search', getSearchItems);
 
 router.post('/:id/reviews', insertReview);

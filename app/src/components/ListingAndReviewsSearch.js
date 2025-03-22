@@ -72,6 +72,12 @@ const ListingsAndReviewsSearch = ({
     fetchData(page, limit, facetsQuery, searchQuery);
   }, [page, limit, facetsQuery, searchQuery]);
 
+  // Add this useEffect to reset the page and data when facetsQuery or searchQuery changes
+  useEffect(() => {
+    setPage(1);
+    setData([]);
+  }, [facetsQuery, searchQuery]);
+
   if (loading && page === 1) {
     return (
       <div className="flex justify-center items-center h-screen">

@@ -10,7 +10,6 @@ export async function facetSearch(query) {
 	const pipeline = []
     
   	const item = await db.collection(collectionName)
-		.aggregate(pipeline);
   
 	return item.toArray()
 }
