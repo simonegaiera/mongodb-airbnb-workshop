@@ -17,37 +17,36 @@ describe('MongoDB Search Tests', function() {
     it('search-0: the default search index should be created', async function() {
         try {
             const indexName = 'default';
-
             const collection = db.collection(collectionName);
             const cursor = await collection.listSearchIndexes(indexName);
-
             const index = await cursor.next();
             const mapping = index.latestDefinition.mappings.fields;
                
-            // Assert that the fields are configured as facets
-            strictEqual(mapping.amenities.type, 'stringFacet', 'Field "amenities" should be of type "stringFacet"');
-            strictEqual(mapping.beds.type, 'numberFacet', 'Field "beds" should be of type "numberFacet"');
-            strictEqual(mapping.property_type.type, 'stringFacet', 'Field "property_type" should be of type "stringFacet"');
+            // Check amenities: should be an array of length 2 with correct types (order insensitive)
+            assert(Array.isArray(mapping.amenities), 'amenities is not an array');
+            strictEqual(mapping.amenities.length, 2, 'amenities array should have 2 elements');
+            const amenityTypes = mapping.amenities.map(item => item.type);
+            assert(amenityTypes.includes('stringFacet'), 'Amenities missing type "stringFacet"');
+            assert(amenityTypes.includes('token'), 'Amenities missing type "token"');
+            
+            // Check beds: should be an array of length 2 with correct types (order insensitive)
+            assert(Array.isArray(mapping.beds), 'beds is not an array');
+            strictEqual(mapping.beds.length, 2, 'beds array should have 2 elements');
+            const bedTypes = mapping.beds.map(item => item.type);
+            assert(bedTypes.includes('numberFacet'), 'Beds missing type "numberFacet"');
+            assert(bedTypes.includes('number'), 'Beds missing type "number"');
+            
+            // Check name: should be an object with type "autocomplete" and analyzer "lucene.english"
+            assert.strictEqual(typeof mapping.name, 'object', 'name should be an object');
             strictEqual(mapping.name.type, 'autocomplete', 'Field "name" should be of type "autocomplete"');
-        } catch (error) {
-            throw new Error(`Error: ${error.message}`);
-        }
-    });
+            strictEqual(mapping.name.analyzer, 'lucene.english', 'Field "name" should have analyzer "lucene.english"');
 
-    it('search-0: the all search index should be created', async function() {
-        try {
-            const indexName = 'all';
-
-            const collection = db.collection(collectionName);
-            const cursor = await collection.listSearchIndexes(indexName);
-
-            const index = await cursor.next();
-            const mapping = index.latestDefinition.mappings.fields;
-               
-            // Assert that the fields are configured as facets
-            strictEqual(mapping.amenities.type, 'token', 'Field "amenities" should be of type "token"');
-            strictEqual(mapping.property_type.type, 'token', 'Field "property_type" should be of type "token"');
-            strictEqual(mapping.name.type, 'autocomplete', 'Field "name" should be of type "autocomplete"');
+            // Check property_type: should be an array of length 2 with correct types (order insensitive)
+            assert(Array.isArray(mapping.property_type), 'property_type is not an array');
+            strictEqual(mapping.property_type.length, 2, 'property_type array should have 2 elements');
+            const propertyTypeTypes = mapping.property_type.map(item => item.type);
+            assert(propertyTypeTypes.includes('stringFacet'), 'property_type missing type "stringFacet"');
+            assert(propertyTypeTypes.includes('token'), 'property_type missing type "token"');
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }

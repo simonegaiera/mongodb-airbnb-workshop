@@ -53,7 +53,9 @@ const Results = ({ results, whoami }) => {
                     index + 1
                   )}
                 </td>
-                <td className="px-4 py-2">{row.user}</td>
+                <td className="px-4 py-2">
+                  {row.user === whoami ? `${row.user} (You)` : row.user}
+                </td>
                 <td className="px-4 py-2 text-right">{row.points}</td>
               </tr>
             ))}
