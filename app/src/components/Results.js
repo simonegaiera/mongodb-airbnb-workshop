@@ -7,6 +7,8 @@ const medalImages = {
     2: `${process.env.BASE_PATH}/win-third.png`
 };
 
+const winImage = `${process.env.BASE_PATH}/win.png`
+
 const Results = ({ results, whoami }) => {
   // Check if results is defined and is an object
   if (!results || typeof results !== 'object' || Object.keys(results).length === 0) {
@@ -42,14 +44,20 @@ const Results = ({ results, whoami }) => {
             {topTen.map((row, index) => (
               <tr key={row.user} className="border-t">
                 <td className="px-4 py-2 text-center">
-                  {medalImages[index] ? (
+                  {index < 3 ? (
                     <img 
                       src={medalImages[index]} 
-                      alt={index === 0 ? '1' : index === 1 ? '2' : '3'} 
+                      alt={`${index + 1}`} 
                       className="w-6 h-6 inline" 
                     />
                   ) : (
-                    index + 1
+                    <>
+                      <img 
+                        src={winImage} 
+                        alt="win" 
+                        className="w-6 h-6 inline" 
+                      /> {index + 1}
+                    </>
                   )}
                 </td>
                 <td className="px-4 py-2">
@@ -67,7 +75,22 @@ const Results = ({ results, whoami }) => {
                   </td>
                 </tr>
                 <tr className="border-t bg-gray-100">
-                  <td className="px-4 py-2 text-center">{whoamiRankIndex + 1}</td>
+                  <td className="px-4 py-2 text-center">
+                    {whoamiRankIndex < 3 ? (
+                      <img 
+                        src={medalImages[whoamiRankIndex]} 
+                        alt={`${whoamiRankIndex + 1}`} 
+                        className="w-6 h-6 inline mr-1" 
+                      />
+                    ) : (
+                      <img 
+                        src={winImage} 
+                        alt="win" 
+                        className="w-6 h-6 inline mr-1" 
+                      />
+                    )}
+                    {whoamiRankIndex + 1}
+                  </td>
                   <td className="px-4 py-2">{whoamiRow.user} (You)</td>
                   <td className="px-4 py-2 text-right">{whoamiRow.points}</td>
                 </tr>
