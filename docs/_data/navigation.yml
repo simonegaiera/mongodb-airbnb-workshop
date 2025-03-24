@@ -19,6 +19,15 @@ docs:
       - title: "IDE: Codespace/VSCode"
         url: /environment/codespace/
 
+  - title: Test and Resources
+    children:
+      - title: "Validate Your Results"
+        url: /test/
+      - title: "Leaderboard"
+        url: /leaderboard/
+      - title: "Resources"
+        url: /resources/
+
   - title: CRUD Operations (1)
     children:
       - title: "CRUD Operations"
@@ -96,12 +105,3 @@ docs:
         url: /search/facet/
       - title: "Hint: Facet"
         url: /search/facet/hint/
-
-  - title: Test and Resources
-    children:
-      - title: "Validate Your Results"
-        url: /test/
-      - title: "Leaderboard"
-        url: /leaderboard/
-      - title: "Resources"
-        url: /resources/

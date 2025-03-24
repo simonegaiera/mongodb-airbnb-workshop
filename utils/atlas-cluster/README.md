@@ -32,14 +32,25 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
 ## Generate Terraform Configuration
 
-### Step 3: Setup Terraform Variables
+### Step 3: Configure Terraform for MongoDB Atlas
 
-1. **Prepare the Variable File**:
-   - Duplicate the `terraform.tfvars.template` file and rename the copy to `terraform.tfvars`.
+1. **Create a Custom Variable File**:
+   - Find the file named `terraform.tfvars.template` in your project directory.
+   - Make a copy of this template and rename it to `terraform.tfvars`. This file will hold your specific configuration values.
 
-2. **Configure Your Settings**:
-   - Open `terraform.tfvars` and update the settings to fit your specific needs.
-   - Ensure that the API Keys included have `Organization Project Creator` permissions.
+2. **Update the Variable File**:
+   - Open your newly created `terraform.tfvars` file.
+   - Modify the file to include your specific settings, such as your MongoDB Atlas API keys.
+   - Ensure these API keys have the necessary permissions, including `Organization Project Creator`, to allow Terraform to manage your resources.
+
+3. **Modify the Main Configuration**:
+   - Open the `main.tf` file, which contains the core declarations for your Terraform setup.
+   - Customize the settings in `main.tf` to suit your deployment needs.
+   - By default, the configuration will instruct Terraform to create a new MongoDB Atlas Project.
+     - If you prefer to use an existing Atlas project instead, adjust the configuration:
+       - Comment out the `resource` `mongodbatlas_project` that creates a new project.
+       - Uncomment the `mongodbatlas_project` `data` to reference an existing project.
+       - Update all references from `mongodbatlas_project.project.id` to `data.mongodbatlas_project.project.id` to ensure consistency in the configuration.
 
 ### Step 4: Initialize and Apply Terraform
 
@@ -57,4 +68,4 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
    terraform apply
    ```
 
-Following these steps will help ensure a smooth setup for your GameDay environment. Good luck, and enjoy your GameDay experience!
+Following these steps will help ensure a smooth setup for your Atlas GameDay environment.

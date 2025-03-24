@@ -13,13 +13,13 @@ variable "private_key" {
 variable "project_name" {
   description = "The Atlas Project ID used to create the cluster"
   type        = string
-  default     = "MongoDB-Workshop-Customer"
+  default     = "MongoDB-GameDay-Customer"
 }
 
 variable "cluster_name" {
   description = "The Atlas Project cluster name"
   type        = string
-  default     = "mongodb-airbnb-workshop"
+  default     = "airbnb-gameday"
 }
 
 variable "sample_database_name" {
@@ -72,6 +72,12 @@ variable "mongodb_atlas_database_username" {
 
 variable "mongodb_atlas_database_user_password" {
   description = "MongoDB Atlas DB password"
+  type        = string
+  default     = "MongoGameDay123"
+}
+
+variable "customer_user_password" {
+  description = "MongoDB Customer DB password"
   type        = string
   default     = "MongoGameDay123"
 }
