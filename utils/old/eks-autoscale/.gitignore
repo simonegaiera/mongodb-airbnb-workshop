@@ -5,6 +5,6 @@
 **/variables.tf
 trashme
 
-user_list.*
+user_list.csv
 .venv/
 .env
