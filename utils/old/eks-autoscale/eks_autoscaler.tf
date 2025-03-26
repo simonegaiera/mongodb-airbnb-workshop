@@ -32,6 +32,7 @@ resource "aws_subnet" "eks_subnet" {
 
   tags = {
     Name = "${var.cluster_name}-eks-subnet-${count.index}"
+    "kubernetes.io/role/internal-elb"   = "1"
   }
 
   depends_on = [ aws_vpc.eks_vpc ]

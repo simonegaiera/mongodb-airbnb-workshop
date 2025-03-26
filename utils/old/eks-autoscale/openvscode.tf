@@ -136,10 +136,12 @@ resource "helm_release" "user_openvscode" {
 
 data "kubernetes_service" "openvscode_services" {
   for_each = tomap({ for id in local.user_ids : id => id })
+
   metadata {
     name      = "${substr("vscode-${each.value}", 0, 53)}-svc"
     namespace = helm_release.user_openvscode[each.key].namespace
   }
+
   depends_on = [
     helm_release.user_openvscode
   ]
@@ -150,28 +152,6 @@ output "user_cluster_map" {
     for user_id in local.user_ids :
     "${user_id}.${var.aws_route53_record_name}" => lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
   })
-}
-
-locals {
-  # Base Nginx configuration
-  base_nginx_config = templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx.conf.tpl", {
-    server_name = var.aws_route53_record_name
-  })
-
-  # Generate a list of Nginx configuration blocks for each user ID
-  nginx_user_configs = [
-    for user_id in local.user_ids : templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx-ssl.conf.tpl", {
-      server_name = "${user_id}.${var.aws_route53_record_name}",
-      data_username = "${user_id}",
-      proxy_pass = lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
-    })
-  ]
-
-  # Combine the base config with user configs and MongoDB config
-  combined_nginx_config = join("\n\n", concat(
-    [local.base_nginx_config],
-    local.nginx_user_configs
-  ))
 }
 
 resource "kubernetes_pod" "nfs_pod" {
