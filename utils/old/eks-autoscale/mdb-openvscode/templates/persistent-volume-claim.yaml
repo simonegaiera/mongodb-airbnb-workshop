@@ -1,0 +1,14 @@
+{{- if .Values.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # name: {{ include "mdb-openvscode.fullname" . }}-pvc
+  name: {{ .Release.Name }}-pvc
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | default "ReadWriteMany" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | default "250Mi" }}
+  storageClassName: {{ .Values.persistence.storageClass | default "efs-sc" }}
+{{- end }}

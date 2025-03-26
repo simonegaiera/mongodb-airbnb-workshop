@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # name: {{ include "mdb-openvscode.fullname" . }}-cm
+  name: {{ .Release.Name }}-cm
+  labels:
+    {{- include "mdb-openvscode.labels" . | nindent 4 }}
+data:
+  user.conf: |
+    {{ .Values.openvscode.user | nindent 4 }}
+  aws_route53_record_name.conf: |
+    {{ .Values.openvscode.aws_route53_record_name | nindent 4 }}
+  startup.sh: |-
+    {{ .Files.Get "files/startup.sh" | nindent 4 }}
+  user_operations.sh: |-
+    {{ .Files.Get "files/user_operations.sh" | nindent 4 }}
+  openvscode_extensions.sh: |-
+    {{ .Files.Get "files/openvscode_extensions.sh" | nindent 4 }}

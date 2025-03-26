@@ -27,7 +27,9 @@ resource "aws_security_group" "efs_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  depends_on = [ aws_vpc.eks_vpc ]
+  depends_on = [ 
+    aws_vpc.eks_vpc 
+  ]
 }
 
 resource "aws_efs_mount_target" "efs_mt" {
@@ -41,8 +43,9 @@ resource "aws_efs_mount_target" "efs_mt" {
     aws_efs_file_system.efs,  
     aws_security_group.efs_sg,
     aws_subnet.eks_subnet
-  ]  
+  ]
 }
+
 
 # Output the EFS File System ID
 output "efs_id" {

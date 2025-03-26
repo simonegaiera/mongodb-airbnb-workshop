@@ -1,0 +1,103 @@
+https://github.com/gitpod-io/openvscode-server?tab=readme-ov-file
+
+ssh -i "simone.gaiera.pem" ec2-user@ec2-3-148-144-119.us-east-2.compute.amazonaws.com
+
+sudo yum install -y git
+
+
+sudo dnf update -y
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+source ~/.bashrc 
+nvm install node
+node -v
+npm -v
+
+
+
+cd /home/ec2-user
+wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-v1.95.2/openvscode-server-v1.95.2-linux-x64.tar.gz
+tar -xzf openvscode-server-v1.95.2-linux-x64.tar.gz
+cd openvscode-server-v1.95.2-linux-x64
+
+
+./bin/openvscode-server --host 0.0.0.0 --port 8080 --without-connection-token
+
+--user-data-dir /home/ec2-user/openvscode-conf/data
+--extensions-dir /home/ec2-user/openvscode-conf/extensions
+
+
+sudo vi /etc/systemd/system/openvscode-server.service
+
+[Unit]
+Description=OpenVSCode-Server
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+ExecStart=/home/ec2-user/openvscode-server-v1.95.2-linux-x64/bin/openvscode-server --host 0.0.0.0 --port 8080 --without-connection-token
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl enable openvscode-server
+sudo systemctl start openvscode-server
+sudo systemctl status openvscode-server
+sudo systemctl stop openvscode-server
+
+
+sudo dnf update -y
+sudo dnf install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+sudo dnf install certbot python3-certbot-nginx -y
+sudo vi /etc/nginx/conf.d/openvscode-server.conf
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name airbnb-workshop-customer.mongosa.com;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
+    }
+}
+
+sudo systemctl reload nginx
+sudo systemctl status nginx
+
+sudo certbot --nginx -d airbnb-workshop-customer.mongosa.com
+
+
+
+git clone https://github.com/simonegaiera/mongodb-airbnb-workshop
+
+cd server
+npm install
+
+cd app
+npm install
+npm run build
+
+
+sudo rm -rf /var/www/html/out
+sudo mkdir -p /var/www/html/
+sudo cp -r /home/ec2-user/mongodb-airbnb-workshop/app/out /var/www/html/
+sudo chown -R nginx:nginx /var/www
+
+sudo chmod 755 /var/www/html/out
+sudo find /var/www/html/out -type d -exec chmod 755 {} \;
+sudo find /var/www/html/out -type f -exec chmod 644 {} \;
+
+
+sudo systemctl stop nginx
+sudo systemctl start nginx

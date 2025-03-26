@@ -1,0 +1,93 @@
+# Default values for mdb-openvscode.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: gitpod/openvscode-server
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: openvscode
+      port: 3000
+      targetPort: 3000
+    - name: web
+      port: 3001
+      targetPort: 3001
+    - name: api
+      port: 5000
+      targetPort: 5000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+
+# livenessProbe:
+#   httpGet:
+#     path: /
+#     port: http
+# readinessProbe:
+#   httpGet:
+#     path: /
+#     port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+
+persistence:
+  enabled: true
+  fileSystemId: ""
+  accessMode: ReadWriteMany
+  size: 250Mi
+  storageClass: ""
+  annotations: {}
+
+openvscode:
+  user: ""
+  aws_route53_record_name: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -254,42 +254,25 @@ resource "aws_eks_node_group" "node_group" {
   ]
 }
 
-# output "cluster_endpoint" {
-#   value = aws_eks_cluster.eks_cluster.endpoint
-# }
+output "cluster_endpoint" {
+  value = aws_eks_cluster.eks_cluster.endpoint
+}
 
-# output "cluster_certificate_authority_data" {
-#   value = aws_eks_cluster.eks_cluster.certificate_authority[0].data
-# }
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name               = aws_eks_cluster.eks_cluster.name
+  addon_name                 = "vpc-cni"
+  resolve_conflicts_on_update = "OVERWRITE"
+  depends_on                 = [
+    aws_eks_cluster.eks_cluster
+  ]
+}
 
-resource "helm_release" "metrics_server" {
-  name       = "metrics-server"
-  repository = "https://kubernetes-sigs.github.io/metrics-server/"
-  chart      = "metrics-server"
-  version    = "3.12.2"
-  namespace  = "kube-system"
-
-  set {
-    name  = "args[0]"
-    value = "--kubelet-preferred-address-types=InternalIP"
-  }
-
-  set {
-    name  = "args[1]"
-    value = "--kubelet-insecure-tls"
-  }
-
-  set {
-    name  = "args[2]"
-    value = "--metric-resolution=30s"
-  }
-
-  # Optional settings
-  timeout           = 600
-  create_namespace  = true
-
-  depends_on = [
-    aws_eks_node_group.node_group
+resource "aws_eks_addon" "metrics_server" {
+  cluster_name               = aws_eks_cluster.eks_cluster.name
+  addon_name                 = "metrics-server"
+  resolve_conflicts_on_update = "OVERWRITE"
+  depends_on                 = [
+    aws_eks_cluster.eks_cluster
   ]
 }
 
@@ -412,7 +395,6 @@ resource "helm_release" "cluster_autoscaler" {
   depends_on = [
     aws_eks_node_group.node_group,
     aws_iam_role_policy_attachment.custom_autoscaling_policy_attachment,
-    data.aws_autoscaling_groups.node_group_asg,
-    helm_release.prometheus
+    data.aws_autoscaling_groups.node_group_asg
   ]
 }
