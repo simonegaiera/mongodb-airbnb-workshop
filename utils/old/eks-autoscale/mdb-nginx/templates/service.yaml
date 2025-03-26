@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "mdb-nginx.fullname" . }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
   labels:
     {{- include "mdb-nginx.labels" . | nindent 4 }}
 spec:
