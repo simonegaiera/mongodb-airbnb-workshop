@@ -6,7 +6,7 @@ server {
     }
     
     location /frontend/ {
-        alias /mnt/vscode-${data_username}/mongodb-airbnb-workshop/app/out;
+        alias /mnt/vscode-${data_username}/mongodb-airbnb-workshop/app/out/;
         index index.html;
         try_files $uri $uri/ /index.html;
     }

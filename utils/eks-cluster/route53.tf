@@ -59,16 +59,6 @@ resource "acme_certificate" "mongosa_cert" {
   ]
 }
 
-data "kubernetes_service" "nginx_service" {
-  metadata {
-    name      = helm_release.airbnb_gameday_nginx.name
-    namespace = helm_release.airbnb_gameday_nginx.namespace
-  }
-
-  depends_on = [
-    helm_release.airbnb_gameday_nginx
-  ]
-}
 
 resource "aws_route53_record" "nginx-mongosa" {
   zone_id = data.aws_route53_zone.mongosa_com.zone_id

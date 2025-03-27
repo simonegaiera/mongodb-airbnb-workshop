@@ -336,7 +336,7 @@ resource "aws_eks_addon" "vpc_cni" {
   cluster_name               = aws_eks_cluster.eks_cluster.name
   addon_name                 = "vpc-cni"
   resolve_conflicts_on_update = "OVERWRITE"
-  depends_on                 = [
+  depends_on = [
     aws_eks_cluster.eks_cluster
   ]
 }
@@ -346,9 +346,9 @@ resource "aws_eks_addon" "metrics_server" {
   addon_name                 = "metrics-server"
   resolve_conflicts_on_update = "OVERWRITE"
 
-  depends_on                 = [
+  depends_on  = [
     aws_eks_cluster.eks_cluster,
-    aws_eks_addon.vpc_cni
+    kubernetes_pod.nfs_pod
   ]
 }
 
@@ -359,7 +359,7 @@ resource "aws_eks_addon" "observability" {
 
   depends_on = [ 
     aws_eks_cluster.eks_cluster,
-    aws_eks_addon.efs_csi_driver
+    kubernetes_pod.nfs_pod
   ]
 }
 
@@ -370,7 +370,7 @@ resource "aws_eks_addon" "efs_csi_driver" {
 
   depends_on = [
     aws_eks_cluster.eks_cluster,
-    aws_eks_addon.metrics_server
+    kubernetes_pod.nfs_pod
   ]
 }
 
@@ -379,7 +379,9 @@ resource "null_resource" "patch_efs_hostnetwork" {
     command = "kubectl patch deployment efs-csi-controller -n kube-system -p '{\"spec\": {\"template\": {\"spec\": {\"hostNetwork\": true}}}}'"
   }
   
-  depends_on = [aws_eks_addon.efs_csi_driver]
+  depends_on = [
+    aws_eks_addon.efs_csi_driver
+  ]
 }
 
 resource "null_resource" "patch_efs_sa" {
@@ -387,7 +389,9 @@ resource "null_resource" "patch_efs_sa" {
     command = "kubectl patch serviceaccount efs-csi-controller-sa -n kube-system -p '{\"metadata\": {\"annotations\": {\"eks.amazonaws.com/role-arn\": null}}}'"
   }
   
-  depends_on = [aws_eks_addon.efs_csi_driver]
+  depends_on = [
+    aws_eks_addon.efs_csi_driver
+  ]
 }
 
 resource "kubernetes_storage_class" "efs" {
@@ -408,5 +412,71 @@ resource "kubernetes_storage_class" "efs" {
     aws_eks_addon.efs_csi_driver,
     null_resource.patch_efs_hostnetwork,
     null_resource.patch_efs_sa
+  ]
+}
+
+resource "kubernetes_pod" "nfs_pod" {
+  metadata {
+    name = "efs-initializer"
+  }
+
+  spec {
+    container {
+      image = "amazonlinux:2"
+      name  = "efs-setup"
+
+      command = [
+        "sh",
+        "-c",
+<<-EOT
+# Confirm current user
+echo "Running as user: $(whoami)"
+
+# Install NFS tools
+echo "Installing nfs-utils..."
+if yum install -y nfs-utils; then
+  echo "nfs-utils installed successfully."
+else
+  echo "Failed to install nfs-utils."
+  exit 1
+fi
+
+# Prepare for EFS mount
+echo "Creating directory /mnt/efs..."
+mkdir -p /mnt/efs
+
+# Check and mount the EFS
+echo "Checking mountpoint for EFS..."
+efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
+echo "EFS Address: $efs"
+if ! grep -qs '/mnt/efs ' /proc/mounts; then
+    echo "Mounting EFS..."
+    mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
+    if [ $? -eq 0 ]; then
+        echo "EFS mounted successfully."
+    else
+        echo "Failed to mount EFS."
+        exit 1
+    fi
+else
+    echo "EFS is already mounted."
+fi
+
+# Keep the container running
+echo "Keeping the container running..."
+tail -f /dev/null
+EOT
+      ]
+
+      security_context {
+        privileged = true
+      }
+    }
+  }
+
+  depends_on = [
+    aws_efs_mount_target.efs_mt,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_addon.vpc_cni,
   ]
 }
