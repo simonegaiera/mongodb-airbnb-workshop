@@ -14,7 +14,7 @@ All the instructions you'll need can be found in the workshop guide:
 
 ## 🛠️ Environment Setup (For MongoDB SAs Only)  
 
-MongoDB **SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
+**MongoDB SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
 
 - **Set up an Atlas Cluster**:  
   Instructions available here:  
