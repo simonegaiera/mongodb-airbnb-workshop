@@ -16,14 +16,14 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
    - Visit your VSCode environment provided for the workshop.
    - URL Pattern:
      ```
-     https://username.airbnb-workshop-customer.mongosa.com/?folder=/home/workspace/mongodb-airbnb-workshop
+     https://<username>.<customer>.mongogameday.com/?folder=/home/workspace/mongodb-airbnb-workshop
      ```
    - Ensure you can log in and see the workshop files.
 
 2. **Access Application Frontend:**
    - Open the application frontend using:
      ```
-     https://username.airbnb-workshop-customer.mongosa.com/frontend/
+     https://<username>.<customer>.mongogameday.com/frontend/
      ```
    - Confirm that the frontend is accessible and functional.
 
@@ -37,7 +37,7 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
    - Choose `Connect with Connection String`.
    - Input the connection string provided by your System Administrator (SA). Example:
      ```
-     mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
      ```
 
 3. **Verify Connection:**
@@ -49,7 +49,7 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
    - Navigate to the **server** directory.
    - Open the `.env` file and paste your MongoDB connection string, replacing the placeholder:
      ```
-     MONGODB_URI=mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+     MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
      ```
 
 2. **Start the Server:**
@@ -62,5 +62,7 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
 
 3. **Verify Server Functionality:**
    - Check for console logs indicating the server is running and connected to MongoDB.
+
+---
 
 Following these steps will ensure your VSCode environment is ready for development, enabling you to efficiently work with your application and MongoDB. If you encounter any issues, consult with your SA for additional support. Happy coding!
