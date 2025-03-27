@@ -189,7 +189,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   timeouts {
     create = "60m"
-    delete = "2h"
+    delete = "120m"
   }
 
   upgrade_policy {
