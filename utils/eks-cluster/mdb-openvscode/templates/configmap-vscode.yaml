@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-vscode-cm
+  labels:
+    {{- include "mdb-openvscode.labels" . | nindent 4 }}
+data:
+  settings.json: |-
+    {{ .Files.Get "files/settings.json" | nindent 4 }}

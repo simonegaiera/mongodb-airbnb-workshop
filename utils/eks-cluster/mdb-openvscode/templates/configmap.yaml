@@ -1,7 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  # name: {{ include "mdb-openvscode.fullname" . }}-cm
   name: {{ .Release.Name }}-cm
   labels:
     {{- include "mdb-openvscode.labels" . | nindent 4 }}

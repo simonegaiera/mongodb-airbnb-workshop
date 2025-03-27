@@ -29,29 +29,15 @@ resource "kubernetes_secret" "nginx_tls_secret" {
   type = "kubernetes.io/tls"
 
   data = {
-    "tls.crt" = file("${path.module}/nginx-conf-files/tls.crt")
-    "tls.key" = file("${path.module}/nginx-conf-files/tls.key")
+    "tls.crt" = acme_certificate.mongosa_cert.certificate_pem
+    "tls.key" = tls_private_key.request_key.private_key_pem
   }
+
+  depends_on = [ 
+    acme_certificate.mongosa_cert, 
+    tls_private_key.request_key 
+  ]
 }
-
-# resource "kubernetes_secret" "nginx_tls_secret" {
-#   metadata {
-#     name      = "nginx-tls-secret"
-#     namespace = "default"
-#   }
-
-#   type = "kubernetes.io/tls"
-
-#   data = {
-#     "tls.crt" = acme_certificate.mongosa_cert.certificate_pem
-#     "tls.key" = tls_private_key.request_key.private_key_pem
-#   }
-
-#   depends_on = [ 
-#     acme_certificate.mongosa_cert, 
-#     tls_private_key.request_key 
-#   ]
-# }
 
 resource "helm_release" "airbnb_gameday_nginx" {
   name       = "mdb-nginx"
@@ -153,4 +139,21 @@ data "kubernetes_service" "nginx_service" {
 
 output "nginx_service_hostname" {
   value = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
+}
+
+locals {
+  hostname_parts = split("-", data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname)
+  short_hostname = join("-", slice(local.hostname_parts, 0, 4))
+}
+
+data "aws_lb" "nginx_lb" {
+  name = local.short_hostname
+
+  depends_on = [ 
+    data.kubernetes_service.nginx_service
+  ]
+}
+
+output "zone_id" {
+  value = data.aws_lb.nginx_lb.zone_id
 }

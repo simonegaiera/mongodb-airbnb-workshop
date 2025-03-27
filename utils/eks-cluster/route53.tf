@@ -50,6 +50,7 @@ resource "acme_certificate" "mongosa_cert" {
 
     config = {
       AWS_DEFAULT_REGION = "us-east-1"
+      AWS_PROFILE = var.aws_profile
     }
   }
 
@@ -60,34 +61,48 @@ resource "acme_certificate" "mongosa_cert" {
 }
 
 
-resource "aws_route53_record" "nginx-mongosa" {
-  zone_id = data.aws_route53_zone.mongosa_com.zone_id
+data "aws_route53_zone" "hosted_zone" {
+  name         = var.aws_route53_hosted_zone
+  private_zone = false
+}
+
+output "route53_hosted_zone" {
+  value = data.aws_route53_zone.hosted_zone.zone_id
+}
+
+
+resource "aws_route53_record" "nginx-record" {
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = var.aws_route53_record_name
   type    = "A"
 
   alias {
     name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = var.aws_elb_hosted_zone_id[var.aws_region]
+    zone_id                = data.aws_lb.nginx_lb.zone_id
     evaluate_target_health = true
   }
 
   depends_on = [
-    data.kubernetes_service.nginx_service
+    data.kubernetes_service.nginx_service,
+    data.aws_route53_zone.hosted_zone,
+    data.aws_lb.nginx_lb
   ]
 }
 
-resource "aws_route53_record" "nginx-mongosa-wildcard" {
-  zone_id = data.aws_route53_zone.mongosa_com.zone_id
+resource "aws_route53_record" "nginx-record-wildcard" {
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "*.${var.aws_route53_record_name}"
   type    = "A"
 
   alias {
     name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = var.aws_elb_hosted_zone_id[var.aws_region]
+    zone_id                = data.aws_lb.nginx_lb.zone_id
     evaluate_target_health = true
   }
 
   depends_on = [
-    data.kubernetes_service.nginx_service
+    data.kubernetes_service.nginx_service,
+    data.aws_route53_zone.hosted_zone,
+    data.aws_lb.nginx_lb
   ]
 }

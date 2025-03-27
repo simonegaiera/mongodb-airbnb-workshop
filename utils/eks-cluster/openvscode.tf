@@ -127,6 +127,27 @@ resource "helm_release" "user_openvscode" {
     value = "/home/workspace/utils"
   }
 
+  # Set the configmap volume (index 2 - config)
+  set {
+    name  = "volumes[2].name"
+    value = "openvscode-configmap-${each.value}-vscode"
+  }
+
+  set {
+    name  = "volumes[2].configMap.name"
+    value = "${substr("vscode-${each.value}", 0, 53)}-vscode-cm"
+  }
+  
+  set {
+    name  = "volumeMounts[2].name"
+    value = "openvscode-configmap-${each.value}-vscode"
+  }
+
+  set {
+    name  = "volumeMounts[2].mountPath"
+    value = "/home/.openvscode-server/User"
+  }
+
   depends_on = [
     aws_efs_mount_target.efs_mt,
     kubernetes_storage_class.efs
@@ -148,8 +169,7 @@ data "kubernetes_service" "openvscode_services" {
 }
 
 output "user_cluster_map" {
-  value = jsonencode({
-    for user_id in local.user_ids :
-    "${user_id}.${var.aws_route53_record_name}" => lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
-  })
+  value = [
+    for user_id in local.user_ids : "${user_id}.${var.aws_route53_record_name}"
+  ]
 }
