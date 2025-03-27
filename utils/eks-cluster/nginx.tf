@@ -34,6 +34,25 @@ resource "kubernetes_secret" "nginx_tls_secret" {
   }
 }
 
+# resource "kubernetes_secret" "nginx_tls_secret" {
+#   metadata {
+#     name      = "nginx-tls-secret"
+#     namespace = "default"
+#   }
+
+#   type = "kubernetes.io/tls"
+
+#   data = {
+#     "tls.crt" = acme_certificate.mongosa_cert.certificate_pem
+#     "tls.key" = tls_private_key.request_key.private_key_pem
+#   }
+
+#   depends_on = [ 
+#     acme_certificate.mongosa_cert, 
+#     tls_private_key.request_key 
+#   ]
+# }
+
 resource "helm_release" "airbnb_gameday_nginx" {
   name       = "mdb-nginx"
   repository = "local"

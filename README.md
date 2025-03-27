@@ -18,7 +18,7 @@ MongoDB **SAs** managing the environment can follow these setup guides to prepar
   Instructions available here:  
   ➡️ **[atlas-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/atlas-cluster)**  
 
-- **Set up an EKS Cluster**:  
+- **Set up an EKS Cluster for VSCode Online**:
   Instructions available here:  
   ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
 

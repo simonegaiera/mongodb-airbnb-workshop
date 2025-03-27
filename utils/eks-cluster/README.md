@@ -65,22 +65,4 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
 ---
 
-### Known Issue: `server_names_hash_bucket_size`
-
-If you encounter an error in Nginx related to `server_names_hash_bucket_size`, please follow these steps to resolve it:
-
-1. **Remove Users with Long Names**:
-   - Identify and remove any users with names longer than 64 bytes. These names can cause issues with the current configuration.
-
-2. **Re-run Terraform**:
-   - Execute your Terraform configuration again. This step will configure Nginx to load with an increased `server_names_hash_bucket_size`.
-
-3. **Re-add Users**:
-   - Once Nginx is properly configured, add the users back into your system.
-   - Execute your Terraform configuration once more to ensure all changes are applied.
-
-Following these steps should help you resolve the Nginx configuration error.
-
----
-
 Following these steps will help ensure a smooth setup for your GameDay environment. Good luck, and enjoy your GameDay experience!
