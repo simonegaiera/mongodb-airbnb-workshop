@@ -1,13 +1,13 @@
 locals {
   # Base Nginx configuration
   base_nginx_config = templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx.conf.tpl", {
-    server_name = var.aws_route53_record_name
+    server_name = local.aws_route53_record_name
   })
 
   # Generate a list of Nginx configuration blocks for each user ID
   nginx_user_configs = [
     for user_id in local.user_ids : templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx-ssl.conf.tpl", {
-      server_name = "${user_id}.${var.aws_route53_record_name}",
+      server_name = "${user_id}.${local.aws_route53_record_name}",
       data_username = "${user_id}",
       proxy_pass = lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
     })

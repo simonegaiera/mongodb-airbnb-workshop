@@ -1,10 +1,10 @@
 resource "aws_efs_file_system" "efs" {
-  creation_token = "efs-${var.cluster_name}"
+  creation_token = "efs-${local.cluster_name}"
 
   encrypted = true
 
   tags = {
-    Name = "efs-${var.cluster_name}"
+    Name = "efs-${local.cluster_name}"
   }
 }
 

@@ -3,12 +3,22 @@ provider "aws" {
   profile = var.aws_profile
 }
 
+locals {
+  cluster_name = "${var.customer_name}-gameday-eks"
+  aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
+  current_timestamp = timestamp()
+  expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 
-  filter {
-    name   = "zone-name"
-    values = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"]
+  dynamic "filter" {
+    for_each = var.aws_region == "us-west-2" ? [1] : []
+    content {
+      name   = "zone-name"
+      values = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"]
+    }
   }
 }
 
@@ -19,7 +29,7 @@ resource "aws_vpc" "eks_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${var.cluster_name}-eks-vpc"
+    Name = "${local.cluster_name}-eks-vpc"
   }
 }
 
@@ -31,7 +41,7 @@ resource "aws_subnet" "eks_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.cluster_name}-eks-subnet-${count.index}"
+    Name = "${local.cluster_name}-eks-subnet-${count.index}"
     "kubernetes.io/role/elb" = "1"
   }
 
@@ -42,7 +52,7 @@ resource "aws_internet_gateway" "eks_igw" {
   vpc_id = aws_vpc.eks_vpc.id
 
   tags = {
-    Name = "${var.cluster_name}-eks-igw"
+    Name = "${local.cluster_name}-eks-igw"
   }
 
   depends_on = [ aws_vpc.eks_vpc ]
@@ -57,7 +67,7 @@ resource "aws_route_table" "rt" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-eks-public-rt"
+    Name = "${local.cluster_name}-eks-public-rt"
   }
 
   depends_on = [ 
@@ -102,7 +112,7 @@ resource "aws_security_group" "eks_sg" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-eks-sg"
+    Name = "${local.cluster_name}-eks-sg"
   }
 
   depends_on = [ 
@@ -112,19 +122,8 @@ resource "aws_security_group" "eks_sg" {
 
 # IAM Role for EKS Node
 resource "aws_iam_role" "node" {
-  name ="${var.cluster_name}-eks-node-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = ["sts:AssumeRole"]
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
+  name ="${local.cluster_name}-eks-node-role"
+  assume_role_policy = file("${path.module}/aws_policies/node_policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodeMinimalPolicy" {
@@ -143,69 +142,8 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEFSClientReadWriteAccess" 
 }
 
 resource "aws_iam_policy" "efs_csi_node_policy" {
-  name   = "${var.cluster_name}-efs-csi-node-policy"
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AllowDescribe",
-            "Effect": "Allow",
-            "Action": [
-                "elasticfilesystem:DescribeAccessPoints",
-                "elasticfilesystem:DescribeFileSystems",
-                "elasticfilesystem:DescribeMountTargets",
-                "ec2:DescribeAvailabilityZones"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "AllowCreateAccessPoint",
-            "Effect": "Allow",
-            "Action": [
-                "elasticfilesystem:CreateAccessPoint"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "Null": {
-                    "aws:RequestTag/efs.csi.aws.com/cluster": "false"
-                },
-                "ForAllValues:StringEquals": {
-                    "aws:TagKeys": "efs.csi.aws.com/cluster"
-                }
-            }
-        },
-        {
-            "Sid": "AllowTagNewAccessPoints",
-            "Effect": "Allow",
-            "Action": [
-                "elasticfilesystem:TagResource"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "StringEquals": {
-                    "elasticfilesystem:CreateAction": "CreateAccessPoint"
-                },
-                "Null": {
-                    "aws:RequestTag/efs.csi.aws.com/cluster": "false"
-                },
-                "ForAllValues:StringEquals": {
-                    "aws:TagKeys": "efs.csi.aws.com/cluster"
-                }
-            }
-        },
-        {
-            "Sid": "AllowDeleteAccessPoint",
-            "Effect": "Allow",
-            "Action": "elasticfilesystem:DeleteAccessPoint",
-            "Resource": "*",
-            "Condition": {
-                "Null": {
-                    "aws:ResourceTag/efs.csi.aws.com/cluster": "false"
-                }
-            }
-        }
-    ]
-})
+  name   = "${local.cluster_name}-efs-csi-node-policy"
+  policy = file("${path.module}/aws_policies/efs_csi_node_policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "node_efs_csi_attachment" {
@@ -215,22 +153,8 @@ resource "aws_iam_role_policy_attachment" "node_efs_csi_attachment" {
 
 # IAM Role for EKS Cluster
 resource "aws_iam_role" "cluster" {
-  name ="${var.cluster_name}-eks-cluster-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "sts:AssumeRole",
-          "sts:TagSession"
-        ]
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      },
-    ]
-  })
+  name ="${local.cluster_name}-eks-cluster-role"
+  assume_role_policy = file("${path.module}/aws_policies/cluster_policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
@@ -260,7 +184,7 @@ resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSNetworkingPolicy" {
 
 # EKS Cluster
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = var.cluster_name
+  name     = local.cluster_name
   role_arn = aws_iam_role.cluster.arn
 
   upgrade_policy {
@@ -303,7 +227,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   tags = {
-    Name       = var.cluster_name
+    Name        = local.cluster_name
     "expire-on" = local.expire_timestamp
     "owner"     = var.domain_email
     "purpose"   = "gameday"
@@ -316,11 +240,6 @@ resource "aws_eks_cluster" "eks_cluster" {
     aws_iam_role.node,
     aws_iam_role.cluster
   ]
-}
-
-locals {
-  current_timestamp = timestamp()
-  expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
 }
 
 output "cluster_endpoint" {
@@ -428,44 +347,10 @@ resource "kubernetes_pod" "nfs_pod" {
       command = [
         "sh",
         "-c",
-<<-EOT
-# Confirm current user
-echo "Running as user: $(whoami)"
-
-# Install NFS tools
-echo "Installing nfs-utils..."
-if yum install -y nfs-utils; then
-  echo "nfs-utils installed successfully."
-else
-  echo "Failed to install nfs-utils."
-  exit 1
-fi
-
-# Prepare for EFS mount
-echo "Creating directory /mnt/efs..."
-mkdir -p /mnt/efs
-
-# Check and mount the EFS
-echo "Checking mountpoint for EFS..."
-efs="${aws_efs_file_system.efs.id}.efs.${var.aws_region}.amazonaws.com"
-echo "EFS Address: $efs"
-if ! grep -qs '/mnt/efs ' /proc/mounts; then
-    echo "Mounting EFS..."
-    mount -t nfs4 -o nfsvers=4.1 "$efs:/" /mnt/efs
-    if [ $? -eq 0 ]; then
-        echo "EFS mounted successfully."
-    else
-        echo "Failed to mount EFS."
-        exit 1
-    fi
-else
-    echo "EFS is already mounted."
-fi
-
-# Keep the container running
-echo "Keeping the container running..."
-tail -f /dev/null
-EOT
+        templatefile("${path.module}/efs_initializer.sh", {
+          aws_efs_id = aws_efs_file_system.efs.id,
+          aws_region = var.aws_region
+        })
       ]
 
       security_context {

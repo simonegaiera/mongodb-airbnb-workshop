@@ -71,7 +71,7 @@ resource "helm_release" "user_openvscode" {
 
   set {
     name  = "openvscode.aws_route53_record_name"
-    value = var.aws_route53_record_name
+    value = local.aws_route53_record_name
   }
 
   set {
@@ -149,6 +149,6 @@ data "kubernetes_service" "openvscode_services" {
 
 output "user_cluster_map" {
   value = [
-    for user_id in local.user_ids : "${user_id}.${var.aws_route53_record_name}"
+    for user_id in local.user_ids : "${user_id}.${local.aws_route53_record_name}"
   ]
 }

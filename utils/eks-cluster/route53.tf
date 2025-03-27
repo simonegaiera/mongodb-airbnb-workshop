@@ -33,11 +33,11 @@ resource "tls_private_key" "request_key" {
 resource "tls_cert_request" "prod_request" {
   private_key_pem = tls_private_key.request_key.private_key_pem
   subject {
-    common_name = "*.${var.aws_route53_record_name}"
+    common_name = "*.${local.aws_route53_record_name}"
   }
   dns_names = [
-    "${var.aws_route53_record_name}",
-    "*.${var.aws_route53_record_name}"
+    "${local.aws_route53_record_name}",
+    "*.${local.aws_route53_record_name}"
   ]
 }
 
@@ -73,7 +73,7 @@ output "route53_hosted_zone" {
 
 resource "aws_route53_record" "nginx-record" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
-  name    = var.aws_route53_record_name
+  name    = local.aws_route53_record_name
   type    = "A"
 
   alias {
@@ -91,7 +91,7 @@ resource "aws_route53_record" "nginx-record" {
 
 resource "aws_route53_record" "nginx-record-wildcard" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
-  name    = "*.${var.aws_route53_record_name}"
+  name    = "*.${local.aws_route53_record_name}"
   type    = "A"
 
   alias {

@@ -35,10 +35,11 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 ### Step 3: Setup Terraform Variables
 
 1. **Prepare the Variable File**:
-   - Duplicate the `terraform.tfvars.template` file and rename the copy to `terraform.tfvars`.
+   - Duplicate the `variables.tf.template` file and rename the copy to `variables.tf`.
 
 2. **Configure Your Settings**:
-   - Open `terraform.tfvars` and update the settings to meet your specific needs.   
+   - Open `variables.tf` and update the settings to meet your specific needs.
+   - Modify the `customer` name, `aws_region`, and `domain_email`.
    - **Note**: The default cluster expiration is set to one week from the creation date. Please plan accordingly or adjust the expiration parameter in your settings if needed.  
 
 ### Step 4: Initialize and Apply Terraform

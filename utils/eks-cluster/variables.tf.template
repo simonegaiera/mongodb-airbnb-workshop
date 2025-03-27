@@ -1,17 +1,17 @@
-variable "aws_profile" {
-  description = "SA AWS Profile"
+variable "domain_email" {
+  description = "The email of the SA (only needed to request a certobot certificate)."
   type        = string
-  default     = "Solution-Architects.User-979559056307"
+  default     = "youremail@mongodb.com"
 }
 
-variable "cluster_name" {
-  description = "The name of the EKS cluster."
+variable "customer_name" {
+  description = "The name of the customer you are running GameDay for."
   type        = string
-  default     = "customer-gameday-eks"
+  default     = "customer"
 }
 
 variable "aws_region" {
-  description = "The zone name of the EKS cluster."
+  description = "The zone of the EKS cluster, closest to you Customer (limitations might apply)."
   type        = string
   default     = "us-east-2"
 }
@@ -22,14 +22,8 @@ variable "aws_route53_hosted_zone" {
   default     = "mongogameday.com."
 }
 
-variable "aws_route53_record_name" {
-  description = "The name of the Domain for the specific customer."
+variable "aws_profile" {
+  description = "SA AWS Profile"
   type        = string
-  default     = "customer.mongogameday.com"
-}
-
-variable "domain_email" {
-  description = "The name of the email for the specific customer."
-  type        = string
-  default     = "youremail@mongodb.com"
+  default     = "Solution-Architects.User-979559056307"
 }
