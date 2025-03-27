@@ -24,7 +24,7 @@ MongoDB **SAs** managing the environment can follow these setup guides to prepar
   Instructions available here:  
   ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
 
-- **Slack Channel**: [#gamneday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
+- **Slack Channel**: [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
 
 ---
 
