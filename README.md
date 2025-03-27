@@ -8,6 +8,8 @@ Welcome to the **MongoDB Airbnb GameDay**! This interactive session is designed 
 All the instructions you'll need can be found in the workshop guide:  
 👉 **[mongodb-airbnb-workshop](https://simonegaiera.github.io/mongodb-airbnb-workshop/)**  
 
+**Note for Participants:** The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
+
 ---
 
 ## 🛠️ Environment Setup (For MongoDB SAs Only)  
@@ -22,8 +24,7 @@ MongoDB **SAs** managing the environment can follow these setup guides to prepar
   Instructions available here:  
   ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
 
-### Note for Participants:  
-The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
+- **Slack Channel**: [#gamneday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
 
 ---
 
