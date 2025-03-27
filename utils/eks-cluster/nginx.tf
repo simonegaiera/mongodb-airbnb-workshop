@@ -121,17 +121,6 @@ resource "helm_release" "airbnb_gameday_nginx" {
   ]
 }
 
-data "kubernetes_service" "nginx_service" {
-  metadata {
-    name      = helm_release.airbnb_gameday_nginx.name
-    namespace = helm_release.airbnb_gameday_nginx.namespace
-  }
-
-  depends_on = [
-    helm_release.airbnb_gameday_nginx
-  ]
-}
-
 output "nginx_service_hostname" {
   value = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
 }

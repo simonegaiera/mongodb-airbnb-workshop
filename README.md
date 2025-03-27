@@ -20,7 +20,7 @@ MongoDB **SAs** managing the environment can follow these setup guides to prepar
 
 - **Set up an EKS Cluster**:  
   Instructions available here:  
-  ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/openvscode-eks)**  
+  ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
 
 ### Note for Participants:  
 The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
