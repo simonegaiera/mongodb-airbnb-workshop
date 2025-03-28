@@ -26,7 +26,46 @@ Search Indexes
 // Create a Search Index
 // index_name = 'default'
 // type = 'search'
-// definition = {}
+// definition = {
+//   "analyzer": "",
+//   "searchAnalyzer": "",
+//   "mappings": {
+//     "dynamic": false,
+//     "fields": {
+//       "amenities": [
+//         {
+//           "type": ""
+//         },
+//         {
+//           "type": ""
+//         }
+//       ],
+//       "beds": [
+//         {
+//           "type": ""
+//         },
+//         {
+//           "type": ""
+//         }
+//       ],
+//       "name": {
+//         "analyzer": "",
+//         "foldDiacritics": false,
+//         "maxGrams": 1,
+//         "minGrams": 1,
+//         "type": ""
+//       },
+//       "property_type": [
+//         {
+//           "type": ""
+//         },
+//         {
+//           "type": ""
+//         }
+//       ]
+//     }
+//   }
+// }
 // db.listingsAndReviews.createSearchIndex(
 //     index_name,
 //     type,

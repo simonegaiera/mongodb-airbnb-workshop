@@ -51,6 +51,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
        - Comment out the `resource` `mongodbatlas_project` that creates a new project.
        - Uncomment the `mongodbatlas_project` `data` to reference an existing project.
        - Update all references from `mongodbatlas_project.project.id` to `data.mongodbatlas_project.project.id` to ensure consistency in the configuration.
+   - By dafault, Terraform is configured to invite the users to the Project. Comment the `mongodbatlas_project_invitation` resource to disable this functionality.
 
 ### Step 4: Initialize and Apply Terraform
 
@@ -59,7 +60,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
    ```bash
    # Initialize the Terraform working directory
-   terraform init
+   terraform init -upgrade
 
    # Generate and display an execution plan
    terraform plan

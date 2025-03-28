@@ -2,7 +2,6 @@ terraform {
   required_providers {
     mongodbatlas = {
       source = "mongodb/mongodbatlas"
-      version = "~> 1.29.0"
     }
   }
 }
@@ -64,7 +63,7 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
 }
 
 output "connection_strings" {
-  value = ["${mongodbatlas_cluster.cluster.connection_strings}"]
+  value = ["${mongodbatlas_advanced_cluster.cluster.connection_strings}"]
 }
 
 resource "mongodbatlas_project_ip_access_list" "all" {
@@ -72,7 +71,9 @@ resource "mongodbatlas_project_ip_access_list" "all" {
   cidr_block = "0.0.0.0/0"
   comment    = "accept all"
 
-  depends_on = [ mongodbatlas_project.project ]
+  depends_on = [ 
+    mongodbatlas_project.project 
+  ]
 }
 
 resource "mongodbatlas_database_user" "user-main" {
@@ -131,13 +132,13 @@ resource "mongodbatlas_database_user" "users" {
 }
 
 # Send email invitations to the users
-resource "mongodbatlas_project_invitation" "invitation-name_surname" {
-  for_each = tomap({ for id in local.user_emails : id => id })
+# resource "mongodbatlas_project_invitation" "invitation-name_surname" {
+#   for_each = tomap({ for id in local.user_emails : id => id })
 
-  username    = "${each.value}"
-  project_id  = mongodbatlas_project.project.id
-  roles       = [ "GROUP_READ_ONLY", "GROUP_DATA_ACCESS_READ_ONLY", "GROUP_SEARCH_INDEX_EDITOR" ]
-}
+#   username    = "${each.value}"
+#   project_id  = mongodbatlas_project.project.id
+#   roles       = [ "GROUP_READ_ONLY", "GROUP_DATA_ACCESS_READ_ONLY", "GROUP_SEARCH_INDEX_EDITOR" ]
+# }
 
 # Generate the data for the database
 resource "local_file" "env_file" {

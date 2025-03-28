@@ -55,7 +55,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
    ```bash
    # Initialize the Terraform working directory
-   terraform init
+   terraform init -upgrade
 
    # Generate and display an execution plan
    terraform plan
