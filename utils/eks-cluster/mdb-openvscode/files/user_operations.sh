@@ -9,11 +9,20 @@ else
     git clone https://github.com/simonegaiera/mongodb-airbnb-workshop /home/workspace/mongodb-airbnb-workshop || echo "Failed to clone repository"
 fi
 
-mkdir -p /home/workspace/mongodb-airbnb-workshop/server
-echo -e "PORT=5000\nMONGODB_URI=" > /home/workspace/mongodb-airbnb-workshop/server/.env
+# Get the values from settings.json
+USERNAME=$(jq -r '.user' /home/workspace/utils/settings.json)
+URL=$(jq -r '.aws_route53_record_name' /home/workspace/utils/settings.json)
+ATLAS_SRV=$(jq -r '.atlas_standard_srv' /home/workspace/utils/settings.json)
+ATLAS_PWD=$(jq -r '.atlas_user_password' /home/workspace/utils/settings.json)
 
-USERNAME=$(tr -d '[:space:]' < /home/workspace/utils/user.conf)
-URL=$(tr -d '[:space:]' < /home/workspace/utils/aws_route53_record_name.conf)
+ATLAS_HOST=${ATLAS_SRV#mongodb+srv://}
+
+mkdir -p /home/workspace/mongodb-airbnb-workshop/server
+
+cat <<EOL > /home/workspace/mongodb-airbnb-workshop/server/.env
+PORT=5000
+MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
+EOL
 
 mkdir -p /home/workspace/mongodb-airbnb-workshop/app
 

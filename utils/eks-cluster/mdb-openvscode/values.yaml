@@ -90,6 +90,8 @@ persistence:
 openvscode:
   user: ""
   aws_route53_record_name: ""
+  atlas_standard_srv: ""
+  atlas_user_password: ""
 
 nodeSelector: {}
 

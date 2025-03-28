@@ -62,6 +62,16 @@ resource "helm_release" "user_openvscode" {
   }
 
   set {
+    name  = "openvscode.atlas_standard_srv"
+    value = local.atlas_standard_srv
+  }
+
+  set {
+    name  = "openvscode.atlas_user_password"
+    value = local.atlas_user_password
+  }
+
+  set {
     name  = "openvscode.aws_route53_record_name"
     value = local.aws_route53_record_name
   }

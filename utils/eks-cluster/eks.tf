@@ -11,9 +11,9 @@ data "terraform_remote_state" "atlas_cluster" {
 }
 
 locals {
-  atlas_standard_srv  = data.terraform_remote_state.atlas_cluster.outputs.standard_srv
+  atlas_standard_srv  = try(data.terraform_remote_state.atlas_cluster.outputs.standard_srv, "")
   atlas_user_list     = data.terraform_remote_state.atlas_cluster.outputs.user_list
-  atlas_user_password = data.terraform_remote_state.atlas_cluster.outputs.user_password
+  atlas_user_password = try(data.terraform_remote_state.atlas_cluster.outputs.user_password, "")
 
   cluster_name = "${var.customer_name}-gameday-eks"
   aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
