@@ -62,10 +62,6 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   depends_on = [ mongodbatlas_project.project ]
 }
 
-output "connection_strings" {
-  value = ["${mongodbatlas_advanced_cluster.cluster.connection_strings}"]
-}
-
 resource "mongodbatlas_project_ip_access_list" "all" {
   project_id = mongodbatlas_project.project.id
   cidr_block = "0.0.0.0/0"
@@ -129,6 +125,18 @@ resource "mongodbatlas_database_user" "users" {
   depends_on = [ 
     mongodbatlas_project.project 
   ]
+}
+
+output "user_list" {
+    value = local.user_ids
+}
+
+output "user_password" {
+    value = var.customer_user_password
+}
+
+output "standard_srv" {
+    value = mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv
 }
 
 # Send email invitations to the users

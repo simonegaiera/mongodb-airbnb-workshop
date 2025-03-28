@@ -3,11 +3,28 @@ provider "aws" {
   profile = var.aws_profile
 }
 
+data "terraform_remote_state" "atlas_cluster" {
+  backend = "local"
+  config = {
+    path = "${var.atlas_terraform}/terraform.tfstate"
+  }
+}
+
 locals {
+  atlas_standard_srv  = data.terraform_remote_state.atlas_cluster.outputs.standard_srv
+  atlas_user_list     = data.terraform_remote_state.atlas_cluster.outputs.user_list
+  atlas_user_password = data.terraform_remote_state.atlas_cluster.outputs.user_password
+
   cluster_name = "${var.customer_name}-gameday-eks"
   aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
   current_timestamp = timestamp()
   expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
+}
+
+resource "null_resource" "check_atlas_state" {
+  provisioner "local-exec" {
+    command = "test -f ${var.atlas_terraform}/terraform.tfstate || (echo 'Atlas Remote state file not found!' && exit 1)"
+  }
 }
 
 data "aws_availability_zones" "available" {
@@ -31,6 +48,10 @@ resource "aws_vpc" "eks_vpc" {
   tags = {
     Name = "${local.cluster_name}-eks-vpc"
   }
+
+  depends_on = [ 
+    null_resource.check_atlas_state 
+  ]
 }
 
 resource "aws_subnet" "eks_subnet" {
@@ -45,7 +66,9 @@ resource "aws_subnet" "eks_subnet" {
     "kubernetes.io/role/elb" = "1"
   }
 
-  depends_on = [ aws_vpc.eks_vpc ]
+  depends_on = [ 
+    aws_vpc.eks_vpc 
+  ]
 }
 
 resource "aws_internet_gateway" "eks_igw" {
@@ -55,7 +78,9 @@ resource "aws_internet_gateway" "eks_igw" {
     Name = "${local.cluster_name}-eks-igw"
   }
 
-  depends_on = [ aws_vpc.eks_vpc ]
+  depends_on = [ 
+    aws_vpc.eks_vpc 
+  ]
 }
 
 resource "aws_route_table" "rt" {

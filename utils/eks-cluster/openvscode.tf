@@ -44,16 +44,8 @@ resource "null_resource" "update_kubeconfig" {
   ]
 }
 
-data "external" "user_data" {
-  program = ["python3", "${path.module}/parse_users.py", "${path.module}/user_list.csv"]
-}
-
-locals {
-  user_ids = keys(data.external.user_data.result)
-}
-
 resource "helm_release" "user_openvscode" {
-  for_each = tomap({ for id in local.user_ids : id => id })
+  for_each = tomap({ for id in local.atlas_user_list : id => id })
 
   name       = substr("vscode-${each.value}", 0, 53)
   repository = "local"
@@ -135,7 +127,7 @@ resource "helm_release" "user_openvscode" {
 
 
 data "kubernetes_service" "openvscode_services" {
-  for_each = tomap({ for id in local.user_ids : id => id })
+  for_each = tomap({ for id in local.atlas_user_list : id => id })
 
   metadata {
     name      = "${substr("vscode-${each.value}", 0, 53)}-svc"
@@ -149,6 +141,6 @@ data "kubernetes_service" "openvscode_services" {
 
 output "user_cluster_map" {
   value = [
-    for user_id in local.user_ids : "${user_id}.${local.aws_route53_record_name}"
+    for user_id in local.atlas_user_list : "${user_id}.${local.aws_route53_record_name}"
   ]
 }

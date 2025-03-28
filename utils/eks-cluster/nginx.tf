@@ -6,7 +6,7 @@ locals {
 
   # Generate a list of Nginx configuration blocks for each user ID
   nginx_user_configs = [
-    for user_id in local.user_ids : templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx-ssl.conf.tpl", {
+    for user_id in local.atlas_user_list : templatefile("${path.module}/nginx-conf-files/airbnb-customer-nginx-ssl.conf.tpl", {
       server_name = "${user_id}.${local.aws_route53_record_name}",
       data_username = "${user_id}",
       proxy_pass = lookup(data.kubernetes_service.openvscode_services[user_id].metadata[0], "name", "default-ip")
@@ -62,7 +62,7 @@ resource "helm_release" "airbnb_gameday_nginx" {
           }
         ],
         [
-          for uid in local.user_ids : {
+          for uid in local.atlas_user_list : {
             name      = "${substr("vscode-${uid}", 0, 53)}-pvc",
             mountPath = "/mnt/vscode-${uid}"
           }
@@ -91,7 +91,7 @@ resource "helm_release" "airbnb_gameday_nginx" {
           }
         ],
         [
-          for uid in local.user_ids : {
+          for uid in local.atlas_user_list : {
             name = "${substr("vscode-${uid}", 0, 53)}-pvc",
             persistentVolumeClaim = {
               claimName = "${substr("vscode-${uid}", 0, 53)}-pvc"

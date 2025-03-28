@@ -4,12 +4,8 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
 ## Preparation Steps
 
-### Step 1: Collect the User List
-
-1. **Create a CSV File**: 
-   - Name your file `user_list.csv` and use the provided template as a guide.
-   - Ensure the file includes all users relevant to your project.
-   - The `email` field is mandatory and must be filled in for each user.
+### Step 1: Create the Atlas Cluster
+Instructions available here: [atlas-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/atlas-cluster)
 
 ### Step 2: Python3 Setup
 
@@ -35,11 +31,13 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 ### Step 3: Setup Terraform Variables
 
 1. **Prepare the Variable File**:
-   - Duplicate the `variables.tf.template` file and rename the copy to `variables.tf`.
+   - Find the file named `terraform.tfvars.template` in your project directory.
+   - Make a copy of this template and rename it to `terraform.tfvars`. This file will hold your specific configuration values.
 
 2. **Configure Your Settings**:
-   - Open `variables.tf` and update the settings to meet your specific needs.
+   - Open `terraform.tfvars` and update the settings to meet your specific needs.
    - Modify the `customer` name, `aws_region`, and `domain_email`.
+   - Add a `atlas_terraform` if is not in the default location
    - **Note**: The default cluster expiration is set to one week from the creation date. Please plan accordingly or adjust the expiration parameter in your settings if needed.  
 
 ### Step 4: Initialize and Apply Terraform

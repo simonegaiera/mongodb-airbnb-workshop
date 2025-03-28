@@ -13,7 +13,7 @@ variable "private_key" {
 variable "project_name" {
   description = "The Atlas Project ID used to create the cluster"
   type        = string
-  default     = "MongoDB-GameDay-Customer"
+  default     = "gameday-customer"
 }
 
 variable "cluster_name" {

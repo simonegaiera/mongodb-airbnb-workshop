@@ -1,9 +1,10 @@
+
 # Terraform
 **/.terraform*
 **/terraform*.*
+!terraform.tfvars.template
 trashme
 
 user_list.csv
 .venv/
 .env
-**/variables.tfvars
