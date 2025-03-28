@@ -129,6 +129,28 @@ resource "helm_release" "user_openvscode" {
     value = "/home/workspace/utils"
   }
 
+
+   # Set the configmap volume (index 2 - config)
+   set {
+     name  = "volumes[2].name"
+     value = "openvscode-configmap-${each.value}-vscode"
+   }
+ 
+   set {
+     name  = "volumes[2].configMap.name"
+     value = "${substr("vscode-${each.value}", 0, 53)}-vscode-cm"
+   }
+   
+   set {
+     name  = "volumeMounts[2].name"
+     value = "openvscode-configmap-${each.value}-vscode"
+   }
+ 
+   set {
+     name  = "volumeMounts[2].mountPath"
+     value = "/home/workspace/.openvscode-server/data/Machine"
+   }
+
   depends_on = [
     aws_efs_mount_target.efs_mt,
     kubernetes_storage_class.efs

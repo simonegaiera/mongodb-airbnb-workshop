@@ -1,0 +1,6 @@
+{
+    "workbench.startupEditor": "none",
+    "security.workspace.trust.enabled": false,
+    "mdb.confirmRunAll": false,
+    "github.copilot.editor.enableAutoCompletions": false
+}
