@@ -25,6 +25,7 @@ All the instructions you'll need can be found in the workshop guide:
   ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
 
 - **Slack Channel**: [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
+- **GameDay Slides**: [presentation](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)
 
 ---
 

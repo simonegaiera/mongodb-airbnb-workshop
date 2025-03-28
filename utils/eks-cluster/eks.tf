@@ -243,7 +243,17 @@ resource "aws_eks_cluster" "eks_cluster" {
     aws_route_table_association.rt_assoc,
     aws_security_group.eks_sg,
     aws_iam_role.node,
-    aws_iam_role.cluster
+    aws_iam_role.cluster,
+    aws_iam_role_policy_attachment.CloudWatchAgentServerPolicy,
+    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodeMinimalPolicy,
+    aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly,
+    aws_iam_role_policy_attachment.node_AmazonEFSClientReadWriteAccess,
+    aws_iam_role_policy_attachment.node_efs_csi_attachment,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSComputePolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSBlockStoragePolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSLoadBalancingPolicy,
+    aws_iam_role_policy_attachment.cluster_AmazonEKSNetworkingPolicy
   ]
 }
 
