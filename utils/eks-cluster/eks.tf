@@ -387,10 +387,10 @@ resource "kubernetes_pod" "nfs_pod" {
       command = [
         "sh",
         "-c",
-        templatefile("${path.module}/efs_initializer.sh", {
+        format("%s && tail -f /dev/null", templatefile("${path.module}/efs_initializer.sh", {
           aws_efs_id = aws_efs_file_system.efs.id,
           aws_region = var.aws_region
-        })
+        }))
       ]
 
       security_context {
@@ -402,6 +402,6 @@ resource "kubernetes_pod" "nfs_pod" {
   depends_on = [
     aws_efs_mount_target.efs_mt,
     aws_eks_cluster.eks_cluster,
-    aws_eks_addon.vpc_cni,
+    aws_eks_addon.vpc_cni
   ]
 }
