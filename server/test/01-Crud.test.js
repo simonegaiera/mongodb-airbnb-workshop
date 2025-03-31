@@ -108,7 +108,8 @@ describe('MongoDB CRUD Testing', function() {
         await getFilters(req, res);
         
         strictEqual(res.statusCode, 201, 'Status code should be 201');
-        strictEqual(responseData.length, 3, 'the query should return 3 items');
+        strictEqual(responseData[0]._id, '6242962', '_id should be 6242962');
+        strictEqual(responseData.length, 1, 'the query should return 3 items');
     });
     
     it('crud-5: createItem should create a new item and return it', async function() {

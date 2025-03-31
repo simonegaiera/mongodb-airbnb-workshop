@@ -30,7 +30,7 @@ describe('MongoDB Aggregation Tests', function() {
         await getPriceStatistics(req, res);
 
         strictEqual(responseData.length, 19, 'lenght should be 19');
-        strictEqual(responseData[0]._id, 0, 'first result should contain the average for 0 beds');
+        strictEqual(responseData[0].beds, 0, 'first result should contain the average for 0 beds');
         strictEqual(responseData[0].price.toString(), '153.6206896551724137931034482758621', 'average is not correct');
     });
 

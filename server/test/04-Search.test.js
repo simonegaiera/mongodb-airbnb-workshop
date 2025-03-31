@@ -74,11 +74,17 @@ describe('MongoDB Search Tests', function() {
     });
 
     it('search-2: facetSearch should return the correct facets', async function() {
-        const req = { query: { query: 'hawaii' } };
+        const req = { body: { query: 'hawaii' } };
         let responseData = null;
+
         const res = {
-            status: function() { return this; },
-            json: function(data) { responseData = data; }
+            status: function(status) {
+                this.statusCode = status;
+                return this;
+            },
+            json: function(data) {
+                responseData = data;
+            }
         };
 
         await getFacet(req, res);
