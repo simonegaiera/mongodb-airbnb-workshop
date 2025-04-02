@@ -14,7 +14,3 @@ results:
 - console.log anywhere makes the results wrong
 - force people to do the exercises in order
 
-
-## atlas
-other
-- fix permission to gameday database

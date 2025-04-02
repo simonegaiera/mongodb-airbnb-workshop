@@ -98,6 +98,49 @@ locals {
   user_emails = values(data.external.user_data.result)
 }
 
+resource "mongodbatlas_custom_db_role" "airbnb_gameday_role" {
+  project_id = mongodbatlas_project.project.id
+  role_name  = "airbnb_gameday_role"
+
+  actions {
+    action = "FIND"
+    resources {
+      collection_name = "participants"
+      database_name   = "airbnb_gameday"
+    }
+    resources {
+      collection_name = "results"
+      database_name   = "airbnb_gameday"
+    }
+  }
+  actions {
+    action = "LIST_COLLECTIONS"
+    resources {
+      database_name   = "airbnb_gameday"
+    }
+  }
+  actions {
+    action = "LIST_INDEXES"
+    resources {
+      database_name   = "airbnb_gameday"
+    }
+  }
+  actions {
+    action = "CREATE_COLLECTION"
+    resources {
+      collection_name = "results"
+      database_name   = "airbnb_gameday"
+    }
+  }
+  actions {
+    action = "INSERT"
+    resources {
+      collection_name = "results"
+      database_name   = "airbnb_gameday"
+    }
+  }
+}
+
 # Create a database user for each user
 resource "mongodbatlas_database_user" "users" {
   for_each = tomap({ for id in local.user_ids : id => id })
@@ -113,8 +156,8 @@ resource "mongodbatlas_database_user" "users" {
   }
 
   roles {
-      database_name = "airbnb_gameday"
-      role_name     = "readWrite"
+      database_name = "admin"
+      role_name     = "airbnb_gameday_role"
   }
 
   roles {
@@ -123,7 +166,8 @@ resource "mongodbatlas_database_user" "users" {
   }
 
   depends_on = [ 
-    mongodbatlas_project.project 
+    mongodbatlas_project.project,
+    mongodbatlas_custom_db_role.airbnb_gameday_role
   ]
 }
 
