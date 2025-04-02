@@ -28,7 +28,7 @@ const Header = () => {
       <nav className="container mx-auto pt-2 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href={`${process.env.BASE_PATH}/`}>
+            <Link href={`/`}>
               <img
                 className="h-9"
                 src={`${process.env.BASE_PATH}/mongobnb.png`}

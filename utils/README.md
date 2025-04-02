@@ -14,10 +14,6 @@ results:
 - console.log anywhere makes the results wrong
 - force people to do the exercises in order
 
-## eks
-nginx
-- https://simone-gaiera.airbnb.mongogameday.com/app/leaderboard refresh does not work
-
 
 ## atlas
 other

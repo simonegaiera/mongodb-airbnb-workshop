@@ -8,7 +8,7 @@ server {
     location /app/ {
         alias /mnt/vscode-${data_username}/mongodb-airbnb-workshop/app/out/;
         index index.html;
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ $uri.html /app/$uri.html /app/index.html;
     }
 
     location / {
