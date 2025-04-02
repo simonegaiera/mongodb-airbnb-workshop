@@ -5,33 +5,30 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform basic find operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
+In this section, you will learn how to add an element to an array field in MongoDB.
 
 ## Exercise: Insert an array field
 
-**Objective** 
-In this exercise, you will be required to modify a document.
+**Objective**  
+Modify an existing document to include a new review in its `reviews` array.
 
 **Pipeline Definition**  
-
-1. **Navigate to the File**: In the `lab` folder open `crud-7.lab.js`.
-2. **Modify the Function**: Locate and modify the `crudAddToArray` function.
-3. **Update the Code**:
-    - The input for this function are:
-        - the `_id` as the `id`
-        - the `review` we want to insert in the array field `reviews`
-    - Push the new review for the required document
-4. **Bonus**:
-    - Increment the `number_of_reviews`
-    - The bonus won't give more point, but only street cred.
+1. **Navigate to the File**  
+   Locate `crud-7.lab.js` in the `/server/lab/` folder.  
+2. **Modify the Function**  
+   Inside `crudAddToArray`, add the new review to the array field named `reviews`.  
+3. **Update the Code**  
+   - The inputs for this function are:  
+       - `_id` (`id`)  
+       - The `review` to insert  
+   - Use `$push` to add the review to `reviews`  
+   - (Bonus) Use `$inc` to increment `number_of_reviews`  
 
 ### Exercise: Testing API Calls
-
-1. Navigate to the directory: `server/lab/rest-lab`.
-2. Open the file named `crud-7-lab.http`.
-3. In the file, locate and click the `Send Request` link to execute the API call.
-4. Verify that the endpoint is returning the expected results.
+1. In `server/lab/rest-lab`, open `crud-7-lab.http`.  
+2. Click **Send Request** to test the route.  
+3. Verify that the new review is added successfully.
 
 ### Exercise: Frontend validation
-Try to add a new review to the listings.
+Add a new review and confirm it appears for the selected listing.
 ![crud-7-lab](../../assets/images/crud-7-lab.png)

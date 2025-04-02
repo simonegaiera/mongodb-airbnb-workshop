@@ -5,27 +5,27 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform basic find operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
+In this section, you will learn how to perform basic find operations in MongoDB to retrieve unique values from a specific field.
 
 ## Exercise: Find Unique Values
 
-**Objective** 
-In this exercise, you will be required to find the unique values for a specific field.
+**Objective**  
+Update the `crudDistinct` function in `crud-3.lab.js` to:
+- Return all `distinct` values for the document field name (`field_name`).
 
 **Pipeline Definition**  
-
-1. **Navigate to the File**: In the `lab` folder open `crud-3.lab.js`.
-2. **Modify the Function**: Locate and modify the `crudDistinct` function.
-3. **Update the Code**:
-    - You are required to find all the distinct value based in field `field`
+1. **Navigate to the File**  
+   Open the file `crud-3.lab.js` located in the `/server/lab/` folder.
+2. **Locate the Function**  
+   Look for the `crudDistinct` function in the code.
+3. **Modify the Function**  
+   Update the existing code to find and return all distinct values for the given field.
 
 ### Exercise: Testing API Calls
-
-1. Navigate to the directory: `server/lab/rest-lab`.
-2. Open the file named `crud-3-lab.http`.
-3. In the file, locate and click the `Send Request` link to execute the API call.
-4. Verify that the endpoint is returning the expected results.
+1. Open `crud-3-lab.http` in `server/lab/rest-lab`.
+2. Click the **Send Request** link to run the API call.
+3. Verify that the expected unique values are returned.
 
 ### Exercise: Frontend validation
-Select "Filters" and confirm that results are displayed.
+Select "Filters" on the frontend and confirm that all distinct field values are displayed.
 ![crud-3-lab](../../assets/images/crud-3-lab.png)

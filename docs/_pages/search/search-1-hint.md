@@ -1,6 +1,6 @@
 ---
 title: "Atlas Search: Autocomplete"
-permalink: /search/autocomplete/hint/
+permalink: /search/1/hint/
 layout: single
 classes: wide
 ---

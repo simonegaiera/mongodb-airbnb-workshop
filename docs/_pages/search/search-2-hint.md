@@ -1,6 +1,6 @@
 ---
 title: "Atlas Search: Facet"
-permalink: /search/facet/hint/
+permalink: /search/2/hint/
 layout: single
 classes: wide
 ---

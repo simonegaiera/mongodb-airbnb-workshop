@@ -102,10 +102,10 @@ docs:
       - title: "MongoDB Search"
         url: /search/
       - title: "Search: Autocomplete"
-        url: /search/autocomplete/
+        url: /search/1/
       - title: "Hint: Autocomplete"
-        url: /search/autocomplete/hint/
+        url: /search/1/hint/
       - title: "Search: Facet"
-        url: /search/facet/
+        url: /search/2/
       - title: "Hint: Facet"
-        url: /search/facet/hint/
+        url: /search/2/hint/

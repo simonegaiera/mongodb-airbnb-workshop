@@ -5,30 +5,31 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform basic find operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
+In this section, you will learn how to perform basic find operations in MongoDB. You will complete the code snippets so that all documents matching the provided query are returned, sorted, and paginated.
 
 ## Exercise: Find
 
-**Objective** 
-In this exercise, you will be required to find documents given a query.
+**Objective**  
+Update the `crudFind` function in `crud-1.lab.js` to:
+- Find all documents given the `query` in input.  
+- Sort results by `_id`.  
+- Implement pagination by skipping the required `skip` value and limiting the results based on `limit`.  
 
 **Pipeline Definition**  
+1. **Navigate to the File**  
+   Open the file `crud-1.lab.js` located in the `/server/lab/` folder.  
 
-1. **Navigate to the File**: In the `lab` folder open `crud-1.lab.js`.
-2. **Modify the Function**: Locate and modify the `crudFind` function.
-3. **Update the Code**:
-    - You are required to find all the documents given the `query` in input
-    - Results should be sorted by `_id`
-    - Define pagination, skipping the required `skip` pages, and limit results based on `limit`
+2. **Locate the Function**  
+   Look for the `crudFind` function in the code.  
+
+3. **Modify the Function**  
+   Update the existing code to handle querying, sorting, skipping, and limiting as required.  
 
 ### Exercise: Testing API Calls
+1. Locate and open `crud-1-lab.http` in `server/lab/rest-lab`.
+2. Click the **Send Request** link to run the API call.
+3. Verify that the expected results are returned.
 
-1. Navigate to the directory: `server/lab/rest-lab`.
-2. Open the file named `crud-1-lab.http`.
-3. In the file, locate and click the `Send Request` link to execute the API call.
-4. Verify that the endpoint is returning the expected results.
-
-
-### Exercise: Frontend validation
-Refresh the homepage to confirm listings are visible. Scroll down to validate pagination.
+### Exercise: Frontend Validation
+Refresh the homepage and check that the listings are visible. Scroll to confirm pagination works as expected.
 ![crud-1-lab](../../assets/images/crud-1-lab.png)

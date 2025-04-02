@@ -5,36 +5,36 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform basic find operations in MongoDB. You will be required to complete the code snippets to achieve the desired results.
+In this section, you will learn how to perform more advanced find operations in MongoDB, using multiple query parameters to filter the returned documents.
 
 ## Exercise: Find Documents
 
-**Objective** 
-In this exercise, you will be required to find documents given a query.
+**Objective**  
+In this exercise, you are required to:
+- Build a query that accounts for the following input parameters:  
+  - `amenities`: an array of selected amenities  
+  - `propertyType`: the type of property  
+  - `beds`: the range of required beds (e.g., "2-3", "4-7")  
+  - `skip`: the number of documents to skip for pagination  
+  - `limit`: the number of documents returned per page  
+- If none of the query parameters are provided, return all documents for the specified page and limit.
 
 **Pipeline Definition**  
-
-1. **Navigate to the File**: In the `lab` folder open `crud-4.lab.js`.
-2. **Modify the Function**: Locate and modify the `crudFilter` function.
-3. **Update the Code**:
-    - You are given a set of query inputs:
-        - `amenities`: an array of ammenities selected in the application
-        - `propertyType`: the property_type selected in the application
-        - `beds`: the range of required beds. Example: 2-3, 4-7, ...
-    - You are given a set of additional inputs:
-        - `skip`: the page to skip for pagination
-        - `limit`: the number of documents returned
-    - You are asked to complete the code to find all the documents for the specific query inputs
-    - Not all the query items are passed by the application at a given time
-    - If no query items are passed you should return all the document for the given page and limit
+1. **Navigate to the File**  
+   Open the file `crud-4.lab.js` located in the `/server/lab/` folder.  
+2. **Modify the Function**  
+   Locate the `crudFilter` function in `crud-4.lab.js`.  
+3. **Update the Code**  
+   - Construct the `query` object using the specified parameters.  
+   - Use `.find(query)`, then apply `.skip(skip)` and `.limit(limit)`.  
+   - Return the correct documents based on the input filters.
 
 ### Exercise: Testing API Calls
+1. Navigate to the `server/lab/rest-lab` folder.  
+2. Open `crud-4-lab.http`.  
+3. Use the **Send Request** link to run the API call.  
+4. Confirm that the returned data matches the queried criteria.
 
-1. Navigate to the directory: `server/lab/rest-lab`.
-2. Open the file named `crud-4-lab.http`.
-3. In the file, locate and click the `Send Request` link to execute the API call.
-4. Verify that the endpoint is returning the expected results.
-
-### Exercise: Frontend validation
-Select "Filters", and validate that listings are changing based on your selection.
+### Exercise: Frontend Validation
+Access the application’s "Filters" panel, set various combinations of amenities and property types, and verify the listings update accordingly.
 ![crud-4-lab](../../assets/images/crud-4-lab.png)
