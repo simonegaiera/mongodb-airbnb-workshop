@@ -1,1 +1,1 @@
-POST http://localhost:5000/api/listingsAndReviews/autocomplete
+GET http://localhost:5000/api/listingsAndReviews/statistics

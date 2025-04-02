@@ -54,8 +54,8 @@ ingress:
 
 resources:
   requests:
-    cpu: "150m"
-    memory: "350Mi"
+    cpu: "800m"
+    memory: "500Mi"
 
 # livenessProbe:
 #   httpGet:

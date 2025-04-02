@@ -10,7 +10,7 @@ classes: wide
 
 Optimizing your setup for smooth development with VSCode Online is straightforward. Follow this guide to configure your workspace and connect your application seamlessly to MongoDB.
 
-### Step 1: Verify Environment
+### Step 1: Backend
 
 1. **Access VSCode:**
    - Visit your VSCode environment provided for the workshop.
@@ -19,38 +19,6 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
      https://<username>.<customer>.mongogameday.com/?folder=/home/workspace/mongodb-airbnb-workshop
      ```
    - Ensure you can log in and see the workshop files.
-
-2. **Access Application Frontend:**
-   - Open the application frontend using:
-     ```
-     https://<username>.<customer>.mongogameday.com/frontend/
-     ```
-   - Confirm that the frontend is accessible and functional.
-
-### Step 2: Connect MongoDB Extension
-
-1. **Select MongoDB Extension:**
-   - Open VSCode and click on the MongoDB extension in the sidebar.
-
-2. **Establish Connection:**
-   - Within the `CONNECTIONS` section, click the `+` to add a new connection.
-   - Choose `Connect with Connection String`.
-   - Input the connection string provided by your System Administrator (SA). Example:
-     ```
-     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
-     ```
-
-3. **Verify Connection:**
-   - Ensure the MongoDB connection is established successfully, checking for any error messages.
-
-### Step 3: Configure Backend Server
-
-1. **Edit the Configuration File:**
-   - Navigate to the **server** directory.
-   - Open the `.env` file and paste your MongoDB connection string, replacing the placeholder:
-     ```
-     MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
-     ```
 
 2. **Start the Server:**
    - Launch a terminal in VSCode.
@@ -62,6 +30,35 @@ Optimizing your setup for smooth development with VSCode Online is straightforwa
 
 3. **Verify Server Functionality:**
    - Check for console logs indicating the server is running and connected to MongoDB.
+
+
+### Step 2: Frontend
+1. **Access Application Frontend:**
+   - Open the application frontend using:
+     ```
+     https://<username>.<customer>.mongogameday.com/frontend/
+     ```
+   - Confirm that you can see you name in the homepage
+
+### Step 3: Connect MongoDB Extension
+
+1. **Select MongoDB Extension:**
+   - Copy your MongoDB connection string from the `/server/.env` file:
+   ```
+   MONGODB_URI=mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+   ```
+   - Open VSCode and click on the MongoDB extension in the sidebar.
+
+2. **Establish Connection:**
+   - Within the `CONNECTIONS` section, click the `+` to add a new connection.
+   - Choose `Connect with Connection String`.
+   - Input the connection string provided by your System Administrator (SA). Example:
+     ```
+     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
+     ```
+   
+3. **Verify Connection:**
+   - Ensure the MongoDB connection is established successfully, checking for any error messages.
 
 ---
 

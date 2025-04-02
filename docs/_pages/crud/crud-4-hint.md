@@ -17,7 +17,7 @@ For more detailed guidance on each operation, refer to the following MongoDB doc
   [Skip Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#skip)  
 - **limit**: Learn how to limit the number of documents returned by your query.  
   [Limit Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#limit)  
-- **$in**: Discover how to match documents where all field's values are in a specified array.  
+- **$all**: Discover how to match documents where all field's values are in a specified array.  
   [All Documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)  
 - **$gte**: Understand how to filter documents where a field's value is greater than or equal to a specified value.  
   [Gte Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/)  
