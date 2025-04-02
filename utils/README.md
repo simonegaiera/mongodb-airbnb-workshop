@@ -3,8 +3,6 @@
 
 Instructioons
 - Change instructions to make it simpler with screenshot
-- vscodeonline: Connect MongoDB Extension later
-- Add to the instructions that you can see your name
 
 other
 - fix permission to gameday database

@@ -10,12 +10,16 @@ docs:
       - title: "GameDay Overview"
         url: /overview/
 
-  - title: Environment Preparation
+  - title: Environment (Hosted)
+    children:
+      - title: "IDE: VSCode Online"
+        url: /environment/vscodeonline/
+
+
+  - title: Environment (Hybrid)
     children:
       - title: "Atlas Cluster"
         url: /environment/atlas/
-      - title: "IDE: VSCode Online"
-        url: /environment/vscodeonline/
       - title: "IDE: Codespace/VSCode"
         url: /environment/codespace/
 

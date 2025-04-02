@@ -1,65 +1,92 @@
 ---
-title: "Environment Preparation: VSCode"
+title: "Environment Preparation: VSCode Online"
 permalink: /environment/vscodeonline/
 layout: single
 classes: wide
 ---
 
+## Environment Preparation: VSCode Online
 
-### Environment Preparation: VSCode Online
+This guide helps you configure your VSCode Online environment and connect your application to MongoDB for a smooth development experience.
 
-Optimizing your setup for smooth development with VSCode Online is straightforward. Follow this guide to configure your workspace and connect your application seamlessly to MongoDB.
+---
 
-### Step 1: Backend
+### Step 1: Backend Setup
 
-1. **Access VSCode:**
-   - Visit your VSCode environment provided for the workshop.
-   - URL Pattern:
+1. **Access VSCode Online:**
+   - Open your VSCode environment with the URL pattern below:
      ```
-     https://<username>.<customer>.mongogameday.com/?folder=/home/workspace/mongodb-airbnb-workshop
+     https://<username>.<customer>.mongogameday.com/
      ```
-   - Ensure you can log in and see the workshop files.
+   - Open the `Explorer` and click **Open Folder**.
+   - Navigate to:
+     ```
+     /home/workspace/mongodb-airbnb-workshop/
+     ```
+     and click **Ok**.
+   - When prompted, select **Yes, trust the author**.
+
+   ![Folder View](../../assets/images/environment-folder.png)  
+   ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
 2. **Start the Server:**
-   - Launch a terminal in VSCode.
-   - Change directory to the server folder and start the server with:
+   - Open a new terminal using:
+     ```
+     ellipsys > Terminal > New Terminal
+     ```
+   - Change to the server directory and start the server:
      ```bash
      cd server
      npm start
      ```
-
-3. **Verify Server Functionality:**
-   - Check for console logs indicating the server is running and connected to MongoDB.
-
-
-### Step 2: Frontend
-1. **Access Application Frontend:**
-   - Open the application frontend using:
-     ```
-     https://<username>.<customer>.mongogameday.com/frontend/
-     ```
-   - Confirm that you can see you name in the homepage
-
-### Step 3: Connect MongoDB Extension
-
-1. **Select MongoDB Extension:**
-   - Copy your MongoDB connection string from the `/server/.env` file:
-   ```
-   MONGODB_URI=mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
-   ```
-   - Open VSCode and click on the MongoDB extension in the sidebar.
-
-2. **Establish Connection:**
-   - Within the `CONNECTIONS` section, click the `+` to add a new connection.
-   - Choose `Connect with Connection String`.
-   - Input the connection string provided by your System Administrator (SA). Example:
-     ```
-     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
-     ```
-   
-3. **Verify Connection:**
-   - Ensure the MongoDB connection is established successfully, checking for any error messages.
+   - Verify that the server is running and connected to MongoDB by checking the console logs.
 
 ---
 
-Following these steps will ensure your VSCode environment is ready for development, enabling you to efficiently work with your application and MongoDB. If you encounter any issues, consult with your SA for additional support. Happy coding!
+### Step 2: Frontend Setup
+
+1. **Launch the Frontend:**
+   - Open your application’s frontend using:
+     ```
+     https://<username>.<customer>.mongogameday.com/frontend/
+     ```
+   - Confirm that your name appears on the homepage.
+
+   ![Frontend Name Display](../../assets/images/environment-name.png)
+
+---
+
+### Step 3: Connect the MongoDB Extension
+
+1. **Obtain the Connection String:**
+   - Open the `/server/.env` file and copy the MongoDB connection string:
+     ```
+     MONGODB_URI=mongodb+srv://user:password@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+     ```
+
+2. **Establish the Connection:**
+   - In VSCode, click on the **MongoDB extension** in the sidebar.
+   - In the **CONNECTIONS** section, click the **+** button to add a connection.
+   - Select **Connect with Connection String**.
+   - Paste your copied connection string. For example:
+     ```
+     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
+     ```
+
+3. **Verify the Connection:**
+   - Ensure that the connection is successful by checking for any error messages in VSCode.
+
+---
+
+### Troubleshooting
+
+- **Server Issues:**  
+  If you encounter issues starting the server, recheck your terminal commands and ensure you’re in the correct directory.
+
+- **MongoDB Connection Errors:**  
+  Verify that your connection string is correct and that your network allows access to MongoDB.
+
+- **Further Support:**  
+  If problems persist, contact your SA for additional assistance.
+
+Happy coding!
