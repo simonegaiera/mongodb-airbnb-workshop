@@ -5,27 +5,26 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform a find operation in MongoDB to retrieve a single document.
+**Goal**: Learn how to retrieve a single document from MongoDB using its unique identifier.
 
 ## Exercise: Find One Document
 
-**Objective**  
-Update the `crudOneDocument` function in `crud-2.lab.js` to:
-- Find the document with `_id` equal to the provided `id`.
+1. **Open the File**  
+   Navigate to `/server/lab/` and open `crud-2.lab.js`.
 
-**Pipeline Definition**  
-1. **Navigate to the File**  
-   Open the file `crud-2.lab.js` located in the `/server/lab/` folder.  
 2. **Locate the Function**  
-   Look for the `crudOneDocument` function in the code.  
-3. **Modify the Function**  
-   Update the existing code to find exactly one document by `_id`.  
+   Find the `crudOneDocument` function in the file.
+
+3. **Update the Code**  
+   - Implement the function to find one document where `_id` equals the provided `id` parameter.
+   - The function should return the complete document matching this criteria.
 
 ### Exercise: Testing API Calls
-1. Locate and open `crud-2-lab.http` in `server/lab/rest-lab`.
-2. Click the **Send Request** link to run the API call.
-3. Verify that the correct document is returned.
+1. Go to `server/lab/rest-lab` directory.
+2. Open `crud-2-lab.http`.
+3. Click **Send Request** to execute the API call.
+4. Verify the response returns the single document you requested.
 
 ### Exercise: Frontend Validation
-Select a listing and confirm that the data for the single document is displayed correctly.
+Test your implementation by selecting a listing in the application and confirm that all details for the single document display correctly.
 ![crud-2-lab](../../assets/images/crud-2-lab.png)

@@ -5,16 +5,22 @@ layout: single
 classes: wide
 ---
 
-## Exercise: Index creation
+**Goal**: Create a MongoDB index to optimize search queries and improve database performance for fields commonly used in filtering.
 
-**Objective** 
-The goal of this exercise is to create a MongoDB index to optimize search queries and improve database performance. The resulting index name should be `beds_1_price_1`.
+## Exercise: Index Creation
 
-**Field Mappings**  
-You need to create an index to include the following:
-- `beds`
-- `price`
+Create a compound index with the following specifications:
+
+1. **Fields to Include**
+   - `beds` (ascending order)
+   - `price` (ascending order)
+
+2. **Index Name**
+   - The index should be named `beds_1_price_1`
 
 ### Exercise: Execution
-If you don't have access to Compass or the Atlas interface you can use the MongoDB Extension.
-A MongoDB Playground was created for you to help you solve this Exercise.
+
+You can create this index using:
+- MongoDB Atlas web interface
+- MongoDB Compass
+- MongoDB Extension with the provided MongoDB Playground

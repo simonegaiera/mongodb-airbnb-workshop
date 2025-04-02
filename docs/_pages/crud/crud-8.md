@@ -5,27 +5,25 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to perform a basic delete operation in MongoDB.
+**Goal**: Learn how to delete a document from a MongoDB collection based on its ID.
 
 ## Exercise: Delete One Document
 
-**Objective**  
-You are required to delete the document whose `_id` matches the `id` provided.
+1. **Open the File**  
+   Navigate to `/server/lab/` and open `crud-8.lab.js`.
 
-**Pipeline Definition**  
-1. **Navigate to the File**  
-   Open `crud-8.lab.js` located in the `/server/lab/` folder.  
-2. **Modify the Function**  
-   Locate and modify the `crudDelete` function.  
+2. **Locate the Function**  
+   Find the `crudDelete` function in the file.
+
 3. **Update the Code**  
-   - Delete the document with `_id` equal to `id`.
+   - Implement code to delete a document where `_id` equals the provided `id` parameter.
 
 ### Exercise: Testing API Calls
-1. Navigate to `server/lab/rest-lab`.  
-2. Open `crud-8-lab.http`.  
-3. Click **Send Request** to run the API call.  
-4. Verify that the document is successfully removed.
+1. Go to `server/lab/rest-lab` directory.
+2. Open `crud-8-lab.http`.
+3. Click **Send Request** to execute the API call.
+4. Verify the response confirms successful deletion.
 
-### Exercise: Frontend validation
-Delete a listing by selecting "Delete Listing" in the application and confirm the record is removed.
+### Exercise: Frontend Validation
+Test your implementation by selecting "Delete Listing" in the application and confirm the record disappears from the listing.
 ![crud-7-lab](../../assets/images/crud-7-lab.png)

@@ -5,36 +5,41 @@ layout: single
 classes: wide
 ---
 
-Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.
+**Goal**: Create a MongoDB Atlas Search index to enable efficient full-text search and faceted navigation.
 
 ## Exercise: Index Creation
 
-**Objective** 
-The goal of this exercise is to create a MongoDB search index with specific field types to optimize search queries and improve database performance. 
-- Turn off dynamic mapping
-- The index must be named `default`.
-- The index analyzer should be `lucene.english`.
+Create a search index with the following specifications:
 
-**Field Mappings**  
-You need to create an index with the following field mappings:
-- `amenities` should be of type `stringFacet`
-- `amenities` should also be of 
-    - Type `token`
-    - Value `none`
-- `beds` should be of type `numberFacet`
-- `beds` should also be of
-    - Type `number`
-- `property_type` should be of type `stringFacet`
-- `property_type` also should be of
-    - Type `token`
-    - Value `none`
-- `name` should be of type `autocomplete`
-    - Analyzer should be `lucene.english`
-    - Max gram should be set to `7`
-    - Min gram should be set to `3`
-    - Tokenization is `edgeGram`
-    - Fold Diacritics should be set to `false`
+1. **Basic Configuration**
+   - Name: `default`
+   - Analyzer: `lucene.english`
+   - Dynamic Mapping: Off
 
-### Exercise: Execution
-If you don't have access to Compass or the Atlas interface you can use the MongoDB Extension.
-A MongoDB Playground was created for you to help you solve this Exercise.
+2. **Field Mappings**
+   - **name** (for autocomplete)
+     - Type: `autocomplete`
+     - Analyzer: `lucene.english`
+     - Tokenization: `edgeGram`
+     - Min gram: `3`
+     - Max gram: `7`
+     - Fold Diacritics: `false`
+   
+   - **amenities** (for filtering)
+     - First mapping: `stringFacet`
+     - Second mapping: `token` with value `none`
+
+   - **property_type** (for filtering)
+     - First mapping: `stringFacet`
+     - Second mapping: `token` with value `none`
+
+   - **beds** (for numeric filtering)
+     - First mapping: `numberFacet`
+     - Second mapping: `number`
+
+### How to Complete This Exercise
+
+You can create this index using:
+- MongoDB Atlas web interface
+- MongoDB Compass
+- MongoDB Extension with the provided MongoDB Playground

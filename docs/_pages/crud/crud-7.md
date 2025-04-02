@@ -5,30 +5,29 @@ layout: single
 classes: wide
 ---
 
-In this section, you will learn how to add an element to an array field in MongoDB.
+**Goal**: Learn how to add an element to an array field in MongoDB using the $push operator.
 
-## Exercise: Insert an array field
+## Exercise: Add a Review to an Array
 
-**Objective**  
-Modify an existing document to include a new review in its `reviews` array.
+1. **Open the File**  
+   Navigate to `/server/lab/` and open `crud-7.lab.js`.
 
-**Pipeline Definition**  
-1. **Navigate to the File**  
-   Locate `crud-7.lab.js` in the `/server/lab/` folder.  
-2. **Modify the Function**  
-   Inside `crudAddToArray`, add the new review to the array field named `reviews`.  
+2. **Locate the Function**  
+   Find the `crudAddToArray` function in the file.
+
 3. **Update the Code**  
-   - The inputs for this function are:  
-       - `_id` (`id`)  
-       - The `review` to insert  
-   - Use `$push` to add the review to `reviews`  
-   - (Bonus) Use `$inc` to increment `number_of_reviews`  
+   - Use `$push` to add the new review to the `reviews` array
+   - The function receives two parameters:
+     - `id`: The document's _id
+     - `review`: The review object to add
+   - (Bonus) Use `$inc` to increment the `number_of_reviews` field by 1
 
 ### Exercise: Testing API Calls
-1. In `server/lab/rest-lab`, open `crud-7-lab.http`.  
-2. Click **Send Request** to test the route.  
-3. Verify that the new review is added successfully.
+1. Go to `server/lab/rest-lab` directory.
+2. Open `crud-7-lab.http`.
+3. Click **Send Request** to execute the API call.
+4. Verify the response shows the updated document with the new review.
 
-### Exercise: Frontend validation
-Add a new review and confirm it appears for the selected listing.
+### Exercise: Frontend Validation
+Test your implementation by adding a new review in the application and confirm it appears for the selected listing.
 ![crud-7-lab](../../assets/images/crud-7-lab.png)

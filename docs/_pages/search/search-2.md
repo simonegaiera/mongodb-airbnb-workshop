@@ -5,28 +5,33 @@ layout: single
 classes: wide
 ---
 
-Learn how to use MongoDB Atlas Search to perform full-text search on your data. This section will guide you through creating search indexes and running search queries.
+**Goal**: Learn how to use MongoDB Atlas Search to create and query facets.
 
 ## Exercise: Facets
 
-1. **Navigate to the File**: In the `lab` folder, open `search-2.lab.js`.
-2. **Modify the Function**: Locate and modify the `facetSearch` function.
-3. **Update the Pipeline Array**:
-    - Use the `$searchMeta` on the `default` index.
-    - Use the `facet` command to create the facets.
-    - As the `operator`, reuse the `autocomplete` search you created in the previous exercise.
-    - Create the following facets:
-        - `amenities`: string facet
-        - `property_type`: string facet
-        - `beds`: numeric facet with boundaries from 0 to 9, and use "Other" for default.
+1. **Open the File**  
+   In the `lab` folder, open `search-2.lab.js`.
+
+2. **Locate the Function**  
+   Find the `facetSearch` function in the file.
+
+3. **Modify the Pipeline**  
+   - Use `$searchMeta` on the `default` index.  
+   - Apply `facet` in your pipeline.  
+   - For the `operator`, reuse the `autocomplete` search from the previous exercise.  
+   - Create these facets:  
+     - `amenities`: a string facet  
+     - `property_type`: a string facet  
+     - `beds`: a numeric facet with boundaries from 0 to 9, and "Other" for any additional values  
 
 ### Exercise: Testing API Calls
 
-1. Navigate to the directory `server/lab/rest-lab`.
-2. Open the file named `search-2-lab.http`.
-3. Click the **Send Request** link to execute the API call.
-4. Verify that the endpoint returns the expected results.
+1. Go to the `server/lab/rest-lab` directory.  
+2. Open `search-2-lab.http`.  
+3. Click **Send Request** to call the API.  
+4. Make sure you see valid results in the response.
 
-### Exercise: Frontend validation
-Type `"hawaii"` in the search bar and validate that facets are now visible.
+### Exercise: Frontend Validation
+
+Type `"hawaii"` in the search bar and confirm that the new facets appear.
 ![search-2-lab](../../assets/images/search-2-lab.png)
