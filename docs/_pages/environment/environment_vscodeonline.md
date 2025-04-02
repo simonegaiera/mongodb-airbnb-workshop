@@ -48,7 +48,7 @@ This guide helps you configure your VSCode Online environment and connect your a
 1. **Launch the Frontend:**
    - Open your application’s frontend using:
      ```
-     https://<username>.<customer>.mongogameday.com/frontend/
+     https://<username>.<customer>.mongogameday.com/app/
      ```
    - Confirm that your name appears on the homepage.
 

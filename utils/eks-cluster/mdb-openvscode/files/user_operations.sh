@@ -27,7 +27,7 @@ EOL
 mkdir -p /home/workspace/mongodb-airbnb-workshop/app
 
 cat <<EOL > /home/workspace/mongodb-airbnb-workshop/app/.env
-WORKSHOP_USER=/frontend
+WORKSHOP_USER=/app
 BACKEND_URL=https://${USERNAME}.${URL}/backend
 EOL
 

@@ -1,11 +1,11 @@
 server {
     server_name ${server_name};
 
-    location = /frontend {
-        return 301 /frontend/;
+    location = /app {
+        return 301 /app/;
     }
     
-    location /frontend/ {
+    location /app/ {
         alias /mnt/vscode-${data_username}/mongodb-airbnb-workshop/app/out/;
         index index.html;
         try_files $uri $uri/ /index.html;

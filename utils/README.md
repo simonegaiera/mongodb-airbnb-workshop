@@ -16,7 +16,7 @@ results:
 
 ## eks
 nginx
-- https://simone-gaiera.airbnb.mongogameday.com/frontend/leaderboard refresh does not work
+- https://simone-gaiera.airbnb.mongogameday.com/app/leaderboard refresh does not work
 
 
 ## atlas
