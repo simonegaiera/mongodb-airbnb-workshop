@@ -69,7 +69,7 @@ export async function getFilters(req, res) {
     const skip = (page - 1) * limit;
     
     try {
-        const items = await crudFilter(amenities, propertyType, beds, bounds, skip, limit);
+        const items = await crudFilter(amenities, propertyType, beds, skip, limit);
         
         res.status(201).json(items);
     } catch (error) {

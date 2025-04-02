@@ -1,12 +1,15 @@
 # TODO
 
 
-Instructioons
+## instructions
 - Change instructions to make it simpler with screenshot
 
-other
-- fix permission to gameday database
+## exercises
+search 0:
+- have them create a simple index
+- provide the entire index
 
+## eks
 nginx
 - https://simone-gaiera.airbnb.mongogameday.com/frontend/leaderboard refresh does not work
 
@@ -16,13 +19,6 @@ results:
 - console.log anywhere makes the results wrong
 - force people to do the exercises in order
 
-
-crud 4: 
-- add a test to check if ammenities is not there
-- remove bound
-
-
-search 0:
-- have them create a simple index
-- provide the entire index
-
+## atlas
+other
+- fix permission to gameday database
