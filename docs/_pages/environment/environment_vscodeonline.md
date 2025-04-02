@@ -24,15 +24,14 @@ This guide helps you configure your VSCode Online environment and connect your a
      /home/workspace/mongodb-airbnb-workshop/
      ```
      and click **Ok**.
+    ![Folder View](../../assets/images/environment-folder.png)  
    - When prompted, select **Yes, trust the author**.
-
-   ![Folder View](../../assets/images/environment-folder.png)  
-   ![Trust Prompt](../../assets/images/environment-folder-trust.png)
+    ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
 2. **Start the Server:**
    - Open a new terminal using:
      ```
-     ellipsys > Terminal > New Terminal
+     ☰ > Terminal > New Terminal
      ```
    - Change to the server directory and start the server:
      ```bash
