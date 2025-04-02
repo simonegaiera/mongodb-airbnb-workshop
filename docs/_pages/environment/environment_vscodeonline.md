@@ -83,9 +83,6 @@ This guide helps you configure your VSCode Online environment and connect your a
 - **Server Issues:**  
   If you encounter issues starting the server, recheck your terminal commands and ensure you’re in the correct directory.
 
-- **MongoDB Connection Errors:**  
-  Verify that your connection string is correct and that your network allows access to MongoDB.
-
 - **Further Support:**  
   If problems persist, contact your SA for additional assistance.
 

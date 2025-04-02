@@ -5,17 +5,26 @@ layout: single
 classes: wide
 ---
 
-To ensure that your exercise is complete and all functions are working as expected, you can run the provided test suite. Follow these steps to test your results:
+## Validate Your Results
 
-1. **Run Tests**: Execute the test suite by running:
+To confirm that your exercise is complete and your code works correctly, follow these steps:
+
+1. **Run the Test Suite**  
    ```bash
    npm test
    ```
+   This will automatically check each function you modified.
 
-2. **Review Test Results**: The test suite will automatically validate each function you were asked to modify. The output will indicate whether each test has passed or failed.
+2. **Review Your Test Results**  
+   - Passed tests indicate that your implementation meets the requirements.  
+   - Failed tests will provide error messages to help identify issues.
 
-3. **Completion Criteria**: The exercise is considered complete if all tests pass successfully. A positive result for all tests means that your implementation meets the required specifications.
+3. **Completion Criteria**  
+   - The exercise is considered complete when all tests pass.  
+   - If any test fails, review the errors, update your code, and re-run the tests.
 
-4. **Troubleshooting**: If any tests fail, review the error messages and make the necessary adjustments to your code. Re-run the tests until all of them pass.
+4. **Troubleshooting**  
+   - Check that you are in the correct directory before running the tests.  
+   - Confirm that all required dependencies are installed.
 
-By following these steps, you can confidently verify that your changes are correct and the exercise is complete.
+Following these steps ensures your changes are correct and the exercise is successfully completed.

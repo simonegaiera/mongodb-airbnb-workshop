@@ -5,33 +5,45 @@ layout: single
 classes: wide
 ---
 
-## Environment Preparation: Atlas
+## Overview
 
-Before you begin, it's essential to ensure that you can access your environment. 
-Follow these steps to validate your setup:
+This document helps you prepare your MongoDB Atlas environment. You will need:  
+1. A MongoDB Atlas connection string  
+2. Database access credentials (username and password)  
+3. (Optional) Additional Atlas access credentials for the Atlas interface
 
-1. **Obtain Your MongoDB Atlas Connection String**: You will receive a connection string to connect to your MongoDB Atlas cluster.
-2. **Database Access Credentials**: You will be provided a username and password for database access.
-3. **Atlas Access Credentials (Optional)**: While not mandatory, you may receive additional credentials for accessing the MongoDB Atlas interface.
+---
 
-### Environment Validation: Compass (Skip if not available)
+## Validate Your Environment
 
-To validate your environment, you can test your credentials using MongoDB Compass. 
-If you haven't installed Compass yet, download it from [here](https://www.mongodb.com/try/download/compass).
+### Using MongoDB Compass
 
-Steps to Validate Your Connection with Compass:
+1. **Obtain Your Connection String**  
+   Copy the MongoDB Atlas connection string provided to you.
 
-1. **Open MongoDB Compass**: Launch the application after installation.
-2. **Enter Your Connection String**: Paste the connection string into the provided field in Compass.
-3. **Input Your Credentials**: Enter the username and password provided to you.
-4. **Connect**: Click the "Connect" button to establish a connection to your Atlas cluster.
+2. **Launch Compass**  
+   If you haven’t installed MongoDB Compass, download it from [here](https://www.mongodb.com/try/download/compass).
 
-If the connection is successful, you will be able to view your databases and collections in Compass. If you encounter any issues, double-check your connection string and credentials.
+3. **Enter Connection Details**  
+   - Paste the connection string into the **New Connection** screen.  
+   - Enter your username and password.
+
+4. **Connect**  
+   - Click **Connect** to establish a connection.  
+   - If successful, you’ll see your databases and collections in Compass.  
+   - If not, verify your connection string and credentials.
 
 ![compass](../../assets/images/compass.png)
 
 ---
 
-## Self-Paced: Create an Atlas Cluster
+## Self-Paced Setup with MongoDB Atlas
 
-If you prefer a self-paced approach, you can create your own Atlas cluster and load the Sample Dataset. Follow the [MongoDB Atlas documentation](https://www.mongodb.com/docs/atlas/getting-started/) for detailed instructions on creating a cluster and loading sample data.
+1. **Create an Atlas Cluster**  
+   Follow the [MongoDB Atlas documentation](https://www.mongodb.com/docs/atlas/getting-started/) to create a cluster.
+
+2. **Load Sample Data**  
+   - Load the MongoDB sample dataset or import your own data.  
+   - Use the credentials and connection string from your new cluster.
+
+You should now be ready to use MongoDB Atlas. If you run into issues, recheck your credentials or contact support.
