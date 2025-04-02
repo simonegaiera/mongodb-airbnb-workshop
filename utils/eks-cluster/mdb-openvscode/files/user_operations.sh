@@ -41,3 +41,7 @@ npm run build || echo "npm build failed in app"
 echo "Installing dependencies for the server"
 cd /home/workspace/mongodb-airbnb-workshop/server
 npm install --legacy-peer-deps || echo "npm install failed in server"
+
+wget -P /tmp https://downloads.mongodb.com/compass/mongodb-mongosh_2.4.2_amd64.deb || echo "Failed to download mongosh"
+sudo dpkg -i /tmp/mongodb-mongosh_2.4.2_amd64.deb || echo "Failed to install mongosh"
+sudo apt-get install -f || echo "Failed to fix dependencies"
