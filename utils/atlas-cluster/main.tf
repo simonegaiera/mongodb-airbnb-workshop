@@ -126,6 +126,12 @@ resource "mongodbatlas_custom_db_role" "airbnb_gameday_role" {
     }
   }
   actions {
+    action = "CREATE_INDEX"
+    resources {
+      database_name   = "airbnb_gameday"
+    }
+  }
+  actions {
     action = "CREATE_COLLECTION"
     resources {
       collection_name = "results"

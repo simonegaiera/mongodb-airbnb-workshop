@@ -90,15 +90,15 @@ function runTests() {
     let testsSaved = []
     let testSection = '';
 
-    const mocha = spawn('npx', ['mocha', '--exit', testFilesPath], { shell: true });
+    const mocha = spawn('npx', ['mocha', '--bail', '--exit', testFilesPath], { shell: true });
     
     mocha.stdout.on('data', (data) => {
         console.log(data.toString());
         
-        if (data.toString().trim().startsWith("MongoDB")) {
+        if (data.toString().trim().startsWith("MongoDB") && data.toString().trim().endsWith("Tests")) {
             testSection = data.toString().trim()
-        } else if (data.toString().includes("✔")) {
-            let testName = data.toString().trim().replace(/^\s*✔\s*/, '').replace(/\s*\(\d+ms\)\s*$/, '')
+        } else if (data.toString().trim().startsWith("✔")) {
+            let testName = data.toString().trim().replace(/^\s*✔\s*/, '').replace(/\s*\(\d+ms\).*/, '')
 
             testsSaved.push(
                 {
