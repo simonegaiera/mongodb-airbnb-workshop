@@ -101,11 +101,11 @@ docs:
     children:
       - title: "MongoDB Search"
         url: /search/
-      - title: "Search: Autocomplete"
+      - title: "Search: Exercise 1"
         url: /search/1/
-      - title: "Hint: Autocomplete"
+      - title: "Hint: Exercise 1"
         url: /search/1/hint/
-      - title: "Search: Facet"
+      - title: "Search: Exercise 2"
         url: /search/2/
-      - title: "Hint: Facet"
+      - title: "Hint: Exercise 2"
         url: /search/2/hint/
