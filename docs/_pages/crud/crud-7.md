@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Add a Review to an Array
 
 1. **Open the File**  
-   Navigate to `/server/lab/` and open `crud-7.lab.js`.
+   Navigate to `/server/src/lab/` and open `crud-7.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudAddToArray` function in the file.

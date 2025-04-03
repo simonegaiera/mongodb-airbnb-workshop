@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Insert a Document
 
 1. **Open the File**  
-   Navigate to `/server/lab/` and open `crud-5.lab.js`.
+   Navigate to `/server/src/lab/` and open `crud-5.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudCreateItem` function in the file.

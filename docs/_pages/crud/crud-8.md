@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Delete One Document
 
 1. **Open the File**  
-   Navigate to `/server/lab/` and open `crud-8.lab.js`.
+   Navigate to `/server/src/lab/` and open `crud-8.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudDelete` function in the file.

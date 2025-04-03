@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Find Unique Values
 
 1. **Open the File**  
-   Navigate to `/server/lab/` and open `crud-3.lab.js`.
+   Navigate to `/server/lsrc/ab/` and open `crud-3.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudDistinct` function in the file.

@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Find Documents
 
 1. **Open the File**  
-   Navigate to `/server/lab/` and open `crud-1.lab.js`.
+   Navigate to `/server/src/lab/` and open `crud-1.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudFind` function in the file.
