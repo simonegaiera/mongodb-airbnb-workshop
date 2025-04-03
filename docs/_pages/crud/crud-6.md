@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Update a Document
 
 1. **Open the File**  
-   Navigate to `/server/src/lab/` and open `crud-6.lab.js`.
+   Navigate to `server/src/lab/` and open `crud-6.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudUpdateElement` function in the file.
@@ -23,7 +23,7 @@ classes: wide
    - Use `$set` to update the specified field with the new value
 
 ### Exercise: Testing API Calls
-1. Go to `server/lab/rest-lab` directory.
+1. Go to `server/src/lab/rest-lab` directory.
 2. Open `crud-6-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the document with the updated field.

@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Autocomplete
 
 1. **Open the File**  
-   Go to the `lab` folder and open `search-1.lab.js`.
+   Navigate to `server/src/lab/` and open `search-1.lab.js`.
 
 2. **Locate the Function**  
    Find the `autocompleteSearch` function.
@@ -24,7 +24,7 @@ classes: wide
 
 ### Exercise: Testing API Calls
 
-1. Go to `server/lab/rest-lab`.  
+1. Go to `server/src/lab/rest-lab`.  
 2. Open `search-1-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected results.

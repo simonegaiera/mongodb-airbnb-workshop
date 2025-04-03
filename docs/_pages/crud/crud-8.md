@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Delete One Document
 
 1. **Open the File**  
-   Navigate to `/server/src/lab/` and open `crud-8.lab.js`.
+   Navigate to `server/src/lab/` and open `crud-8.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudDelete` function in the file.
@@ -19,7 +19,7 @@ classes: wide
    - Implement code to delete a document where `_id` equals the provided `id` parameter.
 
 ### Exercise: Testing API Calls
-1. Go to `server/lab/rest-lab` directory.
+1. Go to `server/src/lab/rest-lab` directory.
 2. Open `crud-8-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful deletion.

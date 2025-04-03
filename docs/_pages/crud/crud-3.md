@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Find Unique Values
 
 1. **Open the File**  
-   Navigate to `/server/lsrc/ab/` and open `crud-3.lab.js`.
+   Navigate to `server/lsrc/ab/` and open `crud-3.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudDistinct` function in the file.
@@ -20,7 +20,7 @@ classes: wide
    - The function should return an array of all distinct values found in that field across the collection.
 
 ### Exercise: Testing API Calls
-1. Go to `server/lab/rest-lab` directory.
+1. Go to `server/src/lab/rest-lab` directory.
 2. Open `crud-3-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns a list of unique values for the requested field.

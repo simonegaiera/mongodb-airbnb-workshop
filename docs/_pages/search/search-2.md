@@ -10,7 +10,7 @@ classes: wide
 ## Exercise: Facets
 
 1. **Open the File**  
-   In the `lab` folder, open `search-2.lab.js`.
+   Navigate to `server/src/lab/` and open `search-2.lab.js`.
 
 2. **Locate the Function**  
    Find the `facetSearch` function in the file.
@@ -26,7 +26,7 @@ classes: wide
 
 ### Exercise: Testing API Calls
 
-1. Go to the `server/lab/rest-lab` directory.  
+1. Go to the `server/src/lab/rest-lab` directory.  
 2. Open `search-2-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Make sure you see valid results in the response.
