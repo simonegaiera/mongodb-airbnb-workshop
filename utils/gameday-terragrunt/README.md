@@ -1,38 +1,37 @@
-# GameDay Environment Setup Guide
-
-Below is a clearer version of the setup instructions.
+# GameDay Environment Setup Guide (Revised)
 
 ## Prerequisites
 
 ### Python 3
+1. **Verify Python 3 Installation**  
+   Make sure Python 3 is installed on your machine.
 
-1. **Check Python 3**  
-   Make sure Python 3 is installed.
-2. **Set Up Virtual Environment**  
-   It's often best to keep code isolated in a virtual environment:
+2. **Create a Virtual Environment**  
+   Use a virtual environment to keep dependencies isolated:
    ```bash
    python3 -m venv venv
    source venv/bin/activate   # macOS/Linux
    venv\Scripts\activate      # Windows
    ```
 
-### Terraform
-
+### Terraform and Terragrunt
 1. **Install Terraform**  
    ```bash
    brew tap hashicorp/tap
    brew install hashicorp/tap/terraform
    terraform --version
    ```
-   If you need to upgrade:
+   To upgrade:
    ```bash
    brew upgrade hashicorp/tap/terraform
    ```
+
 2. **Install Terragrunt**  
    ```bash
    brew install terragrunt
    terragrunt --version
    ```
+
 3. **Login to AWS SSO**  
    ```bash
    aws sso login --profile Solution-Architects.User-979559056307
@@ -41,41 +40,44 @@ Below is a clearer version of the setup instructions.
 ## Environment Configuration
 
 1. **Copy Files**  
-   - Copy the `airbinb` folder to a new `customer` folder.
-   - For a fully managed setup, keep everything.
-   - For a hybrid setup, remove the `eks-cluster` folder.
+   - Duplicate the `airbinb` folder and rename it to `customer`.  
+   - For a fully managed solution, keep all folders.  
+   - For a hybrid approach, remove the `eks-cluster` folder.
 
-2. **Atlas Environment**  
-   - Go to `customer/atlas-cluster`.
-   - Update `user_list.csv` as needed.
-   - Edit `terragrunt.hcl` with your MongoDB Atlas API keys (must have `Organization Project Creator`).
-   - For existing Atlas projects:
+2. **MongoDB Atlas Configuration**  
+   - Navigate to `customer/atlas-cluster`.  
+   - Update `user_list.csv` if necessary.  
+   - In `terragrunt.hcl`, replace placeholders with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).  
+   - By default, a new Atlas Project is created. To use an existing project instead:
      - Comment out the `mongodbatlas_project` resource.
      - Uncomment the relevant `data` statement.
-     - Update references to `mongodbatlas_project.project.id` with `data.mongodbatlas_project.project.id`.
-     - Uncomment `mongodbatlas_project_invitation` if you need to invite users.
+     - Update references that use `mongodbatlas_project.project.id` to `data.mongodbatlas_project.project.id`.
+   - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
-3. **EKS Environment (Ignore for Hybrid)**  
-   - Adjust `terragrunt.hcl` for your `customer`, `aws_region`, and `domain_email`.
-   - By default, clusters expire after one week. Change if needed.
+3. **EKS Configuration (Skip for Hybrid)**  
+   - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
+   - Note that the cluster expires after one week by default.
 
-## Deploy and Manage
+## Deployment and Management
 
-1. **Init**
+1. **Initialize**  
    ```bash
    terragrunt run-all init
    ```
-2. **Plan**
+
+2. **Plan**  
    ```bash
    terragrunt run-all plan
    ```
-3. **Apply**
+
+3. **Apply**  
    ```bash
    terragrunt run-all apply -auto-approve
    ```
-4. **Destroy**
+
+4. **Destroy**  
    ```bash
    terragrunt run-all destroy
    ```
 
-Review the plan before applying changes, and destroy only when you’re done with the resources.
+Always review any plan before applying changes. Destroy resources only when they are no longer needed.

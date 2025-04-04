@@ -11,8 +11,8 @@ locals {
 }
 
 inputs = {
-    public_key                              = "wnhxcpsp"
-    private_key                             = "e26eb9d7-c4f6-40a8-bbd1-4a0e1aabfd95"
+    public_key                              = "public_key"
+    private_key                             = "private_key"
     project_name                            = "gameday-customer"
     cluster_name                            = "mongodb-airbnb"
     sample_database_name                    = "sample_airbnb"
