@@ -16,13 +16,9 @@ All the instructions you'll need can be found in the workshop guide:
 
 **MongoDB SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
 
-- **Set up an Atlas Cluster**:  
+- **Set up the Environment**:  
   Instructions available here:  
-  ➡️ **[atlas-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/atlas-cluster)**  
-
-- **Set up an EKS Cluster for VSCode Online**:  
-  Instructions available here:  
-  ➡️ **[eks-cluster setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/eks-cluster)**  
+  ➡️ **[setup instructions](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
 
 - **Slack Channel**: [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
 - **GameDay Presentation**: [Deck](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)

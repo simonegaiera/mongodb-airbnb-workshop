@@ -35,8 +35,7 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 ### Step 3: Configure Terraform for MongoDB Atlas
 
 1. **Create a Custom Variable File**:
-   - Find the file named `terraform.tfvars.template` in your project directory.
-   - Make a copy of this template and rename it to `terraform.tfvars`. This file will hold your specific configuration values.
+   - Create a file `terraform.tfvars` that will hold your specific configuration values.
 
 2. **Update the Variable File**:
    - Open your newly created `terraform.tfvars` file.

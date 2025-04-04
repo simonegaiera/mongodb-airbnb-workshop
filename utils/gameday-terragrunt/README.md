@@ -4,6 +4,27 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
 
 ## Prerequisites
 
+### Step 1: Python3 Setup
+
+1. **Verify Python3 Installation**:
+   - Make sure Python 3 is installed on your laptop.
+   
+2. **Set Up a Virtual Environment**:
+   - It's recommended to run your scripts within a virtual environment (venv). If not already set up, you can create and activate it with these commands:
+
+   ```bash
+   # Create a virtual environment
+   python3 -m venv venv
+
+   # Activate the virtual environment (macOS/Linux)
+   source venv/bin/activate
+
+   # Activate the virtual environment (Windows)
+   venv\Scripts\activate
+   ```
+
+### Step 2: Terraform Setup
+
 1. **Install Terraform**  
    ```bash
    brew tap hashicorp/tap
@@ -32,23 +53,29 @@ Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth 
    aws sso login --profile Solution-Architects.User-979559056307
    ```
 
-## Customer Folder Setup
+## Environment Configuration
 
-> **Instructions:**  
-> This section explains how to set up the customer folder from the airbnb folder.  
-> *Add your specifics here...*
+- Copy the `airbinb` folder.
+- To run fully managed, keep all folders.
+- For a hybrid setup, remove the `eks-cluster` folder in the copied directory.
 
-## Next Steps
+### Environment: Atlas
+- Navigate to the `atlas-cluster` folder.
+- Update `user_list.csv` to include required users.
+- Edit `terragrunt.hcl` with MongoDB Atlas API keys and other necessary details.
+- Ensure your API keys have `Organization Project Creator` permissions.
 
-- Configure your Terraform and Terragrunt settings.  
-- To initialize all configurations across folders, run:
-  ```bash
-  terragrunt run-all init
-  ```
-- Run initial commands to set up your environment.
-- Refer to the official [Terragrunt documentation](https://terragrunt.gruntwork.io/) for advanced configuration.
+#### Additional Configurations
+- For existing Atlas projects, comment out the `mongodbatlas_project` resource and uncomment the matching `data` statement.
+- Replace `mongodbatlas_project.project.id` references with `data.mongodbatlas_project.project.id`.
+- Terraform defaults to not inviting users. Uncomment `mongodbatlas_project_invitation` to enable invites.
 
-## Next Steps: Deploy and Manage Your Environment
+### Environment: EKS (Skip if running Hybrid setup)
+- Adjust `terragrunt.hcl` to fit specific needs, such as `customer`, `aws_region`, and `domain_email`.
+- Assign `atlas_terraform` if not using the default path.
+- By default, clusters expire one week after creation. Modify expiration settings as needed.
+
+## Deploy and Manage Your Environment
 
 You can follow these commands:
 
