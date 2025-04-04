@@ -1,0 +1,25 @@
+# Ignore everything in the repository
+/*
+
+# But do not ignore root-level files
+!/*.*
+
+# Explicitly allow directories we want to keep
+!/airbnb/
+!/airbnb/**
+
+# Also, do not ignore common Git files
+!.gitignore
+!.gitattributes
+!README.md
+
+# Terraform
+**/.terragrunt*
+**/.terraform*
+**/terraform*.*
+!terraform.tfvars.template
+trashme
+*.old
+
+.venv/
+.env

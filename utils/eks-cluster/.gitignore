@@ -2,6 +2,7 @@
 # Terraform
 **/.terraform*
 **/terraform*.*
+*.old
 !terraform.tfvars.template
 trashme
 

@@ -81,3 +81,9 @@ variable "customer_user_password" {
   type        = string
   default     = "MongoGameDay123"
 }
+
+variable "user_list_path" {
+  description = "Path to the User List CSV file"
+  type        = string
+  default     = "./user_list.csv"
+}

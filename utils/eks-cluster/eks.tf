@@ -1,30 +1,21 @@
+terraform {
+  backend "s3" {}
+}
+
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
 }
 
-data "terraform_remote_state" "atlas_cluster" {
-  backend = "local"
-  config = {
-    path = "${var.atlas_terraform}/terraform.tfstate"
-  }
-}
-
 locals {
-  atlas_standard_srv  = try(data.terraform_remote_state.atlas_cluster.outputs.standard_srv, "")
-  atlas_user_list     = data.terraform_remote_state.atlas_cluster.outputs.user_list
-  atlas_user_password = try(data.terraform_remote_state.atlas_cluster.outputs.user_password, "")
+  atlas_standard_srv  = try(var.atlas_standard_srv, "")
+  atlas_user_list     = var.atlas_user_list
+  atlas_user_password = try(var.atlas_user_password, "")
 
   cluster_name = "${var.customer_name}-gameday-eks"
   aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
   current_timestamp = timestamp()
   expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
-}
-
-resource "null_resource" "check_atlas_state" {
-  provisioner "local-exec" {
-    command = "test -f ${var.atlas_terraform}/terraform.tfstate || (echo 'Atlas Remote state file not found!' && exit 1)"
-  }
 }
 
 data "aws_availability_zones" "available" {
@@ -49,9 +40,6 @@ resource "aws_vpc" "eks_vpc" {
     Name = "${local.cluster_name}-eks-vpc"
   }
 
-  depends_on = [ 
-    null_resource.check_atlas_state 
-  ]
 }
 
 resource "aws_subnet" "eks_subnet" {

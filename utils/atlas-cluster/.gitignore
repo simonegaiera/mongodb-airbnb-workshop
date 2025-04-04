@@ -4,6 +4,7 @@
 **/terraform*.*
 !terraform.tfvars.template
 trashme
+*.old
 
 user_list.csv
 .venv/

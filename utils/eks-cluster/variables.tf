@@ -28,8 +28,22 @@ variable "domain_email" {
   default     = "youremail@mongodb.com"
 }
 
-variable "atlas_terraform" {
-  description = "This should point to the directory where atlas terraform module is located"
+variable "atlas_standard_srv" {
+  description = "The Atlas standard connection string output from the atlas cluster"
   type        = string
-  default     = "../atlas-cluster"
+}
+
+variable "atlas_user_list" {
+  description = "The list of Atlas users output from the atlas cluster"
+  type        = list(string)
+  default     = []
+  validation {
+    condition     = length(var.atlas_user_list) > 0
+    error_message = "atlas_user_list cannot be empty. Aborting deployment."
+  }
+}
+
+variable "atlas_user_password" {
+  description = "The Atlas user password output from the atlas cluster"
+  type        = string
 }

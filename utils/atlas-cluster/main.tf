@@ -1,4 +1,6 @@
 terraform {
+  backend "s3" {}
+  
   required_providers {
     mongodbatlas = {
       source = "mongodb/mongodbatlas"
@@ -90,7 +92,7 @@ resource "mongodbatlas_database_user" "user-main" {
 
 
 data "external" "user_data" {
-  program = ["python3", "${path.module}/parse_users.py", "${path.module}/user_list.csv"]
+  program = ["python3", "${path.module}/parse_users.py", var.user_list_path, "email"]
 }
 
 locals {
@@ -198,28 +200,6 @@ output "standard_srv" {
 #   roles       = [ "GROUP_READ_ONLY", "GROUP_DATA_ACCESS_READ_ONLY", "GROUP_SEARCH_INDEX_EDITOR" ]
 # }
 
-# Generate the data for the database
-resource "local_file" "env_file" {
-  filename = ".env"
-  content  = <<EOF
-# AIRBNB
-MONGO_CONNECTION_STRING = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
-MONGO_DATABASE_NAME=${var.sample_database_name}
-
-# PUBLIC KEYS AND SECRETS
-PUBLIC_KEY=${var.public_key}
-PRIVATE_KEY=${var.private_key}
-PROJECT_ID=${mongodbatlas_project.project.id}
-CLUSTER_NAME=${var.cluster_name}
-EOF
-
-  depends_on = [
-    mongodbatlas_project.project,
-    mongodbatlas_advanced_cluster.cluster,
-    mongodbatlas_database_user.user-main,
-    mongodbatlas_project_ip_access_list.all
-  ]
-}
 
 # Define a null resource to install the requirements
 resource "null_resource" "install_requirements" {
@@ -228,14 +208,18 @@ resource "null_resource" "install_requirements" {
   }
 }
 
+locals {
+  mongodb_atlas_connection_string = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+}
+
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py ${path.module}/user_list.csv 2>&1"
+    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path}\" 2>&1"
   }
 
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = timestamp()
   }
 
   # Ensure that this script runs after the requirements are installed
