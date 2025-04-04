@@ -40,9 +40,10 @@
 ## Environment Configuration
 
 1. **Copy Files**  
-   - Duplicate the `airbinb` folder and rename it to `customer`.  
+   - Duplicate the `airbinb` folder and rename it with your `customer` name.
    - For a fully managed solution, keep all folders.  
    - For a hybrid approach, remove the `eks-cluster` folder.
+   - Open the `root.hcl` and change `customer` with your customer name in `config.key`.
 
 2. **MongoDB Atlas Configuration**  
    - Navigate to `customer/atlas-cluster`.  
