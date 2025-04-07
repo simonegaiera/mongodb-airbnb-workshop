@@ -32,11 +32,6 @@
    terragrunt --version
    ```
 
-3. **Login to AWS SSO**  
-   ```bash
-   aws sso login --profile Solution-Architects.User-979559056307
-   ```
-
 ## Environment Configuration
 
 1. **Copy Files**  
@@ -63,22 +58,27 @@
 
 ## Deployment and Management
 
-1. **Initialize**  
+1. **Login to AWS SSO**  
+   ```bash
+   aws sso login --profile Solution-Architects.User-979559056307
+   ```
+
+2. **Initialize**  
    ```bash
    terragrunt run-all init
    ```
 
-2. **Plan**  
+3. **Plan**  
    ```bash
    terragrunt run-all plan
    ```
 
-3. **Apply**  
+4. **Apply**  
    ```bash
    terragrunt run-all apply -auto-approve
    ```
 
-4. **Destroy**  
+5. **Destroy**  
    ```bash
    terragrunt run-all destroy
    ```
