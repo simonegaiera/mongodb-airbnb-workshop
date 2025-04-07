@@ -42,7 +42,7 @@
 
 2. **MongoDB Atlas Configuration**  
    - Navigate to `customer/atlas-cluster`.  
-   - Update `user_list.csv` if necessary.  
+   - Update `user_list.csv` with the list of attendees.  
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).
    - Modify the `project_name` with your customer name.
    - Modify the other variables, if necessary.
