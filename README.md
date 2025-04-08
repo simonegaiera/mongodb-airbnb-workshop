@@ -18,7 +18,7 @@ All the instructions you'll need can be found in the workshop guide:
 
 - **Set up the Environment**:  
   Instructions available here:  
-  ➡️ **[gameday-terragrant](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
+  ➡️ **[gameday-terragrunt](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
 
 - **Slack Channel**: [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
 - **GameDay Presentation**: [Deck](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)
