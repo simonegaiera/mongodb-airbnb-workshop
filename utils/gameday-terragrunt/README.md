@@ -1,4 +1,4 @@
-# GameDay Environment Setup Guide (Revised)
+# GameDay Environment Setup Guide
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@
 1. **Copy Files**  
    - Duplicate the `airbinb` folder and rename it with your `customer` name.
    - For a fully managed solution, keep all folders.  
-   - For a hybrid approach, remove the `eks-cluster` folder.
+   - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
    - Open the `root.hcl` and change `customer` with your customer name in `config.key`.
 
 2. **MongoDB Atlas Configuration**  
