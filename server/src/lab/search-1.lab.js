@@ -1,15 +1,17 @@
-import { db } from "../utils/database.js";  
-import { collectionName } from '../config/config.js';  
+import { db } from "../utils/database.js";
+import { collectionName } from '../config/config.js';
 
 /**
-Use the $search stage on the default index.
-Apply the autocomplete operator on the name field of the listing.
-Enable fuzzy search to handle typos and variations.
-Limit the results to 10 entries.
-Use the $project stage to include only the name field in the results.
-*/
+ * Uses $search on the default index to build a simple autocomplete search.
+ * This pipeline applies an autocomplete operator on the 'name' field,
+ * enabling fuzzy search to handle typos and variations.
+ * It limits the results to 10 documents and projects only the 'name' field.
+ *
+ * @param {string} query - The search term to autocomplete on.
+ * @returns {Promise<Array>} - A promise that resolves to an array of documents containing only the 'name' field.
+ */
 export async function autocompleteSearch(query) {
-	const pipeline = []
+    const pipeline = []
 
     const item = await db.collection(collectionName)
 

@@ -2,9 +2,15 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';  
 
 /**
-You are required to find all the documents given the query in input
-Results should be sorted by _id
-Define pagination, skipping the required skip pages, and limit results based on limit
+ * Finds all documents that match the specified `query`.
+ * Sorts results by `_id` in ascending order.
+ * Skips the specified number of documents (`skip`) and limits
+ * the number of documents returned (`limit`).
+ *
+ * @param {Object} query - The query object used for filtering.
+ * @param {number} skip - The number of documents to skip.
+ * @param {number} limit - The maximum number of documents to return.
+ * @returns {Promise<Array>} - A promise that resolves to the list of matching documents.
  */
 export async function crudFind(query, skip, limit) {
 

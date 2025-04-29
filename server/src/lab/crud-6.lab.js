@@ -2,11 +2,12 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';  
 
 /**
-The input for this function are:
-- the _id as the id
-- the name of the field you want to update key
-- the new value for the field you want to update value
-Modify the function to update ($set) the required document with the given value for the given key
+ * Updates the specified document's field using the $set operator.
+ *
+ * @param {string} id - The unique identifier of the document to update.
+ * @param {string} key - The field name to update.
+ * @param {string|number|boolean} value - The new value to set for the field.
+ * @returns {Promise<Object>} - A promise that resolves to the update result.
  */
 export async function crudUpdateElement(id, key, value) {
     const search = {}

@@ -2,11 +2,15 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';  
 
 /**
-Update the Pipeline Array:
-- $match Stage: Filter documents to include only those that have both beds and price fields.
-- $group Stage: Group the documents by the number of beds and calculate the average price for each group.
-- $sort Stage: Sort the grouped documents by the number of beds in ascending order.
-*/
+ * Constructs and runs an aggregation pipeline to compute the average price of listings based on their bed count.
+ * 
+ * - $match: Filter for documents with both beds and price fields.
+ * - $group: Group by number of beds and calculate average price.
+ * - $sort: Sort by number of beds in ascending order.
+ * - $project: Return only `beds` and `averagePrice` fields.
+ *
+ * @returns {Promise<Array>} - A promise that resolves to an array of aggregated documents.
+ */
 export async function aggregationPipeline() {
     const pipeline = []
 

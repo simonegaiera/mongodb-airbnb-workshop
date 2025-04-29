@@ -6,6 +6,49 @@ classes: wide
 ---
 
 ### Hint: Index Creation
-If you need more detailed instructions or additional information on how to create and manage search indexes in MongoDB Atlas, check out the official MongoDB Atlas Search Documentation. It provides comprehensive guides, examples, and best practices to help you get the most out of Atlas Search.
-- [Manage Index](https://www.mongodb.com/docs/atlas/atlas-search/manage-indexes/)
+If you need more detailed instructions or additional information on how to create and manage search indexes in MongoDB Atlas, check out the official MongoDB Atlas Search Documentation. It provides comprehensive guides, examples, and best practices to help you get the most out of Atlas Search.  
+- [Manage Index](https://www.mongodb.com/docs/atlas/atlas-search/manage-indexes/)  
 - [Define Fields Mapping](https://www.mongodb.com/docs/atlas/atlas-search/define-field-mappings/)
+
+````json
+{
+  "analyzer": "lucene.english",
+  "searchAnalyzer": "lucene.english",
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "amenities": [
+        {
+          "type": "stringFacet"
+        },
+        {
+          "type": "token"
+        }
+      ],
+      "beds": [
+        {
+          "type": "numberFacet"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "name": {
+        "analyzer": "lucene.english",
+        "foldDiacritics": false,
+        "maxGrams": 7,
+        "minGrams": 3,
+        "type": "autocomplete"
+      },
+      "property_type": [
+        {
+          "type": "stringFacet"
+        },
+        {
+          "type": "token"
+        }
+      ]
+    }
+  }
+}
+````
