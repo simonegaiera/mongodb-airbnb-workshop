@@ -14,6 +14,10 @@ dependency "atlas" {
 
 terraform {
   source = "../../../eks-cluster" 
+  include_in_copy = [
+    "**/.helmignore",
+    ".helmignore",
+  ]
 }
 
 inputs = {
