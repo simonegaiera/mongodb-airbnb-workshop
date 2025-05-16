@@ -31,6 +31,10 @@
    brew install terragrunt
    terragrunt --version
    ```
+   To upgrade:
+   ```bash
+   brew upgrade terragrunt
+   ```
 
 ## Environment Configuration
 
@@ -65,22 +69,22 @@
 
 2. **Initialize**  
    ```bash
-   terragrunt run-all init
+   terragrunt init --all
    ```
 
 3. **Plan**  
    ```bash
-   terragrunt run-all plan
+   terragrunt plan --all
    ```
 
 4. **Apply**  
    ```bash
-   terragrunt run-all apply -auto-approve
+   terragrunt apply --all
    ```
 
 5. **Destroy**  
    ```bash
-   terragrunt run-all destroy
+   terragrunt destroy --all
    ```
 
 Always review any plan before applying changes. Destroy resources only when they are no longer needed.

@@ -1,7 +1,7 @@
 title: MongoDB AirBnb GameDay
 description: Hands-on experience with MongoDB
-baseurl: "/mongodb-airbnb-workshop"
-url: "https://simonegaiera.github.io"
+baseurl: "/"
+url: "https://mongogameday.com"
 remote_theme: mmistakes/minimal-mistakes@master
 plugins:
   - jekyll-include-cache
