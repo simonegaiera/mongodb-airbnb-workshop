@@ -60,7 +60,7 @@ This guide helps you configure your VSCode Online environment and connect your a
 1. **Obtain the Connection String:**  
    - Open the `/server/.env` file and copy the MongoDB connection string:  
      ```markdown  
-     MONGODB_URI=<code>mongodb+srv://<username>:<password>@<cluster>.mongodb.net</code>/?retryWrites=true&w=majority  
+     MONGODB_URI===mongodb+srv://<username>:<password>@<cluster>.mongodb.net==/?retryWrites=true&w=majority  
      ```
 
 2. **Establish the Connection:**
