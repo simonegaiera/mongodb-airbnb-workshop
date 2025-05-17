@@ -15,6 +15,10 @@ import { collectionName } from '../config/config.js';
  */
 export async function crudFilter(amenities, propertyType, beds, skip, limit) {    
     const query = {}
+
+    if (beds) {
+        const [minBeds, maxBeds] = beds.split('-').map(Number);
+    }
     
     const items = await db.collection(collectionName)
         
