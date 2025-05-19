@@ -81,6 +81,7 @@
    ```bash
    terragrunt apply --all
    ```
+   Note: Before running this, make sure your Python virtual environment is activated.
 
 5. **Destroy**  
    ```bash
