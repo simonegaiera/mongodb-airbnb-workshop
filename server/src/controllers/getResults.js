@@ -39,7 +39,7 @@ export async function getSectionResults(req, res) {
         
         const pipeline = [
             {
-                '$sort': { 'timestamp': -1 }
+                '$sort': { 'timestamp': 1 }
             },
             {
                 '$group': {
