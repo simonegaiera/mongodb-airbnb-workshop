@@ -16,12 +16,11 @@ All the instructions you'll need can be found in the workshop guide:
 
 **MongoDB SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
 
-- **Set up the Environment**:  
-  Instructions available here:  
-  ➡️ **[gameday-terragrunt](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
+- **Set up the Environment**: ➡️ **[gameday-terragrunt](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
 
-- **Slack Channel**: [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
-- **GameDay Presentation**: [Deck](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)
+- **Slack Channel**: 💬 [#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)
+
+- **GameDay Presentation**: 📎 [slides](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)
 
 ---
 
