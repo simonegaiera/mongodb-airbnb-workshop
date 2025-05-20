@@ -5,26 +5,26 @@ layout: single
 classes: wide
 ---
 
-## Validate Your Results
+## ✅ Validate Your Results
 
-To confirm that your exercise is complete and your code works correctly, follow these steps:
+Ready to see if you’ve nailed it? Follow these steps to put your code to the test and claim your spot on the leaderboard!
 
 1. **Run the Test Suite**  
    ```bash
    npm test
    ```
-   This will automatically check each function you modified.
+   This command will automatically check each function you’ve worked on.
 
 2. **Review Your Test Results**  
-   - Passed tests indicate that your implementation meets the requirements.  
-   - Failed tests will provide error messages to help identify issues.
+   - ✅ Green means go! Passed tests show your solution works.
+   - ❌ Red? No worries! Error messages will help you pinpoint what to fix.
 
 3. **Completion Criteria**  
-   - The exercise is considered complete when all tests pass.  
-   - If any test fails, review the errors, update your code, and re-run the tests.
+   - 🏁 All tests must pass for your challenge to be complete.
+   - 🔄 If something fails, review the feedback, tweak your code, and test again.
 
 4. **Troubleshooting**  
-   - Check that you are in the correct directory before running the tests.  
-   - Confirm that all required dependencies are installed.
+   - 📂 Make sure you’re in the correct directory before running tests.
+   - 📦 Double-check that all dependencies are installed.
 
-Following these steps ensures your changes are correct and the exercise is successfully completed.
+**Ready to shine? Run those tests, crush those bugs, and climb the leaderboard! 🚀**

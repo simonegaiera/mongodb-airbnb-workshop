@@ -7,4 +7,15 @@ classes: wide
 
 ![MongoDB](assets/images/logo.svg)
 
-Welcome to the MongoDB Airbnb GameDay! This hands-on workshop is designed to provide you with practical experience using MongoDB. By the end of this session, you'll have a solid grasp of how to interact with MongoDB and utilize its powerful features.
+🎉 **Welcome to the MongoDB Airbnb GameDay!** 🚀
+
+Get ready for an action-packed, hands-on workshop where you’ll put your MongoDB skills to the test!  
+Challenge yourself, race against the clock, and climb the leaderboard as you tackle real-world scenarios and technical challenges.
+
+✨ **What to expect:**
+- 🛠️ Build and deploy with confidence
+- 🚦 Solve practical challenges on your own
+- 🏆 Compete for the top spot and win prizes
+
+Are you ready to show what you’ve got?  
+**Let the competition begin and may the best innovator win!** 🌟

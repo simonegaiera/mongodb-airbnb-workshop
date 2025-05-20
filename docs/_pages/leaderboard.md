@@ -5,8 +5,12 @@ layout: single
 classes: wide
 ---
 
-## Who's winning?
+## 🏁 Who’s on Top?
 
-Check out the Leaderboard section to see the latest rankings and find out who's leading the pack!
+Welcome to the **GameDay Leaderboard**—where the best rise above the rest!  
+Track your progress, see who’s dominating the competition, and get inspired to climb even higher.
+
+🥇 **Will you claim the top spot?**  
+Check back often—rankings update in real time!
 
 ![leaderboard](../assets/images/leaderboard.png)
