@@ -5,9 +5,13 @@ layout: single
 classes: wide
 ---
 
-**Goal**: Learn how to delete a document from a MongoDB collection based on its ID.
+## 🚀 Goal: Delete Documents Like a Pro
 
-## Exercise: Delete One Document
+Clean up your data with confidence—learn how to delete a document from your MongoDB collection by its ID, fast and flawlessly!
+
+---
+
+### 🧩 Exercise: Delete One Document
 
 1. **Open the File**  
    Navigate to `server/src/lab/` and open `crud-8.lab.js`.
@@ -18,12 +22,19 @@ classes: wide
 3. **Update the Code**  
    - Implement code to delete a document where `_id` equals the provided `id` parameter.
 
-### Exercise: Testing API Calls
+---
+
+### 🚦 Test Your API
+
 1. Go to `server/src/lab/rest-lab` directory.
 2. Open `crud-8-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful deletion.
 
-### Exercise: Frontend Validation
-Test your implementation by selecting "Delete Listing" in the application and confirm the record disappears from the listing.
-![crud-7-lab](../../assets/images/crud-7-lab.png)
+---
+
+### 🖥️ Frontend Validation
+
+Select "Delete Listing" in the app and watch the record vanish instantly—clean, smooth, and oh-so-satisfying!
+
+![crud-8-lab](../../assets/images/crud-8-lab.png)

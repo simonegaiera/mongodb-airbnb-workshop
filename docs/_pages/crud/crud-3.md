@@ -5,26 +5,37 @@ layout: single
 classes: wide
 ---
 
-**Goal**: Learn how to retrieve unique values from a specific field in MongoDB using the distinct operation.
+## 🚀 Goal: Discover Unique Values Like a Pro
 
-## Exercise: Find Unique Values
+Unlock the magic of MongoDB’s `distinct`—instantly reveal all the unique values in any field and power up your filters!
+
+---
+
+### 🧩 Exercise: Find Unique Values
 
 1. **Open the File**  
-   Navigate to `server/lsrc/ab/` and open `crud-3.lab.js`.
+   Navigate to `server/src/lab/` and open `crud-3.lab.js`.
 
 2. **Locate the Function**  
    Find the `crudDistinct` function in the file.
 
-3. **Update the Code**  
+3. **Shape the Query**  
    - Use the `distinct` method to retrieve all unique values for the field specified by the `field_name` parameter.
-   - The function should return an array of all distinct values found in that field across the collection.
+   - Return an array of all distinct values found in that field across the collection.
 
-### Exercise: Testing API Calls
-1. Go to `server/src/lab/rest-lab` directory.
+---
+
+### 🚦 Test Your API
+
+1. Go to `server/src/lab/rest-lab`.
 2. Open `crud-3-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns a list of unique values for the requested field.
 
-### Exercise: Frontend Validation
-Test your implementation by opening the "Filters" panel in the application and confirm that all distinct values for the field are displayed.
+---
+
+### 🖥️ Frontend Validation
+
+Open the "Filters" panel in the app and watch all distinct values for your field appear—perfect for dynamic, user-friendly filtering!
+
 ![crud-3-lab](../../assets/images/crud-3-lab.png)

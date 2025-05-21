@@ -62,8 +62,8 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 1. **Grab Your Connection String:**  
    - Open `/server/.env` and copy your MongoDB URI:
-     ```
-     MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
+     ```markdown
+     MONGODB_URI=`mongodb+srv://<username>:<password>@<cluster>.mongodb.net`/?retryWrites=true&w=majority
      ```
 
 2. **Connect in VSCode:**
