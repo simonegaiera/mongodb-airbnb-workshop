@@ -52,7 +52,7 @@
 </head>
 <body>
     <div class="container">
-        <p>We can find the page you’re looking for.</p>
+        <p>Page here</p>
     </div>
     <div class="footer">
         &copy; 2025 MongoDB Airbnb Workshop

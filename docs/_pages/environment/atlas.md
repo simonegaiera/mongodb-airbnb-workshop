@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-# 🚀 Get Ready: MongoDB Atlas Environment
+## 🚀 Get Ready: MongoDB Atlas Environment
 
 Welcome! Let’s get your MongoDB Atlas environment up and running in style.  
 Here’s what you’ll need:

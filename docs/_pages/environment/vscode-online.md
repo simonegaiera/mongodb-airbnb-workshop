@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-# 🌐💡 VSCode Online: Your Cloud Playground
+## 🌐💡 VSCode Online: Your Cloud Playground
 
 Welcome to your cloud-powered dev playground!  
 Let’s get you connected, coding, and exploring MongoDB in style.

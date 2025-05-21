@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-# 🔎✨ Atlas Search: Find Anything, Instantly
+## 🔎✨ Atlas Search: Find Anything, Instantly
 
 Welcome to the world of lightning-fast, full-text search with MongoDB Atlas!  
 Get ready to supercharge your data discovery with powerful search features and hands-on code.

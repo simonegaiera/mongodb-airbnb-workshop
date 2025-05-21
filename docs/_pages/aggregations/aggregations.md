@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-# 🧪✨ MongoDB Aggregations: Data Alchemy
+## 🧪✨ MongoDB Aggregations: Data Alchemy
 
 Welcome to the world of data alchemy!  
 Here you’ll unlock the secrets of MongoDB’s aggregation framework—your toolkit for transforming, analyzing, and making magic with your data.

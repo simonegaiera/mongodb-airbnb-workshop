@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-# 🛠️✨ CRUD Operations: MongoDB Like a Pro
+## 🛠️✨ CRUD Operations: MongoDB Like a Pro
 
 Welcome to the heart of MongoDB magic!  
 Here you’ll master the four essential moves every data wizard needs:
