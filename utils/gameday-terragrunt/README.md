@@ -78,14 +78,20 @@
    ```
 
 4. **Apply**  
+   Before you run the apply step, make sure your Python virtual environment is active.
+   To deploy all modules at once:
    ```bash
    terragrunt apply --all
    ```
-   Note: Before running this, make sure your Python virtual environment is activated.
-   To taint a resource:
+   
+   To target only the EKS cluster module:
    ```bash
-   cd eks-cluster
-   terragrunt run -- taint resource.name
+   terragrunt apply --auto-approve --working-dir=eks-cluster
+   ```
+   
+   To taint (mark for recreation) a specific resource in the EKS module:
+   ```bash
+   terragrunt run --working-dir=eks-cluster -- taint resource.name
    ```
 
 5. **Destroy**  

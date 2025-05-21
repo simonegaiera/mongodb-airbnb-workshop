@@ -24,6 +24,7 @@ All the instructions you'll need can be found in the workshop guide:
 
 ---
 
-Prepare to unleash the full potential of MongoDB! 🚀 Explore, collaborate, and build something amazing.
+Prepare to unleash the full potential of MongoDB! 🚀 
+Explore, collaborate, and build something amazing.
 
 Happy learning! 💻✨  

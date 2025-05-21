@@ -16,6 +16,7 @@ locals {
   aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
   current_timestamp = timestamp()
   expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
+  domain_user = split("@", var.domain_email)[0]
 }
 
 output "aws_route53_record_name" {
@@ -251,7 +252,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   tags = {
     Name        = local.cluster_name
     "expire-on" = local.expire_timestamp
-    "owner"     = var.domain_email
+    "owner"     = local.domain_user
     "purpose"   = "gameday"
   }
 

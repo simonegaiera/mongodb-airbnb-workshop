@@ -28,6 +28,6 @@ inputs = {
   # varibales to change
   aws_profile = "Solution-Architects.User-979559056307"
   customer_name = "airbnb"
-  aws_region = "us-west-2"
+  aws_region = "us-east-2"
   domain_email = "simone.gaiera@mongodb.com"
 }

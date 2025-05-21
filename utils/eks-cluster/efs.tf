@@ -5,6 +5,9 @@ resource "aws_efs_file_system" "efs" {
 
   tags = {
     Name = "efs-${local.cluster_name}"
+    "expire-on" = local.expire_timestamp
+    "owner"     = local.domain_user
+    "purpose"   = "gameday"
   }
 }
 

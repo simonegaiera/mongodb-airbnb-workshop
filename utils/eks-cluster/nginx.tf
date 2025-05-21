@@ -20,11 +20,18 @@ locals {
   ))
 
   index_nginx_html = templatefile("${path.module}/nginx-html-files/index.html.tpl", {
-    customer_name = var.customer_name
+    customer_name = var.customer_name,
+    server_name = local.aws_route53_record_name,
+    record_name = local.aws_route53_record_name,
+    user_ids = local.atlas_user_list
   })
 
-  error_nginx_html = templatefile("${path.module}/nginx-html-files/404.html.tpl", {
+  notfound_nginx_html = templatefile("${path.module}/nginx-html-files/404.html.tpl", {
+    customer_name = var.customer_name,
     server_name = local.aws_route53_record_name
+  })
+
+  error_nginx_html = templatefile("${path.module}/nginx-html-files/50x.html.tpl", {
   })
 }
 
@@ -139,13 +146,23 @@ resource "helm_release" "airbnb_gameday_nginx" {
   }
 
   set {
+    name  = "nginx.notfound"
+    value = local.notfound_nginx_html
+  }
+
+  set {
+    name  = "nginx.html"
+    value = local.index_nginx_html
+  }
+
+  set {
     name  = "nginx.error"
     value = local.error_nginx_html
   }
 
-    set {
-    name  = "nginx.html"
-    value = local.index_nginx_html
+  set {
+    name  = "nginx.favicon"
+    value = filebase64("${path.module}/nginx-html-files/favicon.ico")
   }
 
   depends_on = [

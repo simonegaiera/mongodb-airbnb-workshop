@@ -26,6 +26,11 @@ variable "domain_email" {
   description = "The SA email for certbot (to request certificate)"
   type        = string
   default     = "youremail@mongodb.com"
+
+  validation {
+    condition     = length(regexall("^[^@]+@[^@]+$", var.domain_email)) > 0
+    error_message = "domain_email must be in the format something@something (e.g. user@domain.com)"
+  }
 }
 
 variable "atlas_standard_srv" {

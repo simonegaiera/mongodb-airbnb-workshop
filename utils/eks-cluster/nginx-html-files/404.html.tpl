@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>404 • Page Not Found</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>GameDay at ${customer_name}!</title>
+  <link rel="icon" href="https://${server_name}/favicon.ico" type="image/x-icon">
+  <style>
         body {
             background: #fafafa;
             color: #333;
@@ -18,6 +19,8 @@
             flex-direction: column;
             justify-content: center;
             height: 100vh;
+            width: 90%;
+            margin: 0 auto;
             padding: 20px;
         }
         h1 {
@@ -53,8 +56,9 @@
 <body>
     <div class="container">
         <h1>404</h1>
-        <p>We can’t find the page you’re looking for.</p>
-        <a href="https://${server_name}">Go Back Home</a>
+        <p>Oops! Either the URL is mistyped or your workspace isn’t provisioned yet.</p>
+        <p>Click below to check if your account exists and get set up:</p>
+        <a href="https://${server_name}">Validate Your Account</a>
     </div>
     <div class="footer">
         &copy; 2025 MongoDB Airbnb Workshop

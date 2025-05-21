@@ -82,6 +82,8 @@ nginx:
   config: ""
   html: ""
   error: ""
+  notfound: ""
+  favicon: ""
 
 nodeSelector: {}
 
