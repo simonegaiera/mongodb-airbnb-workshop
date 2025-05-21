@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-## 🚀 Goal: Supercharge Search with Atlas Indexes
+## 🚀 Goal: Supercharge Search with Atlas Search Indexes
 
 Create a MongoDB Atlas Search index to unlock blazing-fast full-text search and faceted navigation—tailored for next-level discovery!
 
