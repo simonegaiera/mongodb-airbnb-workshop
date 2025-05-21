@@ -11,5 +11,6 @@ data:
     {{ .Values.nginx.notfound | nindent 4 }}
   50x.html: |
     {{ .Values.nginx.error | nindent 4 }}
+binaryData:
   favicon.ico: |
-    {{ .Values.nginx.favicon | nindent 4 }}
+    {{ .Values.nginx.favicon | quote }}
