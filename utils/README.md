@@ -12,7 +12,5 @@ search 0:
 # Terraform
 
 ## nginx 
-by default goes to the first user, need to go to error page
-
-## nginx homepage
-create a page with the list of users
+- index page is horrible
+- favicon is not working for the index page
