@@ -32,10 +32,10 @@ Unleash your creativity—add fresh data to your MongoDB collection with style a
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful insertion of the document.
 
----
+<!-- ---
 
 ### 🖥️ Frontend Validation
 
 Add a new listing in the app and watch it appear instantly—seamless, satisfying, and oh-so-smooth!
 
-![crud-5-lab](../../assets/images/crud-5-lab.png)
+![crud-5-lab](../../assets/images/crud-5-lab.png) -->

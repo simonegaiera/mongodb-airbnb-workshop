@@ -37,4 +37,4 @@ Clean up your data with confidence—learn how to delete a document from your Mo
 
 Select "Delete Listing" in the app and watch the record vanish instantly—clean, smooth, and oh-so-satisfying!
 
-![crud-8-lab](../../assets/images/crud-8-lab.png)
+![crud-8-lab](../../assets/images/crud-7-lab.png)
