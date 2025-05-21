@@ -22,7 +22,6 @@ locals {
   index_nginx_html = templatefile("${path.module}/nginx-html-files/index.html.tpl", {
     customer_name = var.customer_name,
     server_name = local.aws_route53_record_name,
-    record_name = local.aws_route53_record_name,
     user_ids = local.atlas_user_list
   })
 

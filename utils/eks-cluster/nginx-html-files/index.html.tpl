@@ -74,7 +74,7 @@
       <div class="links">
         %{ for uid in user_ids }
           <p>
-            <a href="https://${uid}.${record_name}/?folder=/home/workspace/mongodb-airbnb-workshop">
+            <a href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop">
               ${uid}
             </a>
           </p>

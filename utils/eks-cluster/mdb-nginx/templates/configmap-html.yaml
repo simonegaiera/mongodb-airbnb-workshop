@@ -13,4 +13,4 @@ data:
     {{ .Values.nginx.error | nindent 4 }}
 binaryData:
   favicon.ico: |
-    {{ .Values.nginx.favicon | quote }}
+    {{ .Values.nginx.favicon }}
