@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <title>GameDay at ${customer_name}!</title>
+  <title>MongoDB AirBnb GameDay</title>
   <link rel="icon" href="https://${server_name}/favicon.ico" type="image/x-icon">
   <style>
         body {
             background: #fafafa;
-            color: #333;
-            font-family: 'Segoe UI';
+            color: #3d4144;
+            font-family: 'BlinkMacSystemFont';
             text-align: center;
             margin: 0;
             padding: 0;
@@ -24,16 +24,21 @@
             padding: 20px;
         }
         h1 {
-            font-size: 10rem;
-            margin: 0;
-            color: #e74c3c;
+          font-size: 6em;
+          font-weight: bold;
+          margin: 0;
+          color: #3d4144;
+          margin-bottom: 2rem;
         }
         p {
-            font-size: 1.5rem;
+            font-size: 1.5em;
             margin: 10px 0 30px;
         }
         a {
-            display: inline-block;
+            display: block;
+            width: 500px;
+            margin: 0 auto;
+            text-align: center;
             padding: 12px 24px;
             background: #00684A;
             color: #fff;
@@ -55,7 +60,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>404</h1>
+        <h1>Not Found!</h1>
         <p>Oops! Either the URL is mistyped or your workspace isn’t provisioned yet.</p>
         <p>Click below to check if your account exists and get set up:</p>
         <a href="https://${server_name}">Validate Your Account</a>

@@ -15,6 +15,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ---
 
 ## 🚀 Step 1: Backend Setup
+> **Note:** You can skip this step if you’ve already opened your VSCode Online environment via the link above.
 
 1. **Access VSCode Online:**
    - Open your VSCode environment:

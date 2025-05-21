@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>50x</title>
+    <title>MongoDB AirBnb GameDay</title>
     <style>
         body {
             width: 35em;

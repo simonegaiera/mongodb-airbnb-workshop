@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <title>GameDay at ${customer_name}!</title>
+  <title>MongoDB AirBnb GameDay</title>
   <link rel="icon" href="https://${server_name}/favicon.ico" type="image/x-icon">
   <style>
         body {
             background: #fafafa;
-            color: #333;
-            font-family: 'Segoe UI';
+            color: #3d4144;
+            font-family: 'BlinkMacSystemFont';
             text-align: center;
             margin: 0;
             padding: 0;
@@ -24,25 +24,35 @@
             padding: 20px;
         }
         h1 {
-            font-size: 10rem;
-            margin: 0;
+          font-size: 2em;
+          font-weight: bold;
+          margin: 0;
+          color: #3d4144;
+          margin-bottom: 2rem;
+        }
+        .customer-name {
             color: #00684A;
         }
         p {
-            font-size: 1.5rem;
+            font-size: 1.5em;
             margin: 10px 0 30px;
         }
         a {
             display: inline-block;
             padding: 12px 24px;
-            background: #00684A;
-            color: #fff;
+            color: #3d4144;
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.2s ease;
         }
         a:hover {
             background: #00684A;
+            color: #fff;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
         }
         .footer {
             position: absolute;
@@ -55,8 +65,11 @@
 </head>
 <body>
   <div class="container">
-    <h1>GameDay at ${customer_name}!</h1>
-
+    <h1>
+      GameDay at 
+      <span class="customer-name">${customer_name}!</span>
+    </h1>
+    
     %{ if length(user_ids) > 0 }
       <div class="links">
         %{ for uid in user_ids }
