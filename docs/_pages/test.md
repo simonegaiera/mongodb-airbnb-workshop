@@ -10,10 +10,15 @@ classes: wide
 Ready to see if you’ve nailed it? Follow these steps to put your code to the test and claim your spot on the leaderboard!
 
 1. **Run the Test Suite**  
-   ```bash
-   cd server/
-   npm test
-   ```
+   - Open a new terminal:
+     ```
+     ☰ > Terminal > New Terminal
+     ```
+   - Fire up the test suite:
+      ```bash
+      cd server/
+      npm test
+      ```
    This command will automatically check each function you’ve worked on.
 
 2. **Review Your Test Results**  
