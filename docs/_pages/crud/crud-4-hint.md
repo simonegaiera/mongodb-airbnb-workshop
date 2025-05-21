@@ -1,25 +1,27 @@
 ---
-
 title: "Hint: Exercise 4"  
 permalink: /crud/4/hint/  
 layout: single  
 classes: wide  
 ---  
 
-## Hint: MongoDB Query Operations  
+## 🚀 Hint: MongoDB Query Power Moves
 
-For more detailed guidance on each operation, refer to the following MongoDB documentation links:  
-- **find**: Learn how to retrieve documents from a collection based on specified criteria.  
+Level up your querying game with these essential MongoDB tools and operators:
+
+- 🔍 **find**: Retrieve documents that match your criteria.  
   [Find Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/)  
-- **sort**: Understand how to sort the results of your queries in ascending or descending order.  
+- 🗂️ **sort**: Organize your results in ascending or descending order.  
   [Sort Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#sort)  
-- **skip**: Discover how to skip a specified number of documents in your query results.  
+- ⏭️ **skip**: Skip over a set number of documents in your results.  
   [Skip Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#skip)  
-- **limit**: Learn how to limit the number of documents returned by your query.  
+- 🎯 **limit**: Control how many documents are returned.  
   [Limit Documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/#limit)  
-- **$all**: Discover how to match documents where all field's values are in a specified array.  
+- 🧩 **$all**: Match documents where a field contains all specified values.  
   [All Documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)  
-- **$gte**: Understand how to filter documents where a field's value is greater than or equal to a specified value.  
+- 🔼 **$gte**: Filter for values greater than or equal to your target.  
   [Gte Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/)  
-- **$lte**: Learn how to filter documents where a field's value is less than or equal to a specified value.  
-  [Lte Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/)  
+- 🔽 **$lte**: Filter for values less than or equal to your target.  
+  [Lte Documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/)
+
+✨ Mix and match these operators to craft queries that slice and dice your data exactly how you want!
