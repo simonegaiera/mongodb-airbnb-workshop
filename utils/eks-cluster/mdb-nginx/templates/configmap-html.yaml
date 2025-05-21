@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mdb-nginx-html-cm
+  labels:
+    {{- include "mdb-nginx.labels" . | nindent 4 }}
+data:
+  index.html: |
+    {{ .Values.nginx.html | nindent 4 }}
+  404.html: |
+    {{ .Values.nginx.error | nindent 4 }}

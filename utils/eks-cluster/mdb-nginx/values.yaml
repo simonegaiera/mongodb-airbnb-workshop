@@ -59,11 +59,13 @@ resources: {}
 livenessProbe:
   httpGet:
     path: /health
-    port: http
+    port: https
+    scheme: HTTPS
 readinessProbe:
   httpGet:
     path: /health
-    port: http
+    port: https
+    scheme: HTTPS
 
 autoscaling:
   enabled: true
@@ -78,6 +80,8 @@ volumeMounts: []
 nginx:
   conf: ""
   config: ""
+  html: ""
+  error: ""
 
 nodeSelector: {}
 

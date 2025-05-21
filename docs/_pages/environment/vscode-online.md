@@ -5,84 +5,82 @@ layout: single
 classes: wide
 ---
 
-## Environment Preparation: VSCode Online
+# 🌐💡 VSCode Online: Your Cloud Playground
 
-This guide helps you configure your VSCode Online environment and connect your application to MongoDB for a smooth development experience.
+Welcome to your cloud-powered dev playground!  
+Let’s get you connected, coding, and exploring MongoDB in style.
 
 ---
 
-### Step 1: Backend Setup
+## 🚀 Step 1: Backend Setup
 
 1. **Access VSCode Online:**
-   - Open your VSCode environment with the URL pattern below:
+   - Open your VSCode environment:
      ```
      https://<username>.<customer>.mongogameday.com/
      ```
-   - Open the `Explorer` and click **Open Folder**.
-   - Navigate to:
+   - In the `Explorer`, click **Open Folder** and navigate to:
      ```
      /home/workspace/mongodb-airbnb-workshop/
      ```
-     and click **Ok**.
-    ![Folder View](../../assets/images/environment-folder.png)  
+     Click **Ok**.
+     ![Folder View](../../assets/images/environment-folder.png)  
    - When prompted, select **Yes, trust the author**.
-    ![Trust Prompt](../../assets/images/environment-folder-trust.png)
+     ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
 2. **Start the Server:**
-   - Open a new terminal using:
+   - Open a new terminal:
      ```
      ☰ > Terminal > New Terminal
      ```
-   - Change to the server directory and start the server:
+   - Fire up the backend:
      ```bash
      cd server
      npm start
      ```
-   - Verify that the server is running and connected to MongoDB by checking the console logs.
+   - Check the console logs—if you see a MongoDB connection message, you’re golden!
 
 ---
 
-### Step 2: Frontend Setup
+## 🎨 Step 2: Frontend Setup
 
 1. **Launch the Frontend:**
-   - Open your application’s frontend using:
+   - Open your app in the browser:
      ```
      https://<username>.<customer>.mongogameday.com/app/
      ```
-   - Confirm that your name appears on the homepage.
-
-   ![Frontend Name Display](../../assets/images/environment-name.png)
-
----
-
-### Step 3: Connect the MongoDB Extension
-
-1. **Obtain the Connection String:**  
-   - Open the `/server/.env` file and copy the MongoDB connection string:  
-     ```markdown  
-     MONGODB_URI=`mongodb+srv://<username>:<password>@<cluster>.mongodb.net`/?retryWrites=true&w=majority  
-     ```
-
-2. **Establish the Connection:**
-   - In VSCode, click on the **MongoDB extension** in the sidebar.
-   - In the **CONNECTIONS** section, click the **+** button to add a connection.
-   - Select **Connect with Connection String**.
-   - Paste your copied connection string. For example:
-     ```
-     mongodb+srv://<username>:<password>@<cluster>.mongodb.net
-     ```
-
-3. **Verify the Connection:**
-   - Ensure that the connection is successful by checking for any error messages in VSCode.
+   - See your name on the homepage? You’re in!
+     ![Frontend Name Display](../../assets/images/environment-name.png)
 
 ---
 
-### Troubleshooting
+## 🔗 Step 3: Connect the MongoDB Extension
 
-- **Server Issues:**  
-  If you encounter issues starting the server, recheck your terminal commands and ensure you’re in the correct directory.
+1. **Grab Your Connection String:**  
+   - Open `/server/.env` and copy your MongoDB URI:
+     ```
+     MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
+     ```
 
-- **Further Support:**  
-  If problems persist, contact your SA for additional assistance.
+2. **Connect in VSCode:**
+   - Click the **MongoDB extension** in the sidebar.
+   - In **CONNECTIONS**, hit the **+** and choose **Connect with Connection String**.
+   - Paste your URI and connect!
 
-Happy coding!
+3. **Success Check:**
+   - If you see your databases, you’re ready to roll!
+
+---
+
+## 🛠️ Troubleshooting
+
+- **Server not starting?**  
+  Double-check your terminal commands and directory.
+
+- **Still stuck?**  
+  Ping your SA for help—no shame in asking!
+
+---
+
+✨ That’s it! You’re set to code, create, and explore.  
+Happy hacking!

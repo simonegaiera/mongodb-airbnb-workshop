@@ -7,7 +7,7 @@ import { collectionName } from '../config/config.js';
  * - $match: Filter for documents with both beds and price fields.
  * - $group: Group by number of beds and calculate average price.
  * - $sort: Sort by number of beds in ascending order.
- * - $project: Return only `beds` and `averagePrice` fields.
+ * - $project: Return only `beds` and `price` fields.
  *
  * @returns {Promise<Array>} - A promise that resolves to an array of aggregated documents.
  */

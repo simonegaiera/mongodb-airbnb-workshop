@@ -64,6 +64,17 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   depends_on = [ mongodbatlas_project.project ]
 }
 
+resource "mongodbatlas_maintenance_window" "maintenance" {
+  project_id  = mongodbatlas_project.project.id
+  day_of_week = 1
+  hour_of_day = 4
+
+  protected_hours {
+    start_hour_of_day = 10
+    end_hour_of_day   = 20
+  }
+}
+
 resource "mongodbatlas_project_ip_access_list" "all" {
   project_id = mongodbatlas_project.project.id
   cidr_block = "0.0.0.0/0"

@@ -11,6 +11,7 @@ Ready to see if you’ve nailed it? Follow these steps to put your code to the t
 
 1. **Run the Test Suite**  
    ```bash
+   cd server/
    npm test
    ```
    This command will automatically check each function you’ve worked on.

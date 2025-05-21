@@ -18,6 +18,14 @@ locals {
     [local.base_nginx_config],
     local.nginx_user_configs
   ))
+
+  index_nginx_html = templatefile("${path.module}/nginx-html-files/index.html.tpl", {
+    customer_name = var.customer_name
+  })
+
+  error_nginx_html = templatefile("${path.module}/nginx-html-files/404.html.tpl", {
+    server_name = local.aws_route53_record_name
+  })
 }
 
 resource "kubernetes_secret" "nginx_tls_secret" {
@@ -59,6 +67,10 @@ resource "helm_release" "airbnb_gameday_nginx" {
             mountPath = "/etc/nginx/nginx.conf",
             subPath   = "nginx.conf",
             readOnly  = true
+          },
+          {
+            name      = "nginx-html-volume",
+            mountPath = "/usr/share/nginx/html"
           }
         ],
         [
@@ -87,6 +99,12 @@ resource "helm_release" "airbnb_gameday_nginx" {
             name = "custom-nginx-conf",
             configMap = {
               name = "mdb-nginx-cm"
+            }
+          },
+          {
+            name = "nginx-html-volume",
+            configMap = {
+              name = "mdb-nginx-html-cm"
             }
           }
         ],
@@ -118,6 +136,16 @@ resource "helm_release" "airbnb_gameday_nginx" {
   set {
     name  = "nginx.conf"
     value = file("${path.module}/nginx-conf-files/nginx.conf")
+  }
+
+  set {
+    name  = "nginx.error"
+    value = local.error_nginx_html
+  }
+
+    set {
+    name  = "nginx.html"
+    value = local.index_nginx_html
   }
 
   depends_on = [

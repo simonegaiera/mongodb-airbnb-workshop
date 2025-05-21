@@ -18,6 +18,10 @@ locals {
   expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
 }
 
+output "aws_route53_record_name" {
+  value = local.aws_route53_record_name
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 

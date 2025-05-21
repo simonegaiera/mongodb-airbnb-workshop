@@ -82,6 +82,11 @@
    terragrunt apply --all
    ```
    Note: Before running this, make sure your Python virtual environment is activated.
+   To taint a resource:
+   ```bash
+   cd eks-cluster
+   terragrunt run -- taint resource.name
+   ```
 
 5. **Destroy**  
    ```bash
