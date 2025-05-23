@@ -7,7 +7,9 @@ classes: wide
 
 ## ✅ Validate Your Results
 
-Ready to see if you’ve nailed it? Follow these steps to put your code to the test and claim your spot on the leaderboard!
+Every great journey needs checkpoints—and this is yours! As you build out your rental platform, it’s time to see if your code is ready to power the next big thing. Testing your work is how you make sure every feature works perfectly for your users and your business.
+
+Follow these steps to put your code to the test and claim your spot on the leaderboard:
 
 1. **Run the Test Suite**  
    - Open a new terminal:
@@ -15,15 +17,15 @@ Ready to see if you’ve nailed it? Follow these steps to put your code to the t
      ☰ > Terminal > New Terminal
      ```
    - Fire up the test suite:
-      ```bash
-      cd server/
-      npm test
-      ```
-   This command will automatically check each function you’ve worked on.
+     ```bash
+     cd server/
+     npm test
+     ```
+   This command will automatically check each function you’ve worked on—just like a real-world deployment.
 
 2. **Review Your Test Results**  
-   - ✅ Green means go! Passed tests show your solution works.
-   - ❌ Red? No worries! Error messages will help you pinpoint what to fix.
+   - ✅ Green means your code is ready for production—your users will love it!
+   - ❌ Red? No worries! Error messages will help you pinpoint what to fix and try again.
 
 3. **Completion Criteria**  
    - 🏁 All tests must pass for your challenge to be complete.
@@ -33,4 +35,4 @@ Ready to see if you’ve nailed it? Follow these steps to put your code to the t
    - 📂 Make sure you’re in the correct directory before running tests.
    - 📦 Double-check that all dependencies are installed.
 
-**Ready to shine? Run those tests, crush those bugs, and climb the leaderboard! 🚀**
+**Ready to show your skills? Run those tests, crush those bugs, and climb the leaderboard as your platform comes to life! 🚀**
