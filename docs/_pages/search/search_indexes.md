@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Supercharge Search with Atlas Search Indexes
 
-Create a MongoDB Atlas Search index to unlock blazing-fast full-text search and faceted navigation—tailored for next-level discovery!
+Your business wants to delight users with instant, relevant search results and smart suggestions. But before you can deliver that magical experience, you need to lay the foundation: a powerful Atlas Search index. As the backend engineer, you’re setting the stage for autocomplete, faceted navigation, and lightning-fast discovery.
+
+In this exercise, you’ll design and build a custom Atlas Search index—unlocking the full potential of your data and making every search feel effortless for your users.
 
 ---
 
@@ -50,4 +52,12 @@ Choose your favorite tool and get indexing:
 - **MongoDB Compass**
 - **MongoDB Extension** with the provided MongoDB Playground
 
-💡 Pro tip: Smart field mappings and analyzers make your search experience magical!
+---
+
+### 🚦 What to Expect
+
+Once your index is live, your platform will be ready for blazing-fast, full-text search and dynamic filters.  
+Autocomplete, faceted navigation, and instant results will be just a query away—delighting your users and setting your app apart.
+
+With this step, you’re not just configuring fields—you’re building the backbone of a world-class search experience.  
+**Ready to make your data discoverable? Let’s get started!**

@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Advanced Filtering & Pagination Like a Pro
 
-Level up your MongoDB skills—build powerful queries with multiple filters and smooth pagination for a truly dynamic search experience!
+Your platform is now buzzing with listings, and your users want to find their perfect stay—fast. Imagine a guest searching for a cozy apartment with a hot tub, or a family looking for a house with just the right number of beds. As the backend engineer, it’s your job to make these searches seamless and powerful.
+
+In this exercise, you’ll combine multiple filters and pagination to create a dynamic, user-friendly search experience. With MongoDB, you’ll let guests filter by amenities, property type, and bed count—returning only the listings that match their dreams.
 
 ---
 
@@ -42,6 +44,9 @@ Level up your MongoDB skills—build powerful queries with multiple filters and 
 
 ### 🖥️ Frontend Validation
 
-Set different filters in the app’s "Filters" panel and watch your listings update in real time—fast, flexible, and user-friendly!
+Set different filters in the app’s "Filters" panel and watch your listings update in real time—fast, flexible, and user-friendly! This is the search experience that keeps guests coming back, and it’s all powered by your code.
+
+With this step, you’re not just filtering data—you’re helping every guest find their perfect stay, no matter what they’re looking for.  
+**Ready to make your platform truly dynamic? Let’s get started!**
 
 ![crud-4-lab](../../assets/images/crud-4-lab.png)

@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Effortlessly Add to Arrays with $push
 
-Supercharge your documents—add reviews (or any array item) with the magic of MongoDB’s `$push` operator!
+Your platform is thriving, and guests are eager to share their experiences. Imagine a traveler leaving a glowing review after a perfect stay, or a host receiving valuable feedback. As the backend engineer, you make these moments possible—instantly updating listings with new reviews and keeping your data dynamic.
+
+In this exercise, you’ll use MongoDB’s `$push` operator to add reviews (or any array item) to your documents. With every new review, your platform becomes richer and more engaging for everyone.
 
 ---
 
@@ -39,6 +41,9 @@ Supercharge your documents—add reviews (or any array item) with the magic of M
 
 ### 🖥️ Frontend Validation
 
-Add a new review in the app and watch it appear instantly for the selected listing—smooth, dynamic, and oh-so-satisfying!
+Add a new review in the app and watch it appear instantly for the selected listing—smooth, dynamic, and oh-so-satisfying! This is how you keep your platform lively and your users engaged.
+
+With this step, you’re not just updating arrays—you’re capturing the stories and feedback that make your platform come alive.  
+**Ready to let your users’ voices be heard? Let’s get started!**
 
 ![crud-7-lab](../../assets/images/crud-7-lab.png)

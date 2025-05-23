@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Insert New Documents Like a Pro
 
-Unleash your creativity—add fresh data to your MongoDB collection with style and confidence!
+Your platform is growing, and it’s time to expand your offerings! Imagine a host adding a brand-new property or a guest signing up for the first time. As the backend engineer, you’re the one who makes these moments possible—bringing new data to life in your MongoDB collection.
+
+In this exercise, you’ll master the art of inserting documents. Every new listing, guest, or booking starts with a single insert—and your code is what makes it happen.
 
 ---
 
@@ -36,6 +38,9 @@ Unleash your creativity—add fresh data to your MongoDB collection with style a
 
 ### 🖥️ Frontend Validation
 
-Add a new listing in the app and watch it appear instantly—seamless, satisfying, and oh-so-smooth!
+Add a new property or guest in the app and watch as it appears instantly in your listings—ready for the world to see. This is how your platform grows, one document at a time.
+
+With this step, you’re not just adding data—you’re opening the door to new opportunities and experiences for your users.  
+**Ready to help your platform grow? Let’s get started!**
 
 ![crud-5-lab](../../assets/images/crud-5-lab.png) -->

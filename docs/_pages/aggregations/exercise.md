@@ -7,8 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Analyze Listings with Aggregations
 
-Unleash the power of MongoDB aggregations!  
-Build a pipeline to reveal the average price of listings by number of beds—turn raw data into instant insights.
+Your platform is buzzing with activity, and your team wants to make smarter decisions—fast. Imagine being able to spot trends, set competitive prices, or help guests find the best value for their needs. As the backend engineer, you’re the data wizard who can turn mountains of raw listings into actionable insights.
+
+In this exercise, you’ll unleash the power of MongoDB aggregations to reveal the average price of listings by number of beds. With just a few pipeline stages, you’ll transform your data into knowledge that drives your business forward.
 
 ---
 
@@ -40,5 +41,8 @@ Build a pipeline to reveal the average price of listings by number of beds—tur
 ### 🖥️ Frontend Validation
 
 - Tick the "Show Statistics" checkbox to see your aggregated results come alive in the table.
+
+With this step, you’re not just crunching numbers—you’re giving your company the insights it needs to shine in the rental market.  
+**Ready to turn data into strategy? Let’s get started!**
 
 ![pipeline-1-lab](../../assets/images/pipeline-1-lab.png)

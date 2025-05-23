@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Delete Documents Like a Pro
 
-Clean up your data with confidence—learn how to delete a document from your MongoDB collection by its ID, fast and flawlessly!
+Your platform is thriving, but sometimes it’s time to say goodbye—maybe a listing is no longer available, or a guest wants their data removed. As the backend engineer, you ensure your platform stays clean, relevant, and trustworthy by handling deletions quickly and safely.
+
+In this exercise, you’ll master the art of deleting documents by their ID. With MongoDB, you’ll keep your data fresh and your users confident that their information is always up to date.
 
 ---
 
@@ -35,6 +37,9 @@ Clean up your data with confidence—learn how to delete a document from your Mo
 
 ### 🖥️ Frontend Validation
 
-Select "Delete Listing" in the app and watch the record vanish instantly—clean, smooth, and oh-so-satisfying!
+Select "Delete Listing" in the app and watch the record vanish instantly—clean, smooth, and oh-so-satisfying! This is how you keep your platform tidy and your users in control.
+
+With this step, you’re not just removing data—you’re building trust and keeping your platform running at its best.  
+**Ready to keep your data clean? Let’s get started!**
 
 ![crud-8-lab](../../assets/images/crud-7-lab.png)

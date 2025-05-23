@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Faceted Search That Shines
 
-Unlock the magic of MongoDB Atlas Search facets—give your users the power to filter, explore, and discover data like never before!
+Your platform’s search is already fast and smart, but now your business wants to empower users to explore and filter results with ease. Imagine a guest searching for "hawaii" and instantly narrowing down results by amenities, property type, or number of beds—all with a single click. As the backend engineer, you’re about to make this next-level discovery experience a reality with MongoDB Atlas Search facets.
+
+Faceted search lets your users slice and dice results, making it effortless to find exactly what they want—turning every search into a personalized journey.
 
 ---
 
@@ -42,5 +44,8 @@ Unlock the magic of MongoDB Atlas Search facets—give your users the power to f
 ### 🖥️ Frontend Validation
 
 Type `"hawaii"` in the search bar and watch the new facets appear—instantly filter and explore your results!
+
+With this step, you’re not just adding filters—you’re giving your users the power to discover their perfect stay, their way.  
+**Ready to make search truly interactive? Let’s get started!**
 
 ![search-2-lab](../../assets/images/search-2-lab.png)

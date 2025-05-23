@@ -5,12 +5,12 @@ layout: single
 classes: wide
 ---
 
-## 🏁 Who’s on Top?
+## 🏁 The Race to Rental Greatness
 
-Welcome to the **GameDay Leaderboard**—where the best rise above the rest!  
-Track your progress, see who’s dominating the competition, and get inspired to climb even higher.
+Every great company journey has its trailblazers—and this is where you see who’s leading the charge!  
+The **GameDay Leaderboard** tracks your progress as you and your team build the next big thing in short-term rentals. Each challenge you complete brings your company closer to launching a world-class platform—and brings you closer to the top.
 
-🥇 **Will you claim the top spot?**  
-Check back often—rankings update in real time!
+🏆 **Who will become the MongoDB GameDay champion?**  
+Keep an eye on the rankings, celebrate your milestones, and let a little friendly competition push your skills even further.
 
 ![leaderboard](../assets/images/leaderboard.png)

@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Discover Unique Values Like a Pro
 
-Unlock the magic of MongoDB’s `distinct`—instantly reveal all the unique values in any field and power up your filters!
+Your platform is evolving, and now it’s time to give your users the power to filter and explore listings in new ways. Imagine a guest searching for properties by neighborhood, amenities, or property type—dynamic filters make it all possible. As the backend engineer, you’ll use MongoDB’s `distinct` to unlock these features and make your app truly interactive.
+
+In this exercise, you’ll reveal all the unique values in any field, powering up the filters that help guests find exactly what they’re looking for. This is how you turn a simple list into a personalized discovery experience.
 
 ---
 
@@ -36,6 +38,9 @@ Unlock the magic of MongoDB’s `distinct`—instantly reveal all the unique val
 
 ### 🖥️ Frontend Validation
 
-Open the "Filters" panel in the app and watch all distinct values for your field appear—perfect for dynamic, user-friendly filtering!
+Open the "Filters" panel in the app and watch as all distinct values for your chosen field appear—enabling dynamic, user-friendly filtering for your guests.
+
+With this step, you’re not just fetching data—you’re empowering your users to discover the perfect stay, their way.  
+**Ready to make your platform smarter and more interactive? Let’s get started!**
 
 ![crud-3-lab](../../assets/images/crud-3-lab.png)

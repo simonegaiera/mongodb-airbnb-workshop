@@ -7,6 +7,8 @@ classes: wide
 
 ## 🚀 Goal: Autocomplete That Wows
 
+Your business wants to make searching for the perfect stay effortless and delightful. Imagine a guest typing just a few letters and instantly seeing smart, typo-tolerant suggestions—helping them find their dream destination in seconds. As the backend engineer, you’re about to bring this magic to life with MongoDB Atlas Search.
+
 Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autocomplete feature your users will love!
 
 ---
@@ -39,6 +41,9 @@ Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autoc
 
 ### 🖥️ Frontend Validation
 
-Type `"hawaii"` in the search bar and watch autocomplete suggestions appear like magic!
+Type `"hawaii"` in the search bar and watch autocomplete suggestions appear like magic—fast, relevant, and user-friendly!
+
+With this step, you’re not just building a feature—you’re making your users happy and your platform unforgettable.  
+**Ready to wow your guests with instant search? Let’s get started!**
 
 ![search-1-lab](../../assets/images/search-1-lab.png)

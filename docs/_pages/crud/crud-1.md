@@ -7,7 +7,9 @@ classes: wide
 
 ## 🚀 Goal: Find, Sort & Paginate Like a Pro
 
-Master the basics of MongoDB by finding documents, sorting results, and adding smooth pagination to your queries!
+Your company’s journey into the short-term rental market has just begun, and the first challenge is clear: you need to help your users discover the perfect place to stay. As the backend engineer, it’s your job to make searching listings fast, accurate, and delightful.
+
+In this exercise, you’ll master the basics of MongoDB by finding documents, sorting results, and adding smooth pagination to your queries. This is the foundation of every great rental platform—making sure guests can easily browse and explore what your company has to offer.
 
 ---
 
@@ -44,7 +46,9 @@ Master the basics of MongoDB by finding documents, sorting results, and adding s
 
 ### 🖥️ Frontend Validation
 
-Refresh the homepage and watch your listings appear!  
-Scroll to see pagination in action—smooth, fast, and just how users love it.
+Once your backend logic is in place, refresh the homepage and watch as your listings appear—ready for your future guests to explore. Scroll through the results and see pagination in action: smooth, fast, and just how users love it.
+
+With this first step, you’re not just writing code—you’re building the search experience that will help your company stand out in the rental market.  
+**Ready to help your users find their next stay? Let’s get started!**
 
 ![crud-1-lab](../../assets/images/crud-1-lab.png)
