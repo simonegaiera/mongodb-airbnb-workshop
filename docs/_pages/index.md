@@ -7,7 +7,9 @@ classes: wide
 
 🎉 **Welcome to the MongoDB Airbnb GameDay!** 🚀
 
-<img src="assets/images/logo.svg" alt="MongoDB" style="height:100px;"/>
+<div style="text-align:center;">
+  <img src="assets/images/logo.svg" alt="MongoDB" style="height:100px;"/>
+</div>
 
 Get ready for an action-packed, hands-on workshop where you’ll put your MongoDB skills to the test!  
 Challenge yourself, race against the clock, and climb the leaderboard as you tackle real-world scenarios and technical challenges.
