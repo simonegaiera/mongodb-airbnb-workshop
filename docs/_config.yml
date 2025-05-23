@@ -4,7 +4,7 @@ baseurl: "/"
 url: "https://mongogameday.com"
 remote_theme: mmistakes/minimal-mistakes@master
 logo: "/assets/images/logo.png"
-breadcrumbs: true 
+breadcrumbs: false 
 plugins:
   - jekyll-include-cache
 defaults:
