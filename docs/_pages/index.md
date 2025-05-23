@@ -5,7 +5,9 @@ layout: single
 classes: wide
 ---
 
-🎉 **Welcome to the MongoDB Airbnb GameDay!** 🚀
+<div style="text-align:center;">
+  🎉 <strong>Welcome to the MongoDB Airbnb GameDay!</strong> 🚀
+</div>
 
 <div style="text-align:center;">
   <img src="assets/images/logo.svg" alt="MongoDB" style="height:100px;"/>
