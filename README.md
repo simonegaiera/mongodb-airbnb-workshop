@@ -3,8 +3,6 @@
 Welcome to the **MongoDB Airbnb GameDay**!  
 Your company has just made a bold move—diving into the fast-paced world of short-term rentals. The mission? Build a modern, scalable platform to manage listings, bookings, and guests. The twist? You’re starting from scratch, and MongoDB is your database of choice.
 
-This workshop is your kickoff. You’ll step into the shoes of a backend engineer, tackling real-world challenges as you build the backbone of your new rental application. Each hands-on exercise is inspired by scenarios you’ll face as your platform grows—from CRUD basics to advanced search and analytics. By the end, you’ll have the skills to make your users—and your company—happy.
-
 ---
 
 ## 🔗 GameDay Instructions  
