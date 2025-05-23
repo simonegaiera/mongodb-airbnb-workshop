@@ -5,9 +5,9 @@ layout: single
 classes: wide
 ---
 
-![MongoDB](assets/images/logo.svg)
-
 🎉 **Welcome to the MongoDB Airbnb GameDay!** 🚀
+
+<img src="assets/images/logo.svg" alt="MongoDB" height="125"/>
 
 Get ready for an action-packed, hands-on workshop where you’ll put your MongoDB skills to the test!  
 Challenge yourself, race against the clock, and climb the leaderboard as you tackle real-world scenarios and technical challenges.
