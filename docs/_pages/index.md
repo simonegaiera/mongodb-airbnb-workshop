@@ -7,8 +7,8 @@ classes: wide
 
 ## 🎉 Welcome to the MongoDB Airbnb GameDay! 🚀
 
-<div style="text-align:center;">
-  <img src="assets/images/logo.svg" alt="MongoDB" style="height:100px;"/>
+<div style="text-align:center; height:100px; overflow:hidden;">
+  <img src="assets/images/logo.svg" alt="MongoDB" style="height:auto;"/>
 </div>
 
 Get ready for an action-packed, hands-on workshop where you’ll put your MongoDB skills to the test!  
