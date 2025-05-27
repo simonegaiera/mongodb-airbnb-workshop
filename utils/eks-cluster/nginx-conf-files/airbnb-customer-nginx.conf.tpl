@@ -51,4 +51,10 @@ server {
         index index.html;
         try_files $uri $uri/ /index.html;
     }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+        try_files $uri =204;
+    }
 }

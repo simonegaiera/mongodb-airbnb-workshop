@@ -49,11 +49,6 @@
             background: #00684A;
             color: #fff;
         }
-        .links {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 20px;
-        }
         .footer {
             position: absolute;
             bottom: 10px;
@@ -67,19 +62,36 @@
   <div class="container">
     <h1>
       GameDay at 
-      <span class="customer-name">${customer_name}!</span>
+      <span class="customer-name">${customer_name}</span>!
     </h1>
     
     %{ if length(user_ids) > 0 }
-      <div class="links">
-        %{ for uid in user_ids }
-          <p>
-            <a href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop">
-              ${uid}
-            </a>
-          </p>
-        %{ endfor }
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Workspace</th>
+            <th>App</th>
+          </tr>
+        </thead>
+        <tbody>
+          %{ for uid in user_ids }
+            <tr>
+              <td>${uid}</td>
+              <td>
+                <a href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop">
+                  Workspace
+                </a>
+              </td>
+              <td>
+                <a href="https://${uid}.${server_name}/app">
+                  App
+                </a>
+              </td>
+            </tr>
+          %{ endfor }
+        </tbody>
+      </table>
     %{ else }
       <p><em>No users found.</em></p>
     %{ endif }

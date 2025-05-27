@@ -31,6 +31,8 @@ locals {
   })
 
   error_nginx_html = templatefile("${path.module}/nginx-html-files/50x.html.tpl", {
+    customer_name = var.customer_name,
+    server_name = local.aws_route53_record_name
   })
 }
 

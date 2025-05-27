@@ -17,7 +17,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🚀 Step 1: Backend Setup
 
 1. **Access VSCode Online:**
-> **Note:** You can skip this step if you’ve already opened your VSCode Online environment via the link above.
+> **Note:** You can use the default customer page to access your workspace
 
    - Open your VSCode environment:
      ```
@@ -48,11 +48,13 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 ## 🎨 Step 2: Frontend Setup
 
-1. **Launch the Frontend:**
+1. **Launch the App:**
+> **Note:** You can use the default customer page to access your frontend
    - Open your app in the browser:
      ```
      https://<username>.<customer>.mongogameday.com/app/
      ```
+2. **Validate the App:**    
    - See your name on the homepage? You’re in!
      ![Frontend Name Display](../../assets/images/environment-name.png)
 
