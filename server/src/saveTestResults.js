@@ -60,6 +60,21 @@ async function saveToDatabase(testsSaved) {
     }
 }
 
+async function validateResultsRecord(username, cluster) {
+    try {
+        await connectToDatabase();
+        const database = client.db(resultsDatabaseName);
+        const collection = database.collection(resultsCollectionName);
+    
+        const existingCount = await collection.countDocuments({ username, cluster });
+        console.log(`🏅 Congrats! You're on the leaderboard with ${existingCount} completed exercise${existingCount === 1 ? '' : 's'}! Keep up the great work! 🚀`);
+        return existingCount;                             // ← return it
+    } catch (err) {
+        console.error(`Error validating results record: ${err}`);
+        return 0;
+    }
+}
+
 async function createOutputChecksum() {
     try {
         const testFolder = path.resolve(__dirname, '../test');
@@ -87,14 +102,24 @@ function runTests() {
     const testFilesPath = path.resolve(__dirname, '../test/*.test.js');
     console.log(`Running tests at: ${testFilesPath}`);
     
-    let testsSaved = []
+    let testsSaved = [];
     let testSection = '';
+    let passingCount = 0;
+    let failingCount = 0;
 
     const mocha = spawn('npx', ['mocha', '--bail', '--exit', testFilesPath], { shell: true });
     
     mocha.stdout.on('data', (data) => {
-        console.log(data.toString());
-        
+        const text = data.toString();
+        console.log(text);
+
+        // parse out “0 passing” / “1 failing”
+        const passMatch = text.match(/(\d+)\s+passing/);
+        if (passMatch) passingCount = parseInt(passMatch[1], 10);
+
+        const failMatch = text.match(/(\d+)\s+failing/);
+        if (failMatch) failingCount = parseInt(failMatch[1], 10);
+
         if (data.toString().trim().startsWith("MongoDB") && data.toString().trim().endsWith("Tests")) {
             testSection = data.toString().trim()
         } else if (data.toString().trim().startsWith("✔")) {
@@ -121,14 +146,25 @@ function runTests() {
     });
     
     mocha.on('close', async (code) => {
-        console.log('Tests completed. Saving results to the database...');
-        await verifyIndex()
-        await saveToDatabase(testsSaved)
+        console.log(`📊 Test Summary: ✅ ${passingCount} passing, ❌ ${failingCount} failing`);
 
-        if (code !== 0) {
-            console.error(`Mocha process exited with code ${code}`);
-        } else {
-            console.log(`Mocha process completed successfully`);
+        await verifyIndex();
+        await saveToDatabase(testsSaved);
+
+        // now get the DB count and compare
+        const existingCount = await validateResultsRecord(
+          mongodbUri.match(regex)[1],
+          mongodbUri.match(regex)[2]
+        );
+
+        if (existingCount !== passingCount) {
+            console.warn(
+                `\n⚠️  Heads up! There's a mismatch: the database has ${existingCount} solved exercises, but the text just reported ${passingCount} passing.\nPlease reach out to your MongoDB SA!\n`
+            );
+        }
+
+        if (code == 0) {
+            console.log(`🎉 Amazing work! You’ve completed all the MongoDB Airbnb Gameday challenges! 🏆`);
         }
         process.exit(code);
     });
