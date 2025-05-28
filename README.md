@@ -6,9 +6,10 @@ Your company has just made a bold move—diving into the fast-paced world of sho
 ---
 
 ## 🔗 GameDay Instructions  
-> **Note for Participants:** The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
 
 All the instructions you'll need can be found in the workshop guide: 👉 **[mongodb-airbnb-gameday](https://mongogameday.com)**  
+
+> **Note for Participants:** The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
 
 ---
 
