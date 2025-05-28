@@ -7,15 +7,15 @@ Your company has just made a bold move—diving into the fast-paced world of sho
 
 ## 🔗 GameDay Instructions  
 
-All the instructions you'll need can be found in the workshop guide: 👉 **[mongodb-airbnb-gameday](https://mongogameday.com)**  
+All the instructions you'll need can be found in this guide: 👉 **[mongodb-airbnb-gameday](https://mongogameday.com)**  
 
-> **Note for Participants:** The environment has already been prepared for you! Simply follow the workshop instructions to dive into hands-on activities.
+> **Note for Participants:** The environment has already been prepared for you! Simply follow the instructions to dive into hands-on activities.
 
 ---
 
 ## 🛠️ Environment Setup (For MongoDB SAs Only)  
 
-**MongoDB SAs** managing the environment can follow these setup guides to prepare the workshop infrastructure:   
+**MongoDB SAs** managing the environment can follow these setup guides to prepare the infrastructure:   
 
 - **Set up the Environment**: ➡️ **[gameday-terragrunt](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/gameday-terragrunt)**  
 - **Slack Channel**: 💬 **[#gameday](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)**
