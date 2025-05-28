@@ -43,16 +43,22 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   
   replication_specs {
     region_configs {
+      provider_name = var.atlas_provider_name
+      priority      = 7
+      region_name   = var.cluster_region
+
       electable_specs {
         instance_size = var.atlas_provider_instance_size_name
         node_count    = 3
         # disk_size_gb = var.disk_size_gb
       }
-      provider_name = var.atlas_provider_name
-      priority      = 7
-      region_name   = var.cluster_region
+
       auto_scaling {
         disk_gb_enabled = true
+        compute_enabled = true
+        compute_scale_down_enabled = true
+        compute_min_instance_size = var.atlas_provider_instance_size_name
+        compute_max_instance_size = "M60"
       }
     }
   }
