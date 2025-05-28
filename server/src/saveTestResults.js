@@ -15,7 +15,7 @@ const now = new Date()
 
 async function verifyIndex() {
     try {
-        const indexName = 'timestamp_-1_section_1_name_1';
+        const indexName = 'timestamp_1_section_1_name_1';
 
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
@@ -31,7 +31,7 @@ async function verifyIndex() {
         const indexExists = indexes.some(index => index.name === indexName);
 
         if (!indexExists) {
-            await collection.createIndex({ timestamp: -1, section: 1, name: 1 });
+            await collection.createIndex({ timestamp: 1, section: 1, name: 1 });
         }
     } catch (err) {
         console.error(`Error saving to database: ${err}`);
