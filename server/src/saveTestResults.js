@@ -1,17 +1,16 @@
-import { spawn } from 'child_process';
-import { fileURLToPath } from 'url';
+import Mocha from 'mocha';
+import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
 import { promises as fs } from 'fs';
 import XXH from 'xxhashjs'; 
-import {  connectToDatabase, client } from "./utils/database.js";
+import { connectToDatabase, client } from "./utils/database.js";
 import { mongodbUri, resultsDatabaseName, resultsCollectionName } from './config/config.js';
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const regex = /mongodb\+srv:\/\/(.*?):.*?@(.*?)\./;
-const now = new Date()
+const now = new Date();
 
 async function verifyIndex() {
     try {
@@ -41,10 +40,10 @@ async function verifyIndex() {
 async function saveToDatabase(testsSaved) {
     try {
         await connectToDatabase();
-        const checksum = await createOutputChecksum()
+        const checksum = await createOutputChecksum();
         const database = client.db(resultsDatabaseName);
         const collection = database.collection(resultsCollectionName);
-        
+
         for (const test of testsSaved) {
             let result = await collection.findOne(test);
 
@@ -65,10 +64,10 @@ async function validateResultsRecord(username, cluster) {
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
         const collection = database.collection(resultsCollectionName);
-    
+
         const existingCount = await collection.countDocuments({ username, cluster });
         console.log(`🏅 Congrats! You're on the leaderboard with ${existingCount} completed exercise${existingCount === 1 ? '' : 's'}! Keep up the great work! 🚀`);
-        return existingCount;                             // ← return it
+        return existingCount;
     } catch (err) {
         console.error(`Error validating results record: ${err}`);
         return 0;
@@ -97,77 +96,72 @@ async function createOutputChecksum() {
     }
 }
 
-function runTests() {
-    // Construct the absolute path to the test files
-    const testFilesPath = path.resolve(__dirname, '../test/*.test.js');
-    console.log(`Running tests at: ${testFilesPath}`);
-    
+async function runTests() {
+    const testFolder = path.resolve(__dirname, '../test');
+    const files = await fs.readdir(testFolder);
+    const testFiles = files.filter(f => f.endsWith('.test.js')).sort();
+
+    // Tell Mocha about our test files and load them under its context
+    const mocha = new Mocha({ bail: true, exit: true, ui: 'bdd' });
+    testFiles.forEach(file => mocha.addFile(path.join(testFolder, file)));
+    // Load ESM modules so `describe` / `it` are defined when imported
+    await mocha.loadFilesAsync();
+
     let testsSaved = [];
-    let testSection = '';
     let passingCount = 0;
     let failingCount = 0;
+    let testSection = '';
 
-    const mocha = spawn('npx', ['mocha', '--bail', '--exit', testFilesPath], { shell: true });
-    
-    mocha.stdout.on('data', (data) => {
-        const text = data.toString();
-        console.log(text);
-
-        // parse out “0 passing” / “1 failing”
-        const passMatch = text.match(/(\d+)\s+passing/);
-        if (passMatch) passingCount = parseInt(passMatch[1], 10);
-
-        const failMatch = text.match(/(\d+)\s+failing/);
-        if (failMatch) failingCount = parseInt(failMatch[1], 10);
-
-        if (data.toString().trim().startsWith("MongoDB") && data.toString().trim().endsWith("Tests")) {
-            testSection = data.toString().trim()
-        } else if (data.toString().trim().startsWith("✔")) {
-            let testName = data.toString().trim().replace(/^\s*✔\s*/, '').replace(/\s*\(\d+ms\).*/, '')
-
-            testsSaved.push(
-                {
-                    section: testSection,
-                    name: testName,
-                    username: mongodbUri.match(regex)[1],
-                    cluster: mongodbUri.match(regex)[2],
-                }
-            )
-        }
+    // Listen to Mocha events for more granular control
+    mocha.suite.on('pre-require', function(context, file, mocha) {
+        context.beforeEach(function() {
+            // Optionally, set up context
+        });
     });
-    
-    mocha.stderr.on('data', (data) => {
-        console.error(`${data}`);
-    });
-    
-    mocha.on('error', (err) => {
-        console.error(`Error: ${err.message}`);
-        process.exit(1);
-    });
-    
-    mocha.on('close', async (code) => {
-        console.log(`📊 Test Summary: ✅ ${passingCount} passing, ❌ ${failingCount} failing`);
 
-        await verifyIndex();
-        await saveToDatabase(testsSaved);
+    // Run the loaded tests
+    mocha.run()
+        .on('suite', function(suite) {
+            if (suite.title && suite.title.endsWith('Tests')) {
+                testSection = suite.title;
+            }
+        })
+        .on('pass', function(test) {
+            passingCount++;
+            testsSaved.push({
+                section: testSection,
+                name: test.title,
+                username: mongodbUri.match(regex)[1],
+                cluster: mongodbUri.match(regex)[2],
+            });
+        })
+        .on('fail', function(test) {
+            failingCount++;
+        })
+        .on('end', async function() {
+            console.log(`📊 Test Summary: ✅ ${passingCount} passing, ❌ ${failingCount} failing`);
 
-        // now get the DB count and compare
-        const existingCount = await validateResultsRecord(
-          mongodbUri.match(regex)[1],
-          mongodbUri.match(regex)[2]
-        );
+            await verifyIndex();
+            await saveToDatabase(testsSaved);
 
-        if (existingCount !== passingCount) {
-            console.warn(
-                `\n⚠️  Heads up! There's a mismatch: the database has ${existingCount} solved exercises, but the text just reported ${passingCount} passing.\nPlease reach out to your MongoDB SA!\n`
+            const existingCount = await validateResultsRecord(
+                mongodbUri.match(regex)[1],
+                mongodbUri.match(regex)[2]
             );
-        }
 
-        if (code == 0) {
-            console.log(`🎉 Amazing work! You’ve completed all the MongoDB Airbnb Gameday challenges! 🏆`);
-        }
-        process.exit(code);
-    });
+            if (existingCount !== passingCount) {
+                console.warn(
+                    `\n⚠️  Heads up! There's a mismatch: the database has ${existingCount} solved exercises, but Mocha just reported ${passingCount} passing.\nPlease reach out to your MongoDB SA if you need help syncing your progress.`
+                );
+            }
+
+            if (failingCount === 0) {
+                console.log(`\n🎉 Amazing work! You’ve completed all the MongoDB Airbnb Gameday challenges! 🏆`);
+            } else {
+                console.error(`\n🚀 Great effort! Some tests are still waiting for you—keep going, you're making awesome progress!`);
+            }
+            process.exit(failingCount === 0 ? 0 : 1);
+        });
 }
 
 runTests();
