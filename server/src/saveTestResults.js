@@ -12,10 +12,8 @@ const __dirname = path.dirname(__filename);
 const regex = /mongodb\+srv:\/\/(.*?):.*?@(.*?)\./;
 const now = new Date();
 
-async function verifyIndex() {
+async function verifyIndex(indexName, indexDefinition) {
     try {
-        const indexName = 'timestamp_1_section_1_name_1';
-
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
 
@@ -30,7 +28,7 @@ async function verifyIndex() {
         const indexExists = indexes.some(index => index.name === indexName);
 
         if (!indexExists) {
-            await collection.createIndex({ timestamp: 1, section: 1, name: 1 });
+            await collection.createIndex(indexDefinition);
         }
     } catch (err) {
         console.error(`Error saving to database: ${err}`);
@@ -141,7 +139,8 @@ async function runTests() {
         .on('end', async function() {
             console.log(`📊 Test Summary: ✅ ${passingCount} passing, ❌ ${failingCount} failing`);
 
-            await verifyIndex();
+            await verifyIndex('timestamp_1_section_1_name_1', { timestamp: 1, section: 1, name: 1 });
+            await verifyIndex('cluster_1_username_1', { cluster: 1, username: 1 });
             await saveToDatabase(testsSaved);
 
             const existingCount = await validateResultsRecord(
