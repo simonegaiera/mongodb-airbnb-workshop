@@ -58,8 +58,10 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      https://<username>.<customer>.mongogameday.com/app/
      ```
 2. **Validate the App:**    
-   - See your name on the homepage? You’re in!
-     ![Frontend Name Display](../../assets/images/environment-name.png)
+   - See your name on the homepage? ✅ You’re in!
+   - If you see the message **Stays** instead of your name, double-check that your backend server is running.
+   - Still not working? Call your SA for help!
+![Frontend Name Display](../../assets/images/environment-name.png)
 
 ---
 
