@@ -59,9 +59,9 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
 2. **Validate the App:**    
    - See your name on the homepage? ✅ You’re in!
+   ![Frontend Name Display](../../assets/images/environment-name.png)
    - If you see the message **Stays** instead of your name, double-check that your backend server is running.
    - Still not working? Call your SA for help!
-![Frontend Name Display](../../assets/images/environment-name.png)
 
 ---
 
