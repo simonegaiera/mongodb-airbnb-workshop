@@ -81,6 +81,29 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 3. **Success Check:**
    - If you see your databases, you’re ready to roll!
 
+## 🔗 Step 4: Use MongoDB Playground
+
+1. **Open the MongoDB Playground:**  
+   - In VSCode Online, locate and open the file `mongodb-playground.mongodb.js` (usually found in the bottom left of the Explorer).
+   ![MongoDB Playground](../../assets/images/playground.png)
+
+2. **Set Your Database:**  
+   - Find the line:
+     ```js
+     airbnb_database = 'sample_airbnb';
+     ```
+   - Replace `'sample_airbnb'` with your own database name:
+     ```js
+     airbnb_database = '<username>';
+     ```
+
+3. **Run Your First Query:**  
+   - Click the **Play** ▶️ button at the top right of the editor to execute the playground script.
+
+4. **Check the Results:**  
+   - If your query runs successfully and returns data from your database, you’re all set!
+   - If you see errors, double-check your database name and connection.
+
 ---
 
 ## 🛠️ Troubleshooting
