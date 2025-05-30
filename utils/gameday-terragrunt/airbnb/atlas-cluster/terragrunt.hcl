@@ -27,4 +27,3 @@ inputs = {
     customer_user_password                  = "MongoGameDay123"
     user_list_path                          = local.user_list_path
 }
-

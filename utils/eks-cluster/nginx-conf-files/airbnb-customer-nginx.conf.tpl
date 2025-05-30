@@ -53,8 +53,9 @@ server {
     }
 
     location = /favicon.ico {
-        log_not_found off;
-        access_log off;
-        try_files $uri =204;
+        alias /usr/share/nginx/html/favicon.ico;
+        log_not_found   off;
+        access_log      off;
+        default_type    image/x-icon;
     }
 }

@@ -19,7 +19,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 1. **Access VSCode Online:**
 > **Note:** You can use the default customer page to access your workspace
 
-   - Open your VSCode environment:
+   - Go to:
      ```
      https://<username>.<customer>.mongogameday.com/
      ```
@@ -29,10 +29,13 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
      Click **Ok**.
      ![Folder View](../../assets/images/environment-folder.png)  
-   - When prompted, select **Yes, trust the author**.
-     ![Trust Prompt](../../assets/images/environment-folder-trust.png)
+2. **Trust the Workspace:**
+  - When prompted:
+    - Click **Yes, trust the author**
+    - Click **Mark Done**
+  ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
-2. **Start the Server:**
+3. **Start the Server:**
    - Open a new terminal:
      ```
      ☰ > Terminal > New Terminal
@@ -42,7 +45,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      cd server
      npm start
      ```
-   - Check the console logs—if you see a MongoDB connection message, you’re golden!
+   - ✅ **Check:** If you see a MongoDB connection message in the logs, you’re good to go!
 
 ---
 

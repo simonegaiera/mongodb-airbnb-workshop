@@ -91,6 +91,16 @@ resource "mongodbatlas_project_ip_access_list" "all" {
   ]
 }
 
+resource "mongodbatlas_project_ip_access_list" "cloudflare" {
+  project_id = mongodbatlas_project.project.id
+  cidr_block = "104.30.164.0/28"
+  comment    = "accept all"
+
+  depends_on = [ 
+    mongodbatlas_project.project 
+  ]
+}
+
 resource "mongodbatlas_database_user" "user-main" {
   username           = var.mongodb_atlas_database_username
   password           = var.mongodb_atlas_database_user_password

@@ -50,10 +50,7 @@
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).
    - Modify the `project_name` with your customer name.
    - Modify the other variables, if necessary.
-   - By default, a new Atlas Project is created. To use an existing project instead:
-     - Comment out the `mongodbatlas_project` resource.
-     - Uncomment the relevant `data` statement.
-     - Update references that use `mongodbatlas_project.project.id` to `data.mongodbatlas_project.project.id`.
+   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying.
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
 3. **EKS Configuration (Skip for Hybrid)**  
@@ -69,7 +66,7 @@
 
 2. **Initialize**  
    ```bash
-   terragrunt init --all
+   terragrunt init --all --upgrade
    ```
 
 3. **Plan**  
@@ -77,22 +74,34 @@
    terragrunt plan --all
    ```
 
+   If you want to use an existing Atlas project (instead of creating a new one), import it before applying:
+   ```bash
+   terragrunt import --working-dir=atlas-cluster mongodbatlas_project.project <project_id>
+   ```
+
 4. **Apply**  
    Before you run the apply step, make sure your Python virtual environment is active.
-   To deploy all modules at once:
-   ```bash
-   terragrunt apply --all
-   ```
-   
-   To target only the EKS cluster module:
-   ```bash
-   terragrunt apply --auto-approve --working-dir=eks-cluster
-   ```
-   
-   To taint (mark for recreation) a specific resource in the EKS module:
-   ```bash
-   terragrunt run --working-dir=eks-cluster -- taint resource.name
-   ```
+
+   - **To deploy all modules at once (default):**
+     ```bash
+     terragrunt apply --all
+     ```
+
+   In most cases, you only need to run the default apply command below to deploy all modules.  
+   The following commands are for advanced or specific scenarios.
+
+   - **To apply a specific module:**  
+     Replace `<module-directory>` with the desired module folder:
+     ```bash
+     terragrunt apply --working-dir=<module-directory>
+     ```
+
+   - **To taint (mark for recreation) a specific resource in the EKS module:**
+     ```bash
+     terragrunt run --working-dir=eks-cluster -- taint resource.name
+     ```
+
+   > 💡 **Tip:** Always run `terragrunt plan --all` before applying to review the changes that will be made.
 
 5. **Destroy**  
    ```bash

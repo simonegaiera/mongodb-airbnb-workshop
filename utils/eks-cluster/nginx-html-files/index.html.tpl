@@ -49,6 +49,20 @@
             background: #00684A;
             color: #fff;
         }
+        table {
+            width: 90%;
+            border-collapse: collapse;
+        }
+        table tbody tr {
+          border-bottom: 1px solid #ddd;
+        }
+        table tbody tr:last-child {
+          border-bottom: none;
+        }
+        table thead th {
+          border-bottom: 3px solid #ddd;
+          padding-bottom: 0.5rem;
+        }
         .footer {
             position: absolute;
             bottom: 10px;
@@ -69,9 +83,9 @@
       <table>
         <thead>
           <tr>
-            <th>User ID</th>
-            <th>Workspace</th>
-            <th>App</th>
+            <th>Attendees</th>
+            <th>VSCode Workspace</th>
+            <th>App Frontend</th>
           </tr>
         </thead>
         <tbody>
@@ -79,12 +93,18 @@
             <tr>
               <td>${uid}</td>
               <td>
-                <a href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop">
+                <a 
+                  href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop"
+                  target="_blank" rel="noopener noreferrer"
+                >
                   Workspace
                 </a>
               </td>
               <td>
-                <a href="https://${uid}.${server_name}/app">
+                <a 
+                  href="https://${uid}.${server_name}/app"
+                  target="_blank" rel="noopener noreferrer"
+                >
                   App
                 </a>
               </td>
