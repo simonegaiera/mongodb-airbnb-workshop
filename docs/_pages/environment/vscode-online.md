@@ -30,9 +30,9 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      Click **Ok**.
      ![Folder View](../../assets/images/environment-folder.png)  
 2. **Trust the Workspace:**
-  - When prompted:
-    - Click **Yes, trust the author**
-    - Click **Mark Done**
+   - When prompted:
+     - Click **Yes, I trust the author**
+     - Click **Mark Done**
   ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
 3. **Start the Server:**
