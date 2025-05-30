@@ -16,5 +16,7 @@ search 0:
 - have them create a simple index
 - provide the entire index
 
+## test
+- how to run only certain scenarios
 
 ## Terraform
