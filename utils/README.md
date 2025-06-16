@@ -20,3 +20,7 @@ search 0:
 - how to run only certain scenarios
 
 ## Terraform
+
+### OIDC
+- ask if is possible to have OIDC, the SA profile does not allows it now
+

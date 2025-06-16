@@ -169,6 +169,18 @@ resource "aws_iam_role_policy_attachment" "node_efs_csi_attachment" {
   policy_arn = aws_iam_policy.efs_csi_node_policy.arn
 }
 
+# Add Bedrock policy for the node role
+resource "aws_iam_policy" "bedrock_policy" {
+  name        = "${local.cluster_name}-bedrock-policy"
+  description = "Policy for Bedrock access"
+  policy      = file("${path.module}/aws_policies/bedrock.json")
+}
+
+resource "aws_iam_role_policy_attachment" "node_bedrock_policy" {
+  policy_arn = aws_iam_policy.bedrock_policy.arn
+  role       = aws_iam_role.node.name
+}
+
 # IAM Role for EKS Cluster
 resource "aws_iam_role" "cluster" {
   name ="${local.cluster_name}-eks-cluster-role"
@@ -267,6 +279,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly,
     aws_iam_role_policy_attachment.node_AmazonEFSClientReadWriteAccess,
     aws_iam_role_policy_attachment.node_efs_csi_attachment,
+    aws_iam_role_policy_attachment.node_bedrock_policy,
     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.cluster_AmazonEKSComputePolicy,
     aws_iam_role_policy_attachment.cluster_AmazonEKSBlockStoragePolicy,

@@ -2,5 +2,10 @@
     "workbench.startupEditor": "none",
     "security.workspace.trust.enabled": false,
     "mdb.confirmRunAll": false,
-    "github.copilot.editor.enableAutoCompletions": false
+    "github.copilot.editor.enableAutoCompletions": false,
+    "cline.apiProvider": "aws-bedrock",
+    "cline.awsBedrock": {
+        "region": "us-east-2",
+        "modelId": "arn:aws:bedrock:us-west-2:123456789012:inference-profile/your-profile-name"
+    }
 }

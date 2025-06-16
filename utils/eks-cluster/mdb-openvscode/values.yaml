@@ -14,10 +14,13 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  create: true
+  create: false
   automount: true
-  annotations: {}
+  annotations:
+    eks.amazonaws.com/role-arn: ""
   name: ""
+
+hostNetwork: true
 
 podAnnotations: {}
 podLabels: {}
