@@ -104,23 +104,23 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - If your query runs successfully and returns data from your database, you’re all set!
    - If you see errors, double-check your database name and connection.
 
-## 🔗 Step 5: Use Clide for Bedrock AI
+## 🔗 Step 5: Use Cline for Bedrock AI
 
-1. **Launch Clide:**  
-   - Click the **Clide** icon in the toolbar to open the extension.
+1. **LaunchCline:**  
+   - Click the **Cline** icon in the toolbar to open the extension.
    - Go to **Settings**.
-   ![clide-settings](../../assets/images/clide-settings.png)
+   ![cline-settings](../../assets/images/cline-settings.png)
 
 2. **Configure the API:**
    - In the **API Configuration** section:
      1. Set **API Provider** to **Amazon Bedrock**.
      2. Choose **AWS Profile** as the authentication method.
      3. Enable the **Use cross-region inference** option to automatically route requests to the best available region.
-   ![clide-conf](../../assets/images/clide-conf.png)
+   ![cline-conf](../../assets/images/cline-conf.png)
 
 3. **Save and Test:**
    - Click **Save** to apply your settings.
-   - Try a quick prompt in Clide to confirm everything is working!
+   - Try a quick prompt in Cline to confirm everything is working!
 
 ---
 
