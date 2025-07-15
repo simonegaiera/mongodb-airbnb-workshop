@@ -11,7 +11,6 @@
   "dependencies": {
     "leaflet": "^1.9.4",
     "lucide-react": "^0.469.0",
-    "mongodb-chatbot-ui": "^0.15.0",
     "next": "latest",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",

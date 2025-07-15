@@ -42,6 +42,10 @@ Craft your index with these specs:
    - **beds** (for numeric filtering)
      - `numberFacet`
      - `number`
+3. **You can also run the tests:**  
+   ```bash
+   npm test -- --test=search
+   ```
 
 ---
 

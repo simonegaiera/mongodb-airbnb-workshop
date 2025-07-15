@@ -25,7 +25,7 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
    - Add a `$vectorSearch` stage using your vector index.  
    - Use the `description` field as the vector search path.  
    - Pass the user’s query string as the `query` parameter.  
-   - Add a **required** filter on `property_type` for more relevant results.  
+   - Add a filter on `property_type` for more relevant results.  
    - Set `numCandidates` to 100 and `limit` to 10 in the `$vectorSearch` stage.  
 
 ---
@@ -36,6 +36,10 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 2. Open `vector-search-1-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected, semantically relevant results.
+5. **You can also run the tests:**  
+   ```bash
+   npm test -- --test=vector-search
+   ```
 
 ---
 

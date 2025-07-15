@@ -36,6 +36,10 @@ Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autoc
 2. Open `search-1-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected results.
+5. **You can also run the tests:**  
+   ```bash
+   npm test -- --test=search
+   ```
 
 ---
 

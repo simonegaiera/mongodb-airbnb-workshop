@@ -34,6 +34,11 @@ Follow these steps:
 4. **Save and Build**
    - Click **Create Index** to start building your vector index.
 
+5. **You can now run the tests:**  
+   ```bash
+   npm test -- --test=vector-search
+   ```
+
 ---
 
 ### 🚦 What to Expect

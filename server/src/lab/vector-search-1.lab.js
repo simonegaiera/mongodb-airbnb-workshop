@@ -11,7 +11,20 @@ import { collectionName } from '../config/config.js';
  * @returns {Promise<Array>} - A promise that resolves to an array of relevant documents.
  */
 export async function vectorSearch(query, propertyType) {
-    const pipeline = [];
+    const pipeline = [
+  {
+    '$vectorSearch': {
+      'query': query, 
+      'path': 'description', 
+      'numCandidates': 100, 
+      'index': 'vector_index', 
+      'limit': 10, 
+      'filter': {
+        'property_type': propertyType
+      }
+    }
+  }
+];
 
     const cursor = db.collection(collectionName).aggregate(pipeline);
     return cursor.toArray();
