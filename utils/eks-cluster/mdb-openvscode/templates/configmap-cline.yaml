@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-cline-cm
+  labels:
+    {{- include "mdb-openvscode.labels" . | nindent 4 }}
+data:
+  cline_mcp_settings.json: |-
+    {
+      "mcpServers": {
+        "MongoDB": {
+          "command": "npx",
+          "args": ["-y", "mongodb-mcp-server"],
+          "env": {
+            "MDB_MCP_CONNECTION_STRING": "{{ index .Values.extraEnv 0 "value" }}"
+          }
+        }
+      }
+    }

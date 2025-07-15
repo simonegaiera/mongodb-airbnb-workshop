@@ -108,19 +108,23 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 1. **LaunchCline:**  
    - Click the **Cline** icon in the toolbar to open the extension.
-   - Go to **Settings**.
-   ![cline-settings](../../assets/images/cline-settings.png)
+   - Select **Use your own API key**.
+
 
 2. **Configure the API:**
-   - In the **API Configuration** section:
-     1. Set **API Provider** to **Amazon Bedrock**.
-     2. Choose **AWS Profile** as the authentication method.
-     3. Enable the **Use cross-region inference** option to automatically route requests to the best available region.
-   ![cline-conf](../../assets/images/cline-conf.png)
+   1. Set **API Provider** to **Amazon Bedrock**.
+   2. Choose **AWS Profile** as the authentication method.
+   3. Choose **AWS Region** closest to you.
+   4. Enable the **Use cross-region inference** option to automatically route requests to the best available region.
+   5. Select **Let's go!**
+      ![cline-welcome](../../assets/images/cline-welcome.png)
+   6. Confirm the selection
+      ![cline-conf](../../assets/images/cline-conf.png)
 
 3. **Save and Test:**
    - Click **Save** to apply your settings.
-   - Try a quick prompt in Cline to confirm everything is working!
+   - Try a quick prompt in Cline to confirm everything is working! I generally ask to tell me a joke.
+      ![cline-working](../../assets/images/cline-working.png)
 
 ---
 

@@ -50,7 +50,7 @@
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).
    - Modify the `project_name` with your customer name.
    - Modify the other variables, if necessary.
-   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying.
+   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying. Alternatively, the code to use a `data` instead of a `resource` is available in terraform.
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
 3. **EKS Configuration (Skip for Hybrid)**  

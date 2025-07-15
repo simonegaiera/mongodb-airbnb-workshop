@@ -6,6 +6,7 @@ apt-get install -y git curl nginx less vim net-tools lsof jq unzip && \
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 apt-get install -y nodejs && \
 npm install -g npm@latest && \
+npm install -g mongodb-mcp-server && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Download and install AWS CLI v2

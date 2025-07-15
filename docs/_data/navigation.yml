@@ -88,7 +88,7 @@ docs:
       - title: "Hint: Exercise 8"
         url: /crud/8/hint/
 
-  - title: Search Indexes
+  - title: Search
     children:
       - title: "MongoDB Search"
         url: /search/
@@ -96,11 +96,6 @@ docs:
         url: /search/index/
       - title: "Hint: Search Indexes"
         url: /search/index/hint/
-
-  - title: Search
-    children:
-      - title: "MongoDB Search"
-        url: /search/
       - title: "Search: Exercise 1"
         url: /search/1/
       - title: "Hint: Exercise 1"
@@ -109,3 +104,16 @@ docs:
         url: /search/2/
       - title: "Hint: Exercise 2"
         url: /search/2/hint/
+
+  - title: Vector Search
+    children:
+      - title: "MongoDB Vector Search"
+        url: /vector-search/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/
+      - title: "Hint: Vector Search Indexes"
+        url: /vector-search/index/hint/
+      - title: "Vector Search: Exercise 1"
+        url: /vector-search/1/
+      - title: "Hint: Exercise 1"
+        url: /vector-search/1/hint/
