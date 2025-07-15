@@ -12,6 +12,23 @@ const __dirname = path.dirname(__filename);
 const regex = /mongodb\+srv:\/\/(.*?):.*?@(.*?)\./;
 const now = new Date();
 
+// Parse command line arguments
+function parseArgs() {
+    const args = process.argv.slice(2);
+    const options = {};
+    
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] === '--test' && i + 1 < args.length) {
+            options.testFilter = args[i + 1];
+            i++; // Skip the next argument as it's the value
+        } else if (args[i].startsWith('--test=')) {
+            options.testFilter = args[i].split('=')[1];
+        }
+    }
+    
+    return options;
+}
+
 async function verifyIndex(indexName, indexDefinition) {
     try {
         await connectToDatabase();
@@ -95,12 +112,26 @@ async function createOutputChecksum() {
 }
 
 async function runTests() {
+    const options = parseArgs();
     const testFolder = path.resolve(__dirname, '../test');
     const files = await fs.readdir(testFolder);
     const testFiles = files.filter(f => f.endsWith('.test.js')).sort();
 
+    // Configure Mocha options based on whether we're filtering tests
+    const mochaOptions = { 
+        bail: !options.testFilter, // Only bail (stop on first failure) when running all tests
+        exit: true, 
+        ui: 'bdd' 
+    };
+
+    // Add grep option if test filter is specified
+    if (options.testFilter) {
+        mochaOptions.grep = options.testFilter;
+        console.log(`🔍 Running tests matching: "${options.testFilter}"`);
+    }
+
     // Tell Mocha about our test files and load them under its context
-    const mocha = new Mocha({ bail: true, exit: true, ui: 'bdd' });
+    const mocha = new Mocha(mochaOptions);
     testFiles.forEach(file => mocha.addFile(path.join(testFolder, file)));
     // Load ESM modules so `describe` / `it` are defined when imported
     await mocha.loadFilesAsync();

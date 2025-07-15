@@ -24,10 +24,9 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 3. **Shape the Pipeline**  
    - Add a `$vectorSearch` stage using your vector index.  
    - Use the `description` field as the vector search path.  
-   - Pass the user’s query embedding as the `queryVector`.  
-   - Optionally, add a filter on `property_type` for more relevant results.  
-   - Limit results to 10 documents.  
-   - Use `$project` to return only the fields you want (e.g., `name`, `description`, `score`).
+   - Pass the user’s query string as the `query` parameter.  
+   - Add a **required** filter on `property_type` for more relevant results.  
+   - Set `numCandidates` to 100 and `limit` to 10 in the `$vectorSearch` stage.  
 
 ---
 
@@ -42,7 +41,7 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 
 ### 🖥️ Frontend Validation
 
-Type a natural-language query (e.g., `"beach house with pool"`) in the search bar and watch smart, relevant suggestions appear—powered by AI and vector search!
+Type a natural-language query (e.g., `"best view in hawaii"`) in the search bar and watch smart, relevant suggestions appear—powered by AI and vector search!
 
 With this step, you’re not just building a feature—you’re enabling a new era of discovery and delight for your users.  
 **Ready to wow your guests with semantic search? Let’s get started!**

@@ -2,17 +2,17 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';
 
 /**
- * Uses $vectorSearch to perform semantic search on the 'description' field.
- * This pipeline applies a vector search using the provided query embedding,
- * optionally filters by 'property_type', limits results to 10, and projects relevant fields.
+ * Performs a semantic search on the 'description' field using MongoDB's $vectorSearch.
+ * The search uses the provided query string and requires a property type filter.
+ * The pipeline considers 100 candidates and returns up to 10 results.
  *
- * @param {Array<number>} queryEmbedding - The embedding vector for the user's query.
- * @param {string} [propertyType] - Optional property type to filter results.
+ * @param {string} query - The user's search query as a string.
+ * @param {string} propertyType - The property type to filter results.
  * @returns {Promise<Array>} - A promise that resolves to an array of relevant documents.
  */
-export async function vectorSearch(queryEmbedding, propertyType) {
+export async function vectorSearch(query, propertyType) {
     const pipeline = [];
 
-    const cursor = db.collection(collectionName);
+    const cursor = db.collection(collectionName).aggregate(pipeline);
     return cursor.toArray();
 }

@@ -48,6 +48,9 @@ const Header = () => {
             <Link href={`/search`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
               Search
             </Link>
+            <Link href={`/chatbot`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
+              Chatbot
+            </Link>
             <Link href={`/leaderboard`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
               Leaderboard
             </Link>

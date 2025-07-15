@@ -1,0 +1,7 @@
+POST http://localhost:5000/api/listingsAndReviews/vectorsearch
+Content-Type: application/json
+
+{
+    "query": "best view in hawaii",
+    "property_type": "Apartment"
+}
