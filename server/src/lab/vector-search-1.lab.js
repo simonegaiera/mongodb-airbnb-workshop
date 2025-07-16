@@ -7,25 +7,30 @@ import { collectionName } from '../config/config.js';
  * The pipeline considers 100 candidates and returns up to 10 results.
  *
  * @param {string} query - The user's search query as a string.
- * @param {string} propertyType - The property type to filter results.
+ * @param {string} propertyType - The property type to filter results (optional).
  * @returns {Promise<Array>} - A promise that resolves to an array of relevant documents.
  */
 export async function vectorSearch(query, propertyType) {
-    const pipeline = [
-  {
-    '$vectorSearch': {
-      'query': query, 
-      'path': 'description', 
-      'numCandidates': 100, 
-      'index': 'vector_index', 
-      'limit': 10, 
-      'filter': {
+  let filter = {};
+  if (propertyType) {
+      filter = {
         'property_type': propertyType
+      };
+  }
+
+  const pipeline = [
+    {
+      '$vectorSearch': {
+        'query': query, 
+        'path': 'description', 
+        'numCandidates': 100, 
+        'index': 'vector_index', 
+        'limit': 10, 
+        'filter': filter
       }
     }
-  }
-];
+  ];
 
-    const cursor = db.collection(collectionName).aggregate(pipeline);
-    return cursor.toArray();
+  const cursor = db.collection(collectionName).aggregate(pipeline);
+  return cursor.toArray();
 }

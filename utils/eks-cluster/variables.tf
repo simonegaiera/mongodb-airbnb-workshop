@@ -52,3 +52,15 @@ variable "atlas_user_password" {
   description = "The Atlas user password output from the atlas cluster"
   type        = string
 }
+
+variable "llm_enabled" {
+  description = "Enable or disable the LLM integration"
+  type        = bool
+  default     = true
+}
+
+variable "llm" {
+  description = "The LLM model to use"
+  type        = string
+  default     = "us.anthropic.claude-sonnet-4-20250514"
+}

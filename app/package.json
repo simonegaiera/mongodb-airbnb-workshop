@@ -9,13 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.469.0",
     "next": "latest",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-leaflet": "^5.0.0"
+    "react-leaflet": "^5.0.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

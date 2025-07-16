@@ -30,4 +30,6 @@ inputs = {
   customer_name = "airbnb"
   aws_region = "us-east-2"
   domain_email = "simone.gaiera@mongodb.com"
+  llm_enabled = true
+  llm = "us.anthropic.claude-sonnet-4-20250514-v1:0"
 }
