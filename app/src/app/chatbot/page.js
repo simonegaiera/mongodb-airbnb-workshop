@@ -37,7 +37,7 @@ export default function Home() {
       const res = await fetch(`${process.env.BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input })
+        body: JSON.stringify({ message: input, sessionId: username })
       });
       if (!res.ok) throw new Error(res.statusText);
       const { reply } = await res.json();
@@ -50,8 +50,22 @@ export default function Home() {
     }
   };
 
-  const handleClear = () => {
-    setMessages([]);
+  const handleClear = async () => {
+    try {
+      // Clear server-side conversation memory
+      await fetch(`${process.env.BASE_URL}/api/chat/clear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: username })
+      });
+      
+      // Clear frontend messages
+      setMessages([]);
+    } catch (error) {
+      console.error('Error clearing chat:', error);
+      // Still clear frontend messages even if server call fails
+      setMessages([]);
+    }
   };
 
   return (

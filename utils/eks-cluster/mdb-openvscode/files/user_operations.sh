@@ -29,6 +29,8 @@ mkdir -p /home/workspace/mongodb-airbnb-workshop/app
 cat <<EOL > /home/workspace/mongodb-airbnb-workshop/app/.env
 WORKSHOP_USER=/app
 BACKEND_URL=https://${USERNAME}.${URL}/backend
+LLM_MODEL=us.anthropic.claude-sonnet-4-20250514-v1:0
+AWS_REGION=us-east-1
 EOL
 
 echo "Installing and building the app"

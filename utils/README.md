@@ -17,9 +17,13 @@ search 0:
 - provide the entire index
 
 ## test
-- how to run only certain scenarios
+- how to run only certain scenarios (half done)
 
 ## Terraform
+
+### Bedrock
+- add a parameter to exclude bedrock so that they cannot use cline
+- add llm model and region as terraform param in the user_operations.sh
 
 ### OIDC
 - ask if is possible to have OIDC, the SA profile does not allows it now
