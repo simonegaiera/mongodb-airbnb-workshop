@@ -1,0 +1,1195 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MongoDB Airbnb Workshop API",
+    "description": "API for MongoDB Airbnb Workshop - includes CRUD operations, search functionality, aggregations, and vector search capabilities",
+    "version": "1.0.0",
+    "contact": {
+      "name": "MongoDB Airbnb Workshop",
+      "email": "support@mongodb.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/listingsAndReviews": {
+      "get": {
+        "tags": ["Listings"],
+        "summary": "Get all listings",
+        "description": "Retrieve all listings with optional query filtering and pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "JSON query object for filtering",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "{\"property_type\": \"Apartment\"}"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Listings"],
+        "summary": "Create a new listing",
+        "description": "Add a new listing to the database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewListing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Listing created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/{id}": {
+      "get": {
+        "tags": ["Listings"],
+        "summary": "Get listing by ID",
+        "description": "Retrieve a specific listing by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Listing ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Listing"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Listings"],
+        "summary": "Update listing field",
+        "description": "Update a specific field of a listing",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Listing ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Listing updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Listings"],
+        "summary": "Delete listing",
+        "description": "Delete a listing by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Listing ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Item deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/{id}/reviews": {
+      "post": {
+        "tags": ["Reviews"],
+        "summary": "Add review to listing",
+        "description": "Add a new review to a specific listing",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Listing ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/distinct": {
+      "get": {
+        "tags": ["Listings"],
+        "summary": "Get distinct values",
+        "description": "Get distinct values for a specific field",
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "required": true,
+            "description": "Field name to get distinct values for",
+            "schema": {
+              "type": "string",
+              "example": "property_type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Distinct values retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/filter": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Filter listings",
+        "description": "Filter listings based on multiple criteria",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Filtered results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/statistics": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get price statistics",
+        "description": "Get aggregated price statistics for listings",
+        "responses": {
+          "200": {
+            "description": "Price statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceStatistics"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/autocomplete": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Autocomplete search",
+        "description": "Get autocomplete suggestions for search queries",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutocompleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autocomplete suggestions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/facet": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Faceted search",
+        "description": "Perform faceted search with aggregated results",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Faceted search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacetResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/search": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Full-text search",
+        "description": "Perform full-text search on listings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/listingsAndReviews/vectorsearch": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Vector search",
+        "description": "Perform vector-based semantic search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VectorSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vector search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/results": {
+      "get": {
+        "tags": ["Results"],
+        "summary": "Get section results",
+        "description": "Get results for workshop sections",
+        "responses": {
+          "200": {
+            "description": "Section results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionResults"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/results/participants": {
+      "get": {
+        "tags": ["Results"],
+        "summary": "Get all participants",
+        "description": "Retrieve all workshop participants",
+        "responses": {
+          "200": {
+            "description": "List of participants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Participant"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/results/whoami": {
+      "get": {
+        "tags": ["Results"],
+        "summary": "Get current participant",
+        "description": "Get information about the current participant",
+        "responses": {
+          "200": {
+            "description": "Current participant information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Participant"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/chat": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Send chat message",
+        "description": "Send a message to the AI chat system",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/chat/clear": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Clear chat history",
+        "description": "Clear the chat conversation history",
+        "responses": {
+          "200": {
+            "description": "Chat history cleared",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Chat history cleared successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Listing": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Unique identifier for the listing"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the listing"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the listing"
+          },
+          "property_type": {
+            "type": "string",
+            "description": "Type of property (Apartment, House, etc.)"
+          },
+          "room_type": {
+            "type": "string",
+            "description": "Type of room (Entire home/apt, Private room, etc.)"
+          },
+          "bedrooms": {
+            "type": "integer",
+            "description": "Number of bedrooms"
+          },
+          "bathrooms": {
+            "type": "number",
+            "description": "Number of bathrooms"
+          },
+          "beds": {
+            "type": "integer",
+            "description": "Number of beds"
+          },
+          "price": {
+            "type": "number",
+            "description": "Price per night"
+          },
+          "accommodates": {
+            "type": "integer",
+            "description": "Maximum number of guests"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of amenities"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string"
+              },
+              "suburb": {
+                "type": "string"
+              },
+              "government_area": {
+                "type": "string"
+              },
+              "market": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "location": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "Point"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "description": "[longitude, latitude]"
+                  }
+                }
+              }
+            }
+          },
+          "host": {
+            "type": "object",
+            "properties": {
+              "host_id": {
+                "type": "string"
+              },
+              "host_name": {
+                "type": "string"
+              },
+              "host_about": {
+                "type": "string"
+              }
+            }
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            }
+          },
+          "number_of_reviews": {
+            "type": "integer"
+          },
+          "review_scores": {
+            "type": "object",
+            "properties": {
+              "review_scores_rating": {
+                "type": "integer"
+              },
+              "review_scores_accuracy": {
+                "type": "integer"
+              },
+              "review_scores_cleanliness": {
+                "type": "integer"
+              },
+              "review_scores_checkin": {
+                "type": "integer"
+              },
+              "review_scores_communication": {
+                "type": "integer"
+              },
+              "review_scores_location": {
+                "type": "integer"
+              },
+              "review_scores_value": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "NewListing": {
+        "type": "object",
+        "required": ["name", "property_type", "room_type", "price"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the listing"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the listing"
+          },
+          "property_type": {
+            "type": "string",
+            "description": "Type of property"
+          },
+          "room_type": {
+            "type": "string",
+            "description": "Type of room"
+          },
+          "bedrooms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bathrooms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "beds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0
+          },
+          "accommodates": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "listing_id": {
+            "type": "string"
+          },
+          "reviewer_id": {
+            "type": "string"
+          },
+          "reviewer_name": {
+            "type": "string"
+          },
+          "comments": {
+            "type": "string"
+          }
+        },
+        "required": ["reviewer_name", "comments"]
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Field name to update"
+          },
+          "value": {
+            "description": "New value for the field"
+          }
+        },
+        "required": ["key", "value"]
+      },
+      "FilterRequest": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "amenities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "propertyType": {
+                "type": "string"
+              },
+              "beds": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "bounds": {
+                "type": "object",
+                "properties": {
+                  "northeast": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "southwest": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": ["page", "limit", "filters"]
+      },
+      "AutocompleteRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query for autocomplete"
+          }
+        },
+        "required": ["query"]
+      },
+      "SearchRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          }
+        },
+        "required": ["query"]
+      },
+      "VectorSearchRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language query for vector search"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          }
+        },
+        "required": ["query"]
+      },
+      "FacetRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "facets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Fields to facet on"
+          }
+        },
+        "required": ["query"]
+      },
+      "FacetResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Listing"
+            }
+          },
+          "facets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PriceStatistics": {
+        "type": "object",
+        "properties": {
+          "average": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "Participant": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "SectionResults": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "participant": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "number"
+                },
+                "completed": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ChatRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "User message to send to the chat system"
+          },
+          "context": {
+            "type": "string",
+            "description": "Additional context for the chat"
+          }
+        },
+        "required": ["message"]
+      },
+      "ChatResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string",
+            "description": "AI response message"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateResponse": {
+        "type": "object",
+        "properties": {
+          "insertedId": {
+            "type": "string",
+            "description": "ID of the created document"
+          },
+          "acknowledged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateResponse": {
+        "type": "object",
+        "properties": {
+          "modifiedCount": {
+            "type": "integer"
+          },
+          "matchedCount": {
+            "type": "integer"
+          },
+          "acknowledged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        },
+        "required": ["message"]
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Listings",
+      "description": "CRUD operations for Airbnb listings"
+    },
+    {
+      "name": "Reviews",
+      "description": "Operations related to listing reviews"
+    },
+    {
+      "name": "Search",
+      "description": "Search and filtering operations"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics and statistics operations"
+    },
+    {
+      "name": "Results",
+      "description": "Workshop results and participant management"
+    },
+    {
+      "name": "Chat",
+      "description": "AI chat functionality"
+    }
+  ]
+}

@@ -10,21 +10,24 @@ docs:
       - title: "GameDay Overview"
         url: /overview/
 
-  - title: Environment (Hosted)
+  # - title: Environment (Hybrid)
+  #   children:
+  #     - title: "Atlas Cluster"
+  #       url: /environment/atlas/
+  #     - title: "IDE: Codespace/VSCode"
+  #       url: /environment/codespace/
+
+  - title: Vibe Coding
+    children:
+      - title: "IDE: VSCode Online (Vibe)"
+        url: /environment/vscode-vibe/
+      - title: "Vibe Coding Overview"
+        url: /vibe/
+
+  - title: Guided Exercises
     children:
       - title: "IDE: VSCode Online"
-        url: /environment/vscodeonline/
-
-
-  - title: Environment (Hybrid)
-    children:
-      - title: "Atlas Cluster"
-        url: /environment/atlas/
-      - title: "IDE: Codespace/VSCode"
-        url: /environment/codespace/
-
-  - title: Test and Resources
-    children:
+        url: /environment/vscode/
       - title: "Validate Your Results"
         url: /test/
       - title: "Leaderboard"

@@ -14,6 +14,8 @@ USERNAME=$(jq -r '.user' /home/workspace/utils/settings.json)
 URL=$(jq -r '.aws_route53_record_name' /home/workspace/utils/settings.json)
 ATLAS_SRV=$(jq -r '.atlas_standard_srv' /home/workspace/utils/settings.json)
 ATLAS_PWD=$(jq -r '.atlas_user_password' /home/workspace/utils/settings.json)
+LLM_MODEL=$(jq -r '.llm_model' /home/workspace/utils/settings.json)
+LLM_REGION=$(jq -r '.llm_region' /home/workspace/utils/settings.json)
 
 ATLAS_HOST=${ATLAS_SRV#mongodb+srv://}
 
@@ -22,6 +24,17 @@ mkdir -p /home/workspace/mongodb-airbnb-workshop/server
 cat <<EOL > /home/workspace/mongodb-airbnb-workshop/server/.env
 PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
+LLM_MODEL=${LLM_MODEL}
+AWS_REGION=${LLM_REGION}
+EOL
+
+mkdir -p /home/workspace/mongodb-airbnb-workshop/backend
+
+cat <<EOL > /home/workspace/mongodb-airbnb-workshop/backend/.env
+PORT=5000
+MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
+LLM_MODEL=${LLM_MODEL}
+AWS_REGION=${LLM_REGION}
 EOL
 
 mkdir -p /home/workspace/mongodb-airbnb-workshop/app
@@ -29,8 +42,6 @@ mkdir -p /home/workspace/mongodb-airbnb-workshop/app
 cat <<EOL > /home/workspace/mongodb-airbnb-workshop/app/.env
 WORKSHOP_USER=/app
 BACKEND_URL=https://${USERNAME}.${URL}/backend
-LLM_MODEL=us.anthropic.claude-sonnet-4-20250514-v1:0
-AWS_REGION=us-east-1
 EOL
 
 echo "Installing and building the app"

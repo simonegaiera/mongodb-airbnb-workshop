@@ -73,6 +73,14 @@ resource "helm_release" "user_openvscode" {
     value = local.aws_route53_record_name
   }
   set {
+    name  = "openvscode.llm_model"
+    value = var.llm_model
+  }
+  set {
+    name  = "openvscode.llm_region"
+    value = var.llm_region
+  }
+  set {
     name  = "persistence.fileSystemId"
     value = aws_efs_file_system.efs.id
   }

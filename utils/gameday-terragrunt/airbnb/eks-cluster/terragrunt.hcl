@@ -31,5 +31,6 @@ inputs = {
   aws_region = "us-east-2"
   domain_email = "simone.gaiera@mongodb.com"
   llm_enabled = true
-  llm = "us.anthropic.claude-sonnet-4-20250514-v1:0"
+  llm_model = "us.anthropic.claude-sonnet-4-20250514-v1:0"
+  llm_region = "us-east-2"
 }

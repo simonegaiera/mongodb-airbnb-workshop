@@ -59,8 +59,14 @@ variable "llm_enabled" {
   default     = true
 }
 
-variable "llm" {
+variable "llm_model" {
   description = "The LLM model to use"
   type        = string
   default     = "us.anthropic.claude-sonnet-4-20250514"
+}
+
+variable "llm_region" {
+  description = "The AWS region for the LLM model"
+  type        = string
+  default     = "us-east-2"
 }

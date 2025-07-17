@@ -12,24 +12,8 @@ import { collectionName } from '../config/config.js';
  */
 export async function vectorSearch(query, propertyType) {
   let filter = {};
-  if (propertyType) {
-      filter = {
-        'property_type': propertyType
-      };
-  }
 
-  const pipeline = [
-    {
-      '$vectorSearch': {
-        'query': query, 
-        'path': 'description', 
-        'numCandidates': 100, 
-        'index': 'vector_index', 
-        'limit': 10, 
-        'filter': filter
-      }
-    }
-  ];
+  const pipeline = [];
 
   const cursor = db.collection(collectionName).aggregate(pipeline);
   return cursor.toArray();
