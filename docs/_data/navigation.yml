@@ -122,6 +122,8 @@ docs:
         url: /environment/vscode-vibe/
       - title: "Vibe Coding: Instructions"
         url: /vibe/
+      - title: "Hint: Python Prompt"
+        url: /vibe/python/
       - title: "CRUD: Indexes"
         url: /index/
       - title: "Search: Indexes"

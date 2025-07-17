@@ -1,3 +1,41 @@
+---
+title: "Vibe Coding: Python Prompt"
+permalink: /vibe/python/
+layout: single
+classes: wide
+---
+
+# 🐍 Python Implementation Prompt
+
+## 📋 Instructions
+
+This page contains the comprehensive prompt for implementing the MongoDB Airbnb Workshop REST API in Python. Use this prompt with Cline to generate a complete Python application.
+
+### 🎯 How to Use This Prompt
+
+1. **Copy the entire prompt** from the section below
+2. **Paste it into your AI assistant** of choice
+3. **Make sure the swagger.json file** is used as context when prompted
+4. **Review and test** the generated code
+5. **Iterate and refine** as needed
+
+### 📂 Expected Deliverables
+
+After running this prompt, you should receive:
+- ✅ Complete Python REST API application
+- ✅ Organized file structure with separated concerns
+- ✅ MongoDB indexes configuration file
+- ✅ Environment setup instructions
+- ✅ Integration with Atlas Search and Vector Search
+- ✅ AI Chatbot implementation with RAG
+
+---
+
+## 🤖 Python Implementation Prompt
+
+Copy the prompt below and use it with your AI assistant:
+
+```
 Create a Python REST API application based on the swagger.json specification file.
 
 **Core Requirements:**
@@ -53,3 +91,32 @@ Create a Python REST API application based on the swagger.json specification fil
 - Design RAG pipeline for contextual chatbot responses
 
 Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.
+```
+
+---
+
+## 🔧 Post-Generation Checklist
+
+After receiving your generated code, verify:
+
+- [ ] **File Structure**: Code is organized by functionality (CRUD, search, vector, chat, etc.)
+- [ ] **Environment Setup**: `.env` file template and requirements.txt included
+- [ ] **MongoDB Indexes**: `mongodb_indexes.json` file with all necessary indexes
+- [ ] **Atlas Search**: Proper implementation of lexical search features
+- [ ] **Vector Search**: Automated embeddings integration for semantic search
+- [ ] **AI Chatbot**: RAG implementation with LangChain and Bedrock
+- [ ] **Error Handling**: Proper HTTP status codes and error responses
+- [ ] **Testing**: Compatible with existing test files in rest-lab folder
+- [ ] **Documentation**: Clear setup and usage instructions
+
+## 💡 Tips for Success
+
+1. **Start with swagger.json**: Always provide the OpenAPI specification as context
+2. **Test incrementally**: Test each endpoint category as it's implemented
+3. **Use the MCP**: Leverage the Model Context Protocol for schema understanding
+4. **Follow the patterns**: The generated code should match the workshop's architectural patterns
+5. **Iterate**: Don't hesitate to ask for refinements or specific improvements
+
+## 🚀 Ready to Code?
+
+Copy the prompt above and start building your MongoDB Airbnb Workshop API in Python!

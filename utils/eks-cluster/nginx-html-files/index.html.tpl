@@ -94,7 +94,7 @@
               <td>${uid}</td>
               <td>
                 <a 
-                  href="https://${uid}.${server_name}/?folder=/home/workspace/mongodb-airbnb-workshop"
+                  href="https://${uid}.${server_name}/?folder=${folder}"
                   target="_blank" rel="noopener noreferrer"
                 >
                   Workspace

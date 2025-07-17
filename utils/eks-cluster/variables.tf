@@ -70,3 +70,14 @@ variable "llm_region" {
   type        = string
   default     = "us-east-2"
 }
+
+variable "scenario" {
+  description = "The workshop scenario to deploy"
+  type        = string
+  default     = "vibe-coding"
+  
+  validation {
+    condition     = contains(["vibe-coding", "guided-exercises"], var.scenario)
+    error_message = "scenario must be either 'vibe-coding' or 'guided-exercises'."
+  }
+}

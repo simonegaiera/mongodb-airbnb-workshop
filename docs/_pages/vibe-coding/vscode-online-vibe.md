@@ -60,7 +60,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
    - In the `Explorer`, click **Open Folder** and navigate to:
      ```
-     /home/workspace/mongodb-airbnb-workshop/
+     /home/workspace/mongodb-airbnb-workshop/backend/
      ```
      Click **Ok**.
      ![Folder View](../../assets/images/environment-folder.png)  
