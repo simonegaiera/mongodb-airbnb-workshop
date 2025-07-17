@@ -7,8 +7,6 @@ docs:
     children:
       - title: "Introduction"
         url: /
-      - title: "GameDay Overview"
-        url: /overview/
 
   # - title: Environment (Hybrid)
   #   children:
@@ -19,6 +17,8 @@ docs:
 
   - title: Guided Exercises
     children:
+      - title: "GameDay Overview"
+        url: /overview/
       - title: "IDE: VSCode Online"
         url: /environment/vscode/
       - title: "Validate Your Results"
@@ -116,7 +116,9 @@ docs:
 
   - title: Vibe Coding (Coming Soon...)
     children:
-      - title: "IDE: VSCode Online (Vibe)"
+      - title: "GameDay Overview"
+        url: /overview-vibe/
+      - title: "IDE: VSCode Online"
         url: /environment/vscode-vibe/
       - title: "Vibe Coding: Instructions"
         url: /vibe/
