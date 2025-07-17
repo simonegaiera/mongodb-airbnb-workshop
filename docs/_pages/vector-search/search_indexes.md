@@ -50,4 +50,4 @@ Once your vector index is live, your platform will be ready for:
 - The foundation for advanced, conversational discovery experiences.
 
 With this step, you’re not just indexing data—you’re enabling the next generation of search and AI on your platform.  
-**Ready to unlock semantic search? Let’s
+**Ready to unlock semantic search? Let’s get started!**
