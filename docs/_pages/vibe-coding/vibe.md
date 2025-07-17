@@ -56,11 +56,6 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ## 🎯 API Endpoints Overview
 
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; color: white; text-align: center;">
-  <h3 style="margin: 0; font-size: 1.5rem; font-weight: bold;">🚀 Complete API Reference</h3>
-  <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Build powerful endpoints that bring your Airbnb app to life</p>
-</div>
-
 ### 🏠 **Listings Management**
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">

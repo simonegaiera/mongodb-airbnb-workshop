@@ -37,6 +37,15 @@ LLM_MODEL=${LLM_MODEL}
 AWS_REGION=${LLM_REGION}
 EOL
 
+echo "Copying swagger.json to backend folder"
+cp /home/workspace/mongodb-airbnb-workshop/docs/assets/files/swagger.json /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy swagger.json"
+
+echo "Copying playground folder to backend folder"
+cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/playground /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy playground folder"
+
+echo "Copying rest-lab folder to backend folder"
+cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/rest-lab /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy rest-lab folder"
+
 mkdir -p /home/workspace/mongodb-airbnb-workshop/app
 
 cat <<EOL > /home/workspace/mongodb-airbnb-workshop/app/.env

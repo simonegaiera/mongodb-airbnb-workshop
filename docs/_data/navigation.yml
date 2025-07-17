@@ -17,19 +17,6 @@ docs:
   #     - title: "IDE: Codespace/VSCode"
   #       url: /environment/codespace/
 
-  - title: Vibe Coding
-    children:
-      - title: "IDE: VSCode Online (Vibe)"
-        url: /environment/vscode-vibe/
-      - title: "Instructions"
-        url: /vibe/
-      - title: "CRUD: Indexes"
-        url: /index/
-      - title: "Search: Indexes"
-        url: /search/index/
-      - title: "Vector Search: Indexes"
-        url: /vector-search/index/
-
   - title: Guided Exercises
     children:
       - title: "IDE: VSCode Online"
@@ -126,3 +113,16 @@ docs:
         url: /vector-search/1/
       - title: "Hint: Exercise 1"
         url: /vector-search/1/hint/
+
+  - title: Vibe Coding (Coming Soon...)
+    children:
+      - title: "IDE: VSCode Online (Vibe)"
+        url: /environment/vscode-vibe/
+      - title: "Instructions"
+        url: /vibe/
+      - title: "CRUD: Indexes"
+        url: /index/
+      - title: "Search: Indexes"
+        url: /search/index/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/

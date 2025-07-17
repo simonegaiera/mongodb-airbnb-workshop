@@ -9,6 +9,18 @@ npm install -g npm@latest && \
 npm install -g mongodb-mcp-server && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install OpenJDK 21
+echo "Installing OpenJDK 21"
+apt-get update && \
+apt-get install -y openjdk-21-jdk && \
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME environment variable
+echo "Setting JAVA_HOME environment variable"
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' >> /etc/environment
+echo 'export PATH=$PATH:$JAVA_HOME/bin' >> /etc/environment
+
 # Download and install AWS CLI v2
 echo "Downloading and installing AWS CLI v2"
 mkdir -p /tmp
