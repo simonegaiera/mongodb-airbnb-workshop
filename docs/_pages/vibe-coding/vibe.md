@@ -317,7 +317,7 @@ Currently, the API does not require authentication.
 
 ---
 
-## 🗄️ MongoDB Collection Schema
+## 🗄️ MongoDB Collection Schema & Performance
 
 ### Understanding the `listingsAndReviews` Collection
 
@@ -335,6 +335,47 @@ Currently, the API does not require authentication.
 - 📍 **Geospatial Data**: Location coordinates for mapping and proximity searches
 - 🏷️ **Categorical Fields**: Property types, room types, amenities for filtering
 - 💰 **Pricing Information**: Nightly rates and pricing structures
+
+### ⚡ Performance Requirements & Index Creation
+
+**Performance is Key**: Your application must be fast and responsive. Slow queries will hurt user experience and your ranking in the competition!
+
+**Index Strategy**: Ask your LLM to create comprehensive index definitions that cover:
+- 🔍 **Query Performance**: Indexes for all filtering and sorting operations
+- 📊 **Aggregation Support**: Indexes optimized for statistics and analytics
+- 🌐 **Atlas Search**: Full-text search indexes for autocomplete, facet, and text search
+- 🧠 **Vector Search**: Vector indexes with automated embeddings for semantic search
+- 📍 **Geospatial**: 2dsphere indexes for location-based queries
+
+**Index Creation Options**:
+
+1. **Via MCP** (Preferred if available):
+   ```
+   Use the MCP to create indexes directly in your MongoDB cluster.
+   This is the fastest way to get your indexes deployed automatically.
+   ```
+
+2. **Manual Creation** (Fallback):
+   ```
+   Request your LLM to generate a comprehensive mongodb_indexes.json file
+   containing all required index definitions. You'll need to create these
+   indexes manually in MongoDB Atlas or via your application startup code.
+   ```
+
+**Required Index Types**:
+- ✅ **Standard Database Indexes**: For basic CRUD operations and filtering
+- ✅ **Atlas Search Indexes**: For text search, autocomplete, and faceted search
+- ✅ **Vector Search Indexes**: For semantic search with automated embeddings
+- ✅ **Compound Indexes**: For complex queries with multiple filter criteria
+- ✅ **Geospatial Indexes**: For location-based searches and proximity queries
+
+**Performance Tips**:
+- 🎯 **Index Coverage**: Ensure all your queries are covered by appropriate indexes
+- 📈 **Monitor Performance**: Use MongoDB Atlas Performance Advisor
+- 🔄 **Query Optimization**: Design queries that leverage your indexes efficiently
+- 📊 **Aggregation Pipelines**: Optimize pipelines with proper index support
+
+> **💡 Pro Tip**: Ask your LLM to analyze your API endpoints and automatically generate the optimal index strategy. A well-indexed application can be 100x faster than one without proper indexes!
 
 ---
 
@@ -368,10 +409,13 @@ For the Chat endpoints (`/chat`, `/chat/clear`):
 
 ### **Development Workflow**
 1. **Explore**: Use the MCP to understand the collection schema
-2. **Plan**: Design your API endpoints based on the schema insights
-3. **Implement**: Build the REST API following the OpenAPI specification
-4. **Test**: Use the provided test cases in the `rest-lab/` folder
-5. **Optimize**: Fine-tune queries and add performance improvements
+2. **Index Planning**: Ask LLM to create comprehensive index definitions for performance
+3. **Index Creation**: Deploy indexes via MCP or manually from generated JSON file
+4. **Plan**: Design your API endpoints based on the schema insights
+5. **Implement**: Build the REST API following the OpenAPI specification
+6. **Test**: Use the provided test cases in the `rest-lab/` folder
+7. **Optimize**: Fine-tune queries and add performance improvements
+8. **Monitor**: Check query performance and adjust indexes if needed
 
 ### **Bonus Features** *(Get Creative!)*
 - 🚀 **Caching**: Implement Redis or in-memory caching for frequently accessed data
