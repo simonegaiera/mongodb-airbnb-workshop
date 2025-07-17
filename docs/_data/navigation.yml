@@ -118,7 +118,7 @@ docs:
     children:
       - title: "IDE: VSCode Online (Vibe)"
         url: /environment/vscode-vibe/
-      - title: "Instructions"
+      - title: "Vibe Coding: Instructions"
         url: /vibe/
       - title: "CRUD: Indexes"
         url: /index/
