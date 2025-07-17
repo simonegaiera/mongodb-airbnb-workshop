@@ -48,15 +48,9 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ## 📋 API Documentation Preview
 
-### Raw OpenAPI Spec
-- **💾 Download JSON**(../assets/files/swagger.json)
-
-
-### View Interactive Documentation
-- **Swagger Editor**: Copy `swagger.json` content to [editor.swagger.io](https://editor.swagger.io/)
-- **Postman**: Import `swagger.json` directly into Postman
-- **Insomnia**: Import OpenAPI 3.0 specification
-- **VS Code**: Use REST Client or Thunder Client extensions
+### 🚀 Interactive Documentation
+- **[📖 Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/simonegaiera/mongodb-airbnb-workshop/main/docs/assets/files/swagger.json)** - Instant preview
+- **[💾 Download swagger.json](../assets/files/swagger.json)** - Local file
 
 ---
 

@@ -23,6 +23,12 @@ docs:
         url: /environment/vscode-vibe/
       - title: "Vibe Coding Overview"
         url: /vibe/
+      - title: "CRUD: Indexes"
+        url: /index/
+      - title: "Search: Indexes"
+        url: /search/index/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/
 
   - title: Guided Exercises
     children:
@@ -58,7 +64,7 @@ docs:
 
   - title: Indexes
     children:
-      - title: "Indexes"
+      - title: "CRUD: Indexes"
         url: /index/
       - title: "Hint: Indexes"
         url: /index/hint/

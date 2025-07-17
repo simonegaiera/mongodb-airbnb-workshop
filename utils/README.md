@@ -18,11 +18,14 @@ search 0:
 
 ## Terraform
 
+### Atlas
+- remove read on sample_airbnb
+
 ### Bedrock
 - add a parameter to exclude bedrock so that they cannot use cline
 - add llm model and region as terraform param in the user_operations.sh
 
-## test
+### test
 - how to deploy only certain scenarios
 
 ### OIDC
