@@ -9,21 +9,29 @@ Create a Python REST API application based on the swagger.json specification fil
 **Key Implementation Areas:**
 
 1. **CRUD Operations**: Standard database operations for listings and reviews
-2. **Filtering & Statistics**: Advanced filtering using MongoDB aggregation pipelines  
-3. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
-4. **Vector Search**: Implement using MongoDB Atlas Vector Search with knnBeta operator
-5. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration
-6. **Results**: Workshop participant management
+2. **Search & Filtering**: Basic filtering using MongoDB aggregation pipelines and standard queries
+3. **Statistics**: Statistical analysis using MongoDB aggregation framework
+4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
+5. **Vector Search**: Implement using MongoDB Atlas Vector Search with knnBeta operator
+   - **Automated Embeddings**: Reference documentation at http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/
+6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain
+7. **Results**: Workshop participant management
 
 **MongoDB Integration:**
 - Use the available MCP (Model Context Protocol) to understand the `listingsAndReviews` collection schema
 - Implement proper database queries based on the actual collection structure
 
+**Atlas Search & Vector Search Requirements:**
+- **Atlas Search**: Use Atlas Search indexes for text search, autocomplete, and faceted search
+- **Vector Search**: Implement semantic search using vector embeddings and knnBeta operator
+- **Automated Embeddings**: Leverage MongoDB's automated embedding features for vector search
+- **RAG Architecture**: Use vector search for retrieval in chatbot responses
+
 **Required Deliverables:**
 1. **Complete Python application** with proper file organization
 2. **mongodb_indexes.json file** containing all required MongoDB indexes in JSON format:
    - Atlas Search indexes for search functionality
-   - Vector Search indexes for AI chatbot
+   - Vector Search indexes for AI chatbot with automated embeddings
    - Standard database indexes for performance
    - Include clear comments and creation instructions
 
@@ -35,5 +43,13 @@ Create a Python REST API application based on the swagger.json specification fil
 - Environment configuration support
 - CORS for frontend integration
 - Compatible with existing test cases in rest-lab/ folder
+- LangChain integration for AWS Bedrock connectivity
+- MongoDB-based chat memory storage (bonus points)
+
+**Technical Implementation Notes:**
+- Separate filtering/statistics from advanced Atlas Search operations
+- Use appropriate MongoDB operators for each search type
+- Implement vector embeddings for semantic search capabilities
+- Design RAG pipeline for contextual chatbot responses
 
 Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.

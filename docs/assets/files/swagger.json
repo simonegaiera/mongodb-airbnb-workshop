@@ -345,15 +345,25 @@
       "get": {
         "tags": ["Statistics"],
         "summary": "Get price statistics",
-        "description": "Get aggregated price statistics for listings using MongoDB aggregation framework",
+        "description": "Get aggregated price statistics for listings grouped by bed count using MongoDB aggregation framework. Returns average price per bed count as numeric values.",
         "responses": {
           "200": {
-            "description": "Price statistics",
+            "description": "Price statistics grouped by bed count",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PriceStatistics"
-                }
+                },
+                "example": [
+                  {
+                    "price": 153.62,
+                    "beds": 0
+                  },
+                  {
+                    "price": 214.33,
+                    "beds": 1
+                  }
+                ]
               }
             }
           },
@@ -467,9 +477,9 @@
     },
     "/api/listingsAndReviews/vectorsearch": {
       "post": {
-        "tags": ["Atlas Search"],
-        "summary": "Vector search",
-        "description": "Perform vector-based semantic search using MongoDB Atlas Vector Search with knnBeta operator for similarity matching",
+        "tags": ["Vector Search"],
+        "summary": "Vector search with automated embeddings",
+        "description": "Perform vector-based semantic search using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator for similarity matching. Leverages MongoDB's automated embedding feature for seamless vector operations without manual embedding generation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -951,7 +961,7 @@
         "properties": {
           "query": {
             "type": "string",
-            "description": "Natural language query for vector search"
+            "description": "Natural language query for vector search using automated embeddings"
           },
           "limit": {
             "type": "integer",
@@ -1008,21 +1018,21 @@
         }
       },
       "PriceStatistics": {
-        "type": "object",
-        "properties": {
-          "average": {
-            "type": "number"
-          },
-          "min": {
-            "type": "number"
-          },
-          "max": {
-            "type": "number"
-          },
-          "count": {
-            "type": "integer"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "price": {
+              "type": "number",
+              "description": "Average price for listings with this bed count"
+            },
+            "beds": {
+              "type": "integer",
+              "description": "Number of beds"
+            }
           }
-        }
+        },
+        "description": "Array of average price statistics grouped by number of beds"
       },
       "Participant": {
         "type": "object",
@@ -1177,19 +1187,23 @@
     },
     {
       "name": "Filtering",
-      "description": "Advanced filtering operations using MongoDB aggregation pipelines"
+      "description": "Basic filtering operations using MongoDB aggregation pipelines and standard queries"
     },
     {
       "name": "Statistics",
-      "description": "Statistical analysis and aggregated data operations"
+      "description": "Statistical analysis and aggregated data operations using MongoDB aggregation framework"
     },
     {
       "name": "Atlas Search",
-      "description": "Advanced search operations using MongoDB Atlas Search including full-text search, autocomplete, faceted search, and vector search capabilities"
+      "description": "Advanced lexical search operations using MongoDB Atlas Search including full-text search, autocomplete, and faceted search capabilities with Atlas Search indexes and operators"
+    },
+    {
+      "name": "Vector Search",
+      "description": "Semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator for similarity matching. Reference: http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/"
     },
     {
       "name": "AI Chatbot",
-      "description": "AI-powered chatbot functionality using Atlas Vector Search for RAG, AWS Bedrock LLM integration, and MongoDB-based conversation memory"
+      "description": "AI-powered chatbot functionality using Atlas Vector Search with automated embeddings for RAG, AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage"
     },
     {
       "name": "Results",

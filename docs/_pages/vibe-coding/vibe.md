@@ -181,7 +181,9 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </table>
 </div>
 
-> **💡 Atlas Search Integration**: These endpoints are designed to leverage MongoDB Atlas Search capabilities for advanced search functionality including full-text search, autocomplete, faceted search, and vector search. You're expected to implement these features using Atlas Search indexes and operators.
+> **💡 Atlas Search Integration**: These endpoints are designed to leverage MongoDB Atlas Search capabilities for advanced search functionality including full-text search, autocomplete, and faceted search. You're expected to implement these features using Atlas Search indexes and operators for lexical search operations.
+> 
+> **🧠 Vector Search & Auto Embedding**: The vector search endpoint (`/vectorsearch`) should utilize MongoDB's **automated embedding** feature for semantic search capabilities. Reference the latest documentation: [http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/](http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/)
 
 ### 💬 **Chat System** *(AI-Powered Chatbot)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
@@ -209,7 +211,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </div>
 
 > **🤖 AI Chatbot Features**: These endpoints power an intelligent chatbot that can answer questions about Airbnb listings using:
-> - **Atlas Vector Search**: For semantic search and retrieval of relevant listing information
+> - **Atlas Vector Search**: For semantic search and retrieval of relevant listing information with **automated embeddings**
 > - **AWS Bedrock**: LLM connectivity (recommend using LangChain for integration)
 > - **MongoDB Memory Storage**: Store conversation history and context in MongoDB for persistent memory
 > 
@@ -344,19 +346,25 @@ Currently, the API does not require authentication.
 - **Query Optimization**: Build efficient MongoDB queries based on the actual collection schema
 
 ### **Atlas Search Implementation**
-For the Atlas Search endpoints (`/autocomplete`, `/facet`, `/search`, `/vectorsearch`):
-- **Search Indexes**: Create appropriate Atlas Search indexes
-- **Search Operators**: Use Atlas Search operators like `text`, `autocomplete`, `facet`, and `knnBeta`
+For the Atlas Search endpoints (`/autocomplete`, `/facet`, `/search`):
+- **Search Indexes**: Create appropriate Atlas Search indexes for lexical search
+- **Search Operators**: Use Atlas Search operators like `text`, `autocomplete`, and `facet`
 - **Performance**: Optimize search queries for fast response times
 - **Relevance**: Implement proper scoring and ranking for search results
 
+For the Vector Search endpoint (`/vectorsearch`):
+- **Vector Index**: Create Atlas Vector Search index with **automated embeddings**
+- **knnBeta Operator**: Use `knnBeta` operator for semantic similarity searches
+- **Auto Embedding**: Leverage MongoDB's automated embedding feature for seamless vector operations
+
 ### **Chat System Implementation**
 For the Chat endpoints (`/chat`, `/chat/clear`):
-- **Vector Search**: Use Atlas Vector Search to find relevant listings based on user queries
+- **Vector Search**: Use Atlas Vector Search with **automated embeddings** to find relevant listings based on user queries
 - **LLM Integration**: Connect to AWS Bedrock using LangChain for natural language processing
 - **Memory Management**: Store chat history and context in MongoDB collections
 - **RAG Architecture**: Implement Retrieval-Augmented Generation for accurate, context-aware responses
 - **Session Handling**: Maintain conversation continuity across multiple interactions
+- **Embedding Strategy**: Use automated embeddings for both document indexing and query processing in vector operations
 
 ### **Development Workflow**
 1. **Explore**: Use the MCP to understand the collection schema
@@ -364,4 +372,15 @@ For the Chat endpoints (`/chat`, `/chat/clear`):
 3. **Implement**: Build the REST API following the OpenAPI specification
 4. **Test**: Use the provided test cases in the `rest-lab/` folder
 5. **Optimize**: Fine-tune queries and add performance improvements
+
+### **Bonus Features** *(Get Creative!)*
+- 🚀 **Caching**: Implement Redis or in-memory caching for frequently accessed data
+- 📊 **Analytics**: Add advanced analytics and reporting endpoints
+- 🔒 **Rate Limiting**: Implement API rate limiting for production readiness
+- 📝 **Logging**: Add comprehensive logging and monitoring
+- 🎯 **Validation**: Implement robust input validation and error handling
+- 🔍 **Advanced Search**: Create innovative lexical search features using Atlas Search capabilities
+- 🧠 **Smart Memory**: Store chat conversation history in MongoDB for personalized experiences
+- 🤖 **Intelligent Responses**: Use automated vector embeddings for contextually relevant listing recommendations
+- ⚡ **Auto Embedding**: Leverage MongoDB's automated embedding capabilities for vector search operations
 

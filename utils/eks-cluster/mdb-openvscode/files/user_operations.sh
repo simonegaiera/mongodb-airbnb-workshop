@@ -26,7 +26,6 @@ PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
 LLM_MODEL=${LLM_MODEL}
 AWS_REGION=${LLM_REGION}
-DATABASE_NAME=${USERNAME}
 EOL
 
 mkdir -p /home/workspace/mongodb-airbnb-workshop/backend
@@ -36,13 +35,14 @@ PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
 LLM_MODEL=${LLM_MODEL}
 AWS_REGION=${LLM_REGION}
+DATABASE_NAME=${USERNAME}
 EOL
 
 echo "Copying swagger.json to backend folder"
 cp /home/workspace/mongodb-airbnb-workshop/docs/assets/files/swagger.json /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy swagger.json"
 
-echo "Copying playground folder to backend folder"
-cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/playground /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy playground folder"
+# echo "Copying playground folder to backend folder"
+# cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/playground /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy playground folder"
 
 echo "Copying rest-lab folder to backend folder"
 cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/rest-lab /home/workspace/mongodb-airbnb-workshop/backend/ || echo "Failed to copy rest-lab folder"
