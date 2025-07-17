@@ -308,9 +308,9 @@
     },
     "/api/listingsAndReviews/filter": {
       "post": {
-        "tags": ["Search"],
+        "tags": ["Filtering"],
         "summary": "Filter listings",
-        "description": "Filter listings based on multiple criteria",
+        "description": "Filter listings based on multiple criteria using MongoDB aggregation pipelines",
         "requestBody": {
           "required": true,
           "content": {
@@ -343,9 +343,9 @@
     },
     "/api/listingsAndReviews/statistics": {
       "get": {
-        "tags": ["Analytics"],
+        "tags": ["Statistics"],
         "summary": "Get price statistics",
-        "description": "Get aggregated price statistics for listings",
+        "description": "Get aggregated price statistics for listings using MongoDB aggregation framework",
         "responses": {
           "200": {
             "description": "Price statistics",
@@ -365,9 +365,9 @@
     },
     "/api/listingsAndReviews/autocomplete": {
       "post": {
-        "tags": ["Search"],
+        "tags": ["Atlas Search"],
         "summary": "Autocomplete search",
-        "description": "Get autocomplete suggestions for search queries",
+        "description": "Get autocomplete suggestions for search queries using MongoDB Atlas Search autocomplete operator",
         "requestBody": {
           "required": true,
           "content": {
@@ -400,9 +400,9 @@
     },
     "/api/listingsAndReviews/facet": {
       "post": {
-        "tags": ["Search"],
+        "tags": ["Atlas Search"],
         "summary": "Faceted search",
-        "description": "Perform faceted search with aggregated results",
+        "description": "Perform faceted search with aggregated results using MongoDB Atlas Search facet operator",
         "requestBody": {
           "required": true,
           "content": {
@@ -432,9 +432,9 @@
     },
     "/api/listingsAndReviews/search": {
       "post": {
-        "tags": ["Search"],
+        "tags": ["Atlas Search"],
         "summary": "Full-text search",
-        "description": "Perform full-text search on listings",
+        "description": "Perform full-text search on listings using MongoDB Atlas Search text operator with relevance scoring",
         "requestBody": {
           "required": true,
           "content": {
@@ -467,9 +467,9 @@
     },
     "/api/listingsAndReviews/vectorsearch": {
       "post": {
-        "tags": ["Search"],
+        "tags": ["Atlas Search"],
         "summary": "Vector search",
-        "description": "Perform vector-based semantic search",
+        "description": "Perform vector-based semantic search using MongoDB Atlas Vector Search with knnBeta operator for similarity matching",
         "requestBody": {
           "required": true,
           "content": {
@@ -571,9 +571,9 @@
     },
     "/api/chat": {
       "post": {
-        "tags": ["Chat"],
-        "summary": "Send chat message",
-        "description": "Send a message to the AI chat system",
+        "tags": ["AI Chatbot"],
+        "summary": "Send message to AI chatbot",
+        "description": "Send a message to the AI-powered chatbot system that uses Atlas Vector Search for retrieval-augmented generation (RAG) to provide intelligent responses about Airbnb listings. The chatbot leverages AWS Bedrock LLM integration and maintains conversation history in MongoDB.",
         "requestBody": {
           "required": true,
           "content": {
@@ -603,9 +603,9 @@
     },
     "/api/chat/clear": {
       "post": {
-        "tags": ["Chat"],
-        "summary": "Clear chat history",
-        "description": "Clear the chat conversation history",
+        "tags": ["AI Chatbot"],
+        "summary": "Clear chatbot conversation history",
+        "description": "Clear the AI chatbot conversation history and memory stored in MongoDB, resetting the context for future interactions",
         "responses": {
           "200": {
             "description": "Chat history cleared",
@@ -1176,20 +1176,24 @@
       "description": "Operations related to listing reviews"
     },
     {
-      "name": "Search",
-      "description": "Search and filtering operations"
+      "name": "Filtering",
+      "description": "Advanced filtering operations using MongoDB aggregation pipelines"
     },
     {
-      "name": "Analytics",
-      "description": "Analytics and statistics operations"
+      "name": "Statistics",
+      "description": "Statistical analysis and aggregated data operations"
+    },
+    {
+      "name": "Atlas Search",
+      "description": "Advanced search operations using MongoDB Atlas Search including full-text search, autocomplete, faceted search, and vector search capabilities"
+    },
+    {
+      "name": "AI Chatbot",
+      "description": "AI-powered chatbot functionality using Atlas Vector Search for RAG, AWS Bedrock LLM integration, and MongoDB-based conversation memory"
     },
     {
       "name": "Results",
       "description": "Workshop results and participant management"
-    },
-    {
-      "name": "Chat",
-      "description": "AI chat functionality"
     }
   ]
 }

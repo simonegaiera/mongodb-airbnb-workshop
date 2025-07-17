@@ -121,7 +121,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </table>
 </div>
 
-### 🔍 **Search & Analytics**
+### 🔍 **Search & Filtering**
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -142,6 +142,21 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/statistics</td>
       <td style="padding: 1rem; border: none;">📊 Get price statistics</td>
     </tr>
+  </tbody>
+</table>
+</div>
+
+### 🔎 **Atlas Search** *(Advanced Search Features)*
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/autocomplete</td>
@@ -166,7 +181,9 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </table>
 </div>
 
-### 💬 **Chat System**
+> **💡 Atlas Search Integration**: These endpoints are designed to leverage MongoDB Atlas Search capabilities for advanced search functionality including full-text search, autocomplete, faceted search, and vector search. You're expected to implement these features using Atlas Search indexes and operators.
+
+### 💬 **Chat System** *(AI-Powered Chatbot)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -180,16 +197,23 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
     <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/chat</td>
-      <td style="padding: 1rem; border: none;">💬 Send chat message</td>
+      <td style="padding: 1rem; border: none;">💬 Send chat message to AI chatbot</td>
     </tr>
     <tr style="background: #fafbfc;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/chat/clear</td>
-      <td style="padding: 1rem; border: none;">🧹 Clear chat history</td>
+      <td style="padding: 1rem; border: none;">🧹 Clear chat history and memory</td>
     </tr>
   </tbody>
 </table>
 </div>
+
+> **🤖 AI Chatbot Features**: These endpoints power an intelligent chatbot that can answer questions about Airbnb listings using:
+> - **Atlas Vector Search**: For semantic search and retrieval of relevant listing information
+> - **AWS Bedrock**: LLM connectivity (recommend using LangChain for integration)
+> - **MongoDB Memory Storage**: Store conversation history and context in MongoDB for persistent memory
+> 
+> **Bonus Points**: Implement chat memory storage in MongoDB to maintain conversation context across sessions and provide personalized responses based on chat history.
 
 ### 📈 **Results** *(Optional)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
@@ -288,3 +312,56 @@ All endpoints can be tested using curl commands. See examples above or use the "
 ## 🔒 Authentication
 
 Currently, the API does not require authentication.
+
+---
+
+## 🗄️ MongoDB Collection Schema
+
+### Understanding the `listingsAndReviews` Collection
+
+**MCP Integration Available**: There is a Model Context Protocol (MCP) available that can help you understand the structure and schema of the `listingsAndReviews` collection. This MCP provides insights into:
+- Field types and structures
+- Data patterns and relationships
+- Sample document formats
+- Nested object schemas
+
+**Recommendation**: Leverage the MCP to properly understand the MongoDB collection schema before implementing your API endpoints. This will ensure accurate field mappings, proper data validation, and efficient query construction.
+
+**Key Collection Features**:
+- 🏠 **Rich Listing Data**: Property details, amenities, location information
+- ⭐ **Embedded Reviews**: Review arrays with dates, comments, and reviewer info
+- 📍 **Geospatial Data**: Location coordinates for mapping and proximity searches
+- 🏷️ **Categorical Fields**: Property types, room types, amenities for filtering
+- 💰 **Pricing Information**: Nightly rates and pricing structures
+
+---
+
+## 🚀 Enhanced Implementation Guide
+
+### **MongoDB Collection Understanding**
+- **Use the MCP**: Leverage the available Model Context Protocol to understand the `listingsAndReviews` collection structure
+- **Schema Exploration**: Use the MCP insights to implement proper field mappings and data validation
+- **Query Optimization**: Build efficient MongoDB queries based on the actual collection schema
+
+### **Atlas Search Implementation**
+For the Atlas Search endpoints (`/autocomplete`, `/facet`, `/search`, `/vectorsearch`):
+- **Search Indexes**: Create appropriate Atlas Search indexes
+- **Search Operators**: Use Atlas Search operators like `text`, `autocomplete`, `facet`, and `knnBeta`
+- **Performance**: Optimize search queries for fast response times
+- **Relevance**: Implement proper scoring and ranking for search results
+
+### **Chat System Implementation**
+For the Chat endpoints (`/chat`, `/chat/clear`):
+- **Vector Search**: Use Atlas Vector Search to find relevant listings based on user queries
+- **LLM Integration**: Connect to AWS Bedrock using LangChain for natural language processing
+- **Memory Management**: Store chat history and context in MongoDB collections
+- **RAG Architecture**: Implement Retrieval-Augmented Generation for accurate, context-aware responses
+- **Session Handling**: Maintain conversation continuity across multiple interactions
+
+### **Development Workflow**
+1. **Explore**: Use the MCP to understand the collection schema
+2. **Plan**: Design your API endpoints based on the schema insights
+3. **Implement**: Build the REST API following the OpenAPI specification
+4. **Test**: Use the provided test cases in the `rest-lab/` folder
+5. **Optimize**: Fine-tune queries and add performance improvements
+

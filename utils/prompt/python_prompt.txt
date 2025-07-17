@@ -1,0 +1,39 @@
+Create a Python REST API application based on the swagger.json specification file.
+
+**Core Requirements:**
+- Read and analyze the swagger.json file to understand all API endpoints
+- Build a Python web application using Flask or FastAPI on port 5000
+- Organize code into multiple files based on the API categories you identify from the swagger
+- Separate concerns: CRUD operations, search functionality, vector search, filtering, statistics, and chatbot
+
+**Key Implementation Areas:**
+
+1. **CRUD Operations**: Standard database operations for listings and reviews
+2. **Filtering & Statistics**: Advanced filtering using MongoDB aggregation pipelines  
+3. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
+4. **Vector Search**: Implement using MongoDB Atlas Vector Search with knnBeta operator
+5. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration
+6. **Results**: Workshop participant management
+
+**MongoDB Integration:**
+- Use the available MCP (Model Context Protocol) to understand the `listingsAndReviews` collection schema
+- Implement proper database queries based on the actual collection structure
+
+**Required Deliverables:**
+1. **Complete Python application** with proper file organization
+2. **mongodb_indexes.json file** containing all required MongoDB indexes in JSON format:
+   - Atlas Search indexes for search functionality
+   - Vector Search indexes for AI chatbot
+   - Standard database indexes for performance
+   - Include clear comments and creation instructions
+
+**Environment Variables:**
+- MONGODB_URI, AWS_REGION, LLM_MODEL, and other necessary configuration
+
+**Additional Features:**
+- Proper error handling and validation
+- Environment configuration support
+- CORS for frontend integration
+- Compatible with existing test cases in rest-lab/ folder
+
+Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.

@@ -40,7 +40,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
             let response;
 
             if (isEmptyFilters(filters)) {
-                response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/?page=${page}&limit=${limit}`, {
+                response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews?page=${page}&limit=${limit}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'

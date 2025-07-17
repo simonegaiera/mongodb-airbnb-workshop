@@ -26,6 +26,7 @@ PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
 LLM_MODEL=${LLM_MODEL}
 AWS_REGION=${LLM_REGION}
+DATABASE_NAME=${USERNAME}
 EOL
 
 mkdir -p /home/workspace/mongodb-airbnb-workshop/backend
