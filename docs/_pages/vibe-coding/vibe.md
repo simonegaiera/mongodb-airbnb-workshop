@@ -96,56 +96,6 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ---
 
-## 🔧 Example Usage
-
-### Get All Listings
-```bash
-curl -X GET "http://localhost:5000/api/listingsAndReviews?page=1&limit=10" \
-  -H "Content-Type: application/json"
-```
-
-### Create New Listing
-```bash
-curl -X POST "http://localhost:5000/api/listingsAndReviews" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Cozy Downtown Apartment",
-    "property_type": "Apartment",
-    "room_type": "Entire home/apt",
-    "price": 120,
-    "bedrooms": 2,
-    "bathrooms": 1,
-    "accommodates": 4
-  }'
-```
-
-### Search Listings
-```bash
-curl -X POST "http://localhost:5000/api/listingsAndReviews/search" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "beach house",
-    "limit": 5
-  }'
-```
-
-### Filter Listings
-```bash
-curl -X POST "http://localhost:5000/api/listingsAndReviews/filter" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "page": 1,
-    "limit": 10,
-    "filters": {
-      "propertyType": "House",
-      "beds": 3,
-      "amenities": ["WiFi", "Kitchen"]
-    }
-  }'
-```
-
----
-
 ## 📋 Data Schemas
 
 ### Listing Object
@@ -202,8 +152,6 @@ Import the OpenAPI specification directly into Postman:
 
 ### VS Code Extensions
 - **REST Client**: Create `.http` files for testing
-- **Thunder Client**: Built-in API testing
-- **OpenAPI (Swagger) Editor**: Edit swagger.json with validation
 
 ### Testing with curl
 All endpoints can be tested using curl commands. See examples above or use the "Try it out" feature in Swagger UI to generate curl commands automatically.
@@ -213,25 +161,3 @@ All endpoints can be tested using curl commands. See examples above or use the "
 ## 🔒 Authentication
 
 Currently, the API does not require authentication.
-
----
-
-## 📝 Response Formats
-
-All responses are in JSON format with consistent error handling:
-
-### Success Response
-```json
-{
-  "data": [...],
-  "status": "success"
-}
-```
-
-### Error Response
-```json
-{
-  "message": "Error description",
-  "status": "error"
-}
-```
