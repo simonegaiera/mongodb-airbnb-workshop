@@ -54,45 +54,177 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ---
 
-## 📊 API Endpoints Summary
+## 🎯 API Endpoints Overview
 
-### 🏠 Listings Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/listingsAndReviews` | Get all listings with pagination |
-| `POST` | `/api/listingsAndReviews` | Create a new listing |
-| `GET` | `/api/listingsAndReviews/{id}` | Get specific listing by ID |
-| `PATCH` | `/api/listingsAndReviews/{id}` | Update listing field |
-| `DELETE` | `/api/listingsAndReviews/{id}` | Delete listing |
-| `GET` | `/api/listingsAndReviews/distinct` | Get distinct field values |
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; color: white; text-align: center;">
+  <h3 style="margin: 0; font-size: 1.5rem; font-weight: bold;">🚀 Complete API Reference</h3>
+  <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Build powerful endpoints that bring your Airbnb app to life</p>
+</div>
 
-### ⭐ Reviews
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/listingsAndReviews/{id}/reviews` | Add review to listing |
+### 🏠 **Listings Management**
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews</td>
+      <td style="padding: 1rem; border: none;">📄 Get all listings with pagination</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews</td>
+      <td style="padding: 1rem; border: none;">✨ Create a new listing</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}</td>
+      <td style="padding: 1rem; border: none;">🎯 Get specific listing by ID</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #fff3e0; color: #e65100; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">PATCH</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}</td>
+      <td style="padding: 1rem; border: none;">🔧 Update listing field</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #ffebee; color: #c62828; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">DELETE</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}</td>
+      <td style="padding: 1rem; border: none;">🗑️ Delete listing</td>
+    </tr>
+    <tr style="background: #fafbfc;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/distinct</td>
+      <td style="padding: 1rem; border: none;">🔍 Get distinct field values</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
-### 🔍 Search & Analytics
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/listingsAndReviews/filter` | Filter listings with complex criteria |
-| `GET` | `/api/listingsAndReviews/statistics` | Get price statistics |
-| `POST` | `/api/listingsAndReviews/autocomplete` | Search autocomplete |
-| `POST` | `/api/listingsAndReviews/facet` | Faceted search |
-| `POST` | `/api/listingsAndReviews/search` | Full-text search |
-| `POST` | `/api/listingsAndReviews/vectorsearch` | Vector-based semantic search |
+### ⭐ **Reviews**
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #ffd89b, #19547b); color: white;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}/reviews</td>
+      <td style="padding: 1rem; border: none;">💬 Add review to listing</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
-### 💬 Chat System
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/chat` | Send chat message |
-| `POST` | `/api/chat/clear` | Clear chat history |
+### 🔍 **Search & Analytics**
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/filter</td>
+      <td style="padding: 1rem; border: none;">🎛️ Filter listings with complex criteria</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/statistics</td>
+      <td style="padding: 1rem; border: none;">📊 Get price statistics</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/autocomplete</td>
+      <td style="padding: 1rem; border: none;">⚡ Search autocomplete</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/facet</td>
+      <td style="padding: 1rem; border: none;">🔎 Faceted search</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/search</td>
+      <td style="padding: 1rem; border: none;">🔍 Full-text search</td>
+    </tr>
+    <tr style="background: #fafbfc;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/vectorsearch</td>
+      <td style="padding: 1rem; border: none;">🧠 Vector-based semantic search</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
-### 📈 Results (Optional)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/results` | Get section results |
-| `GET` | `/api/results/participants` | Get all participants |
-| `GET` | `/api/results/whoami` | Get current participant info |
+### 💬 **Chat System**
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/chat</td>
+      <td style="padding: 1rem; border: none;">💬 Send chat message</td>
+    </tr>
+    <tr style="background: #fafbfc;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/chat/clear</td>
+      <td style="padding: 1rem; border: none;">🧹 Clear chat history</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+### 📈 **Results** *(Optional)*
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+  <thead>
+    <tr style="background: linear-gradient(135deg, #ffecd2, #fcb69f); color: #333;">
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
+      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/results</td>
+      <td style="padding: 1rem; border: none;">📊 Get section results</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/results/participants</td>
+      <td style="padding: 1rem; border: none;">👥 Get all participants</td>
+    </tr>
+    <tr style="background: #fafbfc;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/results/whoami</td>
+      <td style="padding: 1rem; border: none;">🙋‍♂️ Get current participant info</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
