@@ -1,8 +1,22 @@
 #!/bin/bash
 
-echo "Updating and installing packages"
+echo "Updating system packages"
 apt-get update && \
-apt-get install -y git curl nginx less vim net-tools lsof jq unzip python3-pip && \
+apt-get install -y git curl nginx less vim net-tools lsof jq unzip postgresql-client software-properties-common && \
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install General Tools
+echo "Installing Python 3.13"
+apt-get update && \
+add-apt-repository ppa:deadsnakes/ppa -y && \
+apt-get update && \
+apt-get install -y python3.13-full && \
+python3.13 -m ensurepip --upgrade && \
+update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 && \
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+echo "Installing Node.js 20"
+apt-get update && \
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 apt-get install -y nodejs && \
 npm install -g npm@latest && \
@@ -14,6 +28,13 @@ echo "Installing OpenJDK 21"
 apt-get update && \
 apt-get install -y openjdk-21-jdk && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+echo "Installing uv"
+curl -LsSf https://astral.sh/uv/install.sh | sh
+sudo -u openvscode-server bash -c 'export PATH="$HOME/.local/bin:$PATH"'
+sudo -u openvscode-server bash -c 'uv venv'
+sudo -u openvscode-server bash -c 'uv pip install postgres-mcp'
 
 # Set JAVA_HOME environment variable
 echo "Setting JAVA_HOME environment variable"

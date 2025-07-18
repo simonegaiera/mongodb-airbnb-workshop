@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    acme = {
-      source  = "vancluever/acme"
-    }
-  }
-}
-
 provider "acme" {
   # let's encrypt staging
   # server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"

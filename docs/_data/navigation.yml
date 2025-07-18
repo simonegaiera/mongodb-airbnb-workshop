@@ -15,7 +15,24 @@ docs:
   #     - title: "IDE: Codespace/VSCode"
   #       url: /environment/codespace/
 
-  - title: Guided Exercises
+  - title: "Vibe Coding (Scenario 1)"
+    children:
+      - title: "GameDay Overview"
+        url: /overview-vibe/
+      - title: "IDE: VSCode Online"
+        url: /environment/vscode-vibe/
+      - title: "Vibe Coding: Instructions"
+        url: /vibe/
+      - title: "Hint: Python Prompt"
+        url: /vibe/python/
+      - title: "CRUD: Indexes"
+        url: /index/
+      - title: "Search: Indexes"
+        url: /search/index/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/
+
+  - title: "Guided Exercises (Scenario 2)"
     children:
       - title: "GameDay Overview"
         url: /overview/
@@ -113,20 +130,3 @@ docs:
         url: /vector-search/1/
       - title: "Hint: Exercise 1"
         url: /vector-search/1/hint/
-
-  - title: Vibe Coding (Coming Soon...)
-    children:
-      - title: "GameDay Overview"
-        url: /overview-vibe/
-      - title: "IDE: VSCode Online"
-        url: /environment/vscode-vibe/
-      - title: "Vibe Coding: Instructions"
-        url: /vibe/
-      - title: "Hint: Python Prompt"
-        url: /vibe/python/
-      - title: "CRUD: Indexes"
-        url: /index/
-      - title: "Search: Indexes"
-        url: /search/index/
-      - title: "Vector Search: Indexes"
-        url: /vector-search/index/

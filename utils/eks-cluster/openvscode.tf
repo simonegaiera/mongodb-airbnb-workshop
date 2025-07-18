@@ -160,12 +160,21 @@ resource "helm_release" "user_openvscode" {
     {
       name  = "extraEnv[0].value"
       value = "mongodb+srv://${each.value}:${local.atlas_user_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/${each.value}"
+    },
+    {
+      name  = "extraEnv[1].name"
+      value = "DATABASE_URI"
+    },
+    {
+      name  = "extraEnv[1].value"
+      value = "postgres://${each.value}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/sample_airbnb?sslmode=require"
     }
   ]
 
   depends_on = [
     aws_efs_mount_target.efs_mt,
-    kubernetes_storage_class.efs
+    kubernetes_storage_class.efs,
+    aws_rds_cluster_instance.aurora_instance
   ]
 }
 

@@ -14,6 +14,17 @@ data:
           "env": {
             "MDB_MCP_CONNECTION_STRING": "{{ index .Values.extraEnv 0 "value" }}"
           }
+        },
+        "postgres": {
+          "command": "uv",
+          "args": [
+            "run",
+            "postgres-mcp",
+            "--access-mode=unrestricted"
+          ],
+          "env": {
+            "DATABASE_URI": "{{ index .Values.extraEnv 1 "value" }}"
+          }
         }
       }
     }
