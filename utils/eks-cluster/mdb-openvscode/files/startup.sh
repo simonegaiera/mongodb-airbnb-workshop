@@ -32,9 +32,9 @@ apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install uv
 echo "Installing uv"
 curl -LsSf https://astral.sh/uv/install.sh | sh
-sudo -u openvscode-server bash -c 'export PATH="$HOME/.local/bin:$PATH"'
-sudo -u openvscode-server bash -c 'uv venv'
-sudo -u openvscode-server bash -c 'uv pip install postgres-mcp'
+sudo -u openvscode-server bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+sudo -u openvscode-server bash -c 'cd /home/openvscode-server && export PATH="$HOME/.local/bin:$PATH" && uv venv'
+sudo -u openvscode-server bash -c 'export PATH="$HOME/.local/bin:$PATH" && uv pip install postgres-mcp'
 
 # Set JAVA_HOME environment variable
 echo "Setting JAVA_HOME environment variable"
