@@ -13,10 +13,17 @@ const ListingStatistics = () => {
                 }
                 const result = await response.json();
                 // Process result to round average price to the nearest integer
-                const processedData = result.map(item => ({
-                    id: item.beds,
-                    value: Math.round(parseFloat(item.price?.$numberDecimal)),
-                }));
+                const processedData = result.map(item => {
+                    // Handle both response formats
+                    const price = item.price?.$numberDecimal 
+                        ? parseFloat(item.price.$numberDecimal)
+                        : parseFloat(item.price);
+                    
+                    return {
+                        id: item.beds,
+                        value: Math.round(price),
+                    };
+                });
                 setData(processedData);
             } catch (error) {
                 console.error('Unable to fetch data:', error);

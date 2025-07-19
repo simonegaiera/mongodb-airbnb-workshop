@@ -85,11 +85,12 @@ Create a Python REST API application based on the swagger.json specification fil
 
 **Required Deliverables:**
 1. **Complete Python application** with proper file organization
-2. **mongodb_indexes.json file** containing all required MongoDB indexes:
+2. **mongodb_indexes file** containing all required MongoDB indexes:
    - One comprehensive Atlas Search index for all lexical search operations (search, facet, autocomplete) with proper field mappings
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
    - Include clear comments and creation instructions
+3. **requirements.txt file** without version pinning - let pip resolve the latest compatible versions
 
 **Environment Variables:**
 - MONGODB_URI, AWS_REGION, LLM_MODEL, and other necessary configuration
@@ -120,7 +121,7 @@ After receiving your generated code, verify:
 
 - [ ] **File Structure**: Code is organized by functionality (CRUD, search, vector, chat, etc.)
 - [ ] **Environment Setup**: `.env` file template and requirements.txt included
-- [ ] **MongoDB Indexes**: `mongodb_indexes.json` file with all necessary indexes
+- [ ] **MongoDB Indexes**: file with all necessary indexes
 - [ ] **Atlas Search**: Proper implementation of lexical search features
 - [ ] **Vector Search**: Automated embeddings integration for semantic search
 - [ ] **AI Chatbot**: RAG implementation with LangChain and Bedrock

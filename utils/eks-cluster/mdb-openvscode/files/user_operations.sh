@@ -3,6 +3,7 @@
 # Check if the repository exists and update or clone accordingly
 if [ -d /home/workspace/mongodb-airbnb-workshop/.git ]; then
     echo "Repository exists. Pulling latest changes..."
+    git config --global --add safe.directory /home/workspace/mongodb-airbnb-workshop
     cd /home/workspace/mongodb-airbnb-workshop && git pull || echo "Failed to pull latest changes"
 else
     echo "Repository does not exist. Cloning..."
