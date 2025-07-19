@@ -14,13 +14,13 @@ apt-get install -y postgresql-client > /dev/null && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install General Tools
-echo_with_timestamp "Installing Python 3.13"
+echo_with_timestamp "Installing Python 3.12"
 apt-get update > /dev/null && \
 add-apt-repository ppa:deadsnakes/ppa -y > /dev/null && \
 apt-get update > /dev/null && \
-apt-get install -y python3.13-full > /dev/null && \
-python3.13 -m ensurepip --upgrade && \
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 && \
+apt-get install -y python3.12-full > /dev/null && \
+python3.12 -m ensurepip --upgrade && \
+update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
 
 echo_with_timestamp "Installing Node.js 20"

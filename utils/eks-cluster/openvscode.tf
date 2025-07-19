@@ -163,7 +163,7 @@ resource "helm_release" "user_openvscode" {
     },
     {
       name  = "extraEnv[1].name"
-      value = "DATABASE_URI"
+      value = "PGSQL_MCP_CONNECTION_STRING"
     },
     {
       name  = "extraEnv[1].value"

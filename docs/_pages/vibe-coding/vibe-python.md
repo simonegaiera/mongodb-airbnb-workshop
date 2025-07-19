@@ -43,7 +43,7 @@ Create a Python REST API application based on the swagger.json specification fil
 - Build a Python web application using Flask or FastAPI on port 5000
 - **Implement ONLY the APIs defined in the swagger.json file - no additional endpoints**
 - Organize code into multiple files based on the API categories you identify from the swagger
-- Separate concerns: CRUD operations, search functionality, vector search, filtering, statistics, and chatbot
+- Separate concerns: CRUD operations, search functionality, vector search, and chatbot
 
 **Key Implementation Areas:**
 
@@ -62,8 +62,10 @@ Create a Python REST API application based on the swagger.json specification fil
 - **No Extra Features**: Do not add endpoints, routes, or functionality beyond what's documented in the OpenAPI specification
 
 **MongoDB Integration:**
-- Use the available MCP (Model Context Protocol) to understand the `listingsAndReviews` collection schema
-- Implement proper database queries based on the actual collection structure
+- Use the available MCP (Model Context Protocol) to thoroughly analyze and understand the `listingsAndReviews` collection schema before implementing any queries
+- **Schema Discovery First**: Query the MCP to examine the actual data structure, field types, and document format in the collection
+- Implement proper database queries based on the actual collection structure and field types discovered through MCP
+- Ensure all field references and data types match the real database schema, not assumptions
 
 **Atlas Search & Vector Search Requirements:**
 - **Vector Search Index**: Create a separate vector search index specifically for the `/vectorsearch` endpoint with automated embeddings on the `description` field
@@ -83,7 +85,7 @@ Create a Python REST API application based on the swagger.json specification fil
 
 **Required Deliverables:**
 1. **Complete Python application** with proper file organization
-2. **mongodb_indexes.json file** containing all required MongoDB indexes in JSON format:
+2. **mongodb_indexes.json file** containing all required MongoDB indexes:
    - One comprehensive Atlas Search index for all lexical search operations (search, facet, autocomplete) with proper field mappings
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
@@ -98,16 +100,14 @@ Create a Python REST API application based on the swagger.json specification fil
 - CORS for frontend integration
 - Compatible with existing test cases in rest-lab/ folder
 - LangChain integration for AWS Bedrock connectivity
-- MongoDB-based chat memory storage (bonus points)
+- LangChain MongoDB chat memory storage
 
 **Technical Implementation Notes:**
 - Separate filtering/statistics from advanced Atlas Search operations
 - Use appropriate MongoDB operators for each search type
-- Implement vector embeddings for semantic search capabilities using the `description` field
 - Design RAG pipeline for contextual chatbot responses
 - Ensure the single Atlas Search index supports text operators, autocomplete operators, and facet operators with proper field mappings
 - Create a dedicated vector search index separate from the lexical search index
-- Configure automated embeddings specifically on the `description` field for optimal semantic search
 
 Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.
 ```

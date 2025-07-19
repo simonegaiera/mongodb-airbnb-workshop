@@ -182,7 +182,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 > **🧠 Advanced AI-Powered Features**: This unified section combines semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage. All AI and vector search functionality is consolidated here for better organization.
 
-### 📈 **Results** *(Optional)*
+### 📈 **Results**
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -353,6 +353,7 @@ For the Vector Search endpoint (`/vectorsearch`):
 
 > **📋 Index Requirements**:
 > - **Vector Search Index**: Create a separate vector search index specifically for the `/vectorsearch` endpoint with automated embeddings on the `description` field
+- **Automated Embeddings**: Reference documentation at http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/
 
 > **🎯 Vector Search Parameters**:
 > - **numCandidates**: Set to 100 for optimal performance and accuracy
