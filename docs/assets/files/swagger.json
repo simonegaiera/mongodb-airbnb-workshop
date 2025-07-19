@@ -18,7 +18,7 @@
   "paths": {
     "/api/listingsAndReviews": {
       "get": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Get all listings",
         "description": "Retrieve all listings with optional query filtering and pagination",
         "parameters": [
@@ -76,7 +76,7 @@
         }
       },
       "post": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Create a new listing",
         "description": "Add a new listing to the database",
         "requestBody": {
@@ -108,7 +108,7 @@
     },
     "/api/listingsAndReviews/{id}": {
       "get": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Get listing by ID",
         "description": "Retrieve a specific listing by its ID",
         "parameters": [
@@ -142,7 +142,7 @@
         }
       },
       "patch": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Update listing field",
         "description": "Update a specific field of a listing",
         "parameters": [
@@ -183,7 +183,7 @@
         }
       },
       "delete": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Delete listing",
         "description": "Delete a listing by its ID",
         "parameters": [
@@ -225,7 +225,7 @@
     },
     "/api/listingsAndReviews/{id}/reviews": {
       "post": {
-        "tags": ["Reviews"],
+        "tags": ["Listings & Analytics"],
         "summary": "Add review to listing",
         "description": "Add a new review to a specific listing",
         "parameters": [
@@ -268,7 +268,7 @@
     },
     "/api/listingsAndReviews/distinct": {
       "get": {
-        "tags": ["Listings"],
+        "tags": ["Listings & Analytics"],
         "summary": "Get distinct values",
         "description": "Get distinct values for a specific field",
         "parameters": [
@@ -308,7 +308,7 @@
     },
     "/api/listingsAndReviews/filter": {
       "post": {
-        "tags": ["Filtering"],
+        "tags": ["Listings & Analytics"],
         "summary": "Filter listings",
         "description": "Filter listings based on multiple criteria using MongoDB aggregation pipelines",
         "requestBody": {
@@ -343,7 +343,7 @@
     },
     "/api/listingsAndReviews/statistics": {
       "get": {
-        "tags": ["Statistics"],
+        "tags": ["Listings & Analytics"],
         "summary": "Get price statistics",
         "description": "Get aggregated price statistics for listings grouped by bed count using MongoDB aggregation framework. Returns average price per bed count as numeric values.",
         "responses": {
@@ -477,9 +477,9 @@
     },
     "/api/listingsAndReviews/vectorsearch": {
       "post": {
-        "tags": ["Vector Search"],
+        "tags": ["AI & Vector Search"],
         "summary": "Vector search with automated embeddings",
-        "description": "Perform vector-based semantic search using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator for similarity matching. Leverages MongoDB's automated embedding feature for seamless vector operations without manual embedding generation.",
+        "description": "Perform vector-based semantic search using MongoDB Atlas Vector Search with automated embeddings for similarity matching. Leverages MongoDB's automated embedding feature for seamless vector operations without manual embedding generation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -581,7 +581,7 @@
     },
     "/api/chat": {
       "post": {
-        "tags": ["AI Chatbot"],
+        "tags": ["AI & Vector Search"],
         "summary": "Send message to AI chatbot",
         "description": "Send a message to the AI-powered chatbot system that uses Atlas Vector Search for retrieval-augmented generation (RAG) to provide intelligent responses about Airbnb listings. The chatbot leverages AWS Bedrock LLM integration and maintains conversation history in MongoDB.",
         "requestBody": {
@@ -613,7 +613,7 @@
     },
     "/api/chat/clear": {
       "post": {
-        "tags": ["AI Chatbot"],
+        "tags": ["AI & Vector Search"],
         "summary": "Clear chatbot conversation history",
         "description": "Clear the AI chatbot conversation history and memory stored in MongoDB, resetting the context for future interactions",
         "responses": {
@@ -1178,32 +1178,16 @@
   },
   "tags": [
     {
-      "name": "Listings",
-      "description": "CRUD operations for Airbnb listings"
-    },
-    {
-      "name": "Reviews",
-      "description": "Operations related to listing reviews"
-    },
-    {
-      "name": "Filtering",
-      "description": "Basic filtering operations using MongoDB aggregation pipelines and standard queries"
-    },
-    {
-      "name": "Statistics",
-      "description": "Statistical analysis and aggregated data operations using MongoDB aggregation framework"
+      "name": "Listings & Analytics",
+      "description": "Comprehensive operations for Airbnb listings including CRUD operations, reviews management, filtering using MongoDB aggregation pipelines, and statistical analysis with aggregated data operations"
     },
     {
       "name": "Atlas Search",
       "description": "Advanced lexical search operations using MongoDB Atlas Search including full-text search, autocomplete, and faceted search capabilities with Atlas Search indexes and operators"
     },
     {
-      "name": "Vector Search",
-      "description": "Semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator for similarity matching. Reference: http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/"
-    },
-    {
-      "name": "AI Chatbot",
-      "description": "AI-powered chatbot functionality using Atlas Vector Search with automated embeddings for RAG, AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage"
+      "name": "AI & Vector Search",
+      "description": "Advanced AI-powered functionality including semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage"
     },
     {
       "name": "Results",

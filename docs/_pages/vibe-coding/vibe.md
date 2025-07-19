@@ -56,7 +56,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ## 🎯 API Endpoints Overview
 
-### 🏠 **Listings Management**
+### 🏠 **Listings & Analytics** *(Comprehensive Listing Operations)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -92,52 +92,22 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}</td>
       <td style="padding: 1rem; border: none;">🗑️ Delete listing</td>
     </tr>
-    <tr style="background: #fafbfc;">
-      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
-      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/distinct</td>
-      <td style="padding: 1rem; border: none;">🔍 Get distinct field values</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-### ⭐ **Reviews**
-<div style="overflow-x: auto; margin: 1.5rem 0;">
-<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
-  <thead>
-    <tr style="background: linear-gradient(135deg, #ffd89b, #19547b); color: white;">
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/{id}/reviews</td>
       <td style="padding: 1rem; border: none;">💬 Add review to listing</td>
     </tr>
-  </tbody>
-</table>
-</div>
-
-### 🔍 **Search & Filtering**
-<div style="overflow-x: auto; margin: 1.5rem 0;">
-<table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
-  <thead>
-    <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🔧 Method</th>
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">🌐 Endpoint</th>
-      <th style="padding: 1rem; text-align: left; font-weight: 600; border: none;">📝 Description</th>
-    </tr>
-  </thead>
-  <tbody>
     <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/distinct</td>
+      <td style="padding: 1rem; border: none;">🔍 Get distinct field values</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/filter</td>
       <td style="padding: 1rem; border: none;">🎛️ Filter listings with complex criteria</td>
     </tr>
-    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+    <tr style="background: #fafbfc;">
       <td style="padding: 1rem; border: none;"><span style="background: #e8f5e8; color: #2d5a2d; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">GET</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/statistics</td>
       <td style="padding: 1rem; border: none;">📊 Get price statistics</td>
@@ -146,7 +116,9 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </table>
 </div>
 
-### 🔎 **Atlas Search** *(Advanced Search Features)*
+> **🏠 Comprehensive Listing Operations**: This unified section includes CRUD operations for listings, reviews management, advanced filtering using MongoDB aggregation pipelines, and statistical analysis with aggregated data operations. All core listing functionality is consolidated here for better organization.
+
+### 🔎 **Atlas Search** *(Advanced Lexical Search Features)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -167,25 +139,18 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/facet</td>
       <td style="padding: 1rem; border: none;">🔎 Faceted search</td>
     </tr>
-    <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+    <tr style="background: #fafbfc;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/search</td>
       <td style="padding: 1rem; border: none;">🔍 Full-text search</td>
-    </tr>
-    <tr style="background: #fafbfc;">
-      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
-      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/vectorsearch</td>
-      <td style="padding: 1rem; border: none;">🧠 Vector-based semantic search</td>
     </tr>
   </tbody>
 </table>
 </div>
 
-> **💡 Atlas Search Integration**: These endpoints are designed to leverage MongoDB Atlas Search capabilities for advanced search functionality including full-text search, autocomplete, and faceted search. You're expected to implement these features using Atlas Search indexes and operators for lexical search operations.
-> 
-> **🧠 Vector Search & Auto Embedding**: The vector search endpoint (`/vectorsearch`) should utilize MongoDB's **automated embedding** feature for semantic search capabilities. Reference the latest documentation: [http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/](http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/)
+> **💡 Atlas Search Integration**: These endpoints are designed to leverage MongoDB Atlas Search capabilities for advanced lexical search functionality including full-text search, autocomplete, and faceted search. You're expected to implement these features using Atlas Search indexes and operators for lexical search operations.
 
-### 💬 **Chat System** *(AI-Powered Chatbot)*
+### 🧠 **AI & Vector Search** *(Advanced AI-Powered Functionality)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
 <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
   <thead>
@@ -197,6 +162,11 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
   </thead>
   <tbody>
     <tr style="border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
+      <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
+      <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/listingsAndReviews/vectorsearch</td>
+      <td style="padding: 1rem; border: none;">🧠 Vector-based semantic search</td>
+    </tr>
+    <tr style="background: #fafbfc; border-bottom: 1px solid #f1f3f4; transition: background-color 0.2s;">
       <td style="padding: 1rem; border: none;"><span style="background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-family: monospace;">POST</span></td>
       <td style="padding: 1rem; border: none; font-family: monospace; color: #1a73e8;">/api/chat</td>
       <td style="padding: 1rem; border: none;">💬 Send chat message to AI chatbot</td>
@@ -210,12 +180,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 </table>
 </div>
 
-> **🤖 AI Chatbot Features**: These endpoints power an intelligent chatbot that can answer questions about Airbnb listings using:
-> - **Atlas Vector Search**: For semantic search and retrieval of relevant listing information with **automated embeddings**
-> - **AWS Bedrock**: LLM connectivity (recommend using LangChain for integration)
-> - **MongoDB Memory Storage**: Store conversation history and context in MongoDB for persistent memory
-> 
-> **Bonus Points**: Implement chat memory storage in MongoDB to maintain conversation context across sessions and provide personalized responses based on chat history.
+> **🧠 Advanced AI-Powered Features**: This unified section combines semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage. All AI and vector search functionality is consolidated here for better organization.
 
 ### 📈 **Results** *(Optional)*
 <div style="overflow-x: auto; margin: 1.5rem 0;">
@@ -295,28 +260,6 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ---
 
-## 🛠️ Testing
-
-### Postman Collection
-Import the OpenAPI specification directly into Postman:
-1. Open Postman
-2. Click "Import" and provide the collection file
-4. All endpoints will be automatically imported
-
-### VS Code Extensions
-- **REST Client**: Create `.http` files for testing
-
-### Testing with curl
-All endpoints can be tested using curl commands. See examples above or use the "Try it out" feature in Swagger UI to generate curl commands automatically.
-
----
-
-## 🔒 Authentication
-
-Currently, the API does not require authentication.
-
----
-
 ## 🗄️ MongoDB Collection Schema & Performance
 
 ### Understanding the `listingsAndReviews` Collection
@@ -393,10 +336,29 @@ For the Atlas Search endpoints (`/autocomplete`, `/facet`, `/search`):
 - **Performance**: Optimize search queries for fast response times
 - **Relevance**: Implement proper scoring and ranking for search results
 
+**Field Mappings**:
+- **name** (for autocomplete): Enable autocomplete search on listing names
+- **amenities** (for facet): Support faceted filtering by available amenities
+- **property_type** (for facet): Allow filtering by property type categories
+- **beds** (for numeric facet): Enable range filtering on number of beds
+
+> **📋 Index Requirements**:
+> - **Lexical Search Index**: Create a single Atlas Search index that supports all lexical search operations (`/search`, `/facet`, `/autocomplete`) using appropriate operators and analyzers
+
+### **Atlas Vector Search Implementation**
 For the Vector Search endpoint (`/vectorsearch`):
 - **Vector Index**: Create Atlas Vector Search index with **automated embeddings**
-- **knnBeta Operator**: Use `knnBeta` operator for semantic similarity searches
 - **Auto Embedding**: Leverage MongoDB's automated embedding feature for seamless vector operations
+- **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
+
+> **📋 Index Requirements**:
+> - **Vector Search Index**: Create a separate vector search index specifically for the `/vectorsearch` endpoint with automated embeddings on the `description` field
+
+> **🎯 Vector Search Parameters**:
+> - **numCandidates**: Set to 100 for optimal performance and accuracy
+> - **limit**: Return top 10 most relevant results
+
+> **💡 Important**: Ensure your MongoDB Atlas cluster is properly configured for Vector Search, including the creation of a dedicated vector search index with automated embeddings on the `description` field. Reference the latest documentation for detailed setup instructions.
 
 ### **Chat System Implementation**
 For the Chat endpoints (`/chat`, `/chat/clear`):
@@ -428,3 +390,25 @@ For the Chat endpoints (`/chat`, `/chat/clear`):
 - 🤖 **Intelligent Responses**: Use automated vector embeddings for contextually relevant listing recommendations
 - ⚡ **Auto Embedding**: Leverage MongoDB's automated embedding capabilities for vector search operations
 
+
+---
+
+## 🛠️ Testing
+
+### Postman Collection
+Import the OpenAPI specification directly into Postman:
+1. Open Postman
+2. Click "Import" and provide the collection file
+4. All endpoints will be automatically imported
+
+### VS Code Extensions
+- **REST Client**: Create `.http` files for testing
+
+### Testing with curl
+All endpoints can be tested using curl commands. See examples above or use the "Try it out" feature in Swagger UI to generate curl commands automatically.
+
+---
+
+## 🔒 Authentication
+
+Currently, the API does not require authentication.

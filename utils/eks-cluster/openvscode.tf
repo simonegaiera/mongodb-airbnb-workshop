@@ -167,7 +167,7 @@ resource "helm_release" "user_openvscode" {
     },
     {
       name  = "extraEnv[1].value"
-      value = "postgres://${each.value}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/sample_airbnb?sslmode=require"
+      value = "postgres://${each.value}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/${each.value}?sslmode=require"
     }
   ]
 
