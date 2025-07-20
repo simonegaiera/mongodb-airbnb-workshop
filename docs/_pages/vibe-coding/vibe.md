@@ -372,7 +372,7 @@ For the Vector Search endpoint (`/vectorsearch`):
 For the Chat endpoints (`/chat`, `/chat/clear`):
 - **Vector Search**: Use Atlas Vector Search with **automated embeddings** to find relevant listings based on user queries
 - **LLM Integration**: Connect to AWS Bedrock using LangChain for natural language processing
-- **Memory Management**: Store chat history and context in MongoDB collections
+- **Memory Management**: Use LangChain to store the chat history in MongoDB collections
 - **RAG Architecture**: Implement Retrieval-Augmented Generation for accurate, context-aware responses
 - **Session Handling**: Maintain conversation continuity across multiple interactions
 - **Embedding Strategy**: Use automated embeddings for both document indexing and query processing in vector operations

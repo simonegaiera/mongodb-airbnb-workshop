@@ -111,7 +111,7 @@ Load configuration from the existing `.env` file which contains:
 - CORS for frontend integration
 - Compatible with existing test cases in rest-lab/ folder
 - LangChain integration for AWS Bedrock connectivity
-- LangChain MongoDB chat memory storage
+- LangChain MongoDB chat memory
 
 **Technical Implementation Notes:**
 - Separate filtering/statistics from advanced Atlas Search operations
