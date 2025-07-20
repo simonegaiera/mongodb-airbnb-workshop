@@ -645,10 +645,35 @@
       "post": {
         "tags": ["AI & Vector Search"],
         "summary": "Clear chatbot conversation history",
-        "description": "Clear the AI chatbot conversation history and memory stored in MongoDB, resetting the context for future interactions",
+        "description": "Clear the AI chatbot conversation history and memory stored in MongoDB, resetting the context for future interactions and optionally providing a new session ID",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sessionId": {
+                    "type": "string",
+                    "description": "Current session identifier to clear"
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "Username of the person clearing the chat"
+                  }
+                },
+                "required": ["sessionId", "username"],
+                "example": {
+                  "sessionId": "session_1642678901234_abc123def456",
+                  "username": "Stays"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Chat history cleared",
+            "description": "Chat history cleared successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -657,8 +682,14 @@
                     "message": {
                       "type": "string",
                       "example": "Chat history cleared successfully"
+                    },
+                    "newSessionId": {
+                      "type": "string",
+                      "description": "Optional new session ID for the next conversation",
+                      "example": "session_1642678901234_xyz789abc123"
                     }
-                  }
+                  },
+                  "required": ["message"]
                 }
               }
             }
@@ -1242,24 +1273,33 @@
             "type": "string",
             "description": "User message to send to the chat system"
           },
-          "context": {
+          "sessionId": {
             "type": "string",
-            "description": "Additional context for the chat"
+            "description": "Unique session identifier for conversation tracking"
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of the person sending the message"
           }
         },
-        "required": ["message"]
+        "required": ["message", "sessionId", "username"],
+        "example": {
+          "message": "Best view in hawaii?",
+          "sessionId": "session_1642678901234_abc123def456",
+          "username": "Stays"
+        }
       },
       "ChatResponse": {
         "type": "object",
         "properties": {
-          "response": {
+          "reply": {
             "type": "string",
-            "description": "AI response message"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
+            "description": "AI response message in markdown format"
           }
+        },
+        "required": ["reply"],
+        "example": {
+          "reply": "Here are some properties with the best views in Hawaii:\n\n**Property ID: [abc123](http://localhost:3000/rooms?id=abc123)**\n- Ocean view apartment with stunning sunset views\n- Located on the beach with direct access\n\n**Property ID: [def456](http://localhost:3000/rooms?id=def456)**\n- Mountain view villa with panoramic landscapes\n- Perfect for nature lovers"
         }
       },
       "CreateResponse": {
@@ -1343,7 +1383,7 @@
     },
     {
       "name": "AI & Vector Search",
-      "description": "Advanced AI-powered functionality including semantic search operations using MongoDB Atlas Vector Search with automated embeddings and knnBeta operator, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage"
+      "description": "Advanced AI-powered functionality including semantic search operations using MongoDB Atlas Vector Search with automated embeddings, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage"
     },
     {
       "name": "Results",
