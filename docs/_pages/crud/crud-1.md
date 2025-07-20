@@ -33,7 +33,7 @@ In this exercise, you’ll master the basics of MongoDB by finding documents, so
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.
-2. Open `crud-1-lab.http`.
+2. Open `crud-1-query-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Check that the response returns the paginated results.
 5. Run the Test Suite:

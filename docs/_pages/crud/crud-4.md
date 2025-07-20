@@ -36,7 +36,7 @@ In this exercise, you’ll combine multiple filters and pagination to create a d
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.
-2. Open `crud-4-lab.http`.
+2. Open `crud-4-filter-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Confirm the response returns documents matching your filters.
 

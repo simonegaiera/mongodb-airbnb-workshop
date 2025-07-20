@@ -30,7 +30,7 @@ In this exercise, you’ll master the art of inserting documents. Every new list
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab` directory.
-2. Open `crud-5-lab.http`.
+2. Open `crud-5-insert-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful insertion of the document.
 

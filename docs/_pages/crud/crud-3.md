@@ -30,7 +30,7 @@ In this exercise, you’ll reveal all the unique values in any field, powering u
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.
-2. Open `crud-3-lab.http`.
+2. Open `crud-3-distinct-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns a list of unique values for the requested field.
 

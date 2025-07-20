@@ -32,7 +32,7 @@ In this exercise, you’ll unleash the power of MongoDB aggregations to reveal t
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.
-2. Open `pipeline-1-lab.http`.
+2. Open `pipeline-1-statistics-lab.http`.
 3. Click **Send Request** to hit the API.
 4. Check that you get the expected results—average prices by bed count!
 

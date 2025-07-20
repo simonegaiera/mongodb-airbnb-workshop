@@ -33,7 +33,7 @@ In this exercise, you’ll harness the power of MongoDB’s `$set` operator to u
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab` directory.
-2. Open `crud-6-lab.http`.
+2. Open `crud-6-update-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the document with the updated field.
 

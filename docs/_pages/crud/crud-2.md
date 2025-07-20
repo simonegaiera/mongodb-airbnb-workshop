@@ -30,7 +30,7 @@ In this exercise, you’ll unlock the power of MongoDB’s `findOne` to fetch ex
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.
-2. Open `crud-2-lab.http`.
+2. Open `crud-2-one-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns the single document you requested.
 

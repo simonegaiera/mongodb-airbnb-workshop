@@ -33,7 +33,7 @@ In this exercise, you’ll use MongoDB’s `$push` operator to add reviews (or a
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab` directory.
-2. Open `crud-7-lab.http`.
+2. Open `crud-7-reviews-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the updated document with the new review.
 

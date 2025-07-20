@@ -33,7 +33,7 @@ Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autoc
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.  
-2. Open `search-1-lab.http`.  
+2. Open `search-1-autocomplete-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected results.
 5. **You can also run the tests:**  

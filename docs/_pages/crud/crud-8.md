@@ -29,7 +29,7 @@ In this exercise, you’ll master the art of deleting documents by their ID. Wit
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab` directory.
-2. Open `crud-8-lab.http`.
+2. Open `crud-8-delete-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful deletion.
 

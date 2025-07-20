@@ -989,6 +989,29 @@
           "facetsQuery": {
             "type": "object",
             "description": "Facet filters to apply to the search",
+            "properties": {
+              "amenities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of amenities to filter by"
+              },
+              "propertyType": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of property types to filter by"
+              },
+              "beds": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "Array of bed counts to filter by"
+              }
+            },
             "additionalProperties": true
           },
           "searchQuery": {
@@ -1000,8 +1023,12 @@
         "example": {
           "page": 1,
           "limit": 12,
-          "facetsQuery": {},
-          "searchQuery": "hawaii"
+          "facetsQuery": {
+            "amenities": ["Kitchen"],
+            "propertyType": ["Guest suite"],
+            "beds": [1]
+          },
+          "searchQuery": "House Of Hawaii Dreams"
         }
       },
       "VectorSearchRequest": {

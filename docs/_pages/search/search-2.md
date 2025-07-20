@@ -35,7 +35,7 @@ Faceted search lets your users slice and dice results, making it effortless to f
 ### 🚦 Test Your API
 
 1. Go to `server/src/lab/rest-lab`.  
-2. Open `search-2-lab.http`.  
+2. Open `search-2-facet-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Make sure you see valid results in the response.
 5. **You can also run the tests:**  

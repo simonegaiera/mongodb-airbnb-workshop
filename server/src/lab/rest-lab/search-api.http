@@ -1,0 +1,13 @@
+POST http://localhost:5000/api/listingsAndReviews/search
+Content-Type: application/json
+
+{
+    "page": 1,
+    "limit": 12,
+    "facetsQuery": {
+        "amenities": [],
+        "propertyType": [],
+        "beds": []
+    },
+    "searchQuery": "House Of Hawaii"
+}
