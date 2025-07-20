@@ -10,9 +10,9 @@ import ListingTile from './ListingTile';
 // Fix for default marker icons in leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: '/leaflet/marker-icon-2x.png',
-    iconUrl: '/leaflet/marker-icon.png',
-    shadowUrl: '/leaflet/marker-shadow.png',
+    iconRetinaUrl: `${process.env.BASE_PATH}/leaflet/marker-icon-2x.png`,
+    iconUrl: `${process.env.BASE_PATH}/leaflet/marker-icon.png`,
+    shadowUrl: `${process.env.BASE_PATH}/leaflet/marker-shadow.png`,
 });
 
 // Component to handle map events
@@ -54,7 +54,7 @@ const ListingAndReviewsMap = ({ filters = {} }) => {
             return false;
         }
     };
-
+    
     const fetchData = async (page, limit, filters) => {
         try {
             const filtersWithBounds = {
@@ -110,8 +110,8 @@ const ListingAndReviewsMap = ({ filters = {} }) => {
     if (error) {
         return (
             <div className="container mx-auto">
-                <p className="text-red-500">
-                    Unable to fetch data: {error.message}
+                <p className="text-[rgb(255,56,92)] text-center p-4 font-bold">
+                    Unable to fetch data.
                 </p>
             </div>
         );

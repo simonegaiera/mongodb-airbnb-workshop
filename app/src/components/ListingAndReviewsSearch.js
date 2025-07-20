@@ -51,18 +51,32 @@ const ListingsAndReviewsSearch = ({
         },
         body: JSON.stringify({ page, limit, facetsQuery, searchQuery })
       });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      
+      // Try to parse the response regardless of status code
       const result = await response.json();
-      if (page === 1) {
-        setData(result);
+      
+      // If we have data, use it even if the status code indicates an error
+      if (result && Array.isArray(result) && result.length > 0) {
+        if (page === 1) {
+          setData(result);
+        } else {
+          setData(prevData => [...prevData, ...result]);
+        }
+        setHasMore(result.length === limit);
+        setError(null); // Clear any previous errors
+        setLoading(false);
+      } else if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       } else {
-        setData(prevData => [...prevData, ...result]);
+        // Response is ok but no data
+        if (page === 1) {
+          setData([]);
+        }
+        setHasMore(false);
+        setLoading(false);
       }
-      setHasMore(result.length === limit);
-      setLoading(false);
     } catch (error) {
+      console.error('Fetch error:', error);
       setError(error);
       setLoading(false);
     }
@@ -88,8 +102,8 @@ const ListingsAndReviewsSearch = ({
 
   if (error) {
     return (
-      <div className="text-red-500 text-center p-4">
-        Unable to fetch data: {error.message}
+      <div className="text-[rgb(255,56,92)] text-center p-4 font-bold">
+        Unable to fetch data.
       </div>
     );
   }
