@@ -264,7 +264,14 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ### Understanding the `listingsAndReviews` Collection
 
-**MCP Integration Available**: There is a Model Context Protocol (MCP) available that can help you understand the structure and schema of the `listingsAndReviews` collection. This MCP provides insights into:
+**Database Usage**:
+- 🏠 **Primary Collection**: All listing-related endpoints (`/api/listingsAndReviews/*`) use the `listingsAndReviews` collection
+- 🔍 **Atlas Search**: Search endpoints (`/autocomplete`, `/facet`, `/search`) operate on the `listingsAndReviews` collection
+- 🧠 **Vector Search**: The `/vectorsearch` endpoint uses the `listingsAndReviews` collection with automated embeddings
+- 💬 **Chat System**: Chat endpoints (`/api/chat/*`) use the `listingsAndReviews` collection for RAG operations
+- 📊 **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_gameday` database
+
+**MCP Integration Available**: There is a Model Context Protocol (MCP) available that can help you understand the structure and schema of the two collections. This MCP provides insights into:
 - Field types and structures
 - Data patterns and relationships
 - Sample document formats

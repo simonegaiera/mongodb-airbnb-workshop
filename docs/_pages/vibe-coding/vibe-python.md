@@ -51,8 +51,8 @@ Create a Python REST API application based on the swagger.json specification fil
 2. **Search & Filtering**: Basic filtering using MongoDB aggregation pipelines and standard queries
 3. **Statistics**: Statistical analysis using MongoDB aggregation framework
 4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
-5. **Vector Search**: Implement using MongoDB Atlas Vector Search with knnBeta operator
-   - **Automated Embeddings**: Reference documentation at http://mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/
+5. **Vector Search**: Implement using MongoDB Atlas Vector Search with automated embeddings
+   - **Automated Embeddings**: @web reference the MongoDB Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
    - **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
 6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain
 7. **Results**: Workshop participant management
@@ -66,6 +66,13 @@ Create a Python REST API application based on the swagger.json specification fil
 - **Schema Discovery First**: Query the MCP to examine the actual data structure, field types, and document format in the collection
 - Implement proper database queries based on the actual collection structure and field types discovered through MCP
 - Ensure all field references and data types match the real database schema, not assumptions
+
+**Database Collection Usage:**
+- **Primary Collection**: All listing-related endpoints (`/api/listingsAndReviews/*`) use the `listingsAndReviews` collection
+- **Atlas Search**: Search endpoints (`/autocomplete`, `/facet`, `/search`) operate on the `listingsAndReviews` collection
+- **Vector Search**: The `/vectorsearch` endpoint uses the `listingsAndReviews` collection with automated embeddings
+- **Chat System**: Chat endpoints (`/api/chat/*`) use the `listingsAndReviews` collection for RAG operations
+- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_gameday` database
 
 **Atlas Search & Vector Search Requirements:**
 - **Vector Search Index**: Create a separate vector search index specifically for the `/vectorsearch` endpoint with automated embeddings on the `description` field

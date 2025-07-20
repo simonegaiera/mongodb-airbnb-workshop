@@ -32,7 +32,7 @@ const ListingTile = ({ sequence, item, index, handleClick, isValidURL, stockImag
             {item.name}
           </h3>
           <p className="text-gray-600 text-sm mb-1">
-            <span className="font-bold">${Math.round(item.price.$numberDecimal)}</span> per night
+            <span className="font-bold">${Math.round(item.price?.$numberDecimal ? parseFloat(item.price.$numberDecimal) : parseFloat(item.price))}</span> per night
           </p>
           <p className="text-gray-600 text-sm mb-1">
             Property Type: {item.property_type}
