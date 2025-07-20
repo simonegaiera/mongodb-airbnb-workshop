@@ -396,9 +396,39 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the listing"
+                      }
+                    },
+                    "required": ["name"]
                   }
-                }
+                },
+                "example": [
+                  {
+                    "name": "House Of Hawaii Dreams"
+                  },
+                  {
+                    "name": "Hawaii Tiny House (Red)"
+                  },
+                  {
+                    "name": "English Cottage in Hawaii"
+                  },
+                  {
+                    "name": "Hawaii by the Sea~Walk"
+                  },
+                  {
+                    "name": "Homebase for your Hawaii adventures!"
+                  },
+                  {
+                    "name": "Hawaii North Shore Oahu getaway!"
+                  },
+                  {
+                    "name": "aOceanside Hawaii Apartment Studio Kitchen Parking"
+                  }
+                ]
               }
             }
           },
@@ -990,32 +1020,110 @@
         "required": ["query"]
       },
       "FacetResponse": {
-        "type": "object",
-        "properties": {
-          "results": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Listing"
-            }
-          },
-          "facets": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "object",
+              "properties": {
+                "lowerBound": {
+                  "type": "integer",
+                  "description": "Lower bound count for the facet results"
+                }
+              },
+              "required": ["lowerBound"]
+            },
+            "facet": {
+              "type": "object",
+              "additionalProperties": {
                 "type": "object",
                 "properties": {
-                  "_id": {
-                    "type": "string"
-                  },
-                  "count": {
-                    "type": "integer"
+                  "buckets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "oneOf": [
+                            {"type": "string"},
+                            {"type": "integer"}
+                          ],
+                          "description": "Facet value identifier"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "description": "Number of documents matching this facet value"
+                        }
+                      },
+                      "required": ["_id", "count"]
+                    }
                   }
-                }
+                },
+                "required": ["buckets"]
+              },
+              "description": "Facet results grouped by field names (amenities, property_type, beds, etc.)"
+            }
+          },
+          "required": ["count", "facet"]
+        },
+        "example": [
+          {
+            "count": {
+              "lowerBound": 28
+            },
+            "facet": {
+              "amenities": {
+                "buckets": [
+                  {
+                    "_id": "Wifi",
+                    "count": 27
+                  },
+                  {
+                    "_id": "TV",
+                    "count": 26
+                  },
+                  {
+                    "_id": "Essentials",
+                    "count": 25
+                  }
+                ]
+              },
+              "property_type": {
+                "buckets": [
+                  {
+                    "_id": "Apartment",
+                    "count": 8
+                  },
+                  {
+                    "_id": "House",
+                    "count": 7
+                  },
+                  {
+                    "_id": "Condominium",
+                    "count": 3
+                  }
+                ]
+              },
+              "beds": {
+                "buckets": [
+                  {
+                    "_id": 0,
+                    "count": 1
+                  },
+                  {
+                    "_id": 1,
+                    "count": 12
+                  },
+                  {
+                    "_id": 2,
+                    "count": 5
+                  }
+                ]
               }
             }
           }
-        }
+        ]
       },
       "PriceStatistics": {
         "type": "array",

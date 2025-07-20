@@ -23,7 +23,7 @@ search 0:
 
 ### Bedrock
 - add a parameter to exclude bedrock so that they cannot use cline
-- add llm model and region as terraform param in the user_operations.sh
+- add rules to guide the AI’s behavior. This ensures the AI follows specific guidelines or coding practices you’ve defined.
 
 ### test
 - how to deploy only certain scenarios

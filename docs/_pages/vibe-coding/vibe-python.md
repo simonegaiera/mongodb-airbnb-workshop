@@ -52,7 +52,7 @@ Create a Python REST API application based on the swagger.json specification fil
 3. **Statistics**: Statistical analysis using MongoDB aggregation framework
 4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
 5. **Vector Search**: Implement using MongoDB Atlas Vector Search with automated embeddings
-   - **Automated Embeddings**: @web reference the MongoDB Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
+   - **Automated Embeddings**: curl the Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
    - **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
 6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain
 7. **Results**: Workshop participant management
@@ -62,7 +62,7 @@ Create a Python REST API application based on the swagger.json specification fil
 - **No Extra Features**: Do not add endpoints, routes, or functionality beyond what's documented in the OpenAPI specification
 
 **MongoDB Integration:**
-- Use the available MCP (Model Context Protocol) to thoroughly analyze and understand the `listingsAndReviews` collection schema before implementing any queries
+- Use the available MCP (Model Context Protocol) to thoroughly analyze and understand the collection schemas before implementing any queries
 - **Schema Discovery First**: Query the MCP to examine the actual data structure, field types, and document format in the collection
 - Implement proper database queries based on the actual collection structure and field types discovered through MCP
 - Ensure all field references and data types match the real database schema, not assumptions
@@ -97,10 +97,13 @@ Create a Python REST API application based on the swagger.json specification fil
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
    - Include clear comments and creation instructions
+   - Atlas UI is not available
 3. **requirements.txt file** without version pinning - let pip resolve the latest compatible versions
 
 **Environment Variables:**
+Load configuration from the existing `.env` file which contains:
 - MONGODB_URI, AWS_REGION, LLM_MODEL, and other necessary configuration
+- Use python-dotenv to load these environment variables into your application
 
 **Additional Features:**
 - Proper error handling and validation
@@ -118,6 +121,15 @@ Create a Python REST API application based on the swagger.json specification fil
 - Create a dedicated vector search index separate from the lexical search index
 
 Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.
+```
+
+
+## 🔍 Automated Embeddings Implementation Note
+
+**Automated embeddings is a newer MongoDB Atlas feature**. If your AI assistant doesn't implement automated embeddings correctly or lacks current documentation knowledge, use this enhanced prompt:
+
+```
+@web Reference the MongoDB Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details. Use curl to retrieve the information, not chromium.
 ```
 
 ---
