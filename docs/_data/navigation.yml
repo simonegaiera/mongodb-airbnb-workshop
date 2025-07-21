@@ -25,12 +25,6 @@ docs:
         url: /vibe/
       - title: "Hint: Python Prompt"
         url: /vibe/python/
-      - title: "CRUD: Indexes"
-        url: /index/
-      - title: "Search: Indexes"
-        url: /search/index/
-      - title: "Vector Search: Indexes"
-        url: /vector-search/index/
 
   - title: "Guided Exercises (Scenario 2)"
     children:
