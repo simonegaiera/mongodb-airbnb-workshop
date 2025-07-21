@@ -24,9 +24,9 @@ docs:
       - title: "Vibe Coding: Instructions"
         url: /vibe/
       - title: "Hint: Python Prompt"
-        url: /vibe/python/
-      - title: "Hint: Python Prompt (Beta)"
         url: /vibe/python-full/
+      - title: "Hint: Python Prompt (Beta)"
+        url: /vibe/python/
       - title: "Hint: SpringBoot Prompt (Beta)"
         url: /vibe/spring-boot/
       - title: "Hint: Node Prompt (Beta)"
