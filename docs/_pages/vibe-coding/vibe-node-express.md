@@ -53,7 +53,6 @@ Create a Node.js Express REST API application based on the swagger.json specific
 3. **Statistics**: Statistical analysis using MongoDB aggregation framework
 4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
 5. **Vector Search**: Implement using MongoDB Atlas Vector Search with automated embeddings
-   - **Automated Embeddings**: curl the Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
    - **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
 6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain
 7. **Results**: Workshop participant management
@@ -104,7 +103,7 @@ Create a Node.js Express REST API application based on the swagger.json specific
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
    - Include clear comments and creation instructions
-   - Atlas UI is not available
+   - MongoDB Atlas UI or Atlas CLI is not available
 3. **package.json file** with all necessary dependencies:
    - Express.js for web framework
    - MongoDB driver or Mongoose for database operations
@@ -150,6 +149,7 @@ Load configuration from the existing `.env` file which contains:
 - Create a dedicated vector search index separate from the lexical search index
 - Use modern JavaScript features (ES6+, async/await, destructuring)
 - Implement proper connection pooling for MongoDB
+- No authorization/credentials is required
 
 Analyze the swagger.json file first, then design and implement the complete Express.js application with appropriate file structure and all required indexes.
 ```

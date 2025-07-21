@@ -40,7 +40,7 @@ Create a Java Spring Boot REST API application based on the swagger.json specifi
 
 **Core Requirements:**
 - Read and analyze the swagger.json file to understand all API endpoints
-- Build a Java Spring Boot web application using Spring Boot 3.x on port 5000
+- Build a Java Spring Boot web application using Spring Boot on port 5000
 - **Implement ONLY the APIs defined in the swagger.json file - no additional endpoints**
 - Organize code into proper Java packages based on the API categories you identify from the swagger
 - Separate concerns: CRUD operations, search functionality, vector search, and chatbot using Spring Boot best practices
@@ -52,7 +52,6 @@ Create a Java Spring Boot REST API application based on the swagger.json specifi
 3. **Statistics**: Statistical analysis using MongoDB aggregation framework
 4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
 5. **Vector Search**: Implement using MongoDB Atlas Vector Search with automated embeddings
-   - **Automated Embeddings**: curl the Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
    - **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
 6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain4j
 7. **Results**: Workshop participant management
@@ -98,7 +97,7 @@ Create a Java Spring Boot REST API application based on the swagger.json specifi
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
    - Include clear comments and creation instructions
-   - Atlas UI is not available
+   - MongoDB Atlas UI or Atlas CLI is not available
 3. **pom.xml file** with all necessary dependencies
 4. **application.properties** or **application.yml** configuration file
 
@@ -153,6 +152,7 @@ Load configuration from environment variables or application.properties:
 - Follow Spring Boot naming conventions and best practices
 - Use proper HTTP status codes and error responses
 - Implement proper logging throughout the application
+- No authorization/credentials is required
 
 **Error Handling:**
 - Create custom exception classes

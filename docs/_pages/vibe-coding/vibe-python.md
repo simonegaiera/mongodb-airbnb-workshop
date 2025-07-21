@@ -52,7 +52,6 @@ Create a Python REST API application based on the swagger.json specification fil
 3. **Statistics**: Statistical analysis using MongoDB aggregation framework
 4. **Atlas Search**: Implement using MongoDB Atlas Search operators (autocomplete, facet, text search)
 5. **Vector Search**: Implement using MongoDB Atlas Vector Search with automated embeddings
-   - **Automated Embeddings**: curl the Atlas Vector Search automated embedding documentation at https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/ for implementation details.
    - **Embedding Field**: Configure automated embeddings on the `description` field for semantic search capabilities
 6. **AI Chatbot**: RAG implementation using Atlas Vector Search + AWS Bedrock LLM integration via LangChain
 7. **Results**: Workshop participant management
@@ -97,7 +96,7 @@ Create a Python REST API application based on the swagger.json specification fil
    - One dedicated Vector Search index for semantic search with automated embeddings on the `description` field
    - Standard database indexes for performance optimization
    - Include clear comments and creation instructions
-   - Atlas UI is not available
+   - MongoDB Atlas UI or Atlas CLI is not available
 3. **requirements.txt file** without version pinning - let pip resolve the latest compatible versions
 
 **Environment Variables:**
@@ -119,6 +118,7 @@ Load configuration from the existing `.env` file which contains:
 - Design RAG pipeline for contextual chatbot responses
 - Ensure the single Atlas Search index supports text operators, autocomplete operators, and facet operators with proper field mappings
 - Create a dedicated vector search index separate from the lexical search index
+- No authorization/credentials is required
 
 Analyze the swagger.json file first, then design and implement the complete application with appropriate file structure and all required indexes.
 ```

@@ -31,3 +31,5 @@ search 0:
 ### OIDC
 - ask if is possible to have OIDC, the SA profile does not allows it now
 
+### Cline
+- make the browser work

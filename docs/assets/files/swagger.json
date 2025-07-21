@@ -956,8 +956,10 @@
                 "type": "string"
               },
               "beds": {
-                "type": "integer",
-                "minimum": 0
+                "type": "string",
+                "description": "Number of beds as a range (e.g., '1-2') or single value",
+                "pattern": "^\\d+(-\\d+)?$",
+                "example": "1-2"
               },
               "bounds": {
                 "type": "object",
@@ -989,7 +991,16 @@
             }
           }
         },
-        "required": ["page", "limit", "filters"]
+        "required": ["page", "limit", "filters"],
+        "example": {
+          "limit": 12,
+          "page": 1,
+          "filters": {
+            "amenities": ["24-hour check-in"],
+            "propertyType": "Apartment",
+            "beds": "1-2"
+          }
+        }
       },
       "AutocompleteRequest": {
         "type": "object",

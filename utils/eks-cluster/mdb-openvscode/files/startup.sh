@@ -35,7 +35,7 @@ apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install OpenJDK 21
 echo_with_timestamp "Installing OpenJDK 21"
 apt-get update > /dev/null && \
-apt-get install -y openjdk-21-jdk > /dev/null && \
+apt-get install -y openjdk-21-jdk maven > /dev/null && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install uv
