@@ -25,6 +25,10 @@ docs:
         url: /vibe/
       - title: "Hint: Python Prompt"
         url: /vibe/python/
+      - title: "Hint: SpringBoot Prompt"
+        url: /vibe/spring-boot/
+      - title: "Hint: Node Prompt"
+        url: /vibe/node-express/
 
   - title: "Guided Exercises (Scenario 2)"
     children:
