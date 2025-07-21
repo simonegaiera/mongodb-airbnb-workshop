@@ -214,52 +214,6 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 
 ---
 
-## 📋 Data Schemas
-
-### Listing Object
-```json
-{
-  "_id": "string",
-  "name": "string",
-  "description": "string",
-  "property_type": "string",
-  "room_type": "string",
-  "bedrooms": 0,
-  "bathrooms": 0,
-  "beds": 0,
-  "price": 0,
-  "accommodates": 0,
-  "amenities": ["string"],
-  "address": {
-    "street": "string",
-    "suburb": "string",
-    "country": "string",
-    "location": {
-      "type": "Point",
-      "coordinates": [longitude, latitude]
-    }
-  },
-  "host": {
-    "host_id": "string",
-    "host_name": "string"
-  },
-  "reviews": [],
-  "number_of_reviews": 0
-}
-```
-
-### Review Object
-```json
-{
-  "_id": "string",
-  "date": "2024-01-01T00:00:00Z",
-  "reviewer_name": "string",
-  "comments": "string"
-}
-```
-
----
-
 ## 🗄️ MongoDB Collection Schema & Performance
 
 ### Understanding the `listingsAndReviews` Collection
@@ -285,6 +239,118 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 - 📍 **Geospatial Data**: Location coordinates for mapping and proximity searches
 - 🏷️ **Categorical Fields**: Property types, room types, amenities for filtering
 - 💰 **Pricing Information**: Nightly rates and pricing structures
+
+### 📋 Data Schemas
+```json
+{
+  "_id": "string",
+  "listing_url": "string",
+  "name": "string",
+  "summary": "string",
+  "space": "string",
+  "description": "string",
+  "neighborhood_overview": "string",
+  "notes": "string",
+  "transit": "string",
+  "access": "string",
+  "interaction": "string",
+  "house_rules": "string",
+  "property_type": "string",
+  "room_type": "string",
+  "bed_type": "string",
+  "minimum_nights": "string",
+  "maximum_nights": "string",
+  "cancellation_policy": "string",
+  "last_scraped": "Date",
+  "calendar_last_scraped": "Date",
+  "accommodates": "Number",
+  "bedrooms": "Number",
+  "beds": "Number",
+  "number_of_reviews": "Number",
+  "bathrooms": "Decimal128",
+  "amenities": ["string"],
+  "price": "Decimal128",
+  "weekly_price": "Decimal128",
+  "monthly_price": "Decimal128",
+  "cleaning_fee": "Decimal128",
+  "extra_people": "Decimal128",
+  "guests_included": "Decimal128",
+  "security_deposit": "Decimal128",
+  "images": {
+    "thumbnail_url": "string",
+    "medium_url": "string",
+    "picture_url": "string",
+    "xl_picture_url": "string"
+  },
+  "host": {
+    "host_id": "string",
+    "host_url": "string",
+    "host_name": "string",
+    "host_location": "string",
+    "host_about": "string",
+    "host_thumbnail_url": "string",
+    "host_picture_url": "string",
+    "host_neighbourhood": "string",
+    "host_is_superhost": "Boolean",
+    "host_has_profile_pic": "Boolean",
+    "host_identity_verified": "Boolean",
+    "host_listings_count": "Number",
+    "host_total_listings_count": "Number",
+    "host_verifications": ["string"],
+    "host_response_time": "string",
+    "host_response_rate": "Number"
+  },
+  "address": {
+    "street": "string",
+    "suburb": "string",
+    "government_area": "string",
+    "market": "string",
+    "country": "string",
+    "country_code": "string",
+    "location": {
+      "type": "string",
+      "coordinates": ["Number"],
+      "is_location_exact": "Boolean"
+    }
+  },
+  "availability": {
+    "availability_30": "Number",
+    "availability_60": "Number",
+    "availability_90": "Number",
+    "availability_365": "Number"
+  },
+  "review_scores": {
+    "review_scores_accuracy": "Number",
+    "review_scores_cleanliness": "Number",
+    "review_scores_checkin": "Number",
+    "review_scores_communication": "Number",
+    "review_scores_location": "Number",
+    "review_scores_value": "Number",
+    "review_scores_rating": "Number"
+  },
+  "reviews": [
+    {
+      "_id": "string",
+      "date": "Date",
+      "listing_id": "string",
+      "reviewer_id": "string",
+      "reviewer_name": "string",
+      "comments": "string"
+    }
+  ],
+  "first_review": "Date",
+  "last_review": "Date",
+  "updated_at": "Date"
+}
+```
+
+**Important Data Types:**
+- **Decimal128**: Used for precise monetary values (`price`, `weekly_price`, `monthly_price`, `cleaning_fee`, `extra_people`, `guests_included`, `security_deposit`, `bathrooms`)
+- **Number**: Used for integers (`accommodates`, `bedrooms`, `beds`, `number_of_reviews`, host counts, availability counts, review scores)
+- **Date**: Used for timestamps (`last_scraped`, `calendar_last_scraped`, `first_review`, `last_review`, `updated_at`, review dates)
+- **Boolean**: Used for true/false values (host verification flags, location exactness)
+- **Array**: Used for lists (`amenities`, `host_verifications`, `reviews`, `coordinates`)
+- **Document**: Used for nested objects (`images`, `host`, `address`, `availability`, `review_scores`)
 
 ### ⚡ Performance Requirements & Index Creation
 

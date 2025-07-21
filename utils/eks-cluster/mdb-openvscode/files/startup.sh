@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set debconf to non-interactive mode to avoid prompts
+export DEBIAN_FRONTEND=noninteractive
+
 # Function to echo with timestamp for long operations
 echo_with_timestamp() {
     local message="$1"
@@ -8,7 +11,10 @@ echo_with_timestamp() {
 
 echo_with_timestamp "Updating system packages"
 apt-get update > /dev/null && \
-apt-get install -y apt-utils > /dev/null && \
+apt-get install -y apt-utils > /dev/null
+
+echo_with_timestamp "Installing required packages"
+apt-get update > /dev/null && \
 apt-get install -y git curl less vim net-tools lsof jq unzip software-properties-common > /dev/null && \
 apt-get install -y postgresql-client > /dev/null && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
