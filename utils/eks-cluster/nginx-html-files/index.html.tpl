@@ -79,6 +79,13 @@
       <span class="customer-name">${customer_name}</span>!
     </h1>
     
+    <p>
+      Instructions: 
+      <a href="https://mongogameday.com/" target="_blank" rel="noopener noreferrer">
+        MongoDB GameDay
+      </a>
+    </p>
+    
     %{ if length(user_ids) > 0 }
       <table>
         <thead>

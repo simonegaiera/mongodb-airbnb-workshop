@@ -23,7 +23,7 @@ locals {
     customer_name = var.customer_name,
     server_name = local.aws_route53_record_name,
     user_ids = local.atlas_user_list,
-    folder = var.scenario == "vibe-coding" ? "/home/workspace/mongodb-airbnb-workshop/backend" : "/home/workspace/mongodb-airbnb-workshop"
+    folder = var.scenario == "vibe-coding" ? "/home/workspace/mongodb-airbnb-workshop/backend" : "/home/workspace/mongodb-airbnb-workshop/server"
   })
 
   notfound_nginx_html = templatefile("${path.module}/nginx-html-files/404.html.tpl", {
