@@ -66,7 +66,7 @@ resource "aws_rds_cluster" "aurora_cluster" {
   engine_version        = "17.5"
   database_name         = "sample_airbnb"
   master_username       = "postgres"
-  master_password       = "MongoGameDay123"
+  master_password       = local.atlas_user_password
   
   serverlessv2_scaling_configuration {
     max_capacity = 1.0
@@ -126,7 +126,7 @@ resource "null_resource" "enable_pgvector" {
       fi
             
       # Try to enable pgvector extension (Aurora PostgreSQL 17 should have it built-in)
-      PGPASSWORD='MongoGameDay123' psql \
+      PGPASSWORD='${local.atlas_user_password}' psql \
         -h ${aws_rds_cluster.aurora_cluster.endpoint} \
         -U postgres \
         -d sample_airbnb \
@@ -199,7 +199,8 @@ resource "postgresql_database" "user_databases" {
   owner    = "postgres"
   
   depends_on = [
-    null_resource.enable_pgvector
+    null_resource.enable_pgvector,
+    aws_rds_cluster_instance.aurora_instance
   ]
   
   lifecycle {
@@ -235,7 +236,7 @@ resource "null_resource" "enable_pgvector_per_database" {
       fi
       
       # Enable pgvector extension for each user database sequentially
-      ${join("\n", [for user in local.atlas_user_list : "echo 'Enabling pgvector for database: ${user}'\nPGPASSWORD='MongoGameDay123' psql -h ${aws_rds_cluster.aurora_cluster.endpoint} -U postgres -d ${user} -c \"CREATE EXTENSION IF NOT EXISTS vector;\" || echo 'Failed to enable pgvector for ${user}, continuing...'"])}
+      ${join("\n", [for user in local.atlas_user_list : "echo 'Enabling pgvector for database: ${user}'\nPGPASSWORD='${local.atlas_user_password}' psql -h ${aws_rds_cluster.aurora_cluster.endpoint} -U postgres -d ${user} -c \"CREATE EXTENSION IF NOT EXISTS vector;\" || echo 'Failed to enable pgvector for ${user}, continuing...'"])}
     EOT
   }
 
@@ -361,20 +362,6 @@ resource "postgresql_grant" "atlas_users_function_privileges" {
   lifecycle {
     create_before_destroy = false
   }
-}
-
-# Output the created usernames for reference
-output "postgresql_users" {
-  description = "List of created PostgreSQL users"
-  value       = values(postgresql_role.atlas_users)[*].name
-  sensitive   = false
-}
-
-# Output the created databases for reference
-output "postgresql_databases" {
-  description = "List of created PostgreSQL databases"
-  value       = values(postgresql_database.user_databases)[*].name
-  sensitive   = false
 }
 
 # Output connection strings for each user's database

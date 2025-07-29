@@ -71,7 +71,7 @@ Create a Python REST API application based on the swagger.json specification fil
 - **Atlas Search**: Search endpoints (`/autocomplete`, `/facet`, `/search`) operate on the `listingsAndReviews` collection
 - **Vector Search**: The `/vectorsearch` endpoint uses the `listingsAndReviews` collection with automated embeddings
 - **Chat System**: Chat endpoints (`/api/chat/*`) use the `listingsAndReviews` collection for RAG operations
-- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_gameday` database
+- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_arena` database
 
 **Atlas Search & Vector Search Requirements:**
 - **Vector Search Index**: Create a separate vector search index specifically for the `/vectorsearch` endpoint with automated embeddings on the `description` field

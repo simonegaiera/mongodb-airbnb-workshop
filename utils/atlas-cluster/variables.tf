@@ -13,13 +13,13 @@ variable "private_key" {
 variable "project_name" {
   description = "The Atlas Project ID used to create the cluster"
   type        = string
-  default     = "gameday-customer"
+  default     = "arena-customer"
 }
 
 variable "cluster_name" {
   description = "The Atlas Project cluster name"
   type        = string
-  default     = "airbnb-gameday"
+  default     = "airbnb-arena"
 }
 
 variable "sample_database_name" {
@@ -27,6 +27,13 @@ variable "sample_database_name" {
   type        = string
   default     = "sample_airbnb"
 }
+
+variable "common_database_name" {
+  description = "Name of the sample database"
+  type        = string
+  default     = "airbnb_arena"
+}
+
 
 variable "cluster_region" {
   description = "The Atlas Project cluster region"

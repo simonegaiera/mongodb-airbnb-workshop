@@ -28,7 +28,6 @@ apt-get install -y python3.12-full > /dev/null && \
 python3.12 -m ensurepip --upgrade && \
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
 apt-get clean && rm -rf /var/lib/apt/lists/*
-python3 -m pip install --upgrade pip
 
 echo_with_timestamp "Installing Node.js 20"
 apt-get update > /dev/null && \
@@ -48,6 +47,14 @@ apt-get clean && rm -rf /var/lib/apt/lists/*
 echo_with_timestamp "Installing uv"
 curl -LsSf https://astral.sh/uv/install.sh | sh
 sudo -u openvscode-server bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+
+# Add uv to PATH for openvscode-server user
+echo_with_timestamp "Adding uv to PATH for openvscode-server user"
+sudo -u openvscode-server bash -c 'echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> /home/openvscode-server/.bashrc'
+sudo -u openvscode-server bash -c 'echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> /home/openvscode-server/.profile'
+
+# Create virtual environment and install packages with uv
+echo_with_timestamp "Creating virtual environment and installing packages with uv"
 sudo -u openvscode-server bash -c 'cd /home/openvscode-server && export PATH="$HOME/.local/bin:$PATH" && uv venv'
 sudo -u openvscode-server bash -c 'export PATH="$HOME/.local/bin:$PATH" && uv pip install postgres-mcp'
 

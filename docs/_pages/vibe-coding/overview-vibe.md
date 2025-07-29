@@ -1,5 +1,5 @@
 ---
-title: "GameDay Overview"
+title: "Arena Overview"
 permalink: /overview-vibe/
 layout: single
 classes: wide
@@ -9,17 +9,17 @@ classes: wide
 
 Your company has just made a bold move: entering the fast-paced world of short-term rentals. The goal? Build a modern, scalable platform to manage listings, bookings, and guests. The twist? You’re starting from scratch, and MongoDB is your database of choice.
 
-This is where **MongoDB Airbnb GameDay** begins. Think of it as your company’s kickoff—a hands-on journey where you’ll learn MongoDB fundamentals by building the backbone of your new rental application. Each challenge is inspired by real-world scenarios you’ll face as you bring your product to life. By the end, you’ll have the skills to make your users—and your company—happy.
+This is where **MongoDB Airbnb AI Arena** begins. Think of it as your company’s kickoff—a hands-on journey where you’ll learn MongoDB fundamentals by building the backbone of your new rental application. Each challenge is inspired by real-world scenarios you’ll face as you bring your product to life. By the end, you’ll have the skills to make your users—and your company—happy.
 
 Ready to roll up your sleeves? Check out our [GitHub repository](https://github.com/simonegaiera/mongodb-airbnb-workshop) and let’s get started!
 
 ---
 
-## 🗺️ GameDay Overview
+## 🗺️ Arena Overview
 
 Your mission is to build out the backend of your rental platform, focusing on the controllers that power your application. The project is split into a **frontend** and a **backend**—but your focus will be on the backend, where the real data magic happens.
 
-Throughout GameDay, you’ll tackle these core challenges:
+Throughout Arena, you’ll tackle these core challenges:
 
 1. ✏️ **CRUD Operations** – Master creating, reading, updating, and deleting documents in MongoDB.
 2. 📊 **MongoDB Aggregations** – Unlock powerful data insights using the aggregation framework.

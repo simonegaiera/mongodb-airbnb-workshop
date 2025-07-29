@@ -1,11 +1,11 @@
 ---
-title: "MongoDB Airbnb GameDay"
+title: "MongoDB Airbnb AI Arena"
 permalink: /
 layout: single
 classes: wide
 ---
 
-## 🎉 Welcome to the MongoDB Airbnb GameDay! 🚀
+## 🎉 Welcome to the MongoDB Airbnb Arena! 🚀
 
 Get ready for an action-packed, hands-on workshop where you'll put your MongoDB skills to the test!  
 Challenge yourself, race against the clock, and climb the leaderboard as you tackle real-world scenarios and technical challenges.

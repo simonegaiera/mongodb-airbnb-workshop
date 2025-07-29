@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <title>MongoDB AirBnb GameDay</title>
+  <title>MongoDB AI Arena</title>
   <link rel="icon" href="https://${server_name}/favicon.ico" type="image/x-icon">
   <style>
         body {
@@ -75,14 +75,14 @@
 <body>
   <div class="container">
     <h1>
-      GameDay at 
+      MongoDB AI Arena at 
       <span class="customer-name">${customer_name}</span>!
     </h1>
     
     <p>
       Instructions: 
       <a href="https://mongogameday.com/" target="_blank" rel="noopener noreferrer">
-        MongoDB GameDay
+        MongoDB AI Arena
       </a>
     </p>
     
@@ -125,7 +125,7 @@
 
   </div>
   <div class="footer">
-    &copy; 2025 MongoDB Airbnb Workshop
+    &copy; 2025 MongoDB AI Arena
   </div>
 </body>
 </html>

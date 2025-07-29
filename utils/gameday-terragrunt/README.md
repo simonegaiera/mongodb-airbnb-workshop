@@ -1,4 +1,4 @@
-# GameDay Environment Setup Guide
+# MongoDB AI Arena Environment Setup Guide
 
 ## Prerequisites
 

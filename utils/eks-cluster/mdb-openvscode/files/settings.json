@@ -2,5 +2,6 @@
     "workbench.startupEditor": "none",
     "security.workspace.trust.enabled": false,
     "mdb.confirmRunAll": false,
-    "github.copilot.editor.enableAutoCompletions": false
+    "github.copilot.editor.enableAutoCompletions": false,
+    "workbench.colorTheme": "Dark Modern"
 }

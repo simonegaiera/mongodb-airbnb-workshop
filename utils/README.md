@@ -19,11 +19,9 @@ search 0:
 
 ## Terraform
 
-### Atlas
-- remove read on sample_airbnb
+BRING BACK THE ATLAS MAIN FOR PROJECT!
 
 ### Bedrock
-- add a parameter to exclude bedrock so that they cannot use cline
 - add rules to guide the AI’s behavior. This ensures the AI follows specific guidelines or coding practices you’ve defined.
 - say that cline should east-2
 - contention is high

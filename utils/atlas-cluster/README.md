@@ -1,6 +1,6 @@
-# GameDay Environment Setup Guide
+# AI Arena Environment Setup Guide
 
-Welcome to the GameDay preparation guide! Follow these steps to ensure a smooth setup process for your environment.
+Welcome to the AI Arena preparation guide! Follow these steps to ensure a smooth setup process for your environment.
 
 ## Preparation Steps
 

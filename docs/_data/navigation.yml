@@ -17,7 +17,7 @@ docs:
 
   - title: "Vibe Coding (Scenario 1)"
     children:
-      - title: "GameDay Overview"
+      - title: "AI Arena Overview"
         url: /overview-vibe/
       - title: "IDE: VSCode Online"
         url: /environment/vscode-vibe/
@@ -34,7 +34,7 @@ docs:
 
   - title: "Guided Exercises (Scenario 2)"
     children:
-      - title: "GameDay Overview"
+      - title: "AI Arena Overview"
         url: /overview/
       - title: "IDE: VSCode Online"
         url: /environment/vscode/

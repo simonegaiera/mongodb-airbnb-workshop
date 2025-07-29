@@ -13,9 +13,10 @@ locals {
 inputs = {
     public_key                              = "public_key"
     private_key                             = "private_key"
-    project_name                            = "gameday-customer"
+    project_name                            = "arena-customer"
     cluster_name                            = "mongodb-airbnb"
     sample_database_name                    = "sample_airbnb"
+    common_database_name                    = "airbnb_arena"
     cluster_region                          = "US_EAST_2"
     cluster_type                            = "REPLICASET"
     atlas_provider_name                     = "AWS"

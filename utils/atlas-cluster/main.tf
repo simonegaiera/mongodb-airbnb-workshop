@@ -15,25 +15,25 @@ provider "mongodbatlas" {
 
 data "mongodbatlas_roles_org_id" "org" {}
 
-# data "mongodbatlas_project" "project" {
-#   name   = var.project_name
-# }
-
-resource "mongodbatlas_project" "project" {
+data "mongodbatlas_project" "project" {
   name   = var.project_name
-  org_id = data.mongodbatlas_roles_org_id.org.org_id
-
-  limits {
-    name = "atlas.project.security.databaseAccess.users"
-    value = 250
-  }
 }
+
+# resource "mongodbatlas_project" "project" {
+#   name   = var.project_name
+#   org_id = data.mongodbatlas_roles_org_id.org.org_id
+
+#   limits {
+#     name = "atlas.project.security.databaseAccess.users"
+#     value = 250
+#   }
+# }
 
 #
 # Create a Shared Tier Cluster
 #
 resource "mongodbatlas_advanced_cluster" "cluster" {
-  project_id   = mongodbatlas_project.project.id
+  project_id   = data.mongodbatlas_project.project.id
   name         = var.cluster_name
   cluster_type = var.cluster_type
   paused = false
@@ -67,44 +67,44 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
     oplog_min_retention_hours = 6
   }
 
-  depends_on = [ mongodbatlas_project.project ]
+  depends_on = [ data.mongodbatlas_project.project ]
 }
 
-resource "mongodbatlas_maintenance_window" "maintenance" {
-  project_id  = mongodbatlas_project.project.id
-  day_of_week = 1
-  hour_of_day = 4
+# resource "mongodbatlas_maintenance_window" "maintenance" {
+#   project_id  = data.mongodbatlas_project.project.id
+#   day_of_week = 1
+#   hour_of_day = 4
 
-  protected_hours {
-    start_hour_of_day = 10
-    end_hour_of_day   = 20
-  }
-}
+#   protected_hours {
+#     start_hour_of_day = 10
+#     end_hour_of_day   = 20
+#   }
+# }
 
-resource "mongodbatlas_project_ip_access_list" "all" {
-  project_id = mongodbatlas_project.project.id
-  cidr_block = "0.0.0.0/0"
-  comment    = "accept all"
+# resource "mongodbatlas_project_ip_access_list" "all" {
+#   project_id = data.mongodbatlas_project.project.id
+#   cidr_block = "0.0.0.0/0"
+#   comment    = "accept all"
 
-  depends_on = [ 
-    mongodbatlas_project.project 
-  ]
-}
+#   depends_on = [ 
+#     data.mongodbatlas_project.project 
+#   ]
+# }
 
 resource "mongodbatlas_project_ip_access_list" "cloudflare" {
-  project_id = mongodbatlas_project.project.id
+  project_id = data.mongodbatlas_project.project.id
   cidr_block = "104.30.164.0/28"
   comment    = "accept all"
 
   depends_on = [ 
-    mongodbatlas_project.project 
+    data.mongodbatlas_project.project 
   ]
 }
 
 resource "mongodbatlas_database_user" "user-main" {
   username           = var.mongodb_atlas_database_username
   password           = var.mongodb_atlas_database_user_password
-  project_id         = mongodbatlas_project.project.id
+  project_id         = data.mongodbatlas_project.project.id
   auth_database_name = "admin"
 
   roles {
@@ -113,7 +113,7 @@ resource "mongodbatlas_database_user" "user-main" {
   }
 
   depends_on = [ 
-    mongodbatlas_project.project 
+    data.mongodbatlas_project.project 
   ]
 }
 
@@ -128,50 +128,66 @@ locals {
 }
 
 resource "mongodbatlas_custom_db_role" "airbnb_gameday_role" {
-  project_id = mongodbatlas_project.project.id
+  project_id = data.mongodbatlas_project.project.id
   role_name  = "airbnb_gameday_role"
+  actions {
+    action = "FIND"
+    resources {
+      collection_name = "participants"
+      database_name   = var.common_database_name
+    }
+    resources {
+      collection_name = "results"
+      database_name   = var.common_database_name
+    }
+  }
+}
+
+resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
+  project_id = data.mongodbatlas_project.project.id
+  role_name  = "airbnb_arena_role"
 
   actions {
     action = "FIND"
     resources {
       collection_name = "participants"
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
     resources {
       collection_name = "results"
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
   actions {
     action = "LIST_COLLECTIONS"
     resources {
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
   actions {
     action = "LIST_INDEXES"
     resources {
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
   actions {
     action = "CREATE_INDEX"
     resources {
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
   actions {
     action = "CREATE_COLLECTION"
     resources {
       collection_name = "results"
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
   actions {
     action = "INSERT"
     resources {
       collection_name = "results"
-      database_name   = "airbnb_gameday"
+      database_name   = var.common_database_name
     }
   }
 }
@@ -182,7 +198,7 @@ resource "mongodbatlas_database_user" "users" {
 
   username           = "${each.value}"
   password           = var.customer_user_password
-  project_id         = mongodbatlas_project.project.id
+  project_id         = data.mongodbatlas_project.project.id
   auth_database_name = "admin"
   
   roles {
@@ -192,17 +208,17 @@ resource "mongodbatlas_database_user" "users" {
 
   roles {
       database_name = "admin"
-      role_name     = "airbnb_gameday_role"
+      role_name     = "airbnb_arena_role"
   }
 
-  roles {
-      database_name = "${var.sample_database_name}"
-      role_name     = "read"
-  }
+  # roles {
+  #     database_name = "${var.sample_database_name}"
+  #     role_name     = "read"
+  # }
 
   depends_on = [ 
-    mongodbatlas_project.project,
-    mongodbatlas_custom_db_role.airbnb_gameday_role
+    data.mongodbatlas_project.project,
+    mongodbatlas_custom_db_role.airbnb_arena_role
   ]
 }
 
@@ -242,20 +258,19 @@ locals {
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path}\" 2>&1"
+    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path}\" \"${var.common_database_name}\" 2>&1"
   }
 
   triggers = {
     always_run = timestamp()
   }
 
-  # Ensure that this script runs after the requirements are installed
   depends_on = [
     mongodbatlas_advanced_cluster.cluster,
     null_resource.install_requirements,
-    mongodbatlas_project.project,
+    data.mongodbatlas_project.project,
     mongodbatlas_database_user.user-main,
     mongodbatlas_database_user.users,
-    mongodbatlas_project_ip_access_list.all
+    # mongodbatlas_project_ip_access_list.all
   ]
 }

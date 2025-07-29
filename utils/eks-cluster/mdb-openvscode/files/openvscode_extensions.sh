@@ -3,7 +3,7 @@ OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
 
 echo "Starting OpenVSCode Server Extension Installation"
 
-for ext in "gitpod.gitpod-theme" "mongodb.mongodb-vscode" "humao.rest-client" "saoudrizwan.claude-dev"; do
+for ext in "mongodb.mongodb-vscode" "humao.rest-client" "saoudrizwan.claude-dev"; do
     echo "Installing extension: ${ext}"
     ${OPENVSCODE} --install-extension "${ext}"
 done

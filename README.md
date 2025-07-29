@@ -1,15 +1,15 @@
-# MongoDB Airbnb GameDay 🌐  
+# MongoDB Airbnb AI Arena 🌐  
 
-Welcome to the **MongoDB Airbnb GameDay**!  
+Welcome to the **MongoDB Airbnb AI Arena**!  
 Your company has just made a bold move—diving into the fast-paced world of short-term rentals. The mission? Build a modern, scalable platform to manage listings, bookings, and guests. The twist? You’re starting from scratch, and MongoDB is your database of choice.
 
 ---
 
-## 🔗 GameDay Instructions  
+## 🔗 MongoDB AI Arena Instructions  
 
 All the instructions you'll need can be found in this guide:  
 
-👉 **[mongodb-airbnb-gameday](https://mongogameday.com)**  
+👉 **[mongodb-airbnb-ai-arena](https://mongogameday.com)**  
 
 > **Note for Participants:** The environment has already been prepared for you! Simply follow the instructions to dive into hands-on activities.
 

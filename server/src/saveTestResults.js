@@ -186,7 +186,7 @@ async function runTests() {
             }
 
             if (failingCount === 0) {
-                console.log(`\n🎉 Amazing work! You’ve completed all the MongoDB Airbnb Gameday challenges! 🏆`);
+                console.log(`\n🎉 Amazing work! You’ve completed all the MongoDB AI Arena challenges! 🏆`);
             } else {
                 console.error(`\n🚀 Great effort! Some tests are still waiting for you—keep going, you're making awesome progress!`);
             }

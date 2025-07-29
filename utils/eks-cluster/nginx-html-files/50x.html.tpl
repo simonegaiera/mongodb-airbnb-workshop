@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <title>MongoDB AirBnb GameDay</title>
+  <titleMongoDB AI Arena</title>
   <link rel="icon" href="https://${server_name}/favicon.ico" type="image/x-icon">
   <style>
         body {

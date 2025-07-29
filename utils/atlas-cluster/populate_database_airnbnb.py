@@ -10,7 +10,7 @@ import certifi
 from parse_users import parse_csv
 
 def get_params():
-    if len(sys.argv) != 8:
+    if len(sys.argv) != 9:
         print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE", file=sys.stderr)
         sys.exit(1)
     return {
@@ -21,6 +21,7 @@ def get_params():
         'PROJECT_ID': sys.argv[5],
         'CLUSTER_NAME': sys.argv[6],
         'CSV_FILE': sys.argv[7],
+        'COMMON_DATABASE': sys.argv[8]
     }
 
 def get_client(params):
@@ -98,7 +99,7 @@ def main():
 
     option = 'name'
     users_map = parse_csv(csv_file, option)
-    upsert_users(users_map, client, 'airbnb_gameday')
+    upsert_users(users_map, client, params['COMMON_DATABASE'])
     users = list(users_map.keys())
     collections_list = client[common_database].list_collection_names()
     print(f"Existing collections in '{common_database}': {collections_list}", flush=True)

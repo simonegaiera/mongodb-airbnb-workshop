@@ -64,7 +64,7 @@ Create a Python REST API application based on the swagger.json specification fil
 
 **Database Collection Usage:**
 - **Primary Collection**: All listing-related endpoints (`/api/listingsAndReviews/*`) use the `listingsAndReviews` collection
-- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_gameday` database
+- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_arena` database
 
 **Required Deliverables for Part 1:**
 1. **Complete Python application** with proper file organization:

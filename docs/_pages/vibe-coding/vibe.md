@@ -5,9 +5,9 @@ layout: single
 classes: wide
 ---
 
-## MongoDB Airbnb GameDay (Vibe Coding Edition)
+## MongoDB Airbnb AI Arena (Vibe Coding Edition)
 
-Welcome to the **MongoDB Airbnb Workshop Gameday**! 🚀 
+Welcome to the **MongoDB Airbnb AI Arena**! 🚀 
 
 Your mission is to **create the best backend possible** for this Airbnb application. The frontend is already built and waiting for you, and all API endpoints are clearly defined below. Now it's time to **vibe code your backend** and bring this application to life!
 
@@ -223,7 +223,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 - 🔍 **Atlas Search**: Search endpoints (`/autocomplete`, `/facet`, `/search`) operate on the `listingsAndReviews` collection
 - 🧠 **Vector Search**: The `/vectorsearch` endpoint uses the `listingsAndReviews` collection with automated embeddings
 - 💬 **Chat System**: Chat endpoints (`/api/chat/*`) use the `listingsAndReviews` collection for RAG operations
-- 📊 **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_gameday` database
+- 📊 **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_arena` database
 
 **MCP Integration Available**: There is a Model Context Protocol (MCP) available that can help you understand the structure and schema of the two collections. This MCP provides insights into:
 - Field types and structures
