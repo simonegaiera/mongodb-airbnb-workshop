@@ -192,15 +192,38 @@ provider "postgresql" {
   superuser = false
 }
 
-# Create a database for each user
-resource "postgresql_database" "user_databases" {
+# Create PostgreSQL users for each Atlas user first
+resource "postgresql_role" "atlas_users" {
   for_each = toset(local.atlas_user_list)
   name     = each.value
-  owner    = "postgres"
+  login    = true
+  password = local.atlas_user_password
+  
+  # Grant permissions to create databases so they can own their database
+  create_database = true
+  create_role     = false
+  
+  # Don't grant superuser - Aurora master user can't create superuser roles
+  superuser = false
   
   depends_on = [
     null_resource.enable_pgvector,
     aws_rds_cluster_instance.aurora_instance
+  ]
+  
+  lifecycle {
+    create_before_destroy = false
+  }
+}
+
+# Create a database for each user with the user as owner
+resource "postgresql_database" "user_databases" {
+  for_each = toset(local.atlas_user_list)
+  name     = each.value
+  owner    = postgresql_role.atlas_users[each.value].name
+  
+  depends_on = [
+    postgresql_role.atlas_users
   ]
   
   lifecycle {
@@ -247,120 +270,6 @@ resource "null_resource" "enable_pgvector_per_database" {
   triggers = {
     cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
     user_list        = join(",", local.atlas_user_list)
-  }
-}
-
-# Create PostgreSQL users for each Atlas user (sequential execution)
-resource "postgresql_role" "atlas_users" {
-  for_each = toset(local.atlas_user_list)
-  name     = each.value
-  login    = true
-  password = local.atlas_user_password
-  
-  # Don't grant permissions to create databases - they'll only access their own
-  create_database = false
-  create_role     = false
-  
-  # Don't grant superuser - Aurora master user can't create superuser roles
-  superuser = false
-  
-  depends_on = [
-    postgresql_database.user_databases
-  ]
-  
-  # Force sequential execution by creating dependencies on previous users
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-# Grant CONNECT privilege to user's own database only
-resource "postgresql_grant" "atlas_users_database_connect" {
-  for_each    = toset(local.atlas_user_list)
-  database    = each.value
-  role        = postgresql_role.atlas_users[each.value].name
-  object_type = "database"
-  privileges  = ["CONNECT"]
-  
-  depends_on = [
-    postgresql_role.atlas_users,
-    postgresql_database.user_databases
-  ]
-  
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-# Grant schema privileges on user's own database
-resource "postgresql_grant" "atlas_users_schema_privileges" {
-  for_each    = toset(local.atlas_user_list)
-  database    = each.value
-  role        = postgresql_role.atlas_users[each.value].name
-  schema      = "public"
-  object_type = "schema"
-  privileges  = ["USAGE", "CREATE"]
-  
-  depends_on = [
-    postgresql_grant.atlas_users_database_connect
-  ]
-  
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-# Grant table privileges on user's own database
-resource "postgresql_grant" "atlas_users_table_privileges" {
-  for_each    = toset(local.atlas_user_list)
-  database    = each.value
-  role        = postgresql_role.atlas_users[each.value].name
-  schema      = "public"
-  object_type = "table"
-  privileges  = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"]
-  
-  depends_on = [
-    postgresql_grant.atlas_users_schema_privileges
-  ]
-  
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-# Grant sequence privileges on user's own database
-resource "postgresql_grant" "atlas_users_sequence_privileges" {
-  for_each    = toset(local.atlas_user_list)
-  database    = each.value
-  role        = postgresql_role.atlas_users[each.value].name
-  schema      = "public"
-  object_type = "sequence"
-  privileges  = ["SELECT", "UPDATE", "USAGE"]
-  
-  depends_on = [
-    postgresql_grant.atlas_users_table_privileges
-  ]
-  
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-# Grant function privileges on user's own database
-resource "postgresql_grant" "atlas_users_function_privileges" {
-  for_each    = toset(local.atlas_user_list)
-  database    = each.value
-  role        = postgresql_role.atlas_users[each.value].name
-  schema      = "public"
-  object_type = "function"
-  privileges  = ["EXECUTE"]
-  
-  depends_on = [
-    postgresql_grant.atlas_users_sequence_privileges
-  ]
-  
-  lifecycle {
-    create_before_destroy = false
   }
 }
 
