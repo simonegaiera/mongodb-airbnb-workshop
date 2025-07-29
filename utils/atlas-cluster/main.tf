@@ -127,22 +127,6 @@ locals {
   user_emails = values(data.external.user_data.result)
 }
 
-resource "mongodbatlas_custom_db_role" "airbnb_gameday_role" {
-  project_id = data.mongodbatlas_project.project.id
-  role_name  = "airbnb_gameday_role"
-  actions {
-    action = "FIND"
-    resources {
-      collection_name = "participants"
-      database_name   = var.common_database_name
-    }
-    resources {
-      collection_name = "results"
-      database_name   = var.common_database_name
-    }
-  }
-}
-
 resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
   project_id = data.mongodbatlas_project.project.id
   role_name  = "airbnb_arena_role"
