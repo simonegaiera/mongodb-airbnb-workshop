@@ -16,7 +16,7 @@ data:
           }
         },
         "postgres": {
-          "command": "uv",
+          "command": "/home/openvscode-server/.local/bin/uv",
           "args": [
             "run",
             "postgres-mcp",

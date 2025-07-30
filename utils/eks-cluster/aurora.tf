@@ -231,48 +231,6 @@ resource "postgresql_database" "user_databases" {
   }
 }
 
-# Single resource to enable pgvector extension for all user databases
-resource "null_resource" "enable_pgvector_per_database" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      # Set PATH to include Homebrew's libpq binaries
-      export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-      export HOMEBREW_NO_AUTO_UPDATE=1
-      
-      # Install PostgreSQL client if not available
-      if ! command -v psql &> /dev/null; then
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          brew install libpq
-          # Add libpq to PATH
-          export PATH="/opt/homebrew/opt/libpq/bin:/usr/local/opt/libpq/bin:$PATH"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-          sudo apt-get update && sudo apt-get install -y postgresql-client
-        fi
-      fi
-      
-      # Ensure psql is available
-      if ! command -v psql &> /dev/null; then
-        # Try common libpq paths on macOS
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          export PATH="/opt/homebrew/opt/libpq/bin:/usr/local/opt/libpq/bin:$PATH"
-        fi
-      fi
-      
-      # Enable pgvector extension for each user database sequentially
-      ${join("\n", [for user in local.atlas_user_list : "echo 'Enabling pgvector for database: ${user}'\nPGPASSWORD='${local.atlas_user_password}' psql -h ${aws_rds_cluster.aurora_cluster.endpoint} -U postgres -d ${user} -c \"CREATE EXTENSION IF NOT EXISTS vector;\" || echo 'Failed to enable pgvector for ${user}, continuing...'"])}
-    EOT
-  }
-
-  depends_on = [
-    postgresql_database.user_databases
-  ]
-
-  triggers = {
-    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
-    user_list        = join(",", local.atlas_user_list)
-  }
-}
-
 # Output connection strings for each user's database
 output "user_connection_strings" {
   description = "PostgreSQL connection strings for each user's database"
@@ -290,3 +248,111 @@ output "user_jdbc_urls" {
   }
   sensitive = false
 }
+
+# Download S3 backup once
+resource "null_resource" "download_s3_backup" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Set environment variables
+      export AWS_PROFILE="${var.aws_profile}"
+      export S3_BUCKET="mongodb-gameday"
+      export BACKUP_NAME="airbnb-backup"
+      
+      # Create backup directory if it doesn't exist
+      mkdir -p /tmp/postgres-backup
+      
+      echo "Downloading backup from S3..."
+      aws s3 cp "s3://$S3_BUCKET/postgres-backups/$BACKUP_NAME.sql.gz" /tmp/postgres-backup/$BACKUP_NAME.sql.gz \
+        --profile "${var.aws_profile}"
+      
+      if [ $? -ne 0 ]; then
+        echo "Failed to download backup from S3"
+        exit 1
+      fi
+      
+      # Decompress the backup
+      echo "Decompressing backup..."
+      gunzip -f /tmp/postgres-backup/$BACKUP_NAME.sql.gz
+            
+      echo "Backup downloaded and prepared successfully"
+    EOT
+  }
+
+  depends_on = [
+    postgresql_database.user_databases,
+    postgresql_role.atlas_users
+  ]
+
+  triggers = {
+    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
+    timestamp        = timestamp()
+  }
+}
+
+# Restore database backup to each user's database
+resource "null_resource" "restore_user_databases_from_s3" {
+  for_each = toset(local.atlas_user_list)
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Set environment variables
+      export PGPASSWORD='${local.atlas_user_password}'
+      export BACKUP_NAME="airbnb-backup"
+      
+      echo "Checking if database ${each.value} already has data..."
+      
+      # Check if database already has tables (indicating it's been restored)
+      TABLE_COUNT=$(PGPASSWORD='${local.atlas_user_password}' psql \
+        -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+        -U ${each.value} \
+        -d ${each.value} \
+        -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';" 2>/dev/null | tr -d ' ' | head -1 || echo "0")
+      
+      # Ensure TABLE_COUNT is a valid number
+      if ! [[ "$TABLE_COUNT" =~ ^[0-9]+$ ]]; then
+        TABLE_COUNT="0"
+      fi
+      
+      if [ "$TABLE_COUNT" -gt 0 ]; then
+        echo "Database ${each.value} already has $TABLE_COUNT tables. Skipping restore."
+        exit 0
+      fi
+      
+      echo "Restoring database backup to user database: ${each.value}"
+      
+      # Check if backup file exists
+      if [ ! -f "/tmp/postgres-backup/$BACKUP_NAME.sql" ]; then
+        echo "Backup file not found at /tmp/postgres-backup/$BACKUP_NAME.sql"
+        exit 1
+      fi
+      
+      # Restore the database
+      echo "Restoring database for ${each.value}..."
+      PGPASSWORD='${local.atlas_user_password}' psql \
+        -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+        -U ${each.value} \
+        -d ${each.value} \
+        --set ON_ERROR_STOP=on \
+        -f "/tmp/postgres-backup/$BACKUP_NAME.sql"
+      
+      RESTORE_EXIT_CODE=$?
+      
+      if [ $RESTORE_EXIT_CODE -eq 0 ]; then
+        echo "Database restoration completed successfully for user: ${each.value}"
+      else
+        echo "Database restoration failed for user: ${each.value}"
+        exit 1
+      fi
+    EOT
+  }
+
+  depends_on = [
+    null_resource.download_s3_backup
+  ]
+
+  triggers = {
+    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
+    user_database    = each.value
+  }
+}
+

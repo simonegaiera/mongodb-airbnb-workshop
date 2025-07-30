@@ -45,18 +45,12 @@ apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install uv
 echo_with_timestamp "Installing uv"
-curl -LsSf https://astral.sh/uv/install.sh | sh
 sudo -u openvscode-server bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
-
-# Add uv to PATH for openvscode-server user
-echo_with_timestamp "Adding uv to PATH for openvscode-server user"
-sudo -u openvscode-server bash -c 'echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> /home/openvscode-server/.bashrc'
-sudo -u openvscode-server bash -c 'echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> /home/openvscode-server/.profile'
 
 # Create virtual environment and install packages with uv
 echo_with_timestamp "Creating virtual environment and installing packages with uv"
-sudo -u openvscode-server bash -c 'cd /home/openvscode-server && export PATH="$HOME/.local/bin:$PATH" && uv venv'
-sudo -u openvscode-server bash -c 'export PATH="$HOME/.local/bin:$PATH" && uv pip install postgres-mcp'
+sudo -u openvscode-server bash -c '/home/openvscode-server/.local/bin/uv venv'
+sudo -u openvscode-server bash -c '/home/openvscode-server/.local/bin/uv pip install postgres-mcp'
 
 # Set JAVA_HOME environment variable
 echo_with_timestamp "Setting JAVA_HOME environment variable"
@@ -74,8 +68,8 @@ else
     echo "awscliv2.zip not found. Downloading..."
 fi
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+unzip -q awscliv2.zip
+sudo ./aws/install > /dev/null
 # Clean up the downloaded files
 rm -rf /tmp/awscliv2.zip /tmp/aws
 echo_with_timestamp "AWS CLI v2 installed successfully"
@@ -86,7 +80,9 @@ chmod +x /usr/local/bin/aws
 
 # Create a user-specific operations script
 echo_with_timestamp "Changing npm directory ownership"
-chown -R openvscode-server:openvscode-server /home/workspace/.npm
+# chown -R openvscode-server:openvscode-server /home/workspace/.npm
+find /home/openvscode-server/.npm -type f -exec chown openvscode-server:openvscode-server {} + 2>/dev/null || true
+find /home/openvscode-server/.npm -type d -exec chown openvscode-server:openvscode-server {} + 2>/dev/null || true
 
 echo_with_timestamp "Checking if directory /home/workspace/mongodb-airbnb-workshop is empty"
 # Check if directory is empty and change ownership if it is

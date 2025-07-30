@@ -408,3 +408,37 @@ resource "kubernetes_pod" "nfs_pod" {
     aws_eks_addon.vpc_cni
   ]
 }
+
+# Add S3 policy for the node role to read mongodb-gameday bucket
+resource "aws_iam_policy" "s3_mongodb_gameday_policy" {
+  name        = "${local.cluster_name}-s3-mongodb-gameday-policy"
+  description = "Policy for reading mongodb-gameday S3 bucket"
+  
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::mongodb-gameday",
+          "arn:aws:s3:::mongodb-gameday/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "node_s3_mongodb_gameday_policy" {
+  policy_arn = aws_iam_policy.s3_mongodb_gameday_policy.arn
+  role       = aws_iam_role.node.name
+
+  depends_on = [
+    aws_iam_role.node,
+    aws_iam_policy.s3_mongodb_gameday_policy
+  ]
+}
