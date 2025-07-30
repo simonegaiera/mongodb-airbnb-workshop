@@ -38,12 +38,13 @@ export PGPASSWORD="your_database_password"
 export AWS_PROFILE="Solution-Architects.User-979559056307"
 export S3_BUCKET="mongodb-gameday"
 export BACKUP_NAME="airbnb-backup"
+export DATABASE_NAME="simone-gaiera"
 
 # Backup database to S3 (without comments, which includes extension comments)
 pg_dump \
   -h mongoai-gameday-eks-aurora-cluster.cluster-c2fwyhwvkqkf.us-east-2.rds.amazonaws.com \
   -U postgres \
-  -d simone-gaiera \
+  -d $DATABASE_NAME \
   --verbose --no-owner --no-privileges --no-comments \
   --exclude-table-data=pg_stat_statements \
   | gzip | aws s3 cp - "s3://$S3_BUCKET/postgres-backups/$BACKUP_NAME.sql.gz" \
