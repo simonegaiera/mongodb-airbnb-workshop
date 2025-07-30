@@ -421,7 +421,6 @@ resource "aws_iam_policy" "s3_mongodb_gameday_policy" {
         Effect = "Allow"
         Action = [
           "s3:GetObject",
-          "s3:GetObjectVersion",
           "s3:ListBucket"
         ]
         Resource = [

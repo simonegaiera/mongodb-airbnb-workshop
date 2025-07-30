@@ -249,110 +249,171 @@ output "user_jdbc_urls" {
   sensitive = false
 }
 
-# Download S3 backup once
-resource "null_resource" "download_s3_backup" {
-  provisioner "local-exec" {
-    command = <<-EOT
-      # Set environment variables
-      export AWS_PROFILE="${var.aws_profile}"
-      export S3_BUCKET="mongodb-gameday"
-      export BACKUP_NAME="airbnb-backup"
+# Download S3 backup and restore to all user databases using Kubernetes job
+resource "kubernetes_job_v1" "restore_backup_to_users" {
+  metadata {
+    name = "restore-backup-to-users"
+    labels = {
+      app = "backup-restore"
+    }
+  }
+
+  spec {
+    template {
+      metadata {
+        labels = {
+          app = "backup-restore"
+        }
+      }
       
-      # Create backup directory if it doesn't exist
-      mkdir -p /tmp/postgres-backup
-      
-      echo "Downloading backup from S3..."
-      aws s3 cp "s3://$S3_BUCKET/postgres-backups/$BACKUP_NAME.sql.gz" /tmp/postgres-backup/$BACKUP_NAME.sql.gz \
-        --profile "${var.aws_profile}"
-      
-      if [ $? -ne 0 ]; then
-        echo "Failed to download backup from S3"
-        exit 1
-      fi
-      
-      # Decompress the backup
-      echo "Decompressing backup..."
-      gunzip -f /tmp/postgres-backup/$BACKUP_NAME.sql.gz
-            
-      echo "Backup downloaded and prepared successfully"
-    EOT
+      spec {
+        restart_policy = "Never"
+        host_network   = true
+        
+        container {
+          name  = "backup-restore"
+          image = "postgres:17"
+          
+          command = [
+            "bash",
+            "-c",
+            <<-EOT
+              set -e
+              
+              echo "Installing AWS CLI..."
+              apt-get update && apt-get install -y curl unzip gzip
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip -q awscliv2.zip
+              ./aws/install
+              
+              echo "Creating backup directory..."
+              mkdir -p /backup
+              
+              # Check if backup already exists locally
+              if [ ! -f /backup/airbnb-backup.sql ]; then
+                echo "Downloading backup from S3..."
+                /usr/local/bin/aws s3 cp "s3://mongodb-gameday/postgres-backups/airbnb-backup.sql.gz" /backup/airbnb-backup.sql.gz \
+                  --region us-east-1 \
+                  --no-cli-pager
+                
+                if [ $? -ne 0 ]; then
+                  echo "Failed to download backup from S3"
+                  exit 1
+                fi
+                
+                echo "Decompressing backup..."
+                gunzip -f /backup/airbnb-backup.sql.gz
+              else
+                echo "Backup file already exists, skipping download"
+              fi
+              
+              echo "Starting database restoration for all users..."
+              
+              # List of users to restore to
+              USERS="${join(" ", local.atlas_user_list)}"
+              
+              for USER in $USERS; do
+                echo "Processing user: $USER"
+                
+                # Check if this user's database has already been restored
+                RESTORED=$(PGPASSWORD='${local.atlas_user_password}' psql \
+                  -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                  -U $USER \
+                  -d $USER \
+                  -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'listings';" 2>/dev/null || echo "0")
+                
+                RESTORED=$(echo $RESTORED | tr -d ' ')
+                
+                if [ "$RESTORED" = "1" ]; then
+                  echo "Database for user $USER already restored (listings table exists), skipping..."
+                  continue
+                fi
+                
+                echo "Restoring backup to database: $USER"
+                
+                # Restore the backup to the user's database
+                PGPASSWORD='${local.atlas_user_password}' psql \
+                  -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                  -U $USER \
+                  -d $USER \
+                  -f /backup/airbnb-backup.sql
+                
+                if [ $? -eq 0 ]; then
+                  echo "Successfully restored backup to database: $USER"
+                  
+                  # Verify the restoration by checking table count
+                  TABLE_COUNT=$(PGPASSWORD='${local.atlas_user_password}' psql \
+                    -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                    -U $USER \
+                    -d $USER \
+                    -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';")
+                  
+                  echo "Database $USER now has $(echo $TABLE_COUNT | tr -d ' ') tables"
+                else
+                  echo "Failed to restore backup to database: $USER"
+                  exit 1
+                fi
+              done
+              
+              echo "Backup restoration completed for all users!"
+              
+            EOT
+          ]
+          
+          env {
+            name  = "AWS_DEFAULT_REGION"
+            value = var.aws_region
+          }
+          
+          env {
+            name  = "AWS_REGION"
+            value = var.aws_region
+          }
+          
+          env {
+            name  = "PGCONNECT_TIMEOUT"
+            value = "10"
+          }
+          
+          volume_mount {
+            name       = "backup-storage"
+            mount_path = "/backup"
+          }
+          
+          resources {
+            requests = {
+              memory = "1Gi"
+              cpu    = "500m"
+            }
+            limits = {
+              memory = "2Gi"
+              cpu    = "1000m"
+            }
+          }
+        }
+        
+        volume {
+          name = "backup-storage"
+          empty_dir {
+            size_limit = "1Gi"
+          }
+        }
+      }
+    }
+    
+    backoff_limit = 3
   }
 
   depends_on = [
     postgresql_database.user_databases,
-    postgresql_role.atlas_users
+    postgresql_role.atlas_users,
+    aws_eks_cluster.eks_cluster,
+    aws_iam_role_policy_attachment.node_s3_mongodb_gameday_policy
   ]
-
-  triggers = {
-    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
-    timestamp        = timestamp()
-  }
 }
 
-# Restore database backup to each user's database
-resource "null_resource" "restore_user_databases_from_s3" {
-  for_each = toset(local.atlas_user_list)
-  
-  provisioner "local-exec" {
-    command = <<-EOT
-      # Set environment variables
-      export PGPASSWORD='${local.atlas_user_password}'
-      export BACKUP_NAME="airbnb-backup"
-      
-      echo "Checking if database ${each.value} already has data..."
-      
-      # Check if database already has tables (indicating it's been restored)
-      TABLE_COUNT=$(PGPASSWORD='${local.atlas_user_password}' psql \
-        -h ${aws_rds_cluster.aurora_cluster.endpoint} \
-        -U ${each.value} \
-        -d ${each.value} \
-        -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';" 2>/dev/null | tr -d ' ' | head -1 || echo "0")
-      
-      # Ensure TABLE_COUNT is a valid number
-      if ! [[ "$TABLE_COUNT" =~ ^[0-9]+$ ]]; then
-        TABLE_COUNT="0"
-      fi
-      
-      if [ "$TABLE_COUNT" -gt 0 ]; then
-        echo "Database ${each.value} already has $TABLE_COUNT tables. Skipping restore."
-        exit 0
-      fi
-      
-      echo "Restoring database backup to user database: ${each.value}"
-      
-      # Check if backup file exists
-      if [ ! -f "/tmp/postgres-backup/$BACKUP_NAME.sql" ]; then
-        echo "Backup file not found at /tmp/postgres-backup/$BACKUP_NAME.sql"
-        exit 1
-      fi
-      
-      # Restore the database
-      echo "Restoring database for ${each.value}..."
-      PGPASSWORD='${local.atlas_user_password}' psql \
-        -h ${aws_rds_cluster.aurora_cluster.endpoint} \
-        -U ${each.value} \
-        -d ${each.value} \
-        --set ON_ERROR_STOP=on \
-        -f "/tmp/postgres-backup/$BACKUP_NAME.sql"
-      
-      RESTORE_EXIT_CODE=$?
-      
-      if [ $RESTORE_EXIT_CODE -eq 0 ]; then
-        echo "Database restoration completed successfully for user: ${each.value}"
-      else
-        echo "Database restoration failed for user: ${each.value}"
-        exit 1
-      fi
-    EOT
-  }
-
-  depends_on = [
-    null_resource.download_s3_backup
-  ]
-
-  triggers = {
-    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
-    user_database    = each.value
-  }
+# Output the job status
+output "backup_restore_job_name" {
+  description = "Name of the backup restore job"
+  value       = kubernetes_job_v1.restore_backup_to_users.metadata[0].name
 }
-
