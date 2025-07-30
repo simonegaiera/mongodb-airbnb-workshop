@@ -39,6 +39,16 @@ server {
         rewrite ^/backend/(.*)$ /$1 break;
     }
 
+    location /postgres/ {
+        proxy_pass http://${proxy_pass}:5001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        rewrite ^/postgres/(.*)$ /$1 break;
+    }
+
     listen [::]:443 ssl;
     listen 443 ssl;
 
