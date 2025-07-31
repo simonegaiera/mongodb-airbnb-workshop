@@ -9,7 +9,8 @@
             ],
             "Resource": [
                 "arn:aws:bedrock:*:*:inference-profile/*",
-                "arn:aws:bedrock:*::foundation-model/anthropic.*"
+                "arn:aws:bedrock:*::foundation-model/anthropic.*",
+                "arn:aws:bedrock:*::foundation-model/amazon.*"
             ]
         },
         {

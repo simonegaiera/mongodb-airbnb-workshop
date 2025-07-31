@@ -62,7 +62,7 @@ variable "llm_enabled" {
 variable "llm_model" {
   description = "The LLM model to use"
   type        = string
-  default     = "us.anthropic.claude-sonnet-4-20250514"
+  default     = "us.anthropic.claude-3-haiku-20240307-v1:0"
 }
 
 variable "llm_region" {
