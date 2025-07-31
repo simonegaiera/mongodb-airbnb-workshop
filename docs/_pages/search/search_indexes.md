@@ -18,7 +18,7 @@ In this exercise, you’ll design and build a custom Atlas Search index—unlock
 Craft your index with these specs:
 
 1. **Basic Configuration**
-   - **Name:** `default`
+   - **Name:** `search_index`
    - **Analyzer:** `lucene.english`
    - **Dynamic Mapping:** Off
 

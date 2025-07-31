@@ -8,8 +8,10 @@
                 "bedrock:InvokeModelWithResponseStream"
             ],
             "Resource": [
-                "arn:aws:bedrock:*:*:inference-profile/*",
-                "arn:aws:bedrock:*::foundation-model/anthropic.*",
+                "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-sonnet-*",
+                "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-3*",
+                "arn:aws:bedrock:*::foundation-model/us.anthropic.claude-sonnet-*",
+                "arn:aws:bedrock:*::foundation-model/us.anthropic.claude-3*",
                 "arn:aws:bedrock:*::foundation-model/amazon.*"
             ]
         },

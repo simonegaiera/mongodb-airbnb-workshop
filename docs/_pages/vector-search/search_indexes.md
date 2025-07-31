@@ -18,18 +18,20 @@ In this exercise, you’ll configure a vector index that enables semantic search
 Follow these steps:
 
 1. **Open Atlas Search**
-   - In your MongoDB Atlas cluster, navigate to the **Search** tab.
+   - In your MongoDB Atlas cluster, in the **Services** section navigate to the **Atlas Search** tab.
+   - Select the database and click **Go to Atlas Search**
 
 2. **Create a New Index**
    - Click **Create Search Index**.
    - Choose **Vector Search** as the index type.
    - Select **"I want to semantically search text fields"**.
+   - The **Index Name** should be `vector_index`
+   - Select your database and click **Next**
 
 3. **Configure the Index**
    - **Text Field Path:** `description`
    - **Embedding Model:** Keep the **recommended** model (default).
-   - **Filter Field Path:** `property_type`  
-     (Optionally index this field to pre-filter your data and improve query performance.)
+   - **Filter Field Path:** `property_type`
 
 4. **Save and Build**
    - Click **Create Index** to start building your vector index.

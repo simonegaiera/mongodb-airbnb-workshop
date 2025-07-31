@@ -14,20 +14,28 @@ describe('MongoDB Vector Search Tests', function() {
         }
     });
     
-    it('vector-search-0: the default vector search index should be created', async function() {
+    it('vector-search-0: the vector search index should be created', async function() {
         try {
-            const indexName = 'default';
+            const indexName = 'vector_index';
             const collection = db.collection(collectionName);
             const cursor = await collection.listSearchIndexes(indexName);
             const index = await cursor.next();
-            const mapping = index.latestDefinition.mappings.fields;
+            const fields = index.latestDefinition.fields;
                
-            // Check amenities: should be an array of length 2 with correct types (order insensitive)
-            assert(Array.isArray(mapping.amenities), 'amenities is not an array');
-            strictEqual(mapping.amenities.length, 2, 'amenities array should have 2 elements');
-            const amenityTypes = mapping.amenities.map(item => item.type);
-            assert(amenityTypes.includes('stringFacet'), 'Amenities missing type "stringFacet"');
-            assert(amenityTypes.includes('token'), 'Amenities missing type "token"');
+            // Check that fields array exists and has 2 elements
+            assert(Array.isArray(fields), 'fields is not an array');
+            strictEqual(fields.length, 2, 'fields array should have 2 elements');
+            
+            // Check description field
+            const descriptionField = fields.find(field => field.path === 'description');
+            assert(descriptionField, 'description field not found');
+            strictEqual(descriptionField.type, 'text', 'description field should have type "text"');
+            strictEqual(descriptionField.model, 'voyage-3-large', 'description field should use "voyage-3-large" model');
+            
+            // Check property_type field
+            const propertyTypeField = fields.find(field => field.path === 'property_type');
+            assert(propertyTypeField, 'property_type field not found');
+            strictEqual(propertyTypeField.type, 'filter', 'property_type field should have type "filter"');
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -51,6 +59,11 @@ describe('MongoDB Vector Search Tests', function() {
 
         strictEqual(res.statusCode, 201, 'Status code should be 201');
         strictEqual(responseData.length, 10);
+        
+        // Validate that all returned listings have property_type "Apartment"
+        responseData.forEach((listing) => {
+            strictEqual(listing.property_type, 'Apartment', `All listings should have property_type "Apartment"`);
+        });
     });
 
 

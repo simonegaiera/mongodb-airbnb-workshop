@@ -413,23 +413,7 @@ resource "kubernetes_pod" "nfs_pod" {
 resource "aws_iam_policy" "s3_mongodb_gameday_policy" {
   name        = "${local.cluster_name}-s3-mongodb-gameday-policy"
   description = "Policy for reading mongodb-gameday S3 bucket"
-  
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:GetObject",
-          "s3:ListBucket"
-        ]
-        Resource = [
-          "arn:aws:s3:::mongodb-gameday",
-          "arn:aws:s3:::mongodb-gameday/*"
-        ]
-      }
-    ]
-  })
+  policy     = file("${path.module}/aws_policies/s3.json")
 }
 
 resource "aws_iam_role_policy_attachment" "node_s3_mongodb_gameday_policy" {

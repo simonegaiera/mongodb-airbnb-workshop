@@ -14,9 +14,9 @@ describe('MongoDB Search Tests', function() {
         }
     });
     
-    it('search-0: the default search index should be created', async function() {
+    it('search-0: the search index should be created', async function() {
         try {
-            const indexName = 'default';
+            const indexName = 'search_index';
             const collection = db.collection(collectionName);
             const cursor = await collection.listSearchIndexes(indexName);
             const index = await cursor.next();

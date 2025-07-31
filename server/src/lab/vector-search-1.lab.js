@@ -15,6 +15,6 @@ export async function vectorSearch(query, propertyType) {
 
   const pipeline = [];
 
-  const cursor = db.collection(collectionName).aggregate(pipeline);
+  const cursor = db.collection(collectionName);
   return cursor.toArray();
 }

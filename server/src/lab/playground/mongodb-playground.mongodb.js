@@ -24,7 +24,7 @@ Search Indexes
 // db.listingsAndReviews.getSearchIndexes();
 
 // Create a Search Index
-// index_name = 'default'
+// index_name = 'search_index';
 // type = 'search'
 // definition = {
 //   "analyzer": "",
@@ -65,6 +65,36 @@ Search Indexes
 //       ]
 //     }
 //   }
+// }
+// db.listingsAndReviews.createSearchIndex(
+//     index_name,
+//     type,
+//     definition
+//  )
+
+/*
+Vector Search Indexes
+*/
+airbnb_database = 'simone-gaiera';
+use(airbnb_database);
+// Find all the available Search indexes
+db.listingsAndReviews.getSearchIndexes();
+
+// Create a Vector Search Index
+// index_name = 'vector_index_2';
+// type = 'vectorSearch'
+// definition = {
+//   "fields": [
+//     {
+//       "type": "text",
+//       "path": "description",
+//       "model": "voyage-3-large"
+//     },
+//     {
+//       "type": "filter",
+//       "path": "property_type"
+//     }
+//   ]
 // }
 // db.listingsAndReviews.createSearchIndex(
 //     index_name,
