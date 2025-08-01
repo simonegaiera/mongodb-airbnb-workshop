@@ -21,13 +21,6 @@ resource "kubernetes_secret" "litellm_secrets" {
   ]
 }
 
-# Master key generation removed - authentication disabled
-# resource "random_password" "litellm_master_key" {
-#   count   = var.litellm_enabled && var.litellm_master_key == "" ? 1 : 0
-#   length  = 32
-#   special = true
-# }
-
 # ConfigMap for LiteLLM configuration
 resource "kubernetes_config_map" "litellm_config" {
   count = var.litellm_enabled ? 1 : 0
@@ -41,24 +34,30 @@ resource "kubernetes_config_map" "litellm_config" {
     "config.yaml" = yamlencode({
       model_list = [
         {
-          model_name = "claude-3-5-sonnet"
+          model_name = "claude-3-haiku"
           litellm_params = {
-            model   = "anthropic/claude-3-5-sonnet-20241022"
+            model   = "anthropic/claude-3-haiku-20240307"
             api_key = "os.environ/ANTHROPIC_API_KEY"
+            max_tokens = 4096
+            temperature = 0.7
           }
         },
         {
-          model_name = "claude-3-5-haiku"
+          model_name = "claude-4-sonnet"
           litellm_params = {
-            model   = "anthropic/claude-3-5-haiku-20241022"
+            model   = "anthropic/claude-4-sonnet-20241022"
             api_key = "os.environ/ANTHROPIC_API_KEY"
+            max_tokens = 4096
+            temperature = 0.7
           }
         },
         {
-          model_name = "claude-3-opus"
+          model_name = "claude-3-7-sonnet"
           litellm_params = {
-            model   = "anthropic/claude-3-opus-20240229"
+            model   = "anthropic/claude-3-7-sonnet-20241022"
             api_key = "os.environ/ANTHROPIC_API_KEY"
+            max_tokens = 4096
+            temperature = 0.7
           }
         }
       ]
@@ -73,17 +72,30 @@ resource "kubernetes_config_map" "litellm_config" {
         # Disable authentication
         disable_spend_logs = false
         disable_master_key_return = true
+        # Limit context window and output tokens for cost control
+        max_input_tokens = 32000
+        max_output_tokens = 4096
+        default_max_tokens = 4096
+        enforce_max_tokens = true
       }
       litellm_settings = {
         # Enable detailed logging
-        set_verbose = true
+        set_verbose = false
+        # Enable JSON logs for better parsing
         json_logs = true
-        # Enable caching for cost optimization
-        cache = true
-        cache_type = "redis"
+        # Disable caching to prevent prompt caching
+        cache = false
         # Rate limiting
-        rpm_limit = 100
-        tpm_limit = 10000
+        rpm_limit = 1000
+        tpm_limit = 1000000
+        # Disable extended thinking and prompt caching
+        disable_prompt_caching = true
+        disable_extended_thinking = true
+        # Disable image support to prevent vision model usage
+        disable_image_generation = true
+        disable_vision = true
+        # Force disable any caching headers and image-related parameters
+        drop_params = ["cache_control", "extra_headers", "images", "image_url", "image_data"]
       }
     })
   }
