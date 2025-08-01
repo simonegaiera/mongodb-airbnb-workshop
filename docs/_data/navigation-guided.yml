@@ -1,0 +1,108 @@
+main:
+  - title: GitHub Repository
+    url: https://github.com/simonegaiera/mongodb-airbnb-workshop
+
+docs:
+  - title: Getting Started
+    children:
+      - title: "Introduction"
+        url: /
+
+  - title: "Guided Exercises"
+    children:
+      - title: "AI Arena Overview"
+        url: /overview/
+      - title: "IDE: VSCode Online"
+        url: /environment/vscode/
+      - title: "Validate Your Results"
+        url: /test/
+      - title: "Leaderboard"
+        url: /leaderboard/
+      - title: "Resources"
+        url: /resources/
+
+  - title: CRUD Operations (1)
+    children:
+      - title: "CRUD Operations"
+        url: /crud/
+      - title: "CRUD: Exercise 1"
+        url: /crud/1/
+      - title: "Hint: Exercise 1"
+        url: /crud/1/hint/
+      - title: "CRUD: Exercise 2"
+        url: /crud/2/
+      - title: "Hint: Exercise 2"
+        url: /crud/2/hint/
+      - title: "CRUD: Exercise 3"
+        url: /crud/3/
+      - title: "Hint: Exercise 3"
+        url: /crud/3/hint/
+      - title: "CRUD: Exercise 4"
+        url: /crud/4/
+      - title: "Hint: Exercise 4"
+        url: /crud/4/hint/
+
+  - title: Indexes
+    children:
+      - title: "CRUD: Indexes"
+        url: /index/
+      - title: "Hint: Indexes"
+        url: /index/hint/
+
+  - title: Aggregations
+    children:
+      - title: "MongoDB Aggregations"
+        url: /aggregations/
+      - title: "Aggregations: Exercise 1"
+        url: /aggregations/1/
+      - title: "Hint: Exercise 1"
+        url: /aggregations/1/hint/
+
+  - title: CRUD Operations (2)
+    children:
+      - title: "CRUD: Exercise 5"
+        url: /crud/5/
+      - title: "Hint: Exercise 5"
+        url: /crud/5/hint/
+      - title: "CRUD: Exercise 6"
+        url: /crud/6/
+      - title: "Hint: Exercise 6"
+        url: /crud/6/hint/
+      - title: "CRUD: Exercise 7"
+        url: /crud/7/
+      - title: "Hint: Exercise 7"
+        url: /crud/7/hint/
+      - title: "CRUD: Exercise 8"
+        url: /crud/8/
+      - title: "Hint: Exercise 8"
+        url: /crud/8/hint/
+
+  - title: Search
+    children:
+      - title: "MongoDB Search"
+        url: /search/
+      - title: "Search: Indexes"
+        url: /search/index/
+      - title: "Hint: Search Indexes"
+        url: /search/index/hint/
+      - title: "Search: Exercise 1"
+        url: /search/1/
+      - title: "Hint: Exercise 1"
+        url: /search/1/hint/
+      - title: "Search: Exercise 2"
+        url: /search/2/
+      - title: "Hint: Exercise 2"
+        url: /search/2/hint/
+
+  - title: Vector Search
+    children:
+      - title: "MongoDB Vector Search"
+        url: /vector-search/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/
+      - title: "Hint: Vector Search Indexes"
+        url: /vector-search/index/hint/
+      - title: "Vector Search: Exercise 1"
+        url: /vector-search/1/
+      - title: "Hint: Exercise 1"
+        url: /vector-search/1/hint/

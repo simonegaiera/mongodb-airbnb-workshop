@@ -1,0 +1,48 @@
+main:
+  - title: GitHub Repository
+    url: https://github.com/simonegaiera/mongodb-airbnb-workshop
+
+docs:
+  - title: Getting Started
+    children:
+      - title: "Introduction"
+        url: /
+
+  - title: "Guided Exercises"
+    children:
+      - title: "AI Arena Overview"
+        url: /overview/
+      - title: "IDE: VSCode Online"
+        url: /environment/vscode/
+      - title: "Validate Your Results"
+        url: /test/
+      - title: "Leaderboard"
+        url: /leaderboard/
+      - title: "Resources"
+        url: /resources/
+
+  - title: CRUD Operations
+    children:
+      - title: "CRUD Operations"
+        url: /crud/
+      - title: "CRUD: Exercise 1"
+        url: /crud/1/
+      - title: "Hint: Exercise 1"
+        url: /crud/1/hint/
+      - title: "CRUD: Exercise 2"
+        url: /crud/2/
+      - title: "Hint: Exercise 2"
+        url: /crud/2/hint/
+
+  - title: Vector Search
+    children:
+      - title: "MongoDB Vector Search"
+        url: /vector-search/
+      - title: "Vector Search: Indexes"
+        url: /vector-search/index/
+      - title: "Hint: Vector Search Indexes"
+        url: /vector-search/index/hint/
+      - title: "Vector Search: Exercise 1"
+        url: /vector-search/1/
+      - title: "Hint: Exercise 1"
+        url: /vector-search/1/hint/
