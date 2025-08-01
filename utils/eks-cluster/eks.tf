@@ -233,7 +233,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   compute_config {
     enabled       = true
-    node_pools    = ["general-purpose"]
+    node_pools    = ["general-purpose", "system"]
     node_role_arn = aws_iam_role.node.arn
   }
 
@@ -424,4 +424,16 @@ resource "aws_iam_role_policy_attachment" "node_s3_mongodb_gameday_policy" {
     aws_iam_role.node,
     aws_iam_policy.s3_mongodb_gameday_policy
   ]
+}
+
+# Add this after the existing cluster policies
+resource "aws_iam_policy" "eks_auto_mode_policy" {
+  name        = "${local.cluster_name}-eks-auto-mode-policy"
+  description = "Policy for EKS Auto Mode EC2 tagging operations"
+  policy      = file("${path.module}/aws_policies/eks_auto_mode_policy.json")
+}
+
+resource "aws_iam_role_policy_attachment" "cluster_eks_auto_mode_policy" {
+  policy_arn = aws_iam_policy.eks_auto_mode_policy.arn
+  role       = aws_iam_role.cluster.name
 }
