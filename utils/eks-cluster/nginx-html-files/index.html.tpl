@@ -81,7 +81,7 @@
     
     <p>
       Instructions: 
-      <a href="https://mongogameday.com/" target="_blank" rel="noopener noreferrer">
+      <a href="https://instructions.${server_name}/" target="_blank" rel="noopener noreferrer">
         MongoDB AI Arena
       </a>
     </p>

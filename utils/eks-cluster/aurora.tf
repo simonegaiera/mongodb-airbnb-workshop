@@ -310,7 +310,8 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
               echo "Starting database restoration for all users..."
               
               # List of users to restore to
-              USERS="${join(" ", local.atlas_user_list)}"
+              # USERS="${join(" ", local.atlas_user_list)}"
+              USERS="${join(" ", [for user in local.atlas_user_list : user if user != "scott-capista"])}"
               
               for USER in $USERS; do
                 echo "Processing user: $USER"
@@ -404,6 +405,12 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
     backoff_limit = 3
   }
 
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "5m"
+  }
+  
   depends_on = [
     postgresql_database.user_databases,
     postgresql_role.atlas_users,

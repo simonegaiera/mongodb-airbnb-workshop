@@ -26,6 +26,7 @@ inputs = {
   atlas_user_password = dependency.atlas.outputs.user_password
 
   # varibales to change
+  scenario = "vibe"
   aws_profile = "Solution-Architects.User-979559056307"
   customer_name = "airbnb"
   aws_region = "us-east-2"

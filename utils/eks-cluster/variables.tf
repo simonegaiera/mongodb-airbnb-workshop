@@ -74,10 +74,10 @@ variable "llm_region" {
 variable "scenario" {
   description = "The workshop scenario to deploy"
   type        = string
-  default     = "vibe-coding"
+  default     = "vibe"
   
   validation {
-    condition     = contains(["vibe-coding", "guided-exercises"], var.scenario)
-    error_message = "scenario must be either 'vibe-coding' or 'guided-exercises'."
+    condition     = contains(["vibe", "guided", "guided-vector"], var.scenario)
+    error_message = "the selected scenario is invalid."
   }
 }
