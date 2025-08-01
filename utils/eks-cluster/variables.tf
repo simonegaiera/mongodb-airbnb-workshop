@@ -81,3 +81,17 @@ variable "scenario" {
     error_message = "the selected scenario is invalid."
   }
 }
+
+# Variables for LiteLLM
+variable "litellm_enabled" {
+  description = "Enable or disable LiteLLM proxy deployment"
+  type        = bool
+  default     = true
+}
+
+variable "anthropic_api_key" {
+  description = "Anthropic API key for LiteLLM"
+  type        = string
+  sensitive   = true
+  default     = ""
+}

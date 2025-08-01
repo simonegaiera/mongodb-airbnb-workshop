@@ -34,4 +34,6 @@ inputs = {
   llm_enabled = true
   llm_model = "us.anthropic.claude-3-haiku-20240307-v1:0"
   llm_region = "us-east-2"
+  litellm_enabled = true
+  anthropic_api_key = "api-key-here"
 }
