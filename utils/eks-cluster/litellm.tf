@@ -52,20 +52,19 @@ resource "kubernetes_config_map" "litellm_config" {
           }
         },
         {
-          model_name = "claude-3-7-sonnet"
+          model_name = "claude-3-5-haiku"
           litellm_params = {
-            model   = "anthropic/claude-3-7-sonnet-20241022"
+            model   = "anthropic/claude-3-5-haiku-20241022"
             api_key = "os.environ/ANTHROPIC_API_KEY"
             max_tokens = 4096
             temperature = 0.7
           }
-        }
+        },
       ]
       general_settings = {
-        # Disable authentication for simplicity
-        # master_key = "os.environ/LITELLM_MASTER_KEY"
-        database_url = "sqlite:///tmp/litellm.db"
-        store_model_in_db = true
+        # Remove database configuration to use default in-memory
+        # database_url = "sqlite:///tmp/litellm.db"
+        # store_model_in_db = true
         # Enable usage tracking
         success_callback = ["langfuse"]
         failure_callback = ["langfuse"]
@@ -193,11 +192,11 @@ resource "kubernetes_deployment" "litellm" {
           resources {
             requests = {
               cpu    = "100m"
-              memory = "256Mi"
+              memory = "512Mi"  # ← Increase from 256Mi to 512Mi
             }
             limits = {
               cpu    = "500m"
-              memory = "512Mi"
+              memory = "1Gi"    # ← Increase from 512Mi to 1Gi
             }
           }
 
@@ -234,11 +233,12 @@ resource "kubernetes_deployment" "litellm" {
 
   depends_on = [
     kubernetes_secret.litellm_secrets,
-    kubernetes_config_map.litellm_config
+    kubernetes_config_map.litellm_config,
+    helm_release.user_openvscode
   ]
 }
 
-# LiteLLM Service
+# LiteLLM Service - Using ClusterIP for internal access
 resource "kubernetes_service" "litellm" {
   count = var.litellm_enabled ? 1 : 0
   
@@ -247,6 +247,9 @@ resource "kubernetes_service" "litellm" {
     namespace = "default"
     labels = {
       app = "litellm-proxy"
+    }
+    annotations = {
+      # Remove any AWS load balancer annotations if present
     }
   }
 
@@ -262,61 +265,11 @@ resource "kubernetes_service" "litellm" {
       protocol    = "TCP"
     }
 
-    type = "ClusterIP"
+    type = "ClusterIP"  # Changed from LoadBalancer
   }
 
   depends_on = [
     kubernetes_deployment.litellm
-  ]
-}
-
-# Ingress for LiteLLM (using existing nginx setup)
-resource "kubernetes_ingress_v1" "litellm" {
-  count = var.litellm_enabled ? 1 : 0
-  
-  metadata {
-    name      = "litellm-ingress"
-    namespace = "default"
-    annotations = {
-      "kubernetes.io/ingress.class"                = "nginx"
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/$2"
-      "nginx.ingress.kubernetes.io/use-regex"      = "true"
-      "nginx.ingress.kubernetes.io/ssl-redirect"   = "true"
-      "cert-manager.io/cluster-issuer"             = "letsencrypt-prod"
-      # Rate limiting
-      "nginx.ingress.kubernetes.io/rate-limit-connections" = "10"
-      "nginx.ingress.kubernetes.io/rate-limit-rps"         = "5"
-    }
-  }
-
-  spec {
-    tls {
-      hosts       = [local.aws_route53_record_name]
-      secret_name = "litellm-tls"
-    }
-
-    rule {
-      host = local.aws_route53_record_name
-      http {
-        path {
-          path      = "/litellm(/|$)(.*)"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = kubernetes_service.litellm[0].metadata[0].name
-              port {
-                number = 4000
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  depends_on = [
-    kubernetes_service.litellm,
-    helm_release.nginx_ingress
   ]
 }
 
@@ -356,7 +309,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
         name = "memory"
         target {
           type                = "Utilization"
-          average_utilization = 80
+          average_utilization = 85
         }
       }
     }
@@ -368,46 +321,8 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
   ]
 }
 
-# Output the LiteLLM endpoint
-output "litellm_endpoint" {
-  value = var.litellm_enabled ? "https://${local.aws_route53_record_name}/litellm" : "LiteLLM not enabled"
-}
-
-output "litellm_authentication" {
-  value = var.litellm_enabled ? "Authentication disabled - no password required" : "LiteLLM not enabled"
-}
-
-# ServiceMonitor for Prometheus monitoring (if you have monitoring enabled)
-resource "kubernetes_manifest" "litellm_servicemonitor" {
-  count = var.litellm_enabled ? 1 : 0
-  
-  manifest = {
-    apiVersion = "monitoring.coreos.com/v1"
-    kind       = "ServiceMonitor"
-    metadata = {
-      name      = "litellm-metrics"
-      namespace = "default"
-      labels = {
-        app = "litellm-proxy"
-      }
-    }
-    spec = {
-      selector = {
-        matchLabels = {
-          app = "litellm-proxy"
-        }
-      }
-      endpoints = [
-        {
-          port     = "http"
-          path     = "/metrics"
-          interval = "30s"
-        }
-      ]
-    }
-  }
-
-  depends_on = [
-    kubernetes_service.litellm
-  ]
+# Output the LiteLLM endpoints
+output "litellm_endpoint_simple" {
+  value = var.litellm_enabled ? "http://litellm-service:4000" : "LiteLLM not enabled"
+  description = "LiteLLM simple internal endpoint (shortest form, same namespace only)"
 }
