@@ -11,7 +11,7 @@ resource "kubernetes_secret" "litellm_secrets" {
 
   data = {
     anthropic-api-key = var.anthropic_api_key
-    # Master key removed - authentication disabled
+    # litellm-master-key = "we-love-mongo"
   }
 
   type = "Opaque"
@@ -66,11 +66,12 @@ resource "kubernetes_config_map" "litellm_config" {
         # database_url = "sqlite:///tmp/litellm.db"
         # store_model_in_db = true
         # Enable usage tracking
-        success_callback = ["langfuse"]
-        failure_callback = ["langfuse"]
+        # success_callback = ["langfuse"]
+        # failure_callback = ["langfuse"]
         # Disable authentication
         disable_spend_logs = false
         disable_master_key_return = true
+        public_routes = ["/health", "/health/liveliness", "/health/readiness"]
         # Limit context window and output tokens for cost control
         max_input_tokens = 32000
         max_output_tokens = 4096
@@ -85,8 +86,8 @@ resource "kubernetes_config_map" "litellm_config" {
         # Disable caching to prevent prompt caching
         cache = false
         # Rate limiting
-        rpm_limit = 1000
-        tpm_limit = 1000000
+        # rpm_limit = 1000
+        # tpm_limit = 1000000
         # Disable extended thinking and prompt caching
         disable_prompt_caching = true
         disable_extended_thinking = true
@@ -152,7 +153,6 @@ resource "kubernetes_deployment" "litellm" {
             }
           }
 
-          # Master key disabled for simplified access
           # env {
           #   name = "LITELLM_MASTER_KEY"
           #   value_from {
