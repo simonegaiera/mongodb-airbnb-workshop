@@ -2,7 +2,7 @@ import { strictEqual } from 'assert';
 import { connectToDatabase, db } from "../src/utils/database.js";
 import { collectionName } from '../src/config/config.js';
 
-import { getAllItems, getOneItem, getDistinct, getFilters, insertItem, insertReview, updateValue, deleteItem  } from '../src/controllers/crudController.js';
+import { insertItem, insertReview, updateValue, deleteItem  } from '../src/controllers/crudController.js';
 
 describe('MongoDB CRUD Tests', function() {
     let createdItemId;
