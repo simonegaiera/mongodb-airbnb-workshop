@@ -3,11 +3,7 @@
   "info": {
     "title": "MongoDB Airbnb Workshop API",
     "description": "API for MongoDB Airbnb Workshop - includes CRUD operations, search functionality, aggregations, and vector search capabilities",
-    "version": "1.0.0",
-    "contact": {
-      "name": "MongoDB Airbnb Workshop",
-      "email": "support@mongodb.com"
-    }
+    "version": "1.0.0"
   },
   "servers": [
     {
