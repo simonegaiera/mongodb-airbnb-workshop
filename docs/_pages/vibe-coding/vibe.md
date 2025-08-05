@@ -49,7 +49,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 ## 📋 API Documentation Preview
 
 ### 🚀 Interactive Documentation
-- **[📖 Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/simonegaiera/mongodb-airbnb-workshop/main/docs/assets/files/swagger.json)** - Instant preview
+- **[📖 Open in Swagger Editor](https://editor.swagger.io/?url=https%3A//raw.githubusercontent.com/simonegaiera/mongodb-airbnb-workshop/main/docs/assets/files/swagger.json)** - Instant preview
 - **[💾 Download swagger.json](../assets/files/swagger.json)** - Local file
 
 ---

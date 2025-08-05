@@ -1,0 +1,1013 @@
+openapi: 3.0.0
+info:
+  title: MongoDB Airbnb Workshop API
+  description: API for MongoDB Airbnb Workshop - includes CRUD operations, search functionality, aggregations, and vector search capabilities
+  version: 1.0.0
+  contact:
+    name: MongoDB Airbnb Workshop
+    email: support@mongodb.com
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /api/listingsAndReviews:
+    get:
+      tags:
+        - Listings & Analytics
+      summary: Get all listings
+      description: Retrieve all listings with optional query filtering and pagination
+      parameters:
+        - name: query
+          in: query
+          description: JSON query object for filtering
+          required: false
+          schema:
+            type: string
+            example: '{"property_type": "Apartment"}'
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Listing'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Listings & Analytics
+      summary: Create a new listing
+      description: Add a new listing to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewListing'
+      responses:
+        '201':
+          description: Listing created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/listingsAndReviews/{id}:
+    get:
+      tags:
+        - Listings & Analytics
+      summary: Get listing by ID
+      description: Retrieve a specific listing by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Listing ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Listing found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Listing'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      tags:
+        - Listings & Analytics
+      summary: Update listing field
+      description: Update a specific field of a listing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Listing ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequest'
+      responses:
+        '201':
+          description: Listing updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    delete:
+      tags:
+        - Listings & Analytics
+      summary: Delete listing
+      description: Delete a listing by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Listing ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Listing deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/{id}/reviews:
+    post:
+      tags:
+        - Listings & Analytics
+      summary: Add review to listing
+      description: Add a new review to a specific listing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Listing ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '201':
+          description: Review added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/listingsAndReviews/distinct:
+    get:
+      tags:
+        - Listings & Analytics
+      summary: Get distinct values
+      description: Get distinct values for a specific field
+      parameters:
+        - name: field
+          in: query
+          required: true
+          description: Field name to get distinct values for
+          schema:
+            type: string
+            example: property_type
+      responses:
+        '200':
+          description: Distinct values retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/filter:
+    post:
+      tags:
+        - Listings & Analytics
+      summary: Filter listings
+      description: Filter listings based on multiple criteria using MongoDB aggregation pipelines
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequest'
+      responses:
+        '201':
+          description: Filtered results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Listing'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/listingsAndReviews/statistics:
+    get:
+      tags:
+        - Listings & Analytics
+      summary: Get price statistics
+      description: Get aggregated price statistics for listings grouped by bed count using MongoDB aggregation framework. Returns average price per bed count as numeric values.
+      responses:
+        '200':
+          description: Price statistics grouped by bed count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceStatistics'
+              example:
+                - price: 153.62
+                  beds: 0
+                - price: 214.33
+                  beds: 1
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/autocomplete:
+    post:
+      tags:
+        - Atlas Search
+      summary: Autocomplete search
+      description: Get autocomplete suggestions for search queries using MongoDB Atlas Search autocomplete operator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutocompleteRequest'
+      responses:
+        '200':
+          description: Autocomplete suggestions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the listing
+                  required:
+                    - name
+              example:
+                - name: House Of Hawaii Dreams
+                - name: Hawaii Tiny House (Red)
+                - name: English Cottage in Hawaii
+                - name: Hawaii by the Sea~Walk
+                - name: Homebase for your Hawaii adventures!
+                - name: Hawaii North Shore Oahu getaway!
+                - name: aOceanside Hawaii Apartment Studio Kitchen Parking
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/facet:
+    post:
+      tags:
+        - Atlas Search
+      summary: Faceted search
+      description: Perform faceted search with aggregated results using MongoDB Atlas Search facet operator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacetRequest'
+      responses:
+        '200':
+          description: Faceted search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacetResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/search:
+    post:
+      tags:
+        - Atlas Search
+      summary: Full-text search
+      description: Perform full-text search on listings using MongoDB Atlas Search text operator with relevance scoring
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Listing'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/listingsAndReviews/vectorsearch:
+    post:
+      tags:
+        - AI & Vector Search
+      summary: Vector search with automated embeddings
+      description: Perform vector-based semantic search using MongoDB Atlas Vector Search with automated embeddings for similarity matching. Leverages MongoDB's automated embedding feature for seamless vector operations without manual embedding generation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VectorSearchRequest'
+      responses:
+        '200':
+          description: Vector search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Listing'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/results:
+    get:
+      tags:
+        - Results
+      summary: Get section results
+      description: Get results for workshop sections
+      responses:
+        '200':
+          description: Section results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionResults'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/results/participants:
+    get:
+      tags:
+        - Results
+      summary: Get all participants
+      description: Retrieve all workshop participants
+      responses:
+        '200':
+          description: List of participants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Participant'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/results/whoami:
+    get:
+      tags:
+        - Results
+      summary: Get current participant
+      description: Get information about the current participant
+      responses:
+        '200':
+          description: Current participant information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Participant'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/chat:
+    post:
+      tags:
+        - AI & Vector Search
+      summary: Send message to AI chatbot
+      description: Send a message to the AI-powered chatbot system that uses Atlas Vector Search for retrieval-augmented generation (RAG) to provide intelligent responses about Airbnb listings. The chatbot leverages AWS Bedrock LLM integration and maintains conversation history in MongoDB.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Chat response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/chat/clear:
+    post:
+      tags:
+        - AI & Vector Search
+      summary: Clear chatbot conversation history
+      description: Clear the AI chatbot conversation history and memory stored in MongoDB, resetting the context for future interactions and optionally providing a new session ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                  description: Current session identifier to clear
+                username:
+                  type: string
+                  description: Username of the person clearing the chat
+              required:
+                - sessionId
+                - username
+              example:
+                sessionId: session_1642678901234_abc123def456
+                username: Stays
+      responses:
+        '200':
+          description: Chat history cleared successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Chat history cleared successfully
+                  newSessionId:
+                    type: string
+                    description: Optional new session ID for the next conversation
+                    example: session_1642678901234_xyz789abc123
+                required:
+                  - message
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+    Listing:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the listing
+        name:
+          type: string
+          description: Name of the listing
+        description:
+          type: string
+          description: Detailed description of the listing
+        property_type:
+          type: string
+          description: Type of property (Apartment, House, etc.)
+        room_type:
+          type: string
+          description: Type of room (Entire home/apt, Private room, etc.)
+        bedrooms:
+          type: integer
+          description: Number of bedrooms
+        bathrooms:
+          type: number
+          description: Number of bathrooms
+        beds:
+          type: integer
+          description: Number of beds
+        price:
+          type: number
+          description: Price per night
+        accommodates:
+          type: integer
+          description: Maximum number of guests
+        amenities:
+          type: array
+          items:
+            type: string
+          description: List of amenities
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            suburb:
+              type: string
+            government_area:
+              type: string
+            market:
+              type: string
+            country:
+              type: string
+            country_code:
+              type: string
+            location:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: Point
+                coordinates:
+                  type: array
+                  items:
+                    type: number
+                  description: '[longitude, latitude]'
+        host:
+          type: object
+          properties:
+            host_id:
+              type: string
+            host_name:
+              type: string
+            host_about:
+              type: string
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+        number_of_reviews:
+          type: integer
+        review_scores:
+          type: object
+          properties:
+            review_scores_rating:
+              type: integer
+            review_scores_accuracy:
+              type: integer
+            review_scores_cleanliness:
+              type: integer
+            review_scores_checkin:
+              type: integer
+            review_scores_communication:
+              type: integer
+            review_scores_location:
+              type: integer
+            review_scores_value:
+              type: integer
+
+    NewListing:
+      type: object
+      required:
+        - name
+        - property_type
+        - room_type
+        - price
+      properties:
+        name:
+          type: string
+          description: Name of the listing
+        description:
+          type: string
+          description: Detailed description of the listing
+        property_type:
+          type: string
+          description: Type of property
+        room_type:
+          type: string
+          description: Type of room
+        bedrooms:
+          type: integer
+          minimum: 0
+        bathrooms:
+          type: number
+          minimum: 0
+        beds:
+          type: integer
+          minimum: 0
+        price:
+          type: number
+          minimum: 0
+        accommodates:
+          type: integer
+          minimum: 1
+        amenities:
+          type: array
+          items:
+            type: string
+
+    Review:
+      type: object
+      properties:
+        _id:
+          type: string
+        date:
+          type: string
+          format: date-time
+        listing_id:
+          type: string
+        reviewer_id:
+          type: string
+        reviewer_name:
+          type: string
+        comments:
+          type: string
+      required:
+        - reviewer_name
+        - comments
+
+    UpdateRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Field name to update
+        value:
+          description: New value for the field
+      required:
+        - key
+        - value
+
+    FilterRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        filters:
+          type: object
+          properties:
+            amenities:
+              type: array
+              items:
+                type: string
+            propertyType:
+              type: string
+            beds:
+              type: string
+              description: Number of beds as a range (e.g., '1-2') or single value
+              pattern: ^\d+(-\d+)?$
+              example: 1-2
+            bounds:
+              type: object
+              properties:
+                northeast:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lng:
+                      type: number
+                southwest:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lng:
+                      type: number
+      required:
+        - page
+        - limit
+        - filters
+      example:
+        limit: 12
+        page: 1
+        filters:
+          amenities:
+            - 24-hour check-in
+          propertyType: Apartment
+          beds: 1-2
+
+    AutocompleteRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Search query for autocomplete
+      required:
+        - query
+
+    SearchRequest:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Page number for pagination
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 12
+          description: Number of results per page
+        facetsQuery:
+          type: object
+          description: Facet filters to apply to the search
+          properties:
+            amenities:
+              type: array
+              items:
+                type: string
+              description: Array of amenities to filter by
+            propertyType:
+              type: array
+              items:
+                type: string
+              description: Array of property types to filter by
+            beds:
+              type: array
+              items:
+                type: integer
+              description: Array of bed counts to filter by
+          additionalProperties: true
+        searchQuery:
+          type: string
+          description: Search query text
+      required:
+        - searchQuery
+      example:
+        page: 1
+        limit: 12
+        facetsQuery:
+          amenities:
+            - Kitchen
+          propertyType:
+            - Guest suite
+          beds:
+            - 1
+        searchQuery: House Of Hawaii Dreams
+
+    VectorSearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Natural language query for vector search using automated embeddings
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      required:
+        - query
+
+    FacetRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Search query
+        facets:
+          type: array
+          items:
+            type: string
+          description: Optional array of fields to facet on. If not provided, default facets will be applied.
+      required:
+        - query
+      example:
+        query: hawaii
+
+    FacetResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          count:
+            type: object
+            properties:
+              lowerBound:
+                type: integer
+                description: Lower bound count for the facet results
+            required:
+              - lowerBound
+          facet:
+            type: object
+            additionalProperties:
+              type: object
+              properties:
+                buckets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        oneOf:
+                          - type: string
+                          - type: integer
+                        description: Facet value identifier
+                      count:
+                        type: integer
+                        description: Number of documents matching this facet value
+                    required:
+                      - _id
+                      - count
+              required:
+                - buckets
+            description: Facet results grouped by field names (amenities, property_type, beds, etc.)
+        required:
+          - count
+          - facet
+      example:
+        - count:
+            lowerBound: 28
+          facet:
+            amenities:
+              buckets:
+                - _id: Wifi
+                  count: 27
+                - _id: TV
+                  count: 26
+                - _id: Essentials
+                  count: 25
+            property_type:
+              buckets:
+                - _id: Apartment
+                  count: 8
+                - _id: House
+                  count: 7
+                - _id: Condominium
+                  count: 3
+            beds:
+              buckets:
+                - _id: 0
+                  count: 1
+                - _id: 1
+                  count: 12
+                - _id: 2
+                  count: 5
+
+    PriceStatistics:
+      type: array
+      items:
+        type: object
+        properties:
+          price:
+            type: number
+            description: Average price for listings with this bed count
+          beds:
+            type: integer
+            description: Number of beds
+      description: Array of average price statistics grouped by number of beds
+
+    Participant:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        progress:
+          type: object
+          additionalProperties:
+            type: boolean
+
+    SectionResults:
+      type: object
+      properties:
+        section:
+          type: string
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              participant:
+                type: string
+              score:
+                type: number
+              completed:
+                type: boolean
+
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: User message to send to the chat system
+        sessionId:
+          type: string
+          description: Unique session identifier for conversation tracking
+        username:
+          type: string
+          description: Username of the person sending the message
+      required:
+        - message
+        - sessionId
+        - username
+      example:
+        message: Best view in hawaii?
+        sessionId: session_1642678901234_abc123def456
+        username: Stays
+
+    ChatResponse:
+      type: object
+      properties:
+        reply:
+          type: string
+          description: AI response message in markdown format
+      required:
+        - reply
+      example:
+        reply: |
+          Here are some properties with the best views in Hawaii:
+
+          **Property ID: [abc123](http://localhost:3000/rooms?id=abc123)**
+          - Ocean view apartment with stunning sunset views
+          - Located on the beach with direct access
+
+          **Property ID: [def456](http://localhost:3000/rooms?id=def456)**
+          - Mountain view villa with panoramic landscapes
+          - Perfect for nature lovers
+
+    CreateResponse:
+      type: object
+      properties:
+        insertedId:
+          type: string
+          description: ID of the created document
+        acknowledged:
+          type: boolean
+
+    UpdateResponse:
+      type: object
+      properties:
+        modifiedCount:
+          type: integer
+        matchedCount:
+          type: integer
+        acknowledged:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+      required:
+        - message
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Listings & Analytics
+    description: Comprehensive operations for Airbnb listings including CRUD operations, reviews management, filtering using MongoDB aggregation pipelines, and statistical analysis with aggregated data operations
+  - name: Atlas Search
+    description: Advanced lexical search operations using MongoDB Atlas Search including full-text search, autocomplete, and faceted search capabilities with Atlas Search indexes and operators
+  - name: AI & Vector Search
+    description: Advanced AI-powered functionality including semantic search operations using MongoDB Atlas Vector Search with automated embeddings, plus AI chatbot capabilities with RAG (Retrieval-Augmented Generation), AWS Bedrock LLM integration via LangChain, and MongoDB-based conversation memory storage
+  - name: Results
+    description: Workshop results and participant management

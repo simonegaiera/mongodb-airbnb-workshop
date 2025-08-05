@@ -45,21 +45,12 @@ resource "kubernetes_config_map" "litellm_config" {
         {
           model_name = "claude-4-sonnet"
           litellm_params = {
-            model   = "anthropic/claude-4-sonnet-20241022"
+            model   = "anthropic/claude-sonnet-4-20250514"
             api_key = "os.environ/ANTHROPIC_API_KEY"
             max_tokens = 4096
             temperature = 0.7
           }
-        },
-        {
-          model_name = "claude-3-5-haiku"
-          litellm_params = {
-            model   = "anthropic/claude-3-5-haiku-20241022"
-            api_key = "os.environ/ANTHROPIC_API_KEY"
-            max_tokens = 4096
-            temperature = 0.7
-          }
-        },
+        }
       ]
       general_settings = {
         # Remove database configuration to use default in-memory
@@ -71,7 +62,7 @@ resource "kubernetes_config_map" "litellm_config" {
         # Disable authentication
         disable_spend_logs = false
         disable_master_key_return = true
-        public_routes = ["/health", "/health/liveliness", "/health/readiness"]
+        # public_routes = ["/health", "/health/liveliness", "/health/readiness"]
         # Limit context window and output tokens for cost control
         max_input_tokens = 32000
         max_output_tokens = 4096
@@ -175,11 +166,11 @@ resource "kubernetes_deployment" "litellm" {
 
           args = [
             "--config",
-            "/app/config.yaml",
-            "--port",
-            "4000",
-            "--num_workers",
-            "1"
+            "/app/config.yaml"
+            # "--port",
+            # "4000",
+            # "--num_workers",
+            # "1"
           ]
 
           volume_mount {
@@ -192,31 +183,31 @@ resource "kubernetes_deployment" "litellm" {
           resources {
             requests = {
               cpu    = "100m"
-              memory = "512Mi"  # ← Increase from 256Mi to 512Mi
+              memory = "512Mi"
             }
             limits = {
               cpu    = "500m"
-              memory = "1Gi"    # ← Increase from 512Mi to 1Gi
+              memory = "1Gi"
             }
           }
 
-          liveness_probe {
-            http_get {
-              path = "/health"
-              port = 4000
-            }
-            initial_delay_seconds = 30
-            period_seconds        = 10
-          }
+          # liveness_probe {
+          #   http_get {
+          #     path = "/health"
+          #     port = 4000
+          #   }
+          #   initial_delay_seconds = 30
+          #   period_seconds        = 10
+          # }
 
-          readiness_probe {
-            http_get {
-              path = "/health"
-              port = 4000
-            }
-            initial_delay_seconds = 5
-            period_seconds        = 5
-          }
+          # readiness_probe {
+          #   http_get {
+          #     path = "/health"
+          #     port = 4000
+          #   }
+          #   initial_delay_seconds = 5
+          #   period_seconds        = 5
+          # }
         }
 
         volume {
@@ -265,7 +256,7 @@ resource "kubernetes_service" "litellm" {
       protocol    = "TCP"
     }
 
-    type = "ClusterIP"  # Changed from LoadBalancer
+    type = "ClusterIP"
   }
 
   depends_on = [
@@ -297,7 +288,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
       resource {
         name = "cpu"
         target {
-          type                = "Utilization"
+          type = "Utilization"
           average_utilization = 70
         }
       }
@@ -308,7 +299,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
       resource {
         name = "memory"
         target {
-          type                = "Utilization"
+          type = "Utilization"
           average_utilization = 85
         }
       }
