@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-1.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Find, Sort & Paginate Like a Pro
 
 Your company’s journey into the short-term rental market has just begun, and the first challenge is clear: you need to help your users discover the perfect place to stay. As the backend engineer, it’s your job to make searching listings fast, accurate, and delightful.

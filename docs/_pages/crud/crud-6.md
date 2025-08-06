@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-6.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Update Any Field with $set—Like a Pro
 
 Your platform is thriving, and your users expect flexibility—whether it’s updating a property’s title, adding a new amenity, or correcting a typo. As the backend engineer, you’re the one who makes these real-time updates possible, keeping your data fresh and your users happy.

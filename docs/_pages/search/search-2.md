@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>search-2.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Faceted Search That Shines
 
 Your platform’s search is already fast and smart, but now your business wants to empower users to explore and filter results with ease. Imagine a guest searching for "hawaii" and instantly narrowing down results by amenities, property type, or number of beds—all with a single click. As the backend engineer, you’re about to make this next-level discovery experience a reality with MongoDB Atlas Search facets.

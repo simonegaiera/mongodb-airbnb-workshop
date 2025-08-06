@@ -6,6 +6,12 @@ echo_with_timestamp() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $message"
 }
 
+# Function to extract repository name from URL
+get_repo_name() {
+    local repo_url="$1"
+    basename "$repo_url" .git
+}
+
 echo_with_timestamp "Reading scenario configuration"
 # Check if the scenario config file exists and read it
 if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
@@ -34,14 +40,21 @@ else
     FRONTEND_TYPE="app"
 fi
 
+# Extract repository name from URL
+REPO_NAME=$(get_repo_name "$REPOSITORY")
+REPO_PATH="/home/workspace/$REPO_NAME"
+
+echo_with_timestamp "Repository: $REPOSITORY"
+echo_with_timestamp "Repository folder: $REPO_NAME"
+
 # Check if the repository exists and update or clone accordingly
-if [ -d /home/workspace/mongodb-airbnb-workshop/.git ]; then
+if [ -d "$REPO_PATH/.git" ]; then
     echo_with_timestamp "Repository exists. Pulling latest changes..."
-    git config --global --add safe.directory /home/workspace/mongodb-airbnb-workshop
-    cd /home/workspace/mongodb-airbnb-workshop && git pull || echo_with_timestamp "Failed to pull latest changes"
+    git config --global --add safe.directory "$REPO_PATH"
+    cd "$REPO_PATH" && git pull || echo_with_timestamp "Failed to pull latest changes"
 else
     echo_with_timestamp "Repository does not exist. Cloning..."
-    git clone -b "$BRANCH" "$REPOSITORY" /home/workspace/mongodb-airbnb-workshop || echo_with_timestamp "Failed to clone repository"
+    git clone -b "$BRANCH" "$REPOSITORY" "$REPO_PATH" || echo_with_timestamp "Failed to clone repository"
 fi
 
 # Get the values from settings.json
@@ -53,9 +66,9 @@ ATLAS_HOST=${ATLAS_SRV#mongodb+srv://}
 # Create backend directory and .env based on backend type
 if [ "$BACKEND_TYPE" != "" ]; then
     echo_with_timestamp "Creating $BACKEND_TYPE directory and .env file"
-    mkdir -p /home/workspace/mongodb-airbnb-workshop/$BACKEND_TYPE
+    mkdir -p "$REPO_PATH/$BACKEND_TYPE"
 
-    cat <<EOL > /home/workspace/mongodb-airbnb-workshop/$BACKEND_TYPE/.env
+    cat <<EOL > "$REPO_PATH/$BACKEND_TYPE/.env"
 PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
 LLM_MODEL=${LLM_MODEL}
@@ -66,28 +79,28 @@ EOL
     # Copy files only for backend type
     if [ "$BACKEND_TYPE" = "backend" ]; then
         echo_with_timestamp "Copying files to backend folder"
-        cp /home/workspace/mongodb-airbnb-workshop/docs/assets/files/swagger.json /home/workspace/mongodb-airbnb-workshop/backend/ || echo_with_timestamp "Failed to copy swagger.json"
-        cp -r /home/workspace/mongodb-airbnb-workshop/server/src/lab/rest-lab /home/workspace/mongodb-airbnb-workshop/backend/ || echo_with_timestamp "Failed to copy rest-lab folder"
+        cp "$REPO_PATH/docs/assets/files/swagger.json" "$REPO_PATH/backend/" || echo_with_timestamp "Failed to copy swagger.json"
+        cp -r "$REPO_PATH/server/src/lab/rest-lab" "$REPO_PATH/backend/" || echo_with_timestamp "Failed to copy rest-lab folder"
     fi
 
     # Install dependencies only for server
     if [ "$BACKEND_TYPE" = "server" ]; then
         echo_with_timestamp "Installing server dependencies"
-        cd /home/workspace/mongodb-airbnb-workshop/$BACKEND_TYPE
+        cd "$REPO_PATH/$BACKEND_TYPE"
         npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm install failed in $BACKEND_TYPE"
     fi
 fi
 
 echo_with_timestamp "Creating $FRONTEND_TYPE directory and .env file"
-mkdir -p /home/workspace/mongodb-airbnb-workshop/$FRONTEND_TYPE
+mkdir -p "$REPO_PATH/$FRONTEND_TYPE"
 
-cat <<EOL > /home/workspace/mongodb-airbnb-workshop/$FRONTEND_TYPE/.env
+cat <<EOL > "$REPO_PATH/$FRONTEND_TYPE/.env"
 WORKSHOP_USER=/app
 BACKEND_URL=https://${USERNAME}.${URL}/backend
 EOL
 
 echo_with_timestamp "Installing and building the app"
-cd /home/workspace/mongodb-airbnb-workshop/$FRONTEND_TYPE
+cd "$REPO_PATH/$FRONTEND_TYPE"
 echo_with_timestamp "Installing app dependencies..."
 npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm install failed in $FRONTEND_TYPE"
 echo_with_timestamp "Building the app..."

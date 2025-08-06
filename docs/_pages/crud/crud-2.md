@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-2.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Instantly Retrieve a Single Document
 
 Your platform is growing, and now your users want more than just a list—they want details! Imagine a guest clicking on a property to see every photo, amenity, and review. As the backend engineer, it’s your job to deliver that information instantly and accurately.

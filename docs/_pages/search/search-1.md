@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>search-1.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Autocomplete That Wows
 
 Your business wants to make searching for the perfect stay effortless and delightful. Imagine a guest typing just a few letters and instantly seeing smart, typo-tolerant suggestions—helping them find their dream destination in seconds. As the backend engineer, you’re about to bring this magic to life with MongoDB Atlas Search.

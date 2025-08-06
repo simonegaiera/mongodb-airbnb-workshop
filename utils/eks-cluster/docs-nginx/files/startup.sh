@@ -43,7 +43,12 @@ gem install jekyll bundler
 echo "Cloning repository..."
 cd /tmp
 git clone -b $BRANCH $REPOSITORY
-cd mongodb-airbnb-workshop/docs
+
+# Extract repository name from URL (removes .git suffix if present)
+REPO_NAME=$(basename "$REPOSITORY" .git)
+echo "Repository name: $REPO_NAME"
+
+cd "$REPO_NAME/docs"
 
 echo "Current _config.yml content:"
 cat _config.yml
@@ -53,7 +58,7 @@ cat _config.yml
 #########################################
 echo "Modifying _config.yml..."
 # Update the URL to use Route53 record
-sed -i "s|url: \"https://mongogameday.com\"|url: \"https://instructions.${AWS_ROUTE53_RECORD_NAME}\"|g" _config.yml
+sed -i 's|^url:.*|url: "https://instructions.'"${AWS_ROUTE53_RECORD_NAME}"'"|g' _config.yml
 
 echo "Copying navigation file based on scenario configuration..."
 # Copy scenario-specific navigation file from instructions.base

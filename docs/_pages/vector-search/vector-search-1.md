@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>vector-search-1.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Semantic Search That Wows
 
 Your business wants to make searching for the perfect stay effortless and intelligent. Imagine a guest typing a natural-language query and instantly seeing smart, intent-aware suggestions—helping them find their dream destination even if they don’t use the exact words. As the backend engineer, you’re about to bring this next-level search to life with MongoDB Atlas Vector Search.

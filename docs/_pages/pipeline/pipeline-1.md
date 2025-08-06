@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>pipeline-1.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Analyze Listings with Aggregations
 
 Your platform is buzzing with activity, and your team wants to make smarter decisions—fast. Imagine being able to spot trends, set competitive prices, or help guests find the best value for their needs. As the backend engineer, you’re the data wizard who can turn mountains of raw listings into actionable insights.

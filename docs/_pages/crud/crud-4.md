@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-4.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Advanced Filtering & Pagination Like a Pro
 
 Your platform is now buzzing with listings, and your users want to find their perfect stay—fast. Imagine a guest searching for a cozy apartment with a hot tub, or a family looking for a house with just the right number of beds. As the backend engineer, it’s your job to make these searches seamless and powerful.

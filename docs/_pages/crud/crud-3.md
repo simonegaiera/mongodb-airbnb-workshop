@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-3.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Discover Unique Values Like a Pro
 
 Your platform is evolving, and now it’s time to give your users the power to filter and explore listings in new ways. Imagine a guest searching for properties by neighborhood, amenities, or property type—dynamic filters make it all possible. As the backend engineer, you’ll use MongoDB’s `distinct` to unlock these features and make your app truly interactive.

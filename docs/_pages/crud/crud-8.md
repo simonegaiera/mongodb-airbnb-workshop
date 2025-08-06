@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-8.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Delete Documents Like a Pro
 
 Your platform is thriving, but sometimes it’s time to say goodbye—maybe a listing is no longer available, or a guest wants their data removed. As the backend engineer, you ensure your platform stays clean, relevant, and trustworthy by handling deletions quickly and safely.

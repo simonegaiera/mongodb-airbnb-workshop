@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-5.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Insert New Documents Like a Pro
 
 Your platform is growing, and it’s time to expand your offerings! Imagine a host adding a brand-new property or a guest signing up for the first time. As the backend engineer, you’re the one who makes these moments possible—bringing new data to life in your MongoDB collection.

@@ -5,6 +5,11 @@ layout: single
 classes: wide
 ---
 
+<details>
+<summary>📋 Lab Reference</summary>
+<p><strong>Associated Lab File:</strong> <code>crud-7.lab.js</code></p>
+</details>
+
 ## 🚀 Goal: Effortlessly Add to Arrays with $push
 
 Your platform is thriving, and guests are eager to share their experiences. Imagine a traveler leaving a glowing review after a perfect stay, or a host receiving valuable feedback. As the backend engineer, you make these moments possible—instantly updating listings with new reviews and keeping your data dynamic.
