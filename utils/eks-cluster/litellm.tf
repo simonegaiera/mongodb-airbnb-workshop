@@ -1,8 +1,20 @@
 # LiteLLM Configuration for EKS Cluster
 
+locals {
+  # LLM configuration with defaults
+  llm_config = merge({
+    enabled = false
+    proxy = {
+      enabled = false
+      service-name = "litellm-service"
+      port = 4000
+    }
+  }, try(var.scenario_config.llm, {}))
+}
+
 # Kubernetes Secret for LiteLLM API keys
 resource "kubernetes_secret" "litellm_secrets" {
-  count = var.litellm_enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
   
   metadata {
     name      = "litellm-secrets"
@@ -23,7 +35,7 @@ resource "kubernetes_secret" "litellm_secrets" {
 
 # ConfigMap for LiteLLM configuration
 resource "kubernetes_config_map" "litellm_config" {
-  count = var.litellm_enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
   
   metadata {
     name      = "litellm-config"
@@ -53,39 +65,21 @@ resource "kubernetes_config_map" "litellm_config" {
         }
       ]
       general_settings = {
-        # Remove database configuration to use default in-memory
-        # database_url = "sqlite:///tmp/litellm.db"
-        # store_model_in_db = true
-        # Enable usage tracking
-        # success_callback = ["langfuse"]
-        # failure_callback = ["langfuse"]
-        # Disable authentication
         disable_spend_logs = false
         disable_master_key_return = true
-        # public_routes = ["/health", "/health/liveliness", "/health/readiness"]
-        # Limit context window and output tokens for cost control
         max_input_tokens = 32000
         max_output_tokens = 4096
         default_max_tokens = 4096
         enforce_max_tokens = true
       }
       litellm_settings = {
-        # Enable detailed logging
         set_verbose = false
-        # Enable JSON logs for better parsing
         json_logs = true
-        # Disable caching to prevent prompt caching
         cache = false
-        # Rate limiting
-        # rpm_limit = 1000
-        # tpm_limit = 1000000
-        # Disable extended thinking and prompt caching
         disable_prompt_caching = true
         disable_extended_thinking = true
-        # Disable image support to prevent vision model usage
         disable_image_generation = true
         disable_vision = true
-        # Force disable any caching headers and image-related parameters
         drop_params = ["cache_control", "extra_headers", "images", "image_url", "image_data"]
       }
     })
@@ -98,7 +92,7 @@ resource "kubernetes_config_map" "litellm_config" {
 
 # LiteLLM Deployment
 resource "kubernetes_deployment" "litellm" {
-  count = var.litellm_enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
   
   metadata {
     name      = "litellm-proxy"
@@ -130,7 +124,7 @@ resource "kubernetes_deployment" "litellm" {
           name  = "litellm"
 
           port {
-            container_port = 4000
+            container_port = local.llm_config.proxy.port
             name          = "http"
           }
 
@@ -144,19 +138,9 @@ resource "kubernetes_deployment" "litellm" {
             }
           }
 
-          # env {
-          #   name = "LITELLM_MASTER_KEY"
-          #   value_from {
-          #     secret_key_ref {
-          #       name = kubernetes_secret.litellm_secrets[0].metadata[0].name
-          #       key  = "litellm-master-key"
-          #     }
-          #   }
-          # }
-
           env {
             name  = "PORT"
-            value = "4000"
+            value = tostring(local.llm_config.proxy.port)
           }
 
           env {
@@ -167,10 +151,6 @@ resource "kubernetes_deployment" "litellm" {
           args = [
             "--config",
             "/app/config.yaml"
-            # "--port",
-            # "4000",
-            # "--num_workers",
-            # "1"
           ]
 
           volume_mount {
@@ -190,24 +170,6 @@ resource "kubernetes_deployment" "litellm" {
               memory = "1Gi"
             }
           }
-
-          # liveness_probe {
-          #   http_get {
-          #     path = "/health"
-          #     port = 4000
-          #   }
-          #   initial_delay_seconds = 30
-          #   period_seconds        = 10
-          # }
-
-          # readiness_probe {
-          #   http_get {
-          #     path = "/health"
-          #     port = 4000
-          #   }
-          #   initial_delay_seconds = 5
-          #   period_seconds        = 5
-          # }
         }
 
         volume {
@@ -231,16 +193,13 @@ resource "kubernetes_deployment" "litellm" {
 
 # LiteLLM Service - Using ClusterIP for internal access
 resource "kubernetes_service" "litellm" {
-  count = var.litellm_enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
   
   metadata {
-    name      = "litellm-service"
+    name      = local.llm_config.proxy["service-name"]
     namespace = "default"
     labels = {
       app = "litellm-proxy"
-    }
-    annotations = {
-      # Remove any AWS load balancer annotations if present
     }
   }
 
@@ -251,8 +210,8 @@ resource "kubernetes_service" "litellm" {
 
     port {
       name        = "http"
-      port        = 4000
-      target_port = 4000
+      port        = local.llm_config.proxy.port
+      target_port = local.llm_config.proxy.port
       protocol    = "TCP"
     }
 
@@ -266,7 +225,7 @@ resource "kubernetes_service" "litellm" {
 
 # HorizontalPodAutoscaler for LiteLLM
 resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
-  count = var.litellm_enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
   
   metadata {
     name      = "litellm-hpa"
@@ -314,6 +273,6 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "litellm" {
 
 # Output the LiteLLM endpoints
 output "litellm_endpoint_simple" {
-  value = var.litellm_enabled ? "http://litellm-service:4000" : "LiteLLM not enabled"
+  value = local.llm_config.enabled && local.llm_config.proxy.enabled ? "http://${local.llm_config.proxy["service-name"]}:${local.llm_config.proxy.port}" : "LiteLLM not enabled"
   description = "LiteLLM simple internal endpoint (shortest form, same namespace only)"
 }

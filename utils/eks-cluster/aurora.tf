@@ -1,5 +1,6 @@
 # Create DB subnet group
 resource "aws_db_subnet_group" "aurora_subnet_group" {
+  count      = try(var.scenario_config.database.postgres, false) ? 1 : 0
   name       = "${local.cluster_name}-aurora-subnet-group"
   subnet_ids = aws_subnet.eks_subnet[*].id
 
@@ -15,6 +16,7 @@ resource "aws_db_subnet_group" "aurora_subnet_group" {
 
 # Security group for Aurora cluster
 resource "aws_security_group" "aurora_sg" {
+  count       = try(var.scenario_config.database.postgres, false) ? 1 : 0
   name_prefix = "${local.cluster_name}-aurora-sg"
   vpc_id      = aws_vpc.eks_vpc.id
 
@@ -60,21 +62,22 @@ resource "aws_security_group" "aurora_sg" {
 
 # Aurora Serverless v2 cluster
 resource "aws_rds_cluster" "aurora_cluster" {
-  cluster_identifier     = "${local.cluster_name}-aurora-cluster"
-  engine                 = "aurora-postgresql"
-  engine_mode           = "provisioned"
-  engine_version        = "17.5"
-  database_name         = "sample_airbnb"
-  master_username       = "postgres"
-  master_password       = local.atlas_user_password
+  count              = try(var.scenario_config.database.postgres, false) ? 1 : 0
+  cluster_identifier = "${local.cluster_name}-aurora-cluster"
+  engine             = "aurora-postgresql"
+  engine_mode        = "provisioned"
+  engine_version     = "17.5"
+  database_name      = "sample_airbnb"
+  master_username    = "postgres"
+  master_password    = local.atlas_user_password
   
   serverlessv2_scaling_configuration {
     max_capacity = 1.0
     min_capacity = 0.5
   }
 
-  db_subnet_group_name   = aws_db_subnet_group.aurora_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.aurora_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.aurora_subnet_group[0].name
+  vpc_security_group_ids = [aws_security_group.aurora_sg[0].id]
   
   skip_final_snapshot       = true
   backup_retention_period   = 1
@@ -96,11 +99,12 @@ resource "aws_rds_cluster" "aurora_cluster" {
 
 # Aurora Serverless v2 instance
 resource "aws_rds_cluster_instance" "aurora_instance" {
+  count              = try(var.scenario_config.database.postgres, false) ? 1 : 0
   identifier         = "${local.cluster_name}-aurora-instance"
-  cluster_identifier = aws_rds_cluster.aurora_cluster.id
+  cluster_identifier = aws_rds_cluster.aurora_cluster[0].id
   instance_class     = "db.serverless"
-  engine             = aws_rds_cluster.aurora_cluster.engine
-  engine_version     = aws_rds_cluster.aurora_cluster.engine_version
+  engine             = aws_rds_cluster.aurora_cluster[0].engine
+  engine_version     = aws_rds_cluster.aurora_cluster[0].engine_version
   publicly_accessible = true
 
   tags = {
@@ -114,6 +118,7 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
 
 # Simplified approach to enable pgvector
 resource "null_resource" "enable_pgvector" {
+  count = try(var.scenario_config.database.postgres, false) ? 1 : 0
   provisioner "local-exec" {
     command = <<-EOT
       # Install PostgreSQL client if not available
@@ -127,7 +132,7 @@ resource "null_resource" "enable_pgvector" {
             
       # Try to enable pgvector extension (Aurora PostgreSQL 17 should have it built-in)
       PGPASSWORD='${local.atlas_user_password}' psql \
-        -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+        -h ${aws_rds_cluster.aurora_cluster[0].endpoint} \
         -U postgres \
         -d sample_airbnb \
         -c "CREATE EXTENSION IF NOT EXISTS vector;"
@@ -139,54 +144,53 @@ resource "null_resource" "enable_pgvector" {
   ]
 
   triggers = {
-    cluster_endpoint = aws_rds_cluster.aurora_cluster.endpoint
+    cluster_endpoint = aws_rds_cluster.aurora_cluster[0].endpoint
   }
 }
 
-# Outputs
+# Outputs - only create if postgres is enabled
 output "aurora_cluster_endpoint" {
   description = "Aurora cluster endpoint"
-  value       = aws_rds_cluster.aurora_cluster.endpoint
+  value       = try(var.scenario_config.database.postgres, false) ? aws_rds_cluster.aurora_cluster[0].endpoint : null
   sensitive   = false
 }
 
 output "aurora_cluster_reader_endpoint" {
   description = "Aurora cluster reader endpoint"
-  value       = aws_rds_cluster.aurora_cluster.reader_endpoint
+  value       = try(var.scenario_config.database.postgres, false) ? aws_rds_cluster.aurora_cluster[0].reader_endpoint : null
   sensitive   = false
 }
 
 output "aurora_database_name" {
   description = "Aurora database name"
-  value       = aws_rds_cluster.aurora_cluster.database_name
+  value       = try(var.scenario_config.database.postgres, false) ? aws_rds_cluster.aurora_cluster[0].database_name : null
   sensitive   = false
 }
 
 output "aurora_master_username" {
   description = "Aurora master username"
-  value       = aws_rds_cluster.aurora_cluster.master_username
+  value       = try(var.scenario_config.database.postgres, false) ? aws_rds_cluster.aurora_cluster[0].master_username : null
   sensitive   = false
 }
 
 output "aurora_connection_string" {
   description = "PostgreSQL connection string"
-  value       = "postgresql://${aws_rds_cluster.aurora_cluster.master_username}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/${aws_rds_cluster.aurora_cluster.database_name}"
+  value       = try(var.scenario_config.database.postgres, false) ? "postgresql://${aws_rds_cluster.aurora_cluster[0].master_username}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster[0].endpoint}:5432/${aws_rds_cluster.aurora_cluster[0].database_name}" : null
   sensitive   = true
 }
 
 output "aurora_jdbc_url" {
   description = "JDBC connection URL"
-  value       = "jdbc:postgresql://${aws_rds_cluster.aurora_cluster.endpoint}:5432/${aws_rds_cluster.aurora_cluster.database_name}"
+  value       = try(var.scenario_config.database.postgres, false) ? "jdbc:postgresql://${aws_rds_cluster.aurora_cluster[0].endpoint}:5432/${aws_rds_cluster.aurora_cluster[0].database_name}" : null
   sensitive   = false
 }
 
-# PostgreSQL provider configuration
-
+# PostgreSQL provider configuration - only if postgres is enabled
 provider "postgresql" {
-  host      = aws_rds_cluster.aurora_cluster.endpoint
+  host      = aws_rds_cluster.aurora_cluster[0].endpoint
   port      = 5432
-  database  = aws_rds_cluster.aurora_cluster.database_name
-  username  = aws_rds_cluster.aurora_cluster.master_username
+  database  = aws_rds_cluster.aurora_cluster[0].database_name
+  username  = aws_rds_cluster.aurora_cluster[0].master_username
   password  = local.atlas_user_password
   sslmode   = "require"
   superuser = false
@@ -194,7 +198,8 @@ provider "postgresql" {
 
 # Create PostgreSQL users for each Atlas user first
 resource "postgresql_role" "atlas_users" {
-  for_each = toset(local.atlas_user_list)
+  for_each = try(var.scenario_config.database.postgres, false) ? { for user in local.atlas_user_list : user => user } : {}
+  provider = postgresql
   name     = each.value
   login    = true
   password = local.atlas_user_password
@@ -218,9 +223,10 @@ resource "postgresql_role" "atlas_users" {
 
 # Create a database for each user with the user as owner
 resource "postgresql_database" "user_databases" {
-  for_each = toset(local.atlas_user_list)
+  for_each = try(var.scenario_config.database.postgres, false) ? { for user in local.atlas_user_list : user => user } : {}
+  provider = postgresql
   name     = each.value
-  owner    = postgresql_role.atlas_users[each.value].name
+  owner    = postgresql_role.atlas_users[each.key].name
   
   depends_on = [
     postgresql_role.atlas_users
@@ -234,23 +240,24 @@ resource "postgresql_database" "user_databases" {
 # Output connection strings for each user's database
 output "user_connection_strings" {
   description = "PostgreSQL connection strings for each user's database"
-  value = {
-    for user in local.atlas_user_list : user => "postgresql://${user}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/${user}"
-  }
+  value = try(var.scenario_config.database.postgres, false) ? {
+    for user in local.atlas_user_list : user => "postgresql://${user}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster[0].endpoint}:5432/${user}"
+  } : {}
   sensitive = true
 }
 
 # Output JDBC URLs for each user's database
 output "user_jdbc_urls" {
   description = "JDBC connection URLs for each user's database"
-  value = {
-    for user in local.atlas_user_list : user => "jdbc:postgresql://${aws_rds_cluster.aurora_cluster.endpoint}:5432/${user}"
-  }
+  value = try(var.scenario_config.database.postgres, false) ? {
+    for user in local.atlas_user_list : user => "jdbc:postgresql://${aws_rds_cluster.aurora_cluster[0].endpoint}:5432/${user}"
+  } : {}
   sensitive = false
 }
 
 # Download S3 backup and restore to all user databases using Kubernetes job
 resource "kubernetes_job_v1" "restore_backup_to_users" {
+  count = try(var.scenario_config.database.postgres, false) ? 1 : 0
   metadata {
     name = "restore-backup-to-users"
     labels = {
@@ -318,7 +325,7 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
                 
                 # Check if this user's database has already been restored
                 RESTORED=$(PGPASSWORD='${local.atlas_user_password}' psql \
-                  -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                  -h ${aws_rds_cluster.aurora_cluster[0].endpoint} \
                   -U $USER \
                   -d $USER \
                   -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'listings';" 2>/dev/null || echo "0")
@@ -334,7 +341,7 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
                 
                 # Restore the backup to the user's database
                 PGPASSWORD='${local.atlas_user_password}' psql \
-                  -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                  -h ${aws_rds_cluster.aurora_cluster[0].endpoint} \
                   -U $USER \
                   -d $USER \
                   -f /backup/airbnb-backup.sql
@@ -344,7 +351,7 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
                   
                   # Verify the restoration by checking table count
                   TABLE_COUNT=$(PGPASSWORD='${local.atlas_user_password}' psql \
-                    -h ${aws_rds_cluster.aurora_cluster.endpoint} \
+                    -h ${aws_rds_cluster.aurora_cluster[0].endpoint} \
                     -U $USER \
                     -d $USER \
                     -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';")
@@ -422,5 +429,5 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
 # Output the job status
 output "backup_restore_job_name" {
   description = "Name of the backup restore job"
-  value       = kubernetes_job_v1.restore_backup_to_users.metadata[0].name
+  value       = try(var.scenario_config.database.postgres, false) ? kubernetes_job_v1.restore_backup_to_users[0].metadata[0].name : null
 }

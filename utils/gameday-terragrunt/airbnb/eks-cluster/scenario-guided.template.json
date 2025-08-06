@@ -1,0 +1,50 @@
+{
+    "version": "1.0",
+    "repository": "https://github.com/simonegaiera/mongodb-airbnb-workshop",
+    "branch": "main",
+    "database": {
+        "mongodb": true,
+        "postgres": false
+    },
+    "language": {
+        "python": false,
+        "node": true,
+        "java": false
+    },
+    "llm": {
+        "enabled": true,
+        "proxy": {
+            "enabled": true,
+            "service-name": "litellm-service",
+            "port": 4000
+        },
+        "mcp": true,
+        "provider": "anthropic",
+        "model": "us.anthropic.claude-3-haiku-20240307-v1:0",
+        "region": "us-east-2"
+    },
+    "frontend": "app",
+    "backend": "server",
+    "instructions": {
+        "base": "navigation-guided.yml",
+        "sections": [
+            {
+                "title": "Getting Started"
+            },
+            {
+                "title": "Guided Exercises"
+            },
+            {
+                "title": "CRUD Operations (1)",
+                "content": [
+                    "/crud/1/", 
+                    "/crud/2/"
+                ]
+            },
+            {
+                "title": "Vector Search",
+                "content": []
+            }
+        ]
+    }
+}

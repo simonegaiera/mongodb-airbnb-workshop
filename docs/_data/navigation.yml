@@ -21,6 +21,9 @@ docs:
         url: /overview-vibe/
       - title: "IDE: VSCode Online"
         url: /environment/vscode-vibe/
+
+  - title: "Airbnb Vibe Coding"
+    children:
       - title: "Vibe Coding: Instructions"
         url: /vibe/
       - title: "Hint: Python Prompt"

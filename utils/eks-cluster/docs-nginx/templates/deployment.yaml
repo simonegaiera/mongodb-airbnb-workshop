@@ -30,6 +30,29 @@ spec:
       serviceAccountName: {{ include "docs-nginx.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: docs-builder
+          image: ruby:3.1-alpine
+          command: ["/bin/sh"]
+          args: ["/scripts/startup.sh"]
+          volumeMounts:
+            - name: startup-script
+              mountPath: /scripts
+              readOnly: true
+            - name: scenario-config-volume
+              mountPath: /etc/scenario-config
+              readOnly: true
+            - name: build-storage
+              mountPath: /build
+            - name: instructions-volume
+              mountPath: /usr/share/nginx/html/instructions
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
       containers:
         - name: {{ .Chart.Name }}
           securityContext:

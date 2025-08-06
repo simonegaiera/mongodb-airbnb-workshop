@@ -68,15 +68,15 @@ resource "aws_route53_record" "nginx-record" {
   type    = "A"
 
   alias {
-    name                   = data.kubernetes_service.nginx_service.status[0].load_balancer[0].ingress[0].hostname
-    zone_id                = data.aws_lb.nginx_lb.zone_id
+    name                   = data.kubernetes_service.instructions_nginx_service.status[0].load_balancer[0].ingress[0].hostname
+    zone_id                = data.aws_lb.instructions_nginx_lb.zone_id
     evaluate_target_health = true
   }
 
   depends_on = [
-    data.kubernetes_service.nginx_service,
+    data.kubernetes_service.instructions_nginx_service,
     data.aws_route53_zone.hosted_zone,
-    data.aws_lb.nginx_lb
+    data.aws_lb.instructions_nginx_lb
   ]
 }
 

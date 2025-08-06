@@ -26,14 +26,10 @@ inputs = {
   atlas_user_password = dependency.atlas.outputs.user_password
 
   # varibales to change
-  scenario = "vibe"
+  scenario_config = jsondecode(file("${get_terragrunt_dir()}/scenario.json"))
   aws_profile = "Solution-Architects.User-979559056307"
   customer_name = "airbnb"
   aws_region = "us-east-2"
   domain_email = "simone.gaiera@mongodb.com"
-  llm_enabled = true
-  llm_model = "us.anthropic.claude-3-haiku-20240307-v1:0"
-  llm_region = "us-east-2"
-  litellm_enabled = true
   anthropic_api_key = "api-key-here"
 }

@@ -84,7 +84,6 @@ nginx:
   error: ""
   notfound: ""
   favicon: ""
-  scenario: ""
 
 nodeSelector: {}
 

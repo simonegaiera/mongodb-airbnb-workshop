@@ -7,14 +7,38 @@ metadata:
 data:
   cline_mcp_settings.json: |-
     {
+      {{- $mcpEnabled := false }}
+      {{- $mongoEnabled := false }}
+      {{- $postgresEnabled := false }}
+      
+      {{- if .Values.scenarioConfig }}
+        {{- $mcpEnabled = (index .Values.scenarioConfig "llm" "mcp" | default false) }}
+        {{- $mongoEnabled = (index .Values.scenarioConfig "database" "mongodb" | default false) }}
+        {{- $postgresEnabled = (index .Values.scenarioConfig "database" "postgres" | default false) }}
+      {{- end }}
+      
+      {{- if $mcpEnabled }}
       "mcpServers": {
+        {{- $servers := list }}
+        
+        {{- if $mongoEnabled }}
+          {{- $servers = append $servers "MongoDB" }}
+        {{- end }}
+        
+        {{- if $postgresEnabled }}
+          {{- $servers = append $servers "postgres" }}
+        {{- end }}
+        
+        {{- range $index, $server := $servers }}
+          {{- if eq $server "MongoDB" }}
         "MongoDB": {
           "command": "npx",
           "args": ["-y", "mongodb-mcp-server"],
           "env": {
-            "MDB_MCP_CONNECTION_STRING": "{{ index .Values.extraEnv 0 "value" }}"
+            "MDB_MCP_CONNECTION_STRING": "{{ index $.Values.extraEnv 0 "value" }}"
           }
-        },
+        }{{- if lt $index (sub (len $servers) 1) }},{{- end }}
+          {{- else if eq $server "postgres" }}
         "postgres": {
           "command": "/home/openvscode-server/.local/bin/uv",
           "args": [
@@ -23,8 +47,13 @@ data:
             "--access-mode=unrestricted"
           ],
           "env": {
-            "DATABASE_URI": "{{ index .Values.extraEnv 1 "value" }}"
+            "DATABASE_URI": "{{ index $.Values.extraEnv 1 "value" }}"
           }
-        }
+        }{{- if lt $index (sub (len $servers) 1) }},{{- end }}
+          {{- end }}
+        {{- end }}
       }
+      {{- else }}
+      "mcpServers": {}
+      {{- end }}
     }

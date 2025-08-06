@@ -52,11 +52,11 @@ docs:
   - title: Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /aggregations/
+        url: /pipeline/
       - title: "Aggregations: Exercise 1"
-        url: /aggregations/1/
+        url: /pipeline/1/
       - title: "Hint: Exercise 1"
-        url: /aggregations/1/hint/
+        url: /pipeline/1/hint/
 
   - title: CRUD Operations (2)
     children:

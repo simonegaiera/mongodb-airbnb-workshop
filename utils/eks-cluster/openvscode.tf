@@ -56,30 +56,22 @@ resource "helm_release" "user_openvscode" {
     file("${path.module}/mdb-openvscode/values.yaml")
   ]
 
-  set = [
+  set = concat([
     {
       name  = "openvscode.user"
       value = each.value
     },
     {
-      name  = "openvscode.atlas_standard_srv"
-      value = local.atlas_standard_srv
+      name  = "scenarioConfig.database.mongodb"
+      value = tostring(try(var.scenario_config.database.mongodb, false))
     },
     {
-      name  = "openvscode.atlas_user_password"
-      value = local.atlas_user_password
+      name  = "scenarioConfig.database.postgres"
+      value = tostring(try(var.scenario_config.database.postgres, false))
     },
     {
-      name  = "openvscode.aws_route53_record_name"
-      value = local.aws_route53_record_name
-    },
-    {
-      name  = "openvscode.llm_model"
-      value = var.llm_model
-    },
-    {
-      name  = "openvscode.llm_region"
-      value = var.llm_region
+      name  = "scenarioConfig.llm.mcp"
+      value = tostring(try(var.scenario_config.llm.mcp, false))
     },
     {
       name  = "persistence.fileSystemId"
@@ -154,27 +146,46 @@ resource "helm_release" "user_openvscode" {
       value = "/home/workspace/.openvscode-server/data/User/globalStorage/saoudrizwan.claude-dev/settings"
     },
     {
+      name  = "volumes[4].name"
+      value = "scenario-config-volume"
+    },
+    {
+      name  = "volumes[4].configMap.name"
+      value = "scenario-config-cm"
+    },
+    {
+      name  = "volumeMounts[4].name"
+      value = "scenario-config-volume"
+    },
+    {
+      name  = "volumeMounts[4].mountPath"
+      value = "/home/workspace/scenario-config"
+    },
+    {
       name  = "extraEnv[0].name"
       value = "MDB_MCP_CONNECTION_STRING"
     },
     {
       name  = "extraEnv[0].value"
       value = "mongodb+srv://${each.value}:${local.atlas_user_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/${each.value}"
-    },
+    }
+  ], 
+  try(var.scenario_config.database.postgres, false) ? [
     {
       name  = "extraEnv[1].name"
       value = "PGSQL_MCP_CONNECTION_STRING"
     },
     {
       name  = "extraEnv[1].value"
-      value = "postgres://${each.value}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster.endpoint}:5432/${each.value}?sslmode=require"
+      value = "postgres://${each.value}:${local.atlas_user_password}@${aws_rds_cluster.aurora_cluster[0].endpoint}:5432/${each.value}?sslmode=require"
     }
-  ]
+  ] : [])
 
   depends_on = [
     aws_efs_mount_target.efs_mt,
     kubernetes_storage_class.efs,
-    aws_rds_cluster_instance.aurora_instance
+    aws_rds_cluster_instance.aurora_instance,
+    kubernetes_config_map.scenario_config
   ]
 }
 

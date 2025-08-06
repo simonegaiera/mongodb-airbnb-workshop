@@ -55,9 +55,11 @@
 
 3. **EKS Configuration (Skip for Hybrid)**  
    - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
-   - **Choose Workshop Scenario**: Set the `scenario` variable to one of two options:
-     - `"vibe-coding"` (default): Provides instructions for participants to implement the complete API from scratch
-     - `"guided-exercises"`: Provides a structured, step-by-step learning experience with pre-built exercises
+   - **Choose Workshop Scenario:**  
+     - Edit the `scenario.json` file in the `eks-cluster` folder to select or customize your workshop scenario.  
+     - Example scenarios include `"vibe-coding"` and `"guided-exercises"`.  
+     - The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
+     - **Note:** For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
    - Note that the cluster expires after one week by default.
 
 ## Deployment and Management

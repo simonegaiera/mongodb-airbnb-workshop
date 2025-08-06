@@ -167,14 +167,14 @@ resource "aws_iam_role_policy_attachment" "node_efs_csi_attachment" {
 
 # Add Bedrock policy for the node role - only if LLM is enabled
 resource "aws_iam_policy" "bedrock_policy" {
-  count       = var.llm_enabled ? 1 : 0
+  count       = try(var.scenario_config.llm.enabled, false) ? 1 : 0
   name        = "${local.cluster_name}-bedrock-policy"
   description = "Policy for Bedrock access"
   policy      = file("${path.module}/aws_policies/bedrock.json")
 }
 
 resource "aws_iam_role_policy_attachment" "node_bedrock_policy" {
-  count      = var.llm_enabled ? 1 : 0
+  count      = try(var.scenario_config.llm.enabled, false) ? 1 : 0
   policy_arn = aws_iam_policy.bedrock_policy[0].arn
   role       = aws_iam_role.node.name
 }
@@ -436,4 +436,22 @@ resource "aws_iam_policy" "eks_auto_mode_policy" {
 resource "aws_iam_role_policy_attachment" "cluster_eks_auto_mode_policy" {
   policy_arn = aws_iam_policy.eks_auto_mode_policy.arn
   role       = aws_iam_role.cluster.name
+}
+
+resource "kubernetes_config_map" "scenario_config" {
+  metadata {
+    name = "scenario-config-cm"
+  }
+
+  data = {
+    "scenario-config.json" = jsonencode(merge(var.scenario_config, {
+      aws_route53_record_name = local.aws_route53_record_name
+      atlas_standard_srv      = local.atlas_standard_srv
+      atlas_user_password     = local.atlas_user_password
+    }))
+  }
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster
+  ]
 }

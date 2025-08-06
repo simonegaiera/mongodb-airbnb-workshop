@@ -53,45 +53,15 @@ variable "atlas_user_password" {
   type        = string
 }
 
-variable "llm_enabled" {
-  description = "Enable or disable the LLM integration"
-  type        = bool
-  default     = true
-}
-
-variable "llm_model" {
-  description = "The LLM model to use"
-  type        = string
-  default     = "us.anthropic.claude-3-haiku-20240307-v1:0"
-}
-
-variable "llm_region" {
-  description = "The AWS region for the LLM model"
-  type        = string
-  default     = "us-east-2"
-}
-
-variable "scenario" {
-  description = "The workshop scenario to deploy"
-  type        = string
-  default     = "vibe"
-  
-  validation {
-    condition     = contains(["vibe", "guided", "guided-vector"], var.scenario)
-    error_message = "the selected scenario is invalid."
-  }
-}
-
-# Variables for LiteLLM
-variable "litellm_enabled" {
-  description = "Enable or disable LiteLLM proxy deployment"
-  type        = bool
-  default     = true
-}
-
 variable "anthropic_api_key" {
   description = "Anthropic API key for LiteLLM"
   type        = string
   sensitive   = true
   default     = ""
+}
+
+variable "scenario_config" {
+  description = "Scenario configuration"
+  type        = any
+  default     = {}
 }

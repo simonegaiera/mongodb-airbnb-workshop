@@ -1,6 +1,6 @@
 ---
 title: "MongoDB Aggregations"
-permalink: /aggregations/1/
+permalink: /pipeline/1/
 layout: single
 classes: wide
 ---

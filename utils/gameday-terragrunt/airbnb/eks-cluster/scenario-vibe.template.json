@@ -1,0 +1,43 @@
+{
+    "version": "1.0",
+    "repository": "https://github.com/simonegaiera/mongodb-airbnb-workshop",
+    "branch": "main",
+    "database": {
+        "mongodb": true,
+        "postgres": false
+    },
+    "language": {
+        "python": true,
+        "node": true,
+        "java": true
+    },
+    "llm": {
+        "enabled": true,
+        "proxy": {
+            "enabled": true,
+            "service-name": "litellm-service",
+            "port": 4000
+        },
+        "mcp": true,
+        "provider": "anthropic",
+        "model": "us.anthropic.claude-3-haiku-20240307-v1:0",
+        "region": "us-east-2"
+    },
+    "frontend": "app",
+    "backend": "backend",
+    "instructions": {
+        "base": "navigation-vibe.yml",
+        "sections": [
+            {
+                "title": "Getting Started"
+            },
+            {
+                "title": "Vibe Coding"
+            },
+            {
+                "title": "Airbnb Vibe Coding",
+                "content": []
+            }
+        ]
+    }
+}

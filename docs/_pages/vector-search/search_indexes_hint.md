@@ -12,6 +12,9 @@ Automatically embed your text fields and filter results for smarter, more releva
 
 - 🛠️ [Manage Index](https://www.mongodb.com/docs/atlas/atlas-search/manage-indexes/)  
 
+- 🤖 **Automated Embeddings**: Let MongoDB handle text-to-vector conversion automatically.  
+  [Automated Embedding Documentation](https://www.mongodb.com/docs/atlas/atlas-vector-search/automated-embedding/)
+
 ### ✨ Example: Vector Search Index Definition
 
 ```json

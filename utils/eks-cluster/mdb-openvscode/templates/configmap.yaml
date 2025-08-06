@@ -5,14 +5,9 @@ metadata:
   labels:
     {{- include "mdb-openvscode.labels" . | nindent 4 }}
 data:
-  settings.json: |-
+  user.json: |-
     {
-      "user": "{{ .Values.openvscode.user }}",
-      "aws_route53_record_name": "{{ .Values.openvscode.aws_route53_record_name }}",
-      "atlas_standard_srv": "{{ .Values.openvscode.atlas_standard_srv }}",
-      "atlas_user_password": "{{ .Values.openvscode.atlas_user_password }}",
-      "llm_model": "{{ .Values.openvscode.llm_model }}",
-      "llm_region": "{{ .Values.openvscode.llm_region }}"
+      "user": "{{ .Values.openvscode.user }}"
     }
   startup.sh: |-
     {{ .Files.Get "files/startup.sh" | nindent 4 }}
