@@ -51,6 +51,11 @@ resource "helm_release" "user_openvscode" {
   repository = "local"
   chart      = "./mdb-openvscode"
   version    = "0.1.0"
+  timeout    = 600
+  replace    = true           # Force replacement of existing releases
+  # force_update = true         # Force update even if chart version hasn't changed
+  recreate_pods = true        # Recreate pods on update
+  cleanup_on_fail = true      # Clean up resources if installation fails
 
   values = [
     file("${path.module}/mdb-openvscode/values.yaml")
