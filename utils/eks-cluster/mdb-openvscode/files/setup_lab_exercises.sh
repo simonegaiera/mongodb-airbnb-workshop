@@ -76,19 +76,29 @@ mark_exercises_to_keep() {
     local -n replace_array=$3
     local repo_path="$4"
     
+    # Convert shell glob pattern to regex pattern for grep
+    # Handle character classes [1-4] differently than wildcards *
+    local regex_pattern="$pattern"
+    regex_pattern=$(echo "$regex_pattern" | sed 's/\./\\./g')  # Escape dots first
+    regex_pattern=$(echo "$regex_pattern" | sed 's/\*/.*/g')   # Convert * to .*
+    
     # Find matching files
-    for lab_file in $(ls "$repo_path/server/src/lab/" | grep -E "$pattern" 2>/dev/null); do
+    for lab_file in $(ls "$repo_path/server/src/lab/" | grep -E "$regex_pattern" 2>/dev/null); do
         # Add to keep array if not already there
         if [[ ! " ${keep_array[@]} " =~ " ${lab_file} " ]]; then
             keep_array+=("$lab_file")
+            echo_with_timestamp "    Adding $lab_file to keep list"
         fi
         
-        # Remove from replace array
-        for i in "${!replace_array[@]}"; do
-            if [[ "${replace_array[i]}" = "$lab_file" ]]; then
-                unset 'replace_array[i]'
+        # Remove from replace array - create new array without the matched element
+        local temp_array=()
+        for item in "${replace_array[@]}"; do
+            if [[ "$item" != "$lab_file" ]]; then
+                temp_array+=("$item")
             fi
         done
+        replace_array=("${temp_array[@]}")
+        echo_with_timestamp "    Removed $lab_file from replace list"
     done
 }
 
@@ -158,12 +168,14 @@ process_section_content() {
                 keep_array+=("$lab_file")
             fi
             
-            # Remove from replace array
-            for i in "${!replace_array[@]}"; do
-                if [[ "${replace_array[i]}" = "$lab_file" ]]; then
-                    unset 'replace_array[i]'
+            # Remove from replace array - use same approach as mark_exercises_to_keep
+            local temp_array=()
+            for item in "${replace_array[@]}"; do
+                if [[ "$item" != "$lab_file" ]]; then
+                    temp_array+=("$item")
                 fi
             done
+            replace_array=("${temp_array[@]}")
         fi
     done
 }

@@ -1,5 +1,6 @@
 import { vectorSearch } from "../lab/vector-search-1.lab.js";
 import { ChatBedrockConverse } from "@langchain/aws";
+import { ChatOpenAI } from "@langchain/openai"; // Only needed for LiteLLM proxy
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { ConversationSummaryBufferMemory } from "langchain/memory";
 import { RunnableSequence } from "@langchain/core/runnables";
@@ -8,6 +9,50 @@ import { db } from "../utils/database.js";
 
 // Store search results (keep this in memory for now)
 const sessionSearchResults = new Map();
+
+/**
+ * Initialize the appropriate LLM model based on environment configuration
+ * @returns {ChatBedrockConverse|ChatOpenAI} - The configured LLM model
+ */
+function initializeModel() {
+    const useBedrock = process.env.LLM_BEDROCK === 'true';
+    const useProxy = process.env.LLM_PROXY_ENABLED === 'true';
+    const proxyType = process.env.LLM_PROXY_TYPE;
+
+    console.log(`LLM Configuration: bedrock=${useBedrock}, proxy=${useProxy}, proxyType=${proxyType}`);
+
+    if (useBedrock && !useProxy) {
+        // Direct Bedrock connection - works with any Bedrock model (Anthropic, etc.)
+        console.log('Using direct AWS Bedrock connection');
+        return new ChatBedrockConverse({
+            model: process.env.LLM_MODEL || "us.anthropic.claude-3-haiku-20240307-v1:0",
+            region: process.env.AWS_REGION || "us-east-1",
+            temperature: 0.7,
+            maxTokens: 4096,
+        });
+    } else if (useProxy && proxyType === 'litellm') {
+        // LiteLLM proxy - uses OpenAI-compatible interface regardless of actual provider
+        console.log(`Using LiteLLM proxy for provider: ${process.env.LLM_PROVIDER}`);
+        const proxyService = process.env.LLM_PROXY_SERVICE || 'litellm-service';
+        const proxyPort = process.env.LLM_PROXY_PORT || '4000';
+        const baseURL = `http://${proxyService}:${proxyPort}`;
+
+        // Note: We use ChatOpenAI even for Anthropic models because LiteLLM 
+        // provides an OpenAI-compatible interface
+        return new ChatOpenAI({
+            openAIApiKey: "sk-litellm-proxy-key", // Required but ignored by LiteLLM
+            configuration: {
+                baseURL: baseURL,
+            },
+            // This model name will be routed by LiteLLM to the actual provider
+            modelName: process.env.LLM_MODEL || "claude-3-haiku",
+            temperature: 0.7,
+            maxTokens: 4096,
+        });
+    } else {
+        throw new Error(`Invalid LLM configuration. Set LLM_BEDROCK=true for direct Bedrock, or LLM_PROXY_ENABLED=true with LLM_PROXY_TYPE=litellm for proxy`);
+    }
+}
 
 /**
  * Formats search results for the LLM including comprehensive property and review data
@@ -127,13 +172,8 @@ export async function getChat(req, res) {
         // Create a composite session ID that includes username
         const compositeSessionId = `${username}_${sessionId}`;
 
-        // Initialize Bedrock model using ChatBedrockConverse
-        const model = new ChatBedrockConverse({
-            model: process.env.LLM_MODEL || "us.anthropic.claude-sonnet-4-20250514-v1:0",
-            region: process.env.AWS_REGION || "us-east-1",
-            temperature: 0.7,
-            maxTokens: 4096,
-        });
+        // Initialize the appropriate model based on configuration
+        const model = initializeModel();
 
         // Check if user is referring to previous search results
         const previousResults = sessionSearchResults.get(compositeSessionId) || [];
