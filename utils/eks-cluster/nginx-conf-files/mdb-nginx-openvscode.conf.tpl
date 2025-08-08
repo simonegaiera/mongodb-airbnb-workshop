@@ -1,6 +1,22 @@
 server {
     server_name ${server_name};
 
+    # Custom error pages
+    error_page 502 503 504 /50x.html;
+    error_page 404 /404.html;
+
+    # Serve the custom 50x error page
+    location = /50x.html {
+        root /usr/share/nginx/html;
+        internal;
+    }
+
+    # Serve the custom 404 page
+    location = /404.html {
+        root /usr/share/nginx/html;
+        internal;
+    }
+
     location = /app {
         return 301 /app/;
     }

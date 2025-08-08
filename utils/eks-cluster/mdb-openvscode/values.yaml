@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: gitpod/openvscode-server
-  pullPolicy: IfNotPresent
+  repository: 979559056307.dkr.ecr.us-east-2.amazonaws.com/ai-arena-mdb-openvscode
+  pullPolicy: Always  # IfNotPresent
   tag: "latest"
 
 imagePullSecrets: []

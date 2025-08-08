@@ -15,3 +15,5 @@ data:
     {{ .Files.Get "files/user_operations.sh" | nindent 4 }}
   openvscode_extensions.sh: |-
     {{ .Files.Get "files/openvscode_extensions.sh" | nindent 4 }}
+  setup_lab_exercises.sh: |-
+    {{ .Files.Get "files/setup_lab_exercises.sh" | nindent 4 }}

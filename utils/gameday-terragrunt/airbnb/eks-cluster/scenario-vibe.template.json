@@ -6,11 +6,6 @@
         "mongodb": true,
         "postgres": false
     },
-    "language": {
-        "python": true,
-        "node": true,
-        "java": true
-    },
     "llm": {
         "enabled": true,
         "proxy": {

@@ -40,7 +40,7 @@ data:
         }{{- if lt $index (sub (len $servers) 1) }},{{- end }}
           {{- else if eq $server "postgres" }}
         "postgres": {
-          "command": "/home/openvscode-server/.local/bin/uv",
+          "command": "uv",
           "args": [
             "run",
             "postgres-mcp",

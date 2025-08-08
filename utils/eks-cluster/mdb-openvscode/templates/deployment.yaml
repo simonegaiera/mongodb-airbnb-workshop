@@ -30,6 +30,59 @@ spec:
       serviceAccountName: {{ include "mdb-openvscode.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: workspace-setup
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: true
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "bash"
+            - "-c"
+            - |
+              # Create persistent log file with timestamp
+              INIT_LOG="/home/workspace/init-$(date +%Y%m%d-%H%M%S).log"
+              {
+                echo "Starting workspace initialization at $(date)"
+                echo "Init container starting..."
+                echo "Available files in /home/workspace/utils:"
+                ls -la /home/workspace/utils/
+                echo "Copying files..."
+                cp /home/workspace/utils/startup.sh /tmp/startup.sh
+                cp /home/workspace/utils/user_operations.sh /tmp/user_operations.sh
+                cp /home/workspace/utils/openvscode_extensions.sh /tmp/openvscode_extensions.sh
+                cp /home/workspace/utils/setup_lab_exercises.sh /tmp/setup_lab_exercises.sh
+                echo "Files copied successfully"
+                echo "Setting permissions..."
+                chmod +x /tmp/startup.sh
+                chmod +x /tmp/user_operations.sh
+                chmod +x /tmp/openvscode_extensions.sh
+                chmod +x /tmp/setup_lab_exercises.sh
+                echo "Permissions set successfully"
+                echo "Running openvscode_extensions.sh..."
+                /tmp/openvscode_extensions.sh
+                echo "openvscode_extensions.sh completed with exit code: $?"
+                echo "Running startup.sh..."
+                /tmp/startup.sh
+                echo "startup.sh completed with exit code: $?"
+                echo "Workspace initialization completed at $(date)"
+              } >> "$INIT_LOG" 2>&1 || {
+                echo "Workspace initialization FAILED at $(date) with exit code: $?" >> "$INIT_LOG"
+                exit 1
+              }
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -51,24 +104,6 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "bash"
-                  - "-c"
-                  - |
-                    echo "Starting script execution" >> /tmp/startup.log && \  
-                    cp /home/workspace/utils/startup.sh /tmp/startup.sh 2>> /tmp/startup.log && \ 
-                    cp /home/workspace/utils/user_operations.sh /tmp/user_operations.sh 2>> /tmp/startup.log && \  
-                    cp /home/workspace/utils/openvscode_extensions.sh /tmp/openvscode_extensions.sh 2>> /tmp/startup.log && \  
-                    echo "Copied file" >> /tmp/startup.log && \  
-                    chmod +x /tmp/startup.sh 2>> /tmp/startup.log && \  
-                    chmod +x /tmp/user_operations.sh 2>> /tmp/startup.log && \  
-                    chmod +x /tmp/openvscode_extensions.sh 2>> /tmp/startup.log && \  
-                    echo "Set permissions" >> /tmp/startup.log && \  
-                    nohup /tmp/openvscode_extensions.sh 2>> /tmp/startup.log && \ 
-                    sudo nohup /tmp/startup.sh >> /tmp/startup.log 2>&1 &
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

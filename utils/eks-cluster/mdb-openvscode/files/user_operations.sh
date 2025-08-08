@@ -111,4 +111,15 @@ wget -q -P /tmp https://downloads.mongodb.com/compass/mongodb-mongosh_2.4.2_amd6
 sudo dpkg -i /tmp/mongodb-mongosh_2.4.2_amd64.deb > /dev/null 2>&1 || echo_with_timestamp "Failed to install mongosh"
 sudo apt-get install -f > /dev/null 2>&1 || echo_with_timestamp "Failed to fix dependencies"
 
+# Source and call the lab exercises setup script if backend is server
+if [ "$BACKEND_TYPE" = "server" ]; then
+    echo_with_timestamp "Setting up lab exercises and navigation for server backend"
+    
+    # Source the setup script
+    source "$(dirname "$0")/setup_lab_exercises.sh"
+    
+    # Call the main function with required parameters
+    main "$REPO_PATH" "$SCENARIO_CONFIG" "$BACKEND_TYPE"
+fi
+
 echo_with_timestamp "User operations script completed successfully."
