@@ -214,6 +214,10 @@ output "user_password" {
     value = var.customer_user_password
 }
 
+output "admin_password" {
+    value = urlencode(var.mongodb_atlas_database_user_password)
+}
+
 output "standard_srv" {
     value = mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv
 }
@@ -236,7 +240,7 @@ resource "null_resource" "install_requirements" {
 }
 
 locals {
-  mongodb_atlas_connection_string = "mongodb+srv://${var.mongodb_atlas_database_username}:${var.mongodb_atlas_database_user_password}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(var.mongodb_atlas_database_username)}:${urlencode(var.mongodb_atlas_database_user_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
 }
 
 # Define another null resource to execute the Python script

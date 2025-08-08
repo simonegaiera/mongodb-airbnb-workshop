@@ -80,7 +80,7 @@ variable "mongodb_atlas_database_username" {
 variable "mongodb_atlas_database_user_password" {
   description = "MongoDB Atlas DB password"
   type        = string
-  default     = "MongoGameDay123#Admin"
+  default     = "MongoGameDay123/Admin"
 }
 
 variable "customer_user_password" {

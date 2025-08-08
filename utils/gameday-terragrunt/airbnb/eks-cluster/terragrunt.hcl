@@ -9,6 +9,7 @@ dependency "atlas" {
     standard_srv  = "mongodb+srv://mongodb-airbnb.abcdef.mongodb.net"
     user_list     = ["mockUserA","mockUserB"]
     user_password = "superSecret123"
+    admin_password = "superSecret123"
   }
 }
 
@@ -24,6 +25,7 @@ inputs = {
   atlas_standard_srv  = dependency.atlas.outputs.standard_srv
   atlas_user_list     = dependency.atlas.outputs.user_list
   atlas_user_password = dependency.atlas.outputs.user_password
+  atlas_admin_password = dependency.atlas.outputs.admin_password
 
   # varibales to change
   scenario_config = jsondecode(file("${get_terragrunt_dir()}/scenario.json"))

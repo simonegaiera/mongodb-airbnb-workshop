@@ -1,6 +1,4 @@
-import os
 import sys
-import csv
 import time
 import requests
 from requests.auth import HTTPDigestAuth
@@ -8,6 +6,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import certifi
 from parse_users import parse_csv
+from datetime import datetime, timezone
 
 def get_params():
     if len(sys.argv) != 9:
@@ -75,11 +74,23 @@ def create_user_collection(db_name, client, common_database, collections_list):
 def upsert_users(users_map, client, common_database):
     collection = client[common_database]['participants']
     for user_id, user_data in users_map.items():
-        collection.update_one(
-            {'_id': user_id},
-            {'$set': {'name': user_data}},
-            upsert=True
-        )
+        if user_id.startswith('user'):
+            # For users starting with 'user', only set name on insert (never update)
+            collection.update_one(
+                {'_id': user_id},
+                {'$setOnInsert': {'taken': False}},
+                upsert=True
+            )
+        else:
+            # For other users, set name and timestamp only if document doesn't exist
+            collection.update_one(
+                {'_id': user_id},
+                {
+                    '$set': {'name': user_data},
+                    '$setOnInsert': {'insert_timestamp': datetime.now(timezone.utc)}
+                },
+                upsert=True
+            )
         print(f"Upserted user with _id: {user_id}", flush=True)
 
 def main():
@@ -92,9 +103,7 @@ def main():
     else:
         print(f"Database '{common_database}' does not exist. Creating.", flush=True)
         load_sample_dataset(params)
-    # Now, use parse_csv to get the user identifiers from the provided CSV file (first argument after the required 6 parameters is used in our original call)
-    # For example, if you want to continue passing the CSV file as a parameter, adjust accordingly.
-    # In this example, we assume the CSV file path is provided as an extra parameter:
+
     csv_file = params['CSV_FILE']
 
     option = 'name'

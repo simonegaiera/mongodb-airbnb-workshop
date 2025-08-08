@@ -53,6 +53,11 @@ variable "atlas_user_password" {
   type        = string
 }
 
+variable "atlas_admin_password" {
+  description = "The Atlas admin password output from the atlas cluster"
+  type        = string
+}
+
 variable "anthropic_api_key" {
   description = "Anthropic API key for LiteLLM"
   type        = string

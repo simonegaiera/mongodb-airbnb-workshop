@@ -217,3 +217,125 @@ output "user_cluster_map" {
     for user_id in local.atlas_user_list : "${user_id}.${local.aws_route53_record_name}"
   ]
 }
+
+# ConfigMap for the Python script
+resource "kubernetes_config_map" "results_script" {
+  metadata {
+    name      = "results-script"
+    namespace = "default"
+  }
+
+  data = {
+    "test-results.py" = file("${path.module}/test-results/test-results.py")
+    "requirements.txt" = file("${path.module}/test-results/requirements.txt")
+  }
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster
+  ]
+}
+
+# Secret for environment variables
+resource "kubernetes_secret" "results_env" {
+  metadata {
+    name      = "results-env"
+    namespace = "default"
+  }
+
+  data = {
+    MONGODB_URI = "mongodb+srv://admin:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}"
+    DB_NAME = "airbnb_arena"
+    RESULTS = "automated_results"
+    PARTICIPANTS = "participants"
+    SERVICE_NAME = "vscode-{{PARTICIPANT_NAME}}-svc"
+    TEST_SERVICE_NAME = "{{PARTICIPANT_NAME}}.${local.aws_route53_record_name}/backend/"
+    LOG_LEVEL = "INFO"
+  }
+
+  type = "Opaque"
+
+  depends_on = [
+    aws_eks_cluster.eks_cluster
+  ]
+}
+
+# CronJob to run the Python script every 2 minutes
+resource "kubernetes_cron_job_v1" "results_cronjob" {
+  count = 0  # Set to 1 to enable, 0 to disable
+
+  metadata {
+    name      = "results-cronjob"
+    namespace = "default"
+  }
+
+  spec {
+    schedule = "*/5 9-17 * * 1-5"  # Every 5 minutes, 9 AM to 5 PM, Monday to Friday
+
+    job_template {
+      metadata {
+        name = "results-job"
+      }
+      
+      spec {
+        template {
+          metadata {
+            name = "results-pod"
+          }
+          
+          spec {
+            restart_policy = "OnFailure"
+            
+            container {
+              name  = "results-container"
+              image = "python:3.11-slim"
+              
+              command = ["/bin/bash"]
+              args = [
+                "-c",
+                "pip install -r /app/requirements.txt && python /app/test-results.py"
+              ]
+              
+              env_from {
+                secret_ref {
+                  name = kubernetes_secret.results_env.metadata[0].name
+                }
+              }
+              
+              volume_mount {
+                name       = "script-volume"
+                mount_path = "/app"
+              }
+              
+              resources {
+                requests = {
+                  cpu    = "100m"
+                  memory = "128Mi"
+                }
+                limits = {
+                  cpu    = "500m"
+                  memory = "512Mi"
+                }
+              }
+            }
+            
+            volume {
+              name = "script-volume"
+              config_map {
+                name = kubernetes_config_map.results_script.metadata[0].name
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    successful_jobs_history_limit = 3
+    failed_jobs_history_limit     = 3
+  }
+
+  depends_on = [
+    kubernetes_config_map.results_script,
+    kubernetes_secret.results_env,
+    helm_release.user_openvscode
+  ]
+}

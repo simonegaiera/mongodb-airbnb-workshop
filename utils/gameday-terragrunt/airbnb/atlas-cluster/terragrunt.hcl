@@ -24,7 +24,7 @@ inputs = {
     auto_scaling_disk_gb_enabled            = true
     mongo_db_major_version                  = "8.0"
     mongodb_atlas_database_username         = "admin"
-    mongodb_atlas_database_user_password    = "MongoGameDay123"
+    mongodb_atlas_database_user_password    = "MongoGameDay123/Admin"
     customer_user_password                  = "MongoGameDay123"
     user_list_path                          = local.user_list_path
 }
