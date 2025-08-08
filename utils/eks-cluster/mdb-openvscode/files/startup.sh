@@ -57,6 +57,14 @@ else
     echo_with_timestamp "uv installation skipped (PostgreSQL and MCP not both enabled in scenario config)"
 fi
 
+# Install mongodb-mcp-server globally if MCP is enabled
+if [ "$(is_enabled '.llm.mcp')" = "true" ]; then
+    echo_with_timestamp "MCP is enabled, installing mongodb-mcp-server globally"
+    npm install -g mongodb-mcp-server
+else
+    echo_with_timestamp "MCP is not enabled, skipping mongodb-mcp-server installation"
+fi
+
 echo_with_timestamp "Checking if directory /home/workspace/$REPO_NAME is empty"
 if [ -z "$(ls -A /home/workspace/$REPO_NAME)" ]; then
     echo_with_timestamp "Directory is empty. Changing ownership."

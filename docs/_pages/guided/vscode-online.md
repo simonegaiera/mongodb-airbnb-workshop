@@ -17,18 +17,8 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🚀 Step 1: Backend Setup
 
 1. **Access VSCode Online:**
-> **Note:** You can use the default customer page to access your workspace
-
-   - Go to:
-     ```
-     https://<username>.<customer>.mongogameday.com/
-     ```
-   - In the `Explorer`, click **Open Folder** and navigate to:
-     ```
-     /home/workspace/mongodb-airbnb-workshop/
-     ```
-     Click **Ok**.
-     ![Folder View](../../assets/images/environment-folder.png)  
+   - Navigate to `https://<customer>.mongogameday.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
+     ![Folder View](../../assets/images/environment-homepage.png)  
 2. **Trust the Workspace:**
    - When prompted:
      - Click **Yes, I trust the author**
@@ -104,39 +94,34 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - If your query runs successfully and returns data from your database, you’re all set!
    - If you see errors, double-check your database name and connection.
 
-## 🔗 Step 5: Use Cline for Bedrock AI
+## 🤖 Step 5: Supercharge VSCode with Cline
 
-1. **LaunchCline:**  
-   - Click the **Cline** icon in the toolbar to open the extension.
-   - Select **Use your own API key**.
-
+1. **Launch Cline:**  
+   - Click the **Cline** icon in the VSCode toolbar to open the extension.
+   - Choose **Use your own API key** when prompted.
 
 2. **Configure the API:**
-   1. Set **API Provider** to **Amazon Bedrock**.
-   2. Choose **AWS Profile** as the authentication method.
-   3. Choose **AWS Region** closest to you.
-   4. Enable the **Use cross-region inference** option to automatically route requests to the best available region.
-   5. Select **Let's go!**
-      ![cline-welcome](../../assets/images/cline-welcome.png)
-   6. Confirm the selection
-      ![cline-conf](../../assets/images/cline-conf.png)
+   - Set **API Provider** to **LiteLLM**.
+   - Enter the following LiteLLM settings:
+     - **Base URL:** `http://litellm-service:4000`
+     - **API Key:** `noop`
+     - **Model:** `claude-4-sonnet`
+   - Click **Let's go!**  
+     ![cline-welcome](../../assets/images/cline-welcome.png)
 
 3. **Save and Test:**
    - Click **Save** to apply your settings.
-   - Try a quick prompt in Cline to confirm everything is working! I generally ask to tell me a joke.
-      ![cline-working](../../assets/images/cline-working.png)
+   - Test your setup by entering a prompt in Cline (for example, ask it to tell you a joke).
+     ![cline-working](../../assets/images/cline-working.png)
 
----
+**Tip:**  
+If you don’t get a response, double-check your API settings or ask your SA for
 
-## 🛠️ Troubleshooting
+### 🧪 Test: Explore Collection Structure with MongoDB MCP
 
-- **Server not starting?**  
-  Double-check your terminal commands and directory.
+**Try this in Cline:**  
+Copy and paste the following prompt into Cline to explore your collection:
 
-- **Still stuck?**  
-  Ping your SA for help—no shame in asking!
+> Use the MongoDB MCP to describe the structure and main fields of the `listingsAndReviews` collection in my database.
 
----
-
-✨ That’s it! You’re set to code, create, and explore.  
-Happy hacking!
+**Check the response in Cline to see the main fields and their descriptions.**

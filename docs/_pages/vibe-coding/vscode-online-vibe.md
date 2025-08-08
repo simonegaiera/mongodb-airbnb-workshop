@@ -14,27 +14,25 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 ---
 
-## 🔗 Step 1: Use Cline for Bedrock AI
+## 🔗 Step 1: Supercharge VSCode with Cline
 
-1. **LaunchCline:**  
-   - Click the **Cline** icon in the toolbar to open the extension.
-   - Select **Use your own API key**.
-
+1. **Launch Cline:**  
+   - Click the **Cline** icon in the VSCode toolbar to open the extension.
+   - Choose **Use your own API key** when prompted.
 
 2. **Configure the API:**
-   1. Set **API Provider** to **Amazon Bedrock**.
-   2. Choose **AWS Profile** as the authentication method.
-   3. Choose **AWS Region** closest to you.
-   4. Enable the **Use cross-region inference** option to automatically route requests to the best available region.
-   5. Select **Let's go!**
-      ![cline-welcome](../../assets/images/cline-welcome.png)
-   6. Confirm the selection
-      ![cline-conf](../../assets/images/cline-conf.png)
+   - Set **API Provider** to **LiteLLM**.
+   - Enter the following LiteLLM settings:
+     - **Base URL:** `http://litellm-service:4000`
+     - **API Key:** `noop`
+     - **Model:** `claude-4-sonnet`
+   - Click **Let's go!**  
+     ![cline-welcome](../../assets/images/cline-welcome.png)
 
 3. **Save and Test:**
    - Click **Save** to apply your settings.
-   - Try a quick prompt in Cline to confirm everything is working! I generally ask to tell me a joke.
-      ![cline-working](../../assets/images/cline-working.png)
+   - Test your setup by entering a prompt in Cline (for example, ask it to tell you a joke).
+     ![cline-working](../../assets/images/cline-working.png)
 
 ---
 
