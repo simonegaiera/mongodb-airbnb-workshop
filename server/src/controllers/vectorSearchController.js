@@ -37,15 +37,13 @@ function initializeModel() {
         const proxyPort = process.env.LLM_PROXY_PORT || '4000';
         const baseURL = `http://${proxyService}:${proxyPort}`;
 
-        // Note: We use ChatOpenAI even for Anthropic models because LiteLLM 
         // provides an OpenAI-compatible interface
         return new ChatOpenAI({
-            openAIApiKey: "sk-litellm-proxy-key", // Required but ignored by LiteLLM
+            apiKey: "sk-litellm-proxy-key",
             configuration: {
                 baseURL: baseURL,
             },
-            // This model name will be routed by LiteLLM to the actual provider
-            modelName: process.env.LLM_MODEL || "claude-3-haiku",
+            model: process.env.LLM_MODEL || "claude-3-haiku",
             temperature: 0.7,
             maxTokens: 4096,
         });
