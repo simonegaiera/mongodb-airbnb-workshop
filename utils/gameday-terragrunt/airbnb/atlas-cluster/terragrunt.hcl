@@ -27,4 +27,5 @@ inputs = {
     mongodb_atlas_database_user_password    = "MongoGameDay123/Admin"
     customer_user_password                  = "MongoGameDay123"
     user_list_path                          = local.user_list_path
+    additional_users_count                  = 0
 }

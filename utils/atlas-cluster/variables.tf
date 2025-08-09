@@ -94,3 +94,9 @@ variable "user_list_path" {
   type        = string
   default     = "./user_list.csv"
 }
+
+variable "additional_users_count" {
+  description = "Number of additional database users to create beyond those in the CSV file"
+  type        = number
+  default     = 0
+}

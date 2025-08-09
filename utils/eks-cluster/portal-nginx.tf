@@ -1,0 +1,156 @@
+# Kubernetes Job to build Jekyll docs
+
+locals {
+  # Base Nginx configuration
+  portal_base_nginx_config = templatefile("${path.module}/nginx-conf-files/nginx-base-config.conf.tpl", {})
+  portal_frontend_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-main.conf.tpl", {
+    server_name = "portal.${local.aws_route53_record_name}",
+    index_path = "/usr/share/nginx/html/portal"
+  })
+
+  portal_backend_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-portal.conf.tpl", {
+    server_name = "portal-server.${local.aws_route53_record_name}",
+    proxy_pass = lookup(data.kubernetes_service.portal_service.metadata[0], "name", "default-ip")
+  })
+
+  portal_combined_nginx_config = join("\n\n", [
+    local.portal_base_nginx_config,
+    local.portal_frontend_nginx_config,
+    local.portal_backend_nginx_config
+  ])
+
+}
+
+resource "helm_release" "portal_nginx" {
+  name       = "portal-nginx"
+  repository = "local"
+  chart      = "./portal-nginx"
+  version    = "0.1.0"
+  replace    = true
+
+  values = [
+    file("${path.module}/portal-nginx/values.yaml"),
+    yamlencode({
+      volumeMounts = [
+        {
+          name      = "portal-nginx-config-volume",
+          mountPath = "/etc/nginx/conf.d"
+        },
+        {
+          name      = "portal-nginx-tls-secret",
+          mountPath = "/etc/nginx/ssl",
+          readOnly  = true
+        },
+        {
+          name      = "portal-nginx-html-volume",
+          mountPath = "/usr/share/nginx/html"
+        },
+        {
+          name      = "portal-volume",
+          mountPath = "/usr/share/nginx/html/portal"
+        },
+        {
+          name      = "scenario-config-volume",
+          mountPath = "/etc/scenario-config",
+          readOnly  = true
+        }
+      ],
+      volumes = [
+        {
+          name = "portal-nginx-config-volume",
+          configMap = {
+            name = "portal-nginx-config-cm"
+          }
+        },
+        {
+          name = "portal-nginx-tls-secret",
+          secret = {
+            secretName = "nginx-tls-secret"
+          }
+        },
+        {
+          name = "scenario-config-volume",
+          configMap = {
+            name = "scenario-config-cm"
+          }
+        },
+        {
+          name = "portal-nginx-html-volume",
+          configMap = {
+            name = "mdb-nginx-html-cm"
+          }
+        },
+        {
+          name = "portal-volume",
+          emptyDir = {}
+        },
+        {
+          name = "startup-script",
+          configMap = {
+            name = "portal-nginx-startup-script"
+          }
+        },
+        {
+          name = "build-storage",
+          emptyDir = {}
+        }
+      ]
+    })
+  ]
+
+  set = [
+    {
+      name  = "nginx.config"
+      value = local.portal_combined_nginx_config
+    },
+    {
+      name  = "nginx.notfound"
+      value = local.notfound_nginx_html
+    },
+    {
+      name  = "nginx.html"
+      value = local.index_nginx_html
+    },
+    {
+      name  = "nginx.error"
+      value = local.error_nginx_html
+    },
+    {
+      name  = "nginx.favicon"
+      value = filebase64("${path.module}/nginx-html-files/favicon.ico")
+    }
+  ]
+
+  depends_on = [
+    kubernetes_secret.nginx_tls_secret,
+    kubernetes_config_map.scenario_config
+  ]
+}
+
+data "kubernetes_service" "portal_nginx_service" {
+  metadata {
+    name      = helm_release.portal_nginx.name
+    namespace = helm_release.portal_nginx.namespace
+  }
+
+  depends_on = [
+    helm_release.portal_nginx
+  ]
+}
+
+output "portal_nginx_service_hostname" {
+  value = data.kubernetes_service.portal_nginx_service.status[0].load_balancer[0].ingress[0].hostname
+}
+
+locals {
+  instructions_hostname_parts = split("-", data.kubernetes_service.portal_nginx_service.status[0].load_balancer[0].ingress[0].hostname)
+  instructions_short_hostname = join("-", slice(local.instructions_hostname_parts, 0, 4))
+}
+
+data "aws_lb" "portal_nginx_lb" {
+  name = local.instructions_short_hostname
+
+  depends_on = [ 
+    data.kubernetes_service.portal_nginx_service
+  ]
+}

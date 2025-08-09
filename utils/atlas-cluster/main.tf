@@ -119,12 +119,12 @@ resource "mongodbatlas_database_user" "user-main" {
 
 
 data "external" "user_data" {
-  program = ["python3", "${path.module}/parse_users.py", var.user_list_path, "email"]
+  program = ["python3", "${path.module}/parse_users.py", var.user_list_path, "email", tostring(var.additional_users_count)]
 }
 
 locals {
   user_ids = keys(data.external.user_data.result)
-  user_emails = values(data.external.user_data.result)
+  user_emails = [for email in values(data.external.user_data.result) : email if email != null]
 }
 
 resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
@@ -139,6 +139,14 @@ resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
     }
     resources {
       collection_name = "results"
+      database_name   = var.common_database_name
+    }
+    resources {
+      collection_name = "timed_leaderboard"
+      database_name   = var.common_database_name
+    }
+    resources {
+      collection_name = "score_leaderboard"
       database_name   = var.common_database_name
     }
   }
@@ -210,6 +218,10 @@ output "user_list" {
     value = local.user_ids
 }
 
+output "additional_users_count" {
+    value = var.additional_users_count
+}
+
 output "user_password" {
     value = var.customer_user_password
 }
@@ -246,7 +258,7 @@ locals {
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path}\" \"${var.common_database_name}\" 2>&1"
+    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path}\" \"${var.common_database_name}\" \"${var.additional_users_count}\" 2>&1"
   }
 
   triggers = {

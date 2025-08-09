@@ -22,6 +22,7 @@
     },
     "frontend": "app",
     "backend": "backend",
+    "leaderboard": "score|timed",
     "instructions": {
         "base": "navigation-vibe.yml",
         "sections": [

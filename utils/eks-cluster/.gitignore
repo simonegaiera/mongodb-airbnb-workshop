@@ -9,3 +9,5 @@ trashme
 **/user_list.csv
 .venv/
 .env
+.env.production
+.env.local

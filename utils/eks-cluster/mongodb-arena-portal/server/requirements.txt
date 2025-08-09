@@ -1,0 +1,6 @@
+pymongo
+python-dotenv
+requests
+flask
+flask-cors
+datetime

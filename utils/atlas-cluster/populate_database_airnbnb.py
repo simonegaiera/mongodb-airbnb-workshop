@@ -5,12 +5,12 @@ from requests.auth import HTTPDigestAuth
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import certifi
-from parse_users import parse_csv
+from parse_users import get_all_users
 from datetime import datetime, timezone
 
 def get_params():
-    if len(sys.argv) != 9:
-        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE", file=sys.stderr)
+    if len(sys.argv) != 10:
+        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT", file=sys.stderr)
         sys.exit(1)
     return {
         'MONGO_CONNECTION_STRING': sys.argv[1],
@@ -20,7 +20,8 @@ def get_params():
         'PROJECT_ID': sys.argv[5],
         'CLUSTER_NAME': sys.argv[6],
         'CSV_FILE': sys.argv[7],
-        'COMMON_DATABASE': sys.argv[8]
+        'COMMON_DATABASE': sys.argv[8],
+        'ADDITIONAL_USERS_COUNT': int(sys.argv[9])
     }
 
 def get_client(params):
@@ -74,24 +75,148 @@ def create_user_collection(db_name, client, common_database, collections_list):
 def upsert_users(users_map, client, common_database):
     collection = client[common_database]['participants']
     for user_id, user_data in users_map.items():
+        # Prepare the document data
+        document_data = {}
+        if user_data.get('name'):
+            document_data['name'] = user_data['name']
+        if user_data.get('email'):
+            document_data['email'] = user_data['email']
+        
         if user_id.startswith('user'):
-            # For users starting with 'user', only set name on insert (never update)
+            # For generated users, only set data on insert and include 'taken' field
+            document_data['taken'] = False
             collection.update_one(
                 {'_id': user_id},
-                {'$setOnInsert': {'taken': False}},
+                {'$setOnInsert': document_data},
                 upsert=True
             )
         else:
-            # For other users, set name and timestamp only if document doesn't exist
+            # For CSV users, set name/email and add timestamp on insert
             collection.update_one(
                 {'_id': user_id},
                 {
-                    '$set': {'name': user_data},
+                    '$set': document_data,
                     '$setOnInsert': {'insert_timestamp': datetime.now(timezone.utc)}
                 },
                 upsert=True
             )
         print(f"Upserted user with _id: {user_id}", flush=True)
+
+def create_views(client, common_database):
+    """Create the required views in the common database"""
+    db = client[common_database]
+    
+    # Pipeline for score_leaderboard view
+    score_leaderboard_pipeline = [
+        {
+            '$sort': { 'timestamp': 1 }
+        },
+        {
+            '$group': {
+                '_id': {
+                    'section': '$section',
+                    'name': '$name'
+                },
+                'users': {
+                    '$push': {
+                        'username': '$username',
+                        'timestamp': '$timestamp'
+                    }
+                }
+            }
+        },
+        {
+            '$addFields': {
+                'users': {
+                    '$map': {
+                        'input': { '$range': [0, { '$size': '$users' }] },
+                        'as': 'index',
+                        'in': {
+                            'username': { '$arrayElemAt': [ '$users.username', '$$index' ] },
+                            'points': {
+                                '$subtract': [
+                                    100,
+                                    {
+                                        '$cond': {
+                                            'if': { '$lte': ['$$index', 10] },
+                                            'then': { '$multiply': ['$$index', 5] },
+                                            'else': 50
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        # Unwind the users array to perform lookup for each user separately
+        {
+            '$unwind': '$users'
+        },
+        # Lookup participant info using the username field inside users
+        {
+            '$lookup': {
+                'from': 'participants',
+                'localField': 'users.username',
+                'foreignField': '_id',
+                'as': 'participants_info'
+            }
+        },
+        # Add the participant name as the field "user" on the users object
+        {
+            '$addFields': {
+                'users.user': { '$arrayElemAt': [ '$participants_info.name', 0 ] }
+            }
+        },
+        # Remove participants_info and regroup the users back into an array
+        {
+            '$project': { 'participants_info': 0 }
+        },
+        {
+            '$group': {
+                '_id': '$_id',
+                'users': { '$push': '$users' }
+            }
+        },
+        {
+            '$sort': { '_id.section': 1, '_id.name': 1 }
+        }
+    ]
+    
+    try:
+        # Create the score_leaderboard view
+        db.create_collection('score_leaderboard', viewOn='results', pipeline=score_leaderboard_pipeline)
+        print("Created score_leaderboard view successfully!", flush=True)
+    except Exception as e:
+        if "already exists" in str(e):
+            print("score_leaderboard view already exists, skipping creation.", flush=True)
+        else:
+            print(f"Error creating score_leaderboard view: {e}", flush=True)
+
+def ensure_results_index(db):
+    """Ensure compound index exists on results collection."""
+    index_spec = [("timestamp", 1), ("section", 1), ("name", 1)]
+    indexes = db["results"].index_information()
+    for idx in indexes.values():
+        if idx.get("key") == index_spec:
+            print("Compound index on results already exists.", flush=True)
+            return
+    db["results"].create_index(index_spec)
+    print("Created compound index on results: section, name, timestamp.", flush=True)
+
+def ensure_participants_indexes(db):
+    """Ensure indexes exist on participants collection for taken and name."""
+    participants = db["participants"]
+    # Compound index for taken and name
+    index_spec = [("taken", 1), ("taken_timestamp", 1), ("name", 1)]
+    indexes = participants.index_information()
+    for idx in indexes.values():
+        if idx.get("key") == index_spec:
+            print("Compound index on participants (taken, name) already exists.", flush=True)
+            return
+    participants.create_index(index_spec)
+    print("Created compound index on participants: taken, name.", flush=True)
 
 def main():
     params = get_params()
@@ -106,12 +231,19 @@ def main():
 
     csv_file = params['CSV_FILE']
 
-    option = 'name'
-    users_map = parse_csv(csv_file, option)
+    users_map = get_all_users(csv_file, params['ADDITIONAL_USERS_COUNT'])
     upsert_users(users_map, client, params['COMMON_DATABASE'])
     users = list(users_map.keys())
     collections_list = client[common_database].list_collection_names()
     print(f"Existing collections in '{common_database}': {collections_list}", flush=True)
+    
+    # Ensure index exists before creating views
+    ensure_results_index(client[params['COMMON_DATABASE']])
+    ensure_participants_indexes(client[params['COMMON_DATABASE']])
+    
+    # Create views
+    create_views(client, params['COMMON_DATABASE'])
+    
     for database in users:
         if database in databases:
             print(f"Database '{database}' exists.", flush=True)

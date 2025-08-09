@@ -52,14 +52,6 @@ resource "helm_release" "user_openvscode" {
   chart      = "./mdb-openvscode"
   version    = "0.1.0"
   timeout    = 600
-
-  # Add lifecycle rule to ignore metadata changes
-  lifecycle {
-    ignore_changes = [
-      metadata[0].revision,
-      metadata[0].last_deployed
-    ]
-  }
   
   values = [
     file("${path.module}/mdb-openvscode/values.yaml")
@@ -226,8 +218,8 @@ resource "kubernetes_config_map" "results_script" {
   }
 
   data = {
-    "test-results.py" = file("${path.module}/test-results/test-results.py")
-    "requirements.txt" = file("${path.module}/test-results/requirements.txt")
+    "test-results.py" = file("${path.module}/results-processor/collect-results.py")
+    "requirements.txt" = file("${path.module}/results-processor/requirements.txt")
   }
 
   depends_on = [
