@@ -4,7 +4,7 @@ locals {
   # Base Nginx configuration
   doc_base_nginx_config = templatefile("${path.module}/nginx-conf-files/nginx-base-config.conf.tpl", {})
   doc_index_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-main.conf.tpl", {
-    server_name = "${local.aws_route53_record_name}",
+    server_name = "participants.${local.aws_route53_record_name}",
     index_path = "/usr/share/nginx/html/"
   })
   doc_instructions_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-main.conf.tpl", {
@@ -25,7 +25,6 @@ resource "helm_release" "instructions_nginx" {
   repository = "local"
   chart      = "./docs-nginx"
   version    = "0.1.0"
-  replace    = true
 
   values = [
     file("${path.module}/docs-nginx/values.yaml"),

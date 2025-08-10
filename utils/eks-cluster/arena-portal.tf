@@ -4,12 +4,12 @@ locals {
   # Base Nginx configuration
   portal_base_nginx_config = templatefile("${path.module}/nginx-conf-files/nginx-base-config.conf.tpl", {})
   portal_frontend_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-main.conf.tpl", {
-    server_name = "portal.${local.aws_route53_record_name}",
+    server_name = "${local.aws_route53_record_name}",
     index_path = "/usr/share/nginx/html/portal"
   })
 
   portal_backend_nginx_config = templatefile("${path.module}/nginx-conf-files/portal-nginx-server.conf.tpl", {
-    server_name = "portal-server.${local.aws_route53_record_name}",
+    server_name = "portal.${local.aws_route53_record_name}",
     proxy_pass = lookup(data.kubernetes_service.portal_service.metadata[0], "name", "default-ip")
   })
 
@@ -25,7 +25,6 @@ resource "helm_release" "portal_server" {
   repository = "local"
   chart      = "./portal-server"
   version    = "0.1.0"
-  replace    = true
 
   values = [
     file("${path.module}/portal-server/values.yaml"),
@@ -100,7 +99,6 @@ resource "helm_release" "portal_nginx" {
   repository = "local"
   chart      = "./portal-nginx"
   version    = "0.1.0"
-  replace    = true
 
   values = [
     file("${path.module}/portal-nginx/values.yaml"),
@@ -108,7 +106,7 @@ resource "helm_release" "portal_nginx" {
       env = [
         {
           name  = "NEXT_PUBLIC_API_URL"
-          value = "https://portal-server.${local.aws_route53_record_name}/backend/"
+          value = "https://portal.${local.aws_route53_record_name}/backend/"
         },
         {
           name  = "NEXT_PUBLIC_REPO_NAME"
