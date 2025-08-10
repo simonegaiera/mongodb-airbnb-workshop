@@ -7,7 +7,7 @@ import AvailableCount from '@/components/AvailableCount'
 import Alert from '@/components/Alert'
 
 interface Participant {
-  id: string
+  _id: string
   name?: string
   email?: string
   taken?: boolean
