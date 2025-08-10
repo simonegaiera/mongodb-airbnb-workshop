@@ -31,16 +31,12 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
         return 'mongogameday.com'
       }
       
-      // Extract the base domain (preserve mongoai.mongogameday.com structure)
+      // Extract the base domain (last two parts of the hostname)
       const parts = hostname.split('.')
       if (parts.length >= 3) {
-        // For mongoai.mongogameday.com structure, keep the full domain
-        const baseDomain = parts.slice(-3).join('.')
-        return `https://instructions.${baseDomain}/`
+        return parts.slice(-3).join('.')
       } else if (parts.length >= 2) {
-        // Fallback to last two parts for other domains
-        const baseDomain = parts.slice(-2).join('.')
-        return `https://instructions.${baseDomain}/`
+        return parts.slice(-2).join('.')
       }
       
       // Fallback
