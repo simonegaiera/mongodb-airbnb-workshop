@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 
 interface Participant {
-  id: string
+  _id: string
   name?: string
   email?: string
   taken?: boolean
@@ -51,10 +51,10 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
     const baseDomain = getBaseDomain()
     const repoName = process.env.NEXT_PUBLIC_REPO_NAME || 'mongodb-airbnb-workshop'
     const serverPath = process.env.NEXT_PUBLIC_SERVER_PATH || 'server'
-    
-    // Use participant.id if available, otherwise generate from name or use index
-    let participantId = participant.id
-    
+
+    // Use participant._id for workspace URLs
+    let participantId = participant._id
+
     return {
       app: `https://${participantId}.${baseDomain}/app`,
       server: `https://${participantId}.${baseDomain}/?folder=/home/workspace/${repoName}/${serverPath}`
@@ -204,7 +204,7 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
             const workspaceUrls = getWorkspaceUrls(participant, index)
             return (
               <div 
-                key={participant.id || index} 
+                key={participant._id || index} 
                 className="relative rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md border-gray-200 bg-gray-50"
               >
                 <div className="flex items-start justify-between">
