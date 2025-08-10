@@ -32,12 +32,17 @@ export default function Home() {
       
       // If it's localhost or IP, use fallback
       if (hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-        return 'https://instructions.mongoai.mongogameday.com/'
+        return 'https://mongogameday.com/'
       }
       
-      // Extract the base domain (last two parts of the hostname)
+      // Extract the base domain (preserve mongoai.mongogameday.com structure)
       const parts = hostname.split('.')
-      if (parts.length >= 2) {
+      if (parts.length >= 3) {
+        // For mongoai.mongogameday.com structure, keep the full domain
+        const baseDomain = parts.slice(-3).join('.')
+        return `https://instructions.${baseDomain}/`
+      } else if (parts.length >= 2) {
+        // Fallback to last two parts for other domains
         const baseDomain = parts.slice(-2).join('.')
         return `https://instructions.${baseDomain}/`
       }
@@ -46,7 +51,7 @@ export default function Home() {
       return `https://instructions.${hostname}/`
     } catch (error) {
       // Fallback for invalid URLs
-      return 'https://instructions.mongoai.mongogameday.com/'
+      return 'https://.mongogameday.com/'
     }
   }
 

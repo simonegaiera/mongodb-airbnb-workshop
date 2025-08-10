@@ -35,17 +35,12 @@ spec:
           image: node:current-alpine
           command: ["/bin/sh"]
           args: ["/scripts/startup.sh"]
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          {{- with .Values.volumeMounts }}
           volumeMounts:
-            - name: startup-script
-              mountPath: /scripts
-              readOnly: true
-            - name: scenario-config-volume
-              mountPath: /etc/scenario-config
-              readOnly: true
-            - name: build-storage
-              mountPath: /build
-            - name: portal-volume
-              mountPath: /usr/share/nginx/html/portal
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             requests:
               memory: "512Mi"

@@ -58,12 +58,12 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /health
     port: https
     scheme: HTTPS
 readinessProbe:
   httpGet:
-    path: /
+    path: /health
     port: https
     scheme: HTTPS
 
@@ -98,4 +98,3 @@ persistence:
   size: 250Mi
   storageClass: ""
   annotations: {}
-  

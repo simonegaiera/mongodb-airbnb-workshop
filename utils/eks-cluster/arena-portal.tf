@@ -108,7 +108,7 @@ resource "helm_release" "portal_nginx" {
       env = [
         {
           name  = "NEXT_PUBLIC_API_URL"
-          value = "portal-server.${local.aws_route53_record_name}/backend/"
+          value = "https://portal-server.${local.aws_route53_record_name}/backend/"
         },
         {
           name  = "NEXT_PUBLIC_REPO_NAME"
@@ -134,13 +134,22 @@ resource "helm_release" "portal_nginx" {
           mountPath = "/usr/share/nginx/html"
         },
         {
-          name      = "portal-volume",
-          mountPath = "/usr/share/nginx/html/portal"
-        },
-        {
           name      = "scenario-config-volume",
           mountPath = "/etc/scenario-config",
           readOnly  = true
+        },
+        {
+          name      = "portal-startup-script",
+          mountPath = "/scripts",
+          readOnly  = true
+        },
+        {
+          name      = "portal-build-storage",
+          mountPath = "/build"
+        },
+        {
+          name      = "portal-volume",
+          mountPath = "/usr/share/nginx/html/portal"
         }
       ],
       volumes = [
@@ -169,19 +178,19 @@ resource "helm_release" "portal_nginx" {
           }
         },
         {
-          name = "portal-volume",
-          emptyDir = {}
-        },
-        {
-          name = "startup-script",
+          name = "portal-startup-script",
           configMap = {
             name = "portal-nginx-startup-script"
           }
         },
         {
-          name = "build-storage",
+          name = "portal-build-storage",
           emptyDir = {}
-        }
+        },
+        {
+          name = "portal-volume",
+          emptyDir = {}
+        },
       ]
     })
   ]

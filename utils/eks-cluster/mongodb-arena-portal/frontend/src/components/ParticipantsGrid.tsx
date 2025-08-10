@@ -28,20 +28,26 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
       
       // If it's localhost or IP, use fallback
       if (hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-        return 'mongoai.mongogameday.com'
+        return 'mongogameday.com'
       }
       
-      // Extract the base domain (last two parts of the hostname)
+      // Extract the base domain (preserve mongoai.mongogameday.com structure)
       const parts = hostname.split('.')
-      if (parts.length >= 2) {
-        return parts.slice(-2).join('.')
+      if (parts.length >= 3) {
+        // For mongoai.mongogameday.com structure, keep the full domain
+        const baseDomain = parts.slice(-3).join('.')
+        return `https://instructions.${baseDomain}/`
+      } else if (parts.length >= 2) {
+        // Fallback to last two parts for other domains
+        const baseDomain = parts.slice(-2).join('.')
+        return `https://instructions.${baseDomain}/`
       }
       
       // Fallback
       return hostname
     } catch (error) {
       // Fallback for invalid URLs
-      return 'mongoai.mongogameday.com'
+      return 'mongogameday.com'
     }
   }
 

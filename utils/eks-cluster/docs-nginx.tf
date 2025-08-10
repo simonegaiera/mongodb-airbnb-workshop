@@ -52,6 +52,15 @@ resource "helm_release" "instructions_nginx" {
           name      = "scenario-config-volume",
           mountPath = "/etc/scenario-config",
           readOnly  = true
+        },
+        {
+          name      = "startup-script",
+          mountPath = "/scripts",
+          readOnly  = true
+        },
+        {
+          name      = "build-storage",
+          mountPath = "/build"
         }
       ],
       volumes = [
