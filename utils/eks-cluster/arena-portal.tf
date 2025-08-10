@@ -8,7 +8,7 @@ locals {
     index_path = "/usr/share/nginx/html/portal"
   })
 
-  portal_backend_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-portal.conf.tpl", {
+  portal_backend_nginx_config = templatefile("${path.module}/nginx-conf-files/portal-nginx-server.conf.tpl", {
     server_name = "portal-server.${local.aws_route53_record_name}",
     proxy_pass = lookup(data.kubernetes_service.portal_service.metadata[0], "name", "default-ip")
   })
@@ -18,8 +18,82 @@ locals {
     local.portal_frontend_nginx_config,
     local.portal_backend_nginx_config
   ])
-
 }
+
+resource "helm_release" "portal_server" {
+  name       = "portal-server"
+  repository = "local"
+  chart      = "./portal-server"
+  version    = "0.1.0"
+  replace    = true
+
+  values = [
+    file("${path.module}/portal-server/values.yaml"),
+    yamlencode({
+      env = [
+        {
+          name  = "MONGODB_URI"
+          value = "mongodb+srv://admin:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
+        },
+        {
+          name  = "DB_NAME"
+          value = "airbnb_arena"
+        },
+        {
+          name  = "PARTICIPANTS"
+          value = "participants"
+        },
+        {
+          name  = "LEADERBOARD"
+          value = tostring(var.scenario_config.leaderboard)
+        }
+      ],
+      volumeMounts = [
+        {
+          name      = "scenario-config-volume",
+          mountPath = "/etc/scenario-config",
+          readOnly  = true
+        },
+        {
+          name      = "portal-server-startup-script",
+          mountPath = "/startup",
+          readOnly  = true
+        }
+      ],
+      volumes = [
+        {
+          name = "scenario-config-volume",
+          configMap = {
+            name = "scenario-config-cm"
+          }
+        },
+        {
+          name = "portal-server-startup-script",
+          configMap = {
+            name = "portal-server-startup-script"
+          }
+        }
+      ]
+    })
+  ]
+
+  depends_on = [
+    kubernetes_config_map.scenario_config
+  ]
+}
+
+data "kubernetes_service" "portal_service" {
+
+  metadata {
+    name      = "portal-server"
+    namespace = helm_release.portal_server.namespace
+  }
+
+  depends_on = [
+    helm_release.portal_server
+  ]
+}
+
 
 resource "helm_release" "portal_nginx" {
   name       = "portal-nginx"
@@ -31,6 +105,20 @@ resource "helm_release" "portal_nginx" {
   values = [
     file("${path.module}/portal-nginx/values.yaml"),
     yamlencode({
+      env = [
+        {
+          name  = "NEXT_PUBLIC_API_URL"
+          value = "portal-server.${local.aws_route53_record_name}/backend/"
+        },
+        {
+          name  = "NEXT_PUBLIC_REPO_NAME"
+          value = "airbnb_arena"
+        },
+        {
+          name  = "NEXT_PUBLIC_SERVER_PATH"
+          value = tostring(var.scenario_config.backend)
+        }
+      ],
       volumeMounts = [
         {
           name      = "portal-nginx-config-volume",
@@ -123,7 +211,9 @@ resource "helm_release" "portal_nginx" {
 
   depends_on = [
     kubernetes_secret.nginx_tls_secret,
-    kubernetes_config_map.scenario_config
+    kubernetes_config_map.scenario_config,
+    helm_release.portal_server,
+    data.kubernetes_service.portal_service
   ]
 }
 
@@ -143,12 +233,12 @@ output "portal_nginx_service_hostname" {
 }
 
 locals {
-  instructions_hostname_parts = split("-", data.kubernetes_service.portal_nginx_service.status[0].load_balancer[0].ingress[0].hostname)
-  instructions_short_hostname = join("-", slice(local.instructions_hostname_parts, 0, 4))
+  portal_hostname_parts = split("-", data.kubernetes_service.portal_nginx_service.status[0].load_balancer[0].ingress[0].hostname)
+  portal_short_hostname = join("-", slice(local.portal_hostname_parts, 0, 4))
 }
 
 data "aws_lb" "portal_nginx_lb" {
-  name = local.instructions_short_hostname
+  name = local.portal_short_hostname
 
   depends_on = [ 
     data.kubernetes_service.portal_nginx_service

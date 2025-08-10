@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "portal-nginx.fullname" . }}
+  name: {{ include "portal-server.fullname" . }}
   labels:
-    {{- include "portal-nginx.labels" . | nindent 4 }}
+    {{- include "portal-server.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "portal-nginx.selectorLabels" . | nindent 6 }}
+      {{- include "portal-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "portal-nginx.labels" . | nindent 8 }}
+        {{- include "portal-server.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,55 +27,33 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "portal-nginx.serviceAccountName" . }}
+      serviceAccountName: {{ include "portal-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: portal-builder
-          image: node:current-alpine
-          command: ["/bin/sh"]
-          args: ["/scripts/startup.sh"]
-          volumeMounts:
-            - name: startup-script
-              mountPath: /scripts
-              readOnly: true
-            - name: scenario-config-volume
-              mountPath: /etc/scenario-config
-              readOnly: true
-            - name: build-storage
-              mountPath: /build
-            - name: portal-volume
-              mountPath: /usr/share/nginx/html/portal
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "500m"
-            limits:
-              memory: "1Gi"
-              cpu: "750m"
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash"]
+          args: ["/startup/startup.sh"]
           ports:
-            {{- range .Values.service.ports }}
-            - containerPort: {{ .targetPort }}
-              name: {{ .name }}
-            {{- end }}
-          env:
-            {{- toYaml .Values.env | nindent 12 }}
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
+            {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

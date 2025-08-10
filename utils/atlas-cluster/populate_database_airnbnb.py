@@ -184,6 +184,34 @@ def create_views(client, common_database):
         }
     ]
     
+    # Pipeline for timed_leaderboard view
+    timed_leaderboard_pipeline = [
+        {
+            '$group': {
+                '_id': '$username',
+                'firstTimestamp': { '$first': '$timestamp' },
+                'lastTimestamp': { '$last': '$timestamp' },
+                'count': { '$count': {} }
+            }
+        },
+        {
+            '$addFields': {
+                'delta': {
+                    '$subtract': [
+                        { '$toLong': '$lastTimestamp' },
+                        { '$toLong': '$firstTimestamp' }
+                    ]
+                }
+            }
+        },
+        {
+            '$sort': {
+                'count': -1,
+                'delta': 1
+            }
+        }
+    ]
+    
     try:
         # Create the score_leaderboard view
         db.create_collection('score_leaderboard', viewOn='results', pipeline=score_leaderboard_pipeline)
@@ -193,6 +221,16 @@ def create_views(client, common_database):
             print("score_leaderboard view already exists, skipping creation.", flush=True)
         else:
             print(f"Error creating score_leaderboard view: {e}", flush=True)
+
+    try:
+        # Create the timed_leaderboard view
+        db.create_collection('timed_leaderboard', viewOn='results', pipeline=timed_leaderboard_pipeline)
+        print("Created timed_leaderboard view successfully!", flush=True)
+    except Exception as e:
+        if "already exists" in str(e):
+            print("timed_leaderboard view already exists, skipping creation.", flush=True)
+        else:
+            print(f"Error creating timed_leaderboard view: {e}", flush=True)
 
 def ensure_results_index(db):
     """Ensure compound index exists on results collection."""

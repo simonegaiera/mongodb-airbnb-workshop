@@ -21,6 +21,8 @@
 .idea/
 *.tmproj
 .vscode/
+# Terragrunt files
+.terragrunt-source-manifest
 # Terragrunt
 .terragrunt*
 templates/tests/.terragrunt*

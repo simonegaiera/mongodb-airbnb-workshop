@@ -13,7 +13,18 @@ if [ ! -f "/etc/scenario-config/scenario-config.json" ]; then
 fi
 
 # Parse JSON configuration using jq (install if not available)
-apk add --no-cache jq
+# Install required packages for Alpine Linux
+echo "Installing required packages..."
+if command -v apk >/dev/null 2>&1; then
+    apk update
+    apk add jq git
+elif command -v apt-get >/dev/null 2>&1; then
+    apt-get update
+    apt-get install -y jq git
+else
+    echo "ERROR: No supported package manager found (apk or apt-get)"
+    exit 1
+fi
 
 # Extract configuration values
 SCENARIO=$(jq -r '.scenario // "guided"' /etc/scenario-config/scenario-config.json)

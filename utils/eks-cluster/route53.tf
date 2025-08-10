@@ -136,7 +136,7 @@ resource "aws_route53_record" "portal-record" {
   ]
 }
 
-resource "aws_route53_record" "portal-record" {
+resource "aws_route53_record" "portal-server-record" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "portal-server.${local.aws_route53_record_name}"
   type    = "A"

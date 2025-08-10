@@ -1,13 +1,13 @@
-# Default values for mdb-nginx.
+# Default values for portal-server.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: python
   pullPolicy: IfNotPresent
-  tag: stable
+  tag: "3.12"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -23,20 +23,14 @@ podAnnotations: {}
 podLabels: {}
 
 podSecurityContext: {}
+  # fsGroup: 2000
 
 securityContext: {}
 
 service:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 80
-      protocol: TCP
-      name: http
-    - port: 443
-      targetPort: 443
-      protocol: TCP
-      name: https
+  type: ClusterIP
+  port: 5000
+  targetPort: 5000
 
 ingress:
   enabled: false
@@ -54,48 +48,44 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
 
 livenessProbe:
   httpGet:
-    path: /
-    port: https
-    scheme: HTTPS
+    path: /api/health
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
 readinessProbe:
   httpGet:
-    path: /
-    port: https
-    scheme: HTTPS
+    path: /api/health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 100
   targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 volumes: []
 
 volumeMounts: []
-
-nginx:
-  conf: ""
-  config: ""
-  html: ""
-  error: ""
-  notfound: ""
-  favicon: ""
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
-
-persistence:
-  enabled: false
-  fileSystemId: ""
-  accessMode: ReadWriteMany
-  size: 250Mi
-  storageClass: ""
-  annotations: {}
-  

@@ -33,6 +33,12 @@ REPOSITORY=$(jq -r '.repository // "https://github.com/simonegaiera/mongodb-airb
 BRANCH=$(jq -r '.branch // "main"' /etc/scenario-config/scenario-config.json)
 NAVIGATION_BASE=$(jq -r '.instructions.base // "navigation.yml"' /etc/scenario-config/scenario-config.json)
 
+echo "Scenario: $SCENARIO"
+echo "Route53 Record Name: $AWS_ROUTE53_RECORD_NAME"
+echo "Repository: $REPOSITORY"
+echo "Branch: $BRANCH"
+echo "Navigation Base: $NAVIGATION_BASE"
+
 #########################################
 # Clone and Prepare Repository
 #########################################
@@ -44,33 +50,13 @@ git clone -b $BRANCH $REPOSITORY
 REPO_NAME=$(basename "$REPOSITORY" .git)
 echo "Repository name: $REPO_NAME"
 
+# Install Python requirements
+echo "Installing Python requirements..."
+pip install --no-cache-dir -r /tmp/$REPO_NAME/utils/eks-cluster/mongodb-arena-portal/server/requirements.txt
+
 # Set working directory to the Flask app location
-cd /tmp/$REPO_NAME/utils/eks-cluster/mongodb-arena-portal/frontend
+cd /tmp/$REPO_NAME/utils/eks-cluster/mongodb-arena-portal/server
 
-# Build the frontend app
-echo "Installing dependencies and building frontend..."
-npm install
-
-echo "Building frontend application..."
-npm run build
-
-# Check if build output directory exists
-if [ ! -d "out" ]; then
-    echo "ERROR: Build output directory 'out' not found after npm run build"
-    echo "Available directories:"
-    ls -la
-    exit 1
-fi
-
-# Check if build output directory has files
-if [ ! "$(ls -A out)" ]; then
-    echo "ERROR: Build output directory 'out' is empty"
-    exit 1
-fi
-
-# Move build output to nginx html directory
-echo "Moving build output to /usr/share/nginx/html/portal..."
-mkdir -p /usr/share/nginx/html/portal
-cp -r out/* /usr/share/nginx/html/portal/
-
-echo "Build output successfully copied to nginx directory"
+# Run Flask app directly with Python
+echo "Starting Flask application..."
+python app.py
