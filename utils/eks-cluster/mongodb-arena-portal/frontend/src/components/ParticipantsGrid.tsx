@@ -54,14 +54,6 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
     
     // Use participant.id if available, otherwise generate from name or use index
     let participantId = participant.id
-    if (!participantId || participantId.trim() === '') {
-      // Generate ID from name (lowercase, remove spaces and special chars)
-      if (participant.name) {
-        participantId = participant.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-      } else {
-        participantId = 'participant-' + (index + 1)
-      }
-    }
     
     return {
       app: `https://${participantId}.${baseDomain}/app`,

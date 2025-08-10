@@ -112,7 +112,7 @@ resource "helm_release" "portal_nginx" {
         },
         {
           name  = "NEXT_PUBLIC_REPO_NAME"
-          value = "airbnb_arena"
+          value = element(split("/", var.scenario_config.repository), length(split("/", var.scenario_config.repository)) - 1)
         },
         {
           name  = "NEXT_PUBLIC_SERVER_PATH"
