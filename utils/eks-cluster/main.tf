@@ -31,3 +31,25 @@ terraform {
     }
   }
 }
+
+provider "aws" {
+  region  = var.aws_region
+  profile = var.aws_profile
+}
+
+locals {
+  atlas_standard_srv  = try(var.atlas_standard_srv, "")
+  atlas_user_list     = var.atlas_user_list
+  atlas_user_password = try(var.atlas_user_password, "")
+  atlas_admin_password = try(var.atlas_admin_password, "")
+
+  cluster_name = "${var.customer_name}-gameday-eks"
+  aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
+  current_timestamp = timestamp()
+  expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
+  domain_user = split("@", var.domain_email)[0]
+}
+
+output "aws_route53_record_name" {
+  value = local.aws_route53_record_name
+}

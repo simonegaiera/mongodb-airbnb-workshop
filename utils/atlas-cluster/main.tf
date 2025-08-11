@@ -70,6 +70,32 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   depends_on = [ data.mongodbatlas_project.project ]
 }
 
+resource "mongodbatlas_cloud_backup_schedule" "test" {
+  project_id   = mongodbatlas_advanced_cluster.cluster.project_id
+  cluster_name = mongodbatlas_advanced_cluster.cluster.name
+
+  reference_hour_of_day    = 3
+  reference_minute_of_hour = 45
+  restore_window_days      = 1
+
+
+  // This will now add the desired policy items to the existing mongodbatlas_cloud_backup_schedule resource
+  policy_item_hourly {
+    frequency_interval = 1
+    retention_unit     = "days"
+    retention_value    = 2
+  }
+  policy_item_daily {
+    frequency_interval = 1
+    retention_unit     = "days"
+    retention_value    = 5
+  }
+
+  depends_on = [ 
+    mongodbatlas_advanced_cluster.cluster
+  ]
+}
+
 # resource "mongodbatlas_maintenance_window" "maintenance" {
 #   project_id  = data.mongodbatlas_project.project.id
 #   day_of_week = 1
@@ -149,6 +175,10 @@ resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
       collection_name = "score_leaderboard"
       database_name   = var.common_database_name
     }
+    resources {
+      collection_name = "results_health"
+      database_name   = var.common_database_name
+    }
   }
   actions {
     action = "LIST_COLLECTIONS"
@@ -174,11 +204,19 @@ resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
       collection_name = "results"
       database_name   = var.common_database_name
     }
+    resources {
+      collection_name = "results_health"
+      database_name   = var.common_database_name
+    }
   }
   actions {
     action = "INSERT"
     resources {
       collection_name = "results"
+      database_name   = var.common_database_name
+    }
+    resources {
+      collection_name = "results_health"
       database_name   = var.common_database_name
     }
   }
