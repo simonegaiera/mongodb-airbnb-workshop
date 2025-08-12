@@ -317,6 +317,8 @@ resource "kubernetes_config_map" "scenario_config" {
   }
 
   depends_on = [
-    aws_eks_cluster.eks_cluster
+    aws_eks_cluster.eks_cluster,
+    aws_eks_addon.vpc_cni,
+    aws_eks_addon.efs_csi_driver
   ]
 }

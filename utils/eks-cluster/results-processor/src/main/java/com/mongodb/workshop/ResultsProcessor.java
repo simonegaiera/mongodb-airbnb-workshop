@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -33,6 +35,7 @@ import java.security.cert.X509Certificate;
 public class ResultsProcessor {
     
     private static final Logger logger = LoggerFactory.getLogger(ResultsProcessor.class);
+    private static boolean participantNameLogged = false;
     
     // Database and collection constants
     private static final String DB_NAME = "airbnb_arena";
@@ -53,6 +56,14 @@ public class ResultsProcessor {
     
     private MongoClient mongoClient;
     private MongoDatabase database;
+    
+    private static final String SEPARATOR = "============================================================";
+    private static final String STEP = "➡️ ";
+    private static final String SUCCESS = "✅";
+    private static final String FAIL = "❌";
+    private static final String INFO = "ℹ️";
+    private static final String WARNING = "⚠️";
+    private static final String PARTY = "🎉";
     
     public ResultsProcessor() {
         // Initialize MongoDB connection
@@ -75,7 +86,7 @@ public class ResultsProcessor {
      * Main entry point of the application
      */
     public static void main(String[] args) {
-        logger.info("Starting Results Processor application...");
+        logger.info("\n{}\n{} Starting Results Processor application... {}\n{}", SEPARATOR, PARTY, PARTY, SEPARATOR);
         
         try {
             ResultsProcessor processor = new ResultsProcessor();
@@ -85,7 +96,7 @@ public class ResultsProcessor {
             System.exit(1);
         }
         
-        logger.info("Results Processor application completed successfully");
+        logger.info("\n{}\n{} Results Processor application completed successfully {}\n{}", SEPARATOR, PARTY, PARTY, SEPARATOR);
     }
     
     /**
@@ -147,7 +158,7 @@ public class ResultsProcessor {
      * Executes all exercise tests based on ENVIRONMENT variable
      */
     private void executeExerciseTests() {
-        logger.info("Starting test execution for {} exercise tests", EXERCISE_TESTS.size());
+        logger.info("\n{}\nStarting test execution for {} exercise tests {}\n{}", SEPARATOR, STEP, EXERCISE_TESTS.size(), SEPARATOR);
         
         // Get service name and environment
         String environment = getEnvironmentVariable("ENVIRONMENT");
@@ -170,9 +181,19 @@ public class ResultsProcessor {
         
         // Store results in MongoDB
         storeResults(testResults, currentUser);
-        
-        logger.info("Test execution completed. Executed {} tests for {} environment", 
-            EXERCISE_TESTS.size(), environment);
+
+        int totalTests = EXERCISE_TESTS.size();
+        int passedTests = getCompletedTests(currentUser).size();
+
+        logger.info("{} Summary: Total tests: {}, Passed tests: {}", INFO, totalTests, passedTests);
+
+        if (passedTests == totalTests) {
+            logger.info("\n{}\n{} Congratulations! All tests passed! {}\n{}", SEPARATOR, PARTY, PARTY, SEPARATOR);
+        } else {
+            logger.info("{} Some tests are still pending. Keep going!", WARNING);
+        }
+
+        logger.info("{} Test execution completed. Executed {} tests for {} environment", SUCCESS, EXERCISE_TESTS.size(), environment);
     }
     
     /**
@@ -216,12 +237,12 @@ public class ResultsProcessor {
      */
     private Document executeTest(String testName, String serviceName, String environment, String user) {
         try {
-            logger.info("Executing test: {}", testName);
+            logger.info("{} Executing test: {}", STEP, testName);
             
             // Execute the specific test method based on test name
             boolean testSuccess = executeSpecificTest(testName, user);
             
-            logger.info("Test {} {}", testName, testSuccess ? "passed" : "failed");
+            logger.info("{} Test {} {}", testSuccess ? SUCCESS : FAIL, testName, testSuccess ? "passed" : "failed");
             
             // Only create result document if test passes (first time)
             if (testSuccess) {
@@ -234,7 +255,7 @@ public class ResultsProcessor {
             
         } catch (Exception e) {
             // Ignore errors as requested, but log them
-            logger.warn("Failed to execute test {} (ignoring error): {}", testName, e.getMessage());
+            logger.warn("{} Failed to execute test {} (ignoring error): {}", WARNING, testName, e.getMessage());
         }
         
         // Return null if test failed or had error - will be filtered out
@@ -278,26 +299,26 @@ public class ResultsProcessor {
                 return new Crud3Test(database, serviceName, String.format("%s/distinct", endpoint));
             case "crud-4":
                 return new Crud4Test(database, serviceName, String.format("%s/filter", endpoint));
-            // case "crud-5":
-            //     return new Crud5Test(database, serviceName, endpoint);
-            // case "crud-6":
-            //     return new Crud6Test(database, serviceName, endpoint);
-            // case "crud-7":
-            //     return new Crud7Test(database, serviceName, endpoint);
-            // case "crud-8":
-            //     return new Crud8Test(database, serviceName, endpoint);
-            // case "pipeline-1":
-            //     return new Pipeline1Test(database, serviceName, String.format("%s/statistics", endpoint));
+            case "crud-5":
+                return new Crud5Test(database, serviceName, endpoint);
+            case "crud-6":
+                return new Crud6Test(database, serviceName, endpoint);
+            case "crud-7":
+                return new Crud7Test(database, serviceName, endpoint);
+            case "crud-8":
+                return new Crud8Test(database, serviceName, endpoint);
+            case "pipeline-1":
+                return new Pipeline1Test(database, serviceName, String.format("%s/statistics", endpoint));
             case "search-index":
                 return new SearchIndexTest(database, serviceName, endpoint);
-            // case "search-1":
-            //     return new Search1Test(database, serviceName, String.format("%s/autocomplete", endpoint));
-            // case "search-2":
-            //     return new Search2Test(database, serviceName, String.format("%s/facet", endpoint));
+            case "search-1":
+                return new Search1Test(database, serviceName, String.format("%s/autocomplete", endpoint));
+            case "search-2":
+                return new Search2Test(database, serviceName, String.format("%s/facet", endpoint));
             case "vector-search-index":
                 return new VectorSearchIndexTest(database, serviceName, endpoint);
-            // case "vector-search-1":
-            //     return new VectorSearch1Test(database, serviceName, String.format("%s/vectorsearch", endpoint));
+            case "vector-search-1":
+                return new VectorSearch1Test(database, serviceName, String.format("%s/vectorsearch", endpoint));
             default:
                 return null;
         }
@@ -369,13 +390,13 @@ public class ResultsProcessor {
      * Gets the set of test names that have already been completed for a user
      */
     private Set<String> getCompletedTests(String user) {
-        Set<String> completedTests = new HashSet<>();
+        Set<String> completedTests = new LinkedHashSet<>();
         
         try {
             MongoCollection<Document> resultsCollection = database.getCollection(RESULTS_COLLECTION);
             
             // Query for all results for this user
-            for (Document result : resultsCollection.find(Filters.eq("username", user))) {
+            for (Document result : resultsCollection.find(Filters.eq("username", user)).sort(Sorts.ascending("name"))) {
                 String testName = result.getString("name");
                 if (testName != null) {
                     completedTests.add(testName);
@@ -468,7 +489,10 @@ public class ResultsProcessor {
         if (value.contains("PARTICIPANT_NAME")) {
             String username = extractUsernameFromMongoUri();
             value = value.replace("PARTICIPANT_NAME", username);
-            logger.info("Replaced PARTICIPANT_NAME with '{}' in environment variable {}", username, name);
+            if (!participantNameLogged) {
+                logger.info("Replaced PARTICIPANT_NAME with '{}' in environment variable SERVICE_NAME", username);
+                participantNameLogged = true;
+            }
         }
         
         return value;

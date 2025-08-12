@@ -185,12 +185,18 @@ output "aurora_jdbc_url" {
   sensitive   = false
 }
 
+locals {
+  aurora_host     = var.scenario_config.database.postgres ? aws_rds_cluster.aurora_cluster[0].endpoint      : "localhost"
+  aurora_db       = var.scenario_config.database.postgres ? aws_rds_cluster.aurora_cluster[0].database_name : "dummy"
+  aurora_user     = var.scenario_config.database.postgres ? aws_rds_cluster.aurora_cluster[0].master_username : "dummy"
+}
+
 # PostgreSQL provider configuration - only if postgres is enabled
 provider "postgresql" {
-  host      = aws_rds_cluster.aurora_cluster[0].endpoint
+  host      = local.aurora_host
   port      = 5432
-  database  = aws_rds_cluster.aurora_cluster[0].database_name
-  username  = aws_rds_cluster.aurora_cluster[0].master_username
+  database  = local.aurora_db
+  username  = local.aurora_user
   password  = local.atlas_user_password
   sslmode   = "require"
   superuser = false

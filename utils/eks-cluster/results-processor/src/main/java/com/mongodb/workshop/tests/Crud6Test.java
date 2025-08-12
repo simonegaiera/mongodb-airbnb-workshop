@@ -1,7 +1,10 @@
 package com.mongodb.workshop.tests;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.net.http.HttpResponse;
+
+import org.bson.Document;
 import org.json.JSONObject;
 import java.util.Map;
 
@@ -26,15 +29,24 @@ public class Crud6Test extends BaseTest {
         logger.info("Executing CRUD-6 test - Testing crudUpdateElement function");
         
         try {
+            MongoCollection<Document> collection = getListingsAndReviewsCollection();
+
+            // Perform the query
+            Document query = new Document();
+            Document item = collection.find(query).first();
+            String itemId = item.get("_id").toString();
+
+            // Concatenate itemId to the endpoint URL
+            String itemEndpoint = endpoint.endsWith("/") ? endpoint + itemId : endpoint + "/" + itemId;
+
             // Test the crud-6 endpoint with update parameters
             Map<String, Object> requestBody = createRequestBody();
-            requestBody.put("id", "10006546"); // Known document ID
-            requestBody.put("key", "test_field");
-            requestBody.put("value", "test_value_" + System.currentTimeMillis());
+            requestBody.put("key", "accommodates");
+            requestBody.put("value", 9);
+
+            HttpResponse<String> response = makeLabRequest(itemEndpoint, requestBody, "PATCH");
             
-            HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
-            
-            if (response.statusCode() != 200) {
+            if (response.statusCode() != 201) {
                 logger.warn("CRUD-6 test failed: HTTP status {}", response.statusCode());
                 return false;
             }
@@ -65,7 +77,21 @@ public class Crud6Test extends BaseTest {
                 logger.warn("CRUD-6 test failed: No documents were modified");
                 return false;
             }
-            
+
+            Document checkQuery = new Document("_id", itemId);
+            Document updatedItem = collection.find(checkQuery).first();
+
+            if (updatedItem == null) {
+                logger.warn("CRUD-6 test failed: Updated document not found");
+                return false;
+            }
+
+            // Verify the updated field
+            if (!updatedItem.containsKey("accommodates") || updatedItem.getInteger("accommodates") != 9) {
+                logger.warn("CRUD-6 test failed: Document field not updated correctly");
+                return false;
+            }
+
             logger.info("CRUD-6 test passed: Successfully updated {} document(s)", result.getInt("modifiedCount"));
             return true;
             

@@ -19,15 +19,7 @@ A Java application that connects to MongoDB and processes results from the `airb
 
 ## Configuration
 
-Copy the `.env.template` file to `.env` and configure the following environment variables:
-
-```bash
-MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/?retryWrites=true&w=majority
-PROD_SERVICE_NAME=vscode-{{PARTICIPANT_NAME}}-svc
-TEST_SERVICE_NAME={{PARTICIPANT_NAME}}.mongoai.mongogameday.com/backend/
-ENVIRONMENT=test
-LOG_LEVEL=INFO
-```
+Copy the `.env.template` file to `.env` and configure the following environment variables.
 
 ## Building the Application
 

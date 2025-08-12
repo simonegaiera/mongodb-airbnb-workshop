@@ -1,7 +1,10 @@
 package com.mongodb.workshop.tests;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.net.http.HttpResponse;
+
+import org.bson.Document;
 import org.json.JSONObject;
 import java.util.Map;
 
@@ -26,6 +29,16 @@ public class Crud7Test extends BaseTest {
         logger.info("Executing CRUD-7 test - Testing crudAddToArray function");
         
         try {
+            MongoCollection<Document> collection = getListingsAndReviewsCollection();
+
+            // Perform the query
+            Document query = new Document();
+            Document item = collection.find(query).first();
+            String itemId = item.get("_id").toString();
+
+            // Concatenate itemId and "reviews" to the endpoint URL
+            String itemEndpoint = endpoint.endsWith("/") ? endpoint + itemId + "/reviews" : endpoint + "/" + itemId + "/reviews";
+
             // Create a test review object
             Map<String, Object> testReview = createRequestBody();
             testReview.put("reviewer_name", "Test Reviewer");
@@ -36,12 +49,11 @@ public class Crud7Test extends BaseTest {
             
             // Test the crud-7 endpoint
             Map<String, Object> requestBody = createRequestBody();
-            requestBody.put("id", "10006546"); // Known document ID
             requestBody.put("review", testReview);
+
+            HttpResponse<String> response = makeLabRequest(itemEndpoint, requestBody);
             
-            HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
-            
-            if (response.statusCode() != 200) {
+            if (response.statusCode() != 201) {
                 logger.warn("CRUD-7 test failed: HTTP status {}", response.statusCode());
                 return false;
             }

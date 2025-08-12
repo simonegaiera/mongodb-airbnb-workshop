@@ -28,11 +28,11 @@ public class Search1Test extends BaseTest {
         try {
             // Test the search-1 endpoint with a search query
             Map<String, Object> requestBody = createRequestBody();
-            requestBody.put("query", "apartment"); // Test search term
+            requestBody.put("query", "hawaii");
             
             HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
             
-            if (response.statusCode() != 200) {
+            if (response.statusCode() != 201) {
                 logger.warn("Search-1 test failed: HTTP status {}", response.statusCode());
                 return false;
             }

@@ -84,7 +84,7 @@ resource "helm_release" "instructions_nginx" {
         {
           name = "docs-nginx-html-volume",
           configMap = {
-            name = "mdb-nginx-html-cm"
+            name = "docs-nginx-html-cm"
           }
         },
         {

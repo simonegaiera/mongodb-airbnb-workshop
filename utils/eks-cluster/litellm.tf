@@ -76,7 +76,7 @@ resource "kubernetes_config_map" "litellm_config" {
         set_verbose = false
         json_logs = true
         cache = false
-        disable_prompt_caching = true
+        disable_prompt_caching = false
         disable_extended_thinking = true
         disable_image_generation = true
         disable_vision = true

@@ -29,11 +29,11 @@ public class Search2Test extends BaseTest {
         try {
             // Test the search-2 endpoint with a search query
             Map<String, Object> requestBody = createRequestBody();
-            requestBody.put("query", "apartment"); // Test search term
+            requestBody.put("query", "hawaii");
             
             HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
             
-            if (response.statusCode() != 200) {
+            if (response.statusCode() != 201) {
                 logger.warn("Search-2 test failed: HTTP status {}", response.statusCode());
                 return false;
             }
@@ -100,8 +100,12 @@ public class Search2Test extends BaseTest {
                 return false;
             }
             
+            // Extract count object and get lowerBound value
+            JSONObject countObj = facetResult.getJSONObject("count");
+            int totalCount = countObj.getInt("lowerBound");
+            
             logger.info("Search-2 test passed: Found valid faceted search results with {} total count", 
-                facetResult.getInt("count"));
+                totalCount);
             return true;
             
         } catch (Exception e) {

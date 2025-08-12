@@ -109,8 +109,14 @@
    > 💡 **Tip:** Always run `terragrunt plan --all` before applying to review the changes that will be made.
 
 5. **Destroy**  
-   ```bash
-   terragrunt destroy --all
-   ```
+   - **To destroy all modules:**  
+     ```bash
+     terragrunt destroy --all
+     ```
+   - **To destroy a specific module:**  
+     Replace `<module-directory>` with the desired module folder:
+     ```bash
+     terragrunt destroy --working-dir=<module-directory>
+     ```
 
 Always review any plan before applying changes. Destroy resources only when they are no longer needed.

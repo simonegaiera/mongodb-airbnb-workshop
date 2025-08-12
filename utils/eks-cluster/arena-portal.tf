@@ -172,7 +172,7 @@ resource "helm_release" "portal_nginx" {
         {
           name = "portal-nginx-html-volume",
           configMap = {
-            name = "mdb-nginx-html-cm"
+            name = "docs-nginx-html-cm"
           }
         },
         {

@@ -78,6 +78,13 @@ public abstract class BaseTest {
      * Makes an HTTP POST request to the lab endpoint with request body
      */
     protected HttpResponse<String> makeLabRequest(String endpoint, Object requestBody) throws Exception {
+        return makeLabRequest(endpoint, requestBody, "POST");
+    }
+    
+    /**
+     * Makes an HTTP request to the lab endpoint with specified method
+     */
+    protected HttpResponse<String> makeLabRequest(String endpoint, Object requestBody, String httpMethod) throws Exception {
         // Build the lab endpoint URL
         String baseUrl;
         if (serviceName.startsWith("http://") || serviceName.startsWith("https://")) {
@@ -107,9 +114,30 @@ public abstract class BaseTest {
             } else {
                 jsonBody = new JSONObject().put("data", requestBody).toString();
             }
-            requestBuilder.POST(HttpRequest.BodyPublishers.ofString(jsonBody));
+            
+            // Set HTTP method based on parameter
+            switch (httpMethod.toUpperCase()) {
+                case "POST":
+                    requestBuilder.POST(HttpRequest.BodyPublishers.ofString(jsonBody));
+                    break;
+                case "PUT":
+                    requestBuilder.PUT(HttpRequest.BodyPublishers.ofString(jsonBody));
+                    break;
+                case "PATCH":
+                    requestBuilder.method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody));
+                    break;
+                case "DELETE":
+                    requestBuilder.method("DELETE", HttpRequest.BodyPublishers.ofString(jsonBody));
+                    break;
+                default:
+                    requestBuilder.POST(HttpRequest.BodyPublishers.ofString(jsonBody));
+            }
         } else {
-            requestBuilder.GET();
+            if ("DELETE".equalsIgnoreCase(httpMethod)) {
+                requestBuilder.DELETE();
+            } else {
+                requestBuilder.GET();
+            }
         }
         
         HttpRequest request = requestBuilder.build();
