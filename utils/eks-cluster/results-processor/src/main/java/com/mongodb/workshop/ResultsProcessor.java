@@ -158,7 +158,7 @@ public class ResultsProcessor {
      * Executes all exercise tests based on ENVIRONMENT variable
      */
     private void executeExerciseTests() {
-        logger.info("\n{}\nStarting test execution for {} exercise tests {}\n{}", SEPARATOR, STEP, EXERCISE_TESTS.size(), SEPARATOR);
+        logger.info("\n{}\n{} Starting test execution for {} exercises \n{}", SEPARATOR, STEP, EXERCISE_TESTS.size(), SEPARATOR);
         
         // Get service name and environment
         String environment = getEnvironmentVariable("ENVIRONMENT");
@@ -477,14 +477,30 @@ public class ResultsProcessor {
     
     /**
      * Helper method to get environment variables with participant name replacement
+     * Uses sensible defaults if not set.
      */
     private String getEnvironmentVariable(String name) {
         String value = System.getenv(name);
+
+        // Provide sensible defaults if not set
         if (value == null || value.isEmpty()) {
-            logger.warn("Environment variable {} is not set or empty", name);
-            return value;
+            switch (name) {
+                case "SERVICE_NAME":
+                    value = "http://localhost:5000";
+                    break;
+                case "ENVIRONMENT":
+                    value = "prod";
+                    break;
+                case "LOG_LEVEL":
+                    value = "INFO";
+                    break;
+                default:
+                    logger.warn("Environment variable {} is not set or empty", name);
+                    return value;
+            }
+            logger.info("Using default value for {}: {}", name, value);
         }
-        
+
         // Replace PARTICIPANT_NAME placeholder with actual username from MongoDB URI
         if (value.contains("PARTICIPANT_NAME")) {
             String username = extractUsernameFromMongoUri();
@@ -494,7 +510,7 @@ public class ResultsProcessor {
                 participantNameLogged = true;
             }
         }
-        
+
         return value;
     }
 }

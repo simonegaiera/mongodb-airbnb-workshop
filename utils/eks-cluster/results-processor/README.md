@@ -38,6 +38,7 @@ mvn exec:java -Dexec.mainClass="com.mongodb.workshop.ResultsProcessor"
 ### With the compiled JAR:
 ```bash
 mvn clean package
+export $(grep -v '^#' .env | xargs)
 java -jar target/results-processor-1.0.0.jar
 ```
 
