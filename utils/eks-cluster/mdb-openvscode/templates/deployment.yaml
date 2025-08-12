@@ -72,6 +72,8 @@ spec:
                 echo "Workspace initialization FAILED at $(date) with exit code: $?" >> "$INIT_LOG"
                 exit 1
               }
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
@@ -94,6 +96,8 @@ spec:
             - name: {{ .name }}
               containerPort: {{ .targetPort }}
             {{- end }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

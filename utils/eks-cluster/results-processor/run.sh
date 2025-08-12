@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # MongoDB Results Processor - Run Script
-# This script loads environment variables and runs the Java application
+# This script loads environment variables, builds the project, and copies the package
 
 set -e
 
@@ -30,3 +30,19 @@ mvn exec:java -Dexec.mainClass="com.mongodb.workshop.ResultsProcessor" -q
 
 echo ""
 echo "Application completed."
+
+# echo "Compiling and packaging the application..."
+# mvn clean package -q
+
+# JAR_FILE=$(ls target/*.jar | head -n 1)
+
+# if [ -z "$JAR_FILE" ]; then
+#     echo "Error: No JAR file found in target directory."
+#     exit 2
+# fi
+
+# DEST_DIR="../../../server"
+# mkdir -p "$DEST_DIR"
+# cp "$JAR_FILE" "$DEST_DIR"
+
+# echo "JAR package copied to $DEST_DIR"

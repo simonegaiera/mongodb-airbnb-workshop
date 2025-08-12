@@ -131,35 +131,16 @@ resource "helm_release" "airbnb_gameday_nginx" {
             }
           }
         ]
-      )
+      ),
+      nginx = {
+        config = local.combined_nginx_config
+        conf = file("${path.module}/nginx-conf-files/nginx.conf")
+        notfound = local.notfound_nginx_html
+        html = local.index_nginx_html
+        error = local.error_nginx_html
+        favicon = filebase64("${path.module}/nginx-html-files/favicon.ico")
+      }
     })
-  ]
-
-  set = [
-    {
-      name  = "nginx.config"
-      value = local.combined_nginx_config
-    },
-    {
-      name  = "nginx.conf"
-      value = file("${path.module}/nginx-conf-files/nginx.conf")
-    },
-    {
-      name  = "nginx.notfound"
-      value = local.notfound_nginx_html
-    },
-    {
-      name  = "nginx.html"
-      value = local.index_nginx_html
-    },
-    {
-      name  = "nginx.error"
-      value = local.error_nginx_html
-    },
-    {
-      name  = "nginx.favicon"
-      value = filebase64("${path.module}/nginx-html-files/favicon.ico")
-    }
   ]
 
   depends_on = [

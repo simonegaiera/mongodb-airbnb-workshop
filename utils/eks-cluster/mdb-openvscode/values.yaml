@@ -115,6 +115,8 @@ scenarioConfig:
     mcp: false
 
 # Environment variables for MCP connections
+env: []
+
 extraEnv: []
 
 nodeSelector: {}

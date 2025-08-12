@@ -101,31 +101,15 @@ resource "helm_release" "instructions_nginx" {
           name = "build-storage",
           emptyDir = {}
         }
-      ]
+      ],
+      nginx = {
+        config = local.doc_combined_nginx_config
+        notfound = local.notfound_nginx_html
+        html = local.index_nginx_html
+        error = local.error_nginx_html
+        favicon = filebase64("${path.module}/nginx-html-files/favicon.ico")
+      }
     })
-  ]
-
-  set = [
-    {
-      name  = "nginx.config"
-      value = local.doc_combined_nginx_config
-    },
-    {
-      name  = "nginx.notfound"
-      value = local.notfound_nginx_html
-    },
-    {
-      name  = "nginx.html"
-      value = local.index_nginx_html
-    },
-    {
-      name  = "nginx.error"
-      value = local.error_nginx_html
-    },
-    {
-      name  = "nginx.favicon"
-      value = filebase64("${path.module}/nginx-html-files/favicon.ico")
-    }
   ]
 
   depends_on = [
