@@ -106,7 +106,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      - **Base URL:** `http://litellm-service:4000`
      - **API Key:** `noop`
      - **Model:** `claude-4-sonnet`
-     - Select **Use Prompt Caching:**
+     - Select **Use Prompt Caching (GA)**
    - Click **Let's go!**  
      ![cline-welcome](../../assets/images/cline-welcome.png)
 
@@ -116,7 +116,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ![cline-working](../../assets/images/cline-working.png)
 
 **Tip:**  
-If you don’t get a response, double-check your API settings or ask your SA for
+If you don’t get a response, double-check your API settings or ask your SA for help!
 
 ### 🧪 Test: Explore Collection Structure with MongoDB MCP
 
