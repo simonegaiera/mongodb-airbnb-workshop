@@ -120,11 +120,6 @@ npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm inst
 echo_with_timestamp "Building the app..."
 npm run build > /dev/null 2>&1 || echo_with_timestamp "npm build failed in $FRONTEND_TYPE"
 
-echo_with_timestamp "Downloading and installing mongosh"
-wget -q -P /tmp https://downloads.mongodb.com/compass/mongodb-mongosh_2.4.2_amd64.deb || echo_with_timestamp "Failed to download mongosh"
-sudo dpkg -i /tmp/mongodb-mongosh_2.4.2_amd64.deb > /dev/null 2>&1 || echo_with_timestamp "Failed to install mongosh"
-sudo apt-get install -f > /dev/null 2>&1 || echo_with_timestamp "Failed to fix dependencies"
-
 # Source and call the lab exercises setup script if backend is server
 # if [ "$BACKEND_TYPE" = "server" ]; then
 #     echo_with_timestamp "Setting up lab exercises and navigation for server backend"
