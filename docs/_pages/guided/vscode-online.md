@@ -117,12 +117,3 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 **Tip:**  
 If you don’t get a response, double-check your API settings or ask your SA for help!
-
-### 🧪 Test: Explore Collection Structure with MongoDB MCP
-
-**Try this in Cline:**  
-Copy and paste the following prompt into Cline to explore your collection:
-
-> Use the MongoDB MCP to describe the structure and main fields of the `listingsAndReviews` collection in my database.
-
-**Check the response in Cline to see the main fields and their descriptions.**

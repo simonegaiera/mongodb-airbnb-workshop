@@ -119,6 +119,14 @@ env: []
 
 extraEnv: []
 
+# Results Processor Configuration
+resultsProcessor:
+  enabled: false
+  image:
+    repository: openjdk
+    tag: "openjdk:21-oraclelinux8"
+    pullPolicy: IfNotPresent
+
 nodeSelector: {}
 
 tolerations: []

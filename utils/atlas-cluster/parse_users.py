@@ -7,7 +7,7 @@ from collections import OrderedDict
 def get_user_id_from_email(email):
     """Convert email to sanitized user ID"""
     email_prefix = email.strip().split('@')[0]
-    return re.sub(r'[^a-zA-Z0-9]', '-', email_prefix)
+    return re.sub(r'[^a-zA-Z0-9]', '-', email_prefix).lower()
 
 def parse_csv(filename):
     """Parse CSV file and return users with both name and email"""

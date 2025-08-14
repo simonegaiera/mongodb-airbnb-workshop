@@ -80,7 +80,7 @@ resource "kubernetes_config_map" "litellm_config" {
         disable_extended_thinking = true
         disable_image_generation = true
         disable_vision = true
-        drop_params = ["cache_control", "extra_headers", "images", "image_url", "image_data"]
+        drop_params = ["extra_headers", "images", "image_url", "image_data"]
       }
     })
   }

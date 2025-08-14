@@ -71,7 +71,7 @@ resource "helm_release" "user_openvscode" {
         },
         {
           name  = "SERVICE_NAME"
-          value = "vscode-${each.value}-svc"
+          value = "localhost"
         },
         {
           name  = "WORKSHOP_USER"
@@ -183,6 +183,9 @@ resource "helm_release" "user_openvscode" {
         llm = {
           mcp = try(var.scenario_config.llm.mcp, false)
         }
+      },
+      resultsProcessor = {
+        enabled = false
       },
       persistence = {
         fileSystemId = aws_efs_file_system.efs.id

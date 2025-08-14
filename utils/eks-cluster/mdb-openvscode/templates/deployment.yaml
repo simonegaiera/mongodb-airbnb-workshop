@@ -109,6 +109,75 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+        # {{- if .Values.resultsProcessor.enabled }}
+        # - name: results-processor
+        #   image: "{{ .Values.resultsProcessor.image.repository }}:{{ .Values.resultsProcessor.image.tag }}"
+        #   imagePullPolicy: {{ .Values.resultsProcessor.image.pullPolicy }}
+        #   command:
+        #     - "/bin/bash"
+        #     - "-c"
+        #     - |
+        #       set -e
+        #       echo "Results Processor starting at $(date)"
+              
+        #       # Install curl if not available
+        #       apt-get update -qq && apt-get install -y -qq curl
+              
+        #       # Wait for main container to be ready
+        #       echo "Waiting for main container services to be ready..."
+        #       while ! curl -s http://localhost:5000/api/results/whoami > /dev/null 2>&1; do
+        #         echo "Waiting for backend service..."
+        #         sleep 5
+        #       done
+        #       echo "Backend service is ready!"
+              
+        #       # Navigate to results-processor directory
+        #       cd /home/workspace/utils/eks-cluster/results-processor
+              
+        #       # Check if source code exists
+        #       if [ ! -f "pom.xml" ]; then
+        #         echo "ERROR: pom.xml not found in /home/workspace/utils/eks-cluster/results-processor"
+        #         echo "Available files:"
+        #         ls -la /home/workspace/utils/eks-cluster/ || echo "Directory not found"
+        #         exit 1
+        #       fi
+              
+        #       echo "Compiling Java application..."
+        #       mvn clean compile package -q -DskipTests=true
+              
+        #       if [ ! -f "target/results-processor-1.0.0.jar" ]; then
+        #         echo "ERROR: Compiled JAR not found"
+        #         echo "Available files in target:"
+        #         ls -la target/ || echo "Target directory not found"
+        #         exit 1
+        #       fi
+              
+        #       echo "Starting Results Processor application..."
+        #       # Run the processor in a loop with delays
+        #       while true; do
+        #         echo "Running results processor cycle at $(date)"
+        #         java -jar target/results-processor-1.0.0.jar || echo "Processor cycle completed with errors (continuing...)"
+        #         echo "Sleeping for 30 seconds before next cycle..."
+        #         sleep 30
+        #       done
+        #   env:
+        #     {{- toYaml .Values.env | nindent 12 }}
+        #     {{- toYaml .Values.extraEnv | nindent 12 }}
+        #     # Override SERVICE_NAME to use localhost
+        #     - name: SERVICE_NAME
+        #       value: "http://localhost:5000"
+        #   resources:
+        #     requests:
+        #       memory: "256Mi"
+        #       cpu: "200m"
+        #     limits:
+        #       memory: "512Mi"
+        #       cpu: "500m"
+        #   {{- with .Values.volumeMounts }}
+        #   volumeMounts:
+        #     {{- toYaml . | nindent 12 }}
+        #   {{- end }}
+        # {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
