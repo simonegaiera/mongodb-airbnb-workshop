@@ -41,6 +41,12 @@ Use the MongoDB MCP to describe the structure and main fields of the `listingsAn
 
 ---
 
+### 📚 Learn More
+
+- [MongoDB MCP Documentation](https://www.mongodb.com/docs/mcp-server/overview/?client=claude&deployment-type=atlas)
+
+---
+
 ### 📝 What to Do Next
 
 - **Take Notes:** Jot down interesting fields or structures you might want to use.
