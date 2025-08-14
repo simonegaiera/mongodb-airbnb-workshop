@@ -128,14 +128,19 @@ resource "mongodbatlas_project_ip_access_list" "cloudflare" {
 }
 
 resource "mongodbatlas_database_user" "user-main" {
-  username           = var.mongodb_atlas_database_username
-  password           = var.mongodb_atlas_database_user_password
+  username           = local.mongodb_atlas_database_username
+  password           = var.database_admin_password
   project_id         = data.mongodbatlas_project.project.id
   auth_database_name = "admin"
 
   roles {
     role_name     = "atlasAdmin"
     database_name = "admin"
+  }
+
+  scopes {
+    name   = mongodbatlas_advanced_cluster.cluster.name
+    type = "CLUSTER"
   }
 
   depends_on = [ 
@@ -145,17 +150,18 @@ resource "mongodbatlas_database_user" "user-main" {
 
 
 data "external" "user_data" {
-  program = ["python3", "${path.module}/parse_users.py", var.user_list_path, "email", tostring(var.additional_users_count)]
+  program = ["python3", "${path.module}/parse_users.py", var.user_list_path, "email", tostring(var.additional_users_count), var.cluster_name]
 }
 
 locals {
   user_ids = keys(data.external.user_data.result)
   user_emails = [for email in values(data.external.user_data.result) : email if email != null]
+  mongodb_atlas_database_username = "${var.cluster_name}-admin"
 }
 
 resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
   project_id = data.mongodbatlas_project.project.id
-  role_name  = "airbnb_arena_role"
+  role_name  = "${var.cluster_name}-arena-role"
 
   actions {
     action = "FIND"
@@ -238,13 +244,18 @@ resource "mongodbatlas_database_user" "users" {
 
   roles {
       database_name = "admin"
-      role_name     = "airbnb_arena_role"
+      role_name     = "${var.cluster_name}-arena-role"
   }
 
   # roles {
   #     database_name = "${var.sample_database_name}"
   #     role_name     = "read"
   # }
+
+  scopes {
+    name   = mongodbatlas_advanced_cluster.cluster.name
+    type = "CLUSTER"
+  }
 
   depends_on = [ 
     data.mongodbatlas_project.project,
@@ -261,11 +272,15 @@ output "additional_users_count" {
 }
 
 output "user_password" {
-    value = var.customer_user_password
+    value = urlencode(var.customer_user_password)
+}
+
+output "admin_user" {
+    value = local.mongodb_atlas_database_username
 }
 
 output "admin_password" {
-    value = urlencode(var.mongodb_atlas_database_user_password)
+    value = urlencode(var.database_admin_password)
 }
 
 output "standard_srv" {
@@ -290,7 +305,7 @@ resource "null_resource" "install_requirements" {
 }
 
 locals {
-  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(var.mongodb_atlas_database_username)}:${urlencode(var.mongodb_atlas_database_user_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(local.mongodb_atlas_database_username)}:${urlencode(var.database_admin_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
 }
 
 # Define another null resource to execute the Python script

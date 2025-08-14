@@ -32,7 +32,7 @@ resource "helm_release" "portal_server" {
       env = [
         {
           name  = "MONGODB_URI"
-          value = "mongodb+srv://admin:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
+          value = "mongodb+srv://${local.atlas_admin_user}:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
         },
         {
           name  = "DB_NAME"

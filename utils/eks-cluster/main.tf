@@ -41,6 +41,7 @@ locals {
   atlas_standard_srv  = try(var.atlas_standard_srv, "")
   atlas_user_list     = var.atlas_user_list
   atlas_user_password = try(var.atlas_user_password, "")
+  atlas_admin_user     = try(var.atlas_admin_user, "")
   atlas_admin_password = try(var.atlas_admin_password, "")
 
   cluster_name = "${var.customer_name}-gameday-eks"

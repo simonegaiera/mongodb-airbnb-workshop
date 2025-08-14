@@ -82,8 +82,8 @@ def upsert_users(users_map, client, common_database):
         if user_data.get('email'):
             document_data['email'] = user_data['email']
         
-        if user_id.startswith('user'):
-            # For generated users, only set data on insert and include 'taken' field
+        if user_data.get('email') is None:
+            # For generated users (no email), only set data on insert and include 'taken' field
             document_data['taken'] = False
             collection.update_one(
                 {'_id': user_id},
@@ -269,7 +269,7 @@ def main():
 
     csv_file = params['CSV_FILE']
 
-    users_map = get_all_users(csv_file, params['ADDITIONAL_USERS_COUNT'])
+    users_map = get_all_users(csv_file, params['ADDITIONAL_USERS_COUNT'], params['CLUSTER_NAME'])
     upsert_users(users_map, client, params['COMMON_DATABASE'])
     users = list(users_map.keys())
     collections_list = client[common_database].list_collection_names()

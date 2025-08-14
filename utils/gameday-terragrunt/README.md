@@ -108,6 +108,13 @@
 
    > 💡 **Tip:** Always run `terragrunt plan --all` before applying to review the changes that will be made.
 
+   - **To remove a resource from the Terraform state using Terragrunt:**  
+     This is useful if you need to "forget" a resource without destroying it.  
+     Replace `<module-directory>` with the relevant module folder and `<resource_address>` with the resource to remove:
+     ```bash
+     terragrunt run --working-dir=<module-directory> -- state rm <resource_address>
+     ```
+
 5. **Destroy**  
    - **To destroy all modules:**  
      ```bash

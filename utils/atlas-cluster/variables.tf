@@ -34,7 +34,6 @@ variable "common_database_name" {
   default     = "airbnb_arena"
 }
 
-
 variable "cluster_region" {
   description = "The Atlas Project cluster region"
   type        = string
@@ -71,13 +70,7 @@ variable "mongo_db_major_version" {
   default     = "8.0"
 }
 
-variable "mongodb_atlas_database_username" {
-  description = "MongoDB Atlas DB username"
-  type        = string
-  default     = "admin"
-}
-
-variable "mongodb_atlas_database_user_password" {
+variable "database_admin_password" {
   description = "MongoDB Atlas DB password"
   type        = string
   default     = "MongoGameDay123/Admin"
