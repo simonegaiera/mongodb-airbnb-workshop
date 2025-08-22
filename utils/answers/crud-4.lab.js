@@ -25,7 +25,8 @@ export async function crudFilter(amenities, propertyType, beds, skip, limit) {
     if (propertyType) {
         query.property_type = propertyType;
     }
-    
+
+    // Adding beds range to the query if available
     if (beds) {
         const [minBeds, maxBeds] = beds.split('-').map(Number);
         query.beds = { $gte: minBeds, $lte: maxBeds };

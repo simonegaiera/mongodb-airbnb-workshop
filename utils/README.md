@@ -4,7 +4,8 @@
 
 ## Docs
 
-*No current items.*
+### Portal
+- 🔴 **HIGH:** Add to the homepage the fact that they are looking for Instructions, vs code, and app. Like step 1,2,3
 
 ---
 
@@ -18,6 +19,7 @@
 
 ### Results
 - 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
+- 🔴 **HIGH:** On server restart, run the results-processor. Or then 30 seconds.
 - 🟠 **MEDIUM:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
 
 ---
@@ -40,6 +42,21 @@ Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ### OIDC
 - 🟡 **MEDIUM:** Ask if it is possible to have OIDC (current SA profile does not allow).
+
+
+## NYC .Local
+
+- Flexible Schema
+- Compound Indexing
+
+### Exercises
+
+- (Meh) Simple Find
+- (Meh) Simple Create
+- (X) Insert Reviews (Update with increment)
+- More complicated aggregation pipeline
+- (X) Search
+- (X) Vector and auto-embedding
 
 ---
 
