@@ -10,12 +10,11 @@
 ## Server
 
 ### autocomplete
-- vscode autocomplete doesn't show findOne as method. Why?
+- (Low) VSCode does not shows MongoDB methods (.find(), .findOne()) as suggestion
 
 ### results
-- (Maybe) use the timed one cause the one that finished first was not the winner
 - (High) the test results should be visible in the frontend to have them see the so what
-- (High) release the answers after a period of time
+- (Mid) release the answers after a period of time
 - (Mid) aOceanside is the answer on search1 something
 
 ## Terraform

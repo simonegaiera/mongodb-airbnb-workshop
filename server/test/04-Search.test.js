@@ -71,6 +71,13 @@ describe('MongoDB Search Tests', function() {
         strictEqual(res.statusCode, 201, 'Status code should be 201');
         strictEqual(responseData.length, 10);
         strictEqual(responseData[0].name, 'A bedroom far away from home');
+
+        const expectedNames = [
+            'aOceanside Hawaii Apartment Studio Kitchen Parking',
+            'A bedroom far away from home'
+        ];
+        const found = responseData.some(item => expectedNames.includes(item.name));
+        assert(found, `Expected one of ${expectedNames.join(', ')} in results`);
     });
 
     it('search-2: facetSearch should return the correct facets', async function() {

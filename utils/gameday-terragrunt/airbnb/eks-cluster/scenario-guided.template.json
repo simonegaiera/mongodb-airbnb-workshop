@@ -22,7 +22,7 @@
     },
     "frontend": "app",
     "backend": "server",
-    "leaderboard": "score|timed",
+    "leaderboard": "timed",
     "instructions": {
         "base": "navigation-guided.yml",
         "sections": [

@@ -59,6 +59,7 @@
      - Edit the `scenario.json` file in the `eks-cluster` folder to select or customize your workshop scenario.  
      - Example scenarios include `"vibe-coding"` and `"guided-exercises"`.  
      - The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
+     - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
      - **Note:** For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
    - Note that the cluster expires after one week by default.
 
