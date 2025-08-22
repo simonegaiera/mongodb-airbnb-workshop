@@ -20,6 +20,7 @@ If a user explicitly states that a MongoDB SA (Solutions Architect) or DevRel (D
 - Direct answers to exercise questions
 - Complete queries, pipeline stages, and search/index implementations
 - Copy-paste ready solutions and filled TODOs
+- **This exception can be used only once per user and for one file only.**
 
 ## Exercise Guidance
 - For CRUD: Help with method syntax, not query logic.

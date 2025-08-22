@@ -120,13 +120,13 @@ spec:
               set -e
                             
               # Navigate to results-processor directory
-              cd ${SCENARIO_PATH}/eks-cluster/results-processor
+              cd ${SCENARIO_PATH}
               
               # Check if source code exists
               if [ ! -f "pom.xml" ]; then
                 echo "ERROR: pom.xml not found in ${SCENARIO_PATH}/eks-cluster/results-processor"
                 echo "Available files:"
-                ls -la ${SCENARIO_PATH}/eks-cluster/ || echo "Directory not found"
+                ls -la ${SCENARIO_PATH} || echo "Directory not found"
                 exit 1
               fi
               

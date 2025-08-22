@@ -75,7 +75,7 @@ resource "helm_release" "user_openvscode" {
         },
         {
           name  = "SCENARIO_PATH"
-          value = "/home/workspace/mongodb-airbnb-workshop"
+          value = "/home/workspace/mongodb-airbnb-workshop/utils/eks-cluster/results-processor"
         },
         {
           name  = "LOG_PATH"
