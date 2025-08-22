@@ -27,6 +27,7 @@ function initializeModel() {
         return new ChatBedrockConverse({
             model: process.env.LLM_MODEL || "us.anthropic.claude-3-haiku-20240307-v1:0",
             region: process.env.AWS_REGION || "us-east-1",
+            credentials_profile_name: process.env.AWS_PROFILE || "default",
             temperature: 0.7,
             maxTokens: 4096,
         });
@@ -198,16 +199,25 @@ export async function getChat(req, res) {
             // Perform new vector search
             try {
                 searchResults = await vectorSearch(message, property_type);
-                // Store results for future reference using composite session ID
-                sessionSearchResults.set(compositeSessionId, searchResults);
-                contextInfo = formatPropertiesForLLM(
-                    searchResults, 
-                    "\n\nHere are some relevant properties I found based on your search:\n\n"
-                );
-                console.info(`[getChat] INFO: Performed new vector search, found ${searchResults.length} properties for user ${username}, session ${sessionId}`);
+                
+                // Check if no results were found
+                if (!searchResults || searchResults.length === 0) {
+                    // Store empty results for consistency
+                    sessionSearchResults.set(compositeSessionId, []);
+                    contextInfo = "\n\nI couldn't find any properties matching your specific search criteria. This might be because:\n- Your search terms are very specific and no properties match exactly\n- The vector search index might need to be set up or updated\n- There might be an issue with the search functionality\n\nI recommend going back to the vector-search-1 lab to ensure your vector search implementation is working correctly. You can test it with some basic queries first, then come back to try your search again.";
+                    console.info(`[getChat] INFO: No results found for vector search query: "${message}" for user ${username}, session ${sessionId}`);
+                } else {
+                    // Store results for future reference using composite session ID
+                    sessionSearchResults.set(compositeSessionId, searchResults);
+                    contextInfo = formatPropertiesForLLM(
+                        searchResults, 
+                        "\n\nHere are some relevant properties I found based on your search:\n\n"
+                    );
+                    console.info(`[getChat] INFO: Performed new vector search, found ${searchResults.length} properties for user ${username}, session ${sessionId}`);
+                }
             } catch (searchError) {
                 console.error(`[getChat] ERROR: Vector search failed for user ${username}:`, searchError.message);
-                contextInfo = "\n\nI'm having trouble searching for properties right now, but I can still help with general travel questions and recommendations.";
+                contextInfo = "\n\nI'm experiencing a technical issue with the property search system. This appears to be a problem with the vector search implementation. I recommend going back to the vector-search-1 lab to check your implementation - there may be an error in your code (like an undefined variable or incorrect query structure). Please verify your vector search function is working correctly before trying again.";
             }
         }
 
@@ -250,7 +260,9 @@ When mentioning specific properties in your response, always include their Prope
 
 If a user asks about "the first property", "property #1", or similar references, they are referring to the first property from the most recent search results or recommendations you provided.
 
-If no specific properties are found, provide general travel advice and suggestions for what to look for when booking accommodations.`],
+IMPORTANT: If the context mentions a technical issue with the vector search system or suggests going back to vector-search-1, you must clearly communicate this problem to the user. Do not invent property recommendations or provide generic travel advice when there's a technical search issue. Instead, focus on explaining the problem and directing them to fix their vector search implementation first.
+
+If no specific properties are found due to empty search results (not technical errors), do not provide general travel advice and suggestions for what to look for when booking accommodations, but emphasize the recommendation to check the vector-search-1 implementation.`],
             new MessagesPlaceholder("chat_history"),
             ["human", "{input}"],
         ]);

@@ -3,5 +3,11 @@
     "security.workspace.trust.enabled": false,
     "mdb.confirmRunAll": false,
     "github.copilot.editor.enableAutoCompletions": false,
-    "workbench.colorTheme": "Default Dark Modern"
+    "workbench.colorTheme": "Default Dark Modern",
+
+    // Add these TypeScript memory limit settings:
+    "typescript.tsserver.maxTsServerMemory": 1024,
+    "typescript.preferences.maxInlayHintLength": 30,
+    "typescript.disableAutomaticTypeAcquisition": true,
+    "typescript.suggest.autoImports": "off"
 }

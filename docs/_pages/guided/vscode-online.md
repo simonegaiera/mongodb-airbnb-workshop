@@ -32,7 +32,6 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
    - Fire up the backend:
      ```bash
-     cd server
      npm start
      ```
    - ✅ **Check:** If you see a MongoDB connection message in the logs, you’re good to go!
@@ -58,7 +57,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🔗 Step 3: Connect the MongoDB Extension
 
 1. **Grab Your Connection String:**  
-   - Open `/server/.env` and copy your MongoDB URI:
+   - Open `.env` file and copy your MongoDB URI:
      ```markdown
      MONGODB_URI=`mongodb+srv://<username>:<password>@<cluster>.mongodb.net`/?retryWrites=true&w=majority
      ```
@@ -84,7 +83,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
    - Replace `'sample_airbnb'` with your own database name:
      ```js
-     airbnb_database = '<username>';
+     airbnb_database = '<DATABASE_NAME>';
      ```
 
 3. **Run Your First Query:**  
@@ -111,7 +110,6 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ![cline-welcome](../../assets/images/cline-welcome.png)
 
 3. **Save and Test:**
-   - Click **Save** to apply your settings.
    - Test your setup by entering a prompt in Cline (for example, ask it to tell you a joke).
      ![cline-working](../../assets/images/cline-working.png)
 

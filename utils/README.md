@@ -4,8 +4,7 @@
 
 ## Docs
 
-### Instructions
-- 🟡 **MEDIUM:** Prompt for auto embedding is not working (make it more explicit).
+*No current items.*
 
 ---
 
@@ -17,12 +16,9 @@
 
 ## Server
 
-### Autocomplete
-- 🟢 **LOW:** VSCode does not show MongoDB methods (.find(), .findOne()) as suggestions.
-
 ### Results
 - 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
-- 🟠 **MEDIUM:** Release the answers after a period of time.
+- 🟠 **MEDIUM:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
 
 ---
 
@@ -32,6 +28,7 @@
 
 ### LiteLLM
 - 🔴 **HIGH:** Is there a way to force prompt caching to stay active?
+- 🟢 **LOW:** Can we cache some most asked answers to save tokens?
 
 ### test
 - 🟠 **MEDIUM:** How to deploy only certain scenarios.

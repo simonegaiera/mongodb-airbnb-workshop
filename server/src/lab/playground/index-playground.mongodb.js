@@ -4,8 +4,9 @@ use(airbnb_database);
 
 
 // Find all the available indexes
-db.listingsAndReviews.getIndexes();
+// db.listingsAndReviews.getIndexes();
 
 // Create an index
-// index_fields = {}
+index_fields = {}
+
 // db.listingsAndReviews.createIndex(index_fields)
