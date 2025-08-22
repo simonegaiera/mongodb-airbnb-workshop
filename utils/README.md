@@ -15,7 +15,6 @@
 ### results
 - (High) the test results should be visible in the frontend to have them see the so what
 - (Mid) release the answers after a period of time
-- (Mid) aOceanside is the answer on search1 something
 
 ## Terraform
 
