@@ -3,34 +3,46 @@
 ## Docs
 
 ### instructions
-- make it better
 - prompt for auto embedding is not working (change it to more explicit)
 
 ## App
 
 ## Server
 
-### server/test
-- make sure that the test will be correct even at the end when all crud operations are completed
+### autocomplete
+- vscode autocomplete doesn't show findOne as method. Why?
 
-### server/exercises
-search 0:
-- have them create a simple index
+### results
+- (Maybe) use the timed one cause the one that finished first was not the winner
+- (High) the test results should be visible in the frontend to have them see the so what
+- (High) release the answers after a period of time
+- (Mid) aOceanside is the answer on search1 something
 
 ## Terraform
 
 BRING BACK THE ATLAS MAIN FOR PROJECT!
 
-### Bedrock
-- add rules to guide the AI’s behavior. This ensures the AI follows specific guidelines or coding practices you’ve defined.
-- say that cline should east-2
-- contention is high
+### litellm
+- can enabling cache saving $?
+
 
 ### test
 - how to deploy only certain scenarios
+- send eks logs to s3
+- i need to make sure all the files are there, I had a failure on a pod
+openvscode-server@vscode-callen-mdb-openvscode-c68f9d655-7jj7v:~/mongodb-airbnb-workshop$ git push
+fatal: not a git repository (or any parent up to mount point /home)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ### OIDC
 - ask if is possible to have OIDC, the SA profile does not allows it now
 
-### Cline
-- make the browser work
+
+## Sizing Expectation
+- VSCode: 100 users will require 20 nodes
+    - 14 x c6a.xlarge
+    - 3 x c6a.2xlarge
+    - 3 x c6a.4xlarge
+- LLM: 60$ for LLM 25 people
+
+- 10 out of 25 completed all the exercises in 2.5 hours

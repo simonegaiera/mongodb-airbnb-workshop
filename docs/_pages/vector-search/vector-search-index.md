@@ -7,49 +7,53 @@ classes: wide
 
 ## 🚀 Goal: Enable Semantic Search with Atlas Vector Search Indexes
 
-Your business wants to deliver smarter, AI-powered search experiences—helping users find the perfect stay, even when they use natural language. To unlock this, you’ll create a **Vector Search index** in MongoDB Atlas. As the backend engineer, you’re laying the foundation for semantic search and conversational AI.
+Your users want smarter, AI-powered search—finding the perfect stay even with natural language queries. To deliver this, you’ll create a **Vector Search index** in MongoDB Atlas. As the backend engineer, you’re building the foundation for semantic search, conversational AI, and next-level discovery.
 
 In this exercise, you’ll configure a vector index that enables semantic search on your listings’ descriptions, using MongoDB’s built-in embedding model, and add a filter field for property type.
 
 ---
 
-### 🧩 Exercise: Create Your Vector Search Index
+### 🧩 Exercise: Build Your Vector Search Index
 
-Follow these steps:
+Set up your index with these specs:
 
-1. **Open Atlas Search**
-   - In your MongoDB Atlas cluster, in the **Services** section navigate to the **Atlas Search** tab.
-   - Select the database and click **Go to Atlas Search**
+- **Index Name:** `vector_index`
+- **Text Field Path:** `description`
+- **Embedding Model:** `voyage-3-large`
+- **Filter Field Path:** `property_type`
 
-2. **Create a New Index**
-   - Click **Create Search Index**.
-   - Choose **Vector Search** as the index type.
-   - Select **"I want to semantically search text fields"**.
-   - The **Index Name** should be `vector_index`
-   - Select your database and click **Next**
+---
 
-3. **Configure the Index**
-   - **Text Field Path:** `description`
-   - **Embedding Model:** Keep the **recommended** model (default).
-   - **Filter Field Path:** `property_type`
+### 🛠️ How to Complete This Exercise
 
-4. **Save and Build**
-   - Click **Create Index** to start building your vector index.
+Choose your favorite tool and get indexing:
+- **MongoDB Atlas** web interface
+- **MongoDB Compass**
+- **MongoDB Extension** with the provided MongoDB Playground
 
-5. **You can now run the tests:**  
-   ```bash
-   npm test -- --test=vector-search
-   ```
+#### 💻 **Using VS Code?**
+- We suggest using the Playground feature for a quick and interactive experience.
+- In VSCode Online, locate and open the file `vector-search-index-playground.mongodb.js` (usually found in the bottom left of the Explorer).
+  ![MongoDB Playground](../../assets/images/playground.png)
+
+---
+
+### ✅ Test Your Index
+
+Once your index is created, you can verify your setup by running:
+```bash
+npm test -- --test=vector-search
+```
 
 ---
 
 ### 🚦 What to Expect
 
-Once your vector index is live, your platform will be ready for:
-- **Semantic search** that understands user intent, not just keywords.
-- **AI-powered chatbots** that can match guest queries to the best listings.
-- **Faster, more relevant results** by filtering on property type.
-- The foundation for advanced, conversational discovery experiences.
+With your vector index live, your platform will be ready for:
+- **Semantic search** that understands user intent, not just keywords
+- **AI-powered chatbots** that match guest queries to the best listings
+- **Faster, more relevant results** with property type filtering
+- The foundation for advanced, conversational discovery experiences
 
-With this step, you’re not just indexing data—you’re enabling the next generation of search and AI on your platform.  
+You’re not just indexing data—you’re enabling the next generation of search and AI for your platform.  
 **Ready to unlock semantic search? Let’s get started!**

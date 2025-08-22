@@ -70,12 +70,16 @@ resource "helm_release" "user_openvscode" {
           value = "INFO"
         },
         {
-          name  = "SERVICE_NAME"
-          value = "localhost"
+          name  = "LOG_PATH"
+          value = "/home/workspace/mongodb-airbnb-workshop/server/results"
         },
         {
           name  = "WORKSHOP_USER"
           value = "/app"
+        },
+        {
+          name  = "LEADERBOARD"
+          value = tostring(var.scenario_config.leaderboard)
         },
         {
           name  = "BACKEND_URL"

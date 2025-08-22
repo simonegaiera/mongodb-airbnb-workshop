@@ -188,25 +188,44 @@ def create_views(client, common_database):
     timed_leaderboard_pipeline = [
         {
             '$group': {
-                '_id': '$username',
-                'firstTimestamp': { '$first': '$timestamp' },
-                'lastTimestamp': { '$last': '$timestamp' },
-                'count': { '$count': {} }
+                '_id': '$username', 
+                'firstTimestamp': {
+                    '$first': '$timestamp'
+                }, 
+                'lastTimestamp': {
+                    '$last': '$timestamp'
+                }, 
+                'count': {
+                    '$count': {}
+                }
             }
-        },
-        {
+        }, {
+            '$lookup': {
+                'from': 'participants', 
+                'localField': '_id', 
+                'foreignField': '_id', 
+                'as': 'participants_info'
+            }
+        }, {
             '$addFields': {
                 'delta': {
                     '$subtract': [
-                        { '$toLong': '$lastTimestamp' },
-                        { '$toLong': '$firstTimestamp' }
+                        {
+                            '$toLong': '$lastTimestamp'
+                        }, {
+                            '$toLong': '$firstTimestamp'
+                        }
+                    ]
+                }, 
+                'name': {
+                    '$arrayElemAt': [
+                        '$participants_info.name', 0
                     ]
                 }
             }
-        },
-        {
+        }, {
             '$sort': {
-                'count': -1,
+                'count': -1, 
                 'delta': 1
             }
         }

@@ -1,6 +1,6 @@
 import { vectorSearch } from "../lab/vector-search-1.lab.js";
 import { ChatBedrockConverse } from "@langchain/aws";
-import { ChatOpenAI } from "@langchain/openai"; // Only needed for LiteLLM proxy
+import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { ConversationSummaryBufferMemory } from "langchain/memory";
 import { RunnableSequence } from "@langchain/core/runnables";
@@ -147,14 +147,18 @@ export async function getVectorSearch(req, res) {
     const { query, property_type } = req.body;
     
     if (!query) {
+        console.info(`[vector-search-1] INFO: Missing query parameter in request`);
         return res.status(400).json({ message: 'Query parameter is required' });
     }
     
     try {
         const items = await vectorSearch(query, property_type);
         
+        console.info(`[vector-search-1] SUCCESS: Retrieved ${items.length} vector search results for query: "${query}" (property_type: ${property_type || 'any'})`);
         res.status(201).json(items);
     } catch (error) {
+        console.error(`[vector-search-1] ERROR: Failed to get vector search results for query "${query}":`, error.message);
+        console.error(`[vector-search-1] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
 };
@@ -163,6 +167,7 @@ export async function getChat(req, res) {
     const { message, sessionId = 'default', username = 'default', property_type = 'Apartment' } = req.body;
 
     if (!message) {
+        console.info(`[getChat] INFO: Missing message parameter in request`);
         return res.status(400).json({ message: 'Message parameter is required' });
     }
 
@@ -188,6 +193,7 @@ export async function getChat(req, res) {
                 searchResults, 
                 "\n\nBased on your previous search, here are the properties I found:\n\n"
             );
+            console.info(`[getChat] INFO: Using ${searchResults.length} previous search results for user ${username}, session ${sessionId}`);
         } else {
             // Perform new vector search
             try {
@@ -198,8 +204,9 @@ export async function getChat(req, res) {
                     searchResults, 
                     "\n\nHere are some relevant properties I found based on your search:\n\n"
                 );
+                console.info(`[getChat] INFO: Performed new vector search, found ${searchResults.length} properties for user ${username}, session ${sessionId}`);
             } catch (searchError) {
-                console.error('Vector search error:', searchError);
+                console.error(`[getChat] ERROR: Vector search failed for user ${username}:`, searchError.message);
                 contextInfo = "\n\nI'm having trouble searching for properties right now, but I can still help with general travel questions and recommendations.";
             }
         }
@@ -258,7 +265,7 @@ If no specific properties are found, provide general travel advice and suggestio
                         const memoryVariables = await memory.loadMemoryVariables({});
                         return memoryVariables.chat_history || [];
                     } catch (error) {
-                        console.error('Memory loading error:', error);
+                        console.error(`[getChat] ERROR: Memory loading error for user ${username}:`, error.message);
                         return [];
                     }
                 },
@@ -276,6 +283,7 @@ If no specific properties are found, provide general travel advice and suggestio
             { output: response.content }
         );
 
+        console.info(`[getChat] SUCCESS: Generated chat response for user ${username}, session ${sessionId} (${searchResults.length} properties referenced)`);
         res.status(200).json({ 
             reply: response.content,
             sessionId: compositeSessionId,
@@ -284,7 +292,8 @@ If no specific properties are found, provide general travel advice and suggestio
             foundProperties: searchResults.length
         });
     } catch (error) {
-        console.error('Chat error:', error);
+        console.error(`[getChat] ERROR: Chat failed for user ${username}, session ${sessionId}:`, error.message);
+        console.error(`[getChat] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
 }
@@ -304,6 +313,7 @@ export async function clearChat(req, res) {
         const newSessionId = generateNewSessionId(sessionId);
         const newCompositeSessionId = `${username}_${newSessionId}`;
         
+        console.info(`[clearChat] SUCCESS: Cleared chat session for user ${username}, old session: ${sessionId}, new session: ${newSessionId}`);
         res.status(200).json({ 
             message: 'New conversation started',
             newSessionId: newCompositeSessionId,
@@ -311,7 +321,15 @@ export async function clearChat(req, res) {
             previousSessionId: compositeSessionId
         });
     } catch (error) {
-        console.error('Error starting new chat session:', error);
+        console.error(`[clearChat] ERROR: Failed to clear chat session for user ${username}:`, error.message);
+        console.error(`[clearChat] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
+}
+
+// Helper function to generate new session ID
+function generateNewSessionId(currentSessionId) {
+    const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substring(2, 7);
+    return `${currentSessionId}_${timestamp}_${randomSuffix}`;
 }

@@ -74,7 +74,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🔗 Step 4: Use MongoDB Playground
 
 1. **Open the MongoDB Playground:**  
-   - In VSCode Online, locate and open the file `mongodb-playground.mongodb.js` (usually found in the bottom left of the Explorer).
+   - In VSCode Online, locate and open the file `find-playground.mongodb.js` (usually found in the bottom left of the Explorer).
    ![MongoDB Playground](../../assets/images/playground.png)
 
 2. **Set Your Database:**  

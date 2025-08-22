@@ -10,8 +10,11 @@ export async function getParticipant(req, res) {
 
         const items = await collection.findOne({ _id: databaseName }, { projection: { _id: 0, name: 1 } })
 
+        console.info(`[getParticipant] SUCCESS: Retrieved participant data for ${databaseName}`);
         res.status(200).json(items);
     } catch (error) {
+        console.error(`[getParticipant] ERROR: Failed to retrieve participant data for ${databaseName}:`, error.message);
+        console.error(`[getParticipant] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
 };
@@ -24,8 +27,11 @@ export async function getParticipants(req, res) {
 
         const items = await collection.find({}).toArray()
         
+        console.info(`[getParticipants] SUCCESS: Retrieved ${items.length} participants`);
         res.status(200).json(items);
     } catch (error) {
+        console.error(`[getParticipants] ERROR: Failed to retrieve participants:`, error.message);
+        console.error(`[getParticipants] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
 };
@@ -33,115 +39,58 @@ export async function getParticipants(req, res) {
 
 export async function getSectionResults(req, res) {
     try {
+        const leaderboard = process.env.LEADERBOARD || 'timed';
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
-        const collection = database.collection(resultsCollectionName);
         
-        const pipeline = [
-            {
-                '$sort': { 'timestamp': 1 }
-            },
-            {
-                '$group': {
-                    '_id': {
-                        'section': '$section',
-                        'name': '$name'
-                    },
-                    'users': {
-                        '$push': {
-                            'username': '$username',
-                            'timestamp': '$timestamp'
-                        }
-                    }
-                }
-            },
-            {
-                '$addFields': {
-                    'users': {
-                        '$map': {
-                            'input': { '$range': [0, { '$size': '$users' }] },
-                            'as': 'index',
-                            'in': {
-                                'username': { '$arrayElemAt': [ '$users.username', '$$index' ] },
-                                'points': {
-                                    '$subtract': [
-                                        100,
-                                        {
-                                            '$cond': {
-                                                'if': { '$lte': ['$$index', 10] },
-                                                'then': { '$multiply': ['$$index', 5] },
-                                                'else': 50
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            // Unwind the users array to perform lookup for each user separately
-            {
-                '$unwind': '$users'
-            },
-            // Lookup participant info using the username field inside users
-            {
-                '$lookup': {
-                    'from': 'participants',
-                    'localField': 'users.username',
-                    'foreignField': '_id',
-                    'as': 'participants_info'
-                }
-            },
-            // Add the participant name as the field "user" on the users object
-            {
-                '$addFields': {
-                    'users.user': { '$arrayElemAt': [ '$participants_info.name', 0 ] }
-                }
-            },
-            // Remove participants_info and regroup the users back into an array
-            {
-                '$project': { 'participants_info': 0 }
-            },
-            {
-                '$group': {
-                    '_id': '$_id',
-                    'users': { '$push': '$users' }
-                }
-            },
-            {
-                '$sort': { '_id.section': 1, '_id.name': 1 }
-            }
-        ];
+        // Use different views based on leaderboard type
+        const viewName = leaderboard === 'score' ? 'score_leaderboard' : 'timed_leaderboard';
+        const collection = database.collection(viewName);
 
-        const data = await collection.aggregate(pipeline).toArray();
-        
-        const pointsByUsername = {};  
-        data.forEach(item => {  
-            item.users.forEach(user => {
-                const displayName = user.user ? user.user : user.username;
-
-                if (pointsByUsername[displayName]) {  
-                    pointsByUsername[displayName] += user.points;  
-                } else {  
-                    pointsByUsername[displayName] = user.points;  
-                }  
-            });  
-        });  
-        // Convert the object into an array of key-value pairs and sort them
-        const sortedPointsArray = Object.entries(pointsByUsername).sort((a, b) => b[1] - a[1]);
-        const sortedPointsByUsername = Object.fromEntries(sortedPointsArray);
+        const data = await collection.find({}).toArray();
         
         const whoami = await database.collection(participantsCollectionName).findOne({ _id: databaseName }, { projection: { _id: 0, name: 1 } })
 
-        const items = {
-            whoami: whoami ? whoami.name : databaseName,
-            results: sortedPointsByUsername,
-            data: data
-        };
+        let items;
         
+        if (leaderboard === 'score') {
+            const pointsByUsername = {};
+            data.forEach(item => {  
+                item.users.forEach(user => {
+                    const displayName = user.user ? user.user : user.username;
+
+                    if (pointsByUsername[displayName]) {  
+                        pointsByUsername[displayName] += user.points;  
+                    } else {  
+                        pointsByUsername[displayName] = user.points;  
+                    }  
+                });  
+            });  
+            // Convert the object into an array of key-value pairs and sort them
+            const sortedPointsArray = Object.entries(pointsByUsername).sort((a, b) => b[1] - a[1]);
+            const sortedPointsByUsername = Object.fromEntries(sortedPointsArray);
+            
+            items = {
+                whoami: whoami ? whoami.name : databaseName,
+                results: sortedPointsByUsername,
+                data: data,
+                leaderboardType: 'score'
+            };
+        } else {
+            // For timed leaderboard, return whoami and results as data
+            items = {
+                whoami: whoami ? whoami.name : databaseName,
+                results: data,
+                leaderboardType: 'timed'
+            };
+        }
+        
+        const resultCount = Array.isArray(items.results) ? items.results.length : Object.keys(items.results).length;
+        console.info(`[getResults] SUCCESS: ${items.leaderboardType} leaderboard response sent with ${resultCount} results`);
         res.status(200).json(items);
     } catch (error) {
+        console.error(`[getResults] ERROR: Failed to process ${process.env.LEADERBOARD || 'timed'} leaderboard request:`, error.message);
+        console.error(`[getResults] ERROR: Stack trace:`, error.stack);
         res.status(500).json({ message: error.message });
     }
 };

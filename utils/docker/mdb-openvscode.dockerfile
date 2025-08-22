@@ -6,11 +6,11 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install basic tools and dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -qq && apt-get install -y -qq \
     apt-utils \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -qq && apt-get install -y -qq \
     curl \
     wget \
     gnupg \
@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install Node.js (LTS version)
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get install -y -qq nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install MongoDB MCP Server globally
@@ -36,11 +36,11 @@ RUN npm install -g npm@latest
 RUN npm install -g mongodb-mcp-server@latest
 
 # Install Python 3.12 from deadsnakes PPA
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -qq && apt-get install -y -qq \
     software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update \
-    && apt-get install -y \
+    && apt-get update -qq \
+    && apt-get install -y -qq \
     python3.12 \
     python3.12-venv \
     python3.12-dev \
@@ -60,7 +60,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
     && mv $HOME/.local/bin/uvx /usr/local/bin/
 
 # Install Java 21 (headless version for smaller footprint)
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -qq && apt-get install -y -qq \
     openjdk-21-jdk-headless \
     && rm -rf /var/lib/apt/lists/*
 
@@ -75,7 +75,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 # Install mongosh
 RUN wget -q -P /tmp https://downloads.mongodb.com/compass/mongodb-mongosh_2.5.6_amd64.deb \
     && dpkg -i /tmp/mongodb-mongosh_2.5.6_amd64.deb \
-    && apt-get install -f -y \
+    && apt-get install -f -y -qq \
     && rm -f /tmp/mongodb-mongosh_2.5.6_amd64.deb
 
 USER 1000

@@ -56,6 +56,11 @@ Choose your favorite tool and get indexing:
 - **MongoDB Compass**
 - **MongoDB Extension** with the provided MongoDB Playground
 
+#### 💻 **Using VS Code?**
+- We suggest using the Playground feature for a quick and interactive experience.
+- In VSCode Online, locate and open the file `search-index-playground.mongodb.js` (usually found in the bottom left of the Explorer).
+  ![MongoDB Playground](../../assets/images/playground.png)
+
 ---
 
 ### 🚦 What to Expect
