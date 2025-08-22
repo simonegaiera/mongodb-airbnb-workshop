@@ -120,13 +120,13 @@ spec:
               set -e
                             
               # Navigate to results-processor directory
-              cd /home/workspace/utils/eks-cluster/results-processor
+              cd ${SCENARIO_PATH}/eks-cluster/results-processor
               
               # Check if source code exists
               if [ ! -f "pom.xml" ]; then
-                echo "ERROR: pom.xml not found in /home/workspace/utils/eks-cluster/results-processor"
+                echo "ERROR: pom.xml not found in ${SCENARIO_PATH}/eks-cluster/results-processor"
                 echo "Available files:"
-                ls -la /home/workspace/utils/eks-cluster/ || echo "Directory not found"
+                ls -la ${SCENARIO_PATH}/eks-cluster/ || echo "Directory not found"
                 exit 1
               fi
               
@@ -151,9 +151,6 @@ spec:
           env:
             {{- toYaml .Values.env | nindent 12 }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
-            # Override SERVICE_NAME to use localhost
-            - name: SERVICE_NAME
-              value: "http://localhost:5000"
           resources:
             requests:
               memory: "256Mi"

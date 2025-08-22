@@ -70,6 +70,14 @@ resource "helm_release" "user_openvscode" {
           value = "INFO"
         },
         {
+          name  = "SERVICE_NAME"
+          value = "http://localhost:5000"
+        },
+        {
+          name  = "SCENARIO_PATH"
+          value = "/home/workspace/mongodb-airbnb-workshop"
+        },
+        {
           name  = "LOG_PATH"
           value = "/home/workspace/mongodb-airbnb-workshop/server/results"
         },
@@ -189,7 +197,7 @@ resource "helm_release" "user_openvscode" {
         }
       },
       resultsProcessor = {
-        enabled = false
+        enabled = true
       },
       persistence = {
         fileSystemId = aws_efs_file_system.efs.id

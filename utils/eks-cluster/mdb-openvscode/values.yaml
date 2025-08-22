@@ -124,7 +124,7 @@ resultsProcessor:
   enabled: false
   image:
     repository: openjdk
-    tag: "openjdk:21-oraclelinux8"
+    tag: "25-jdk-oraclelinux8"
     pullPolicy: IfNotPresent
 
 nodeSelector: {}
