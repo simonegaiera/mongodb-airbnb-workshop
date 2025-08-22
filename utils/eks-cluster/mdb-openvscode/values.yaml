@@ -123,8 +123,8 @@ extraEnv: []
 resultsProcessor:
   enabled: false
   image:
-    repository: openjdk
-    tag: "25-jdk-oraclelinux8"
+    repository: maven
+    tag: "3.9.11-amazoncorretto-21-debian"
     pullPolicy: IfNotPresent
 
 nodeSelector: {}

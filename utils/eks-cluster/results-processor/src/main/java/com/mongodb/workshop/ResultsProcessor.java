@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.nio.file.*;
+import java.nio.file.StandardOpenOption;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
@@ -57,6 +61,16 @@ public class ResultsProcessor {
     private MongoClient mongoClient;
     private MongoDatabase database;
     
+    // Signal file constants (will be set from environment variables)
+    private final String signalFilePath;
+    private final String lastSignalFilePath;
+    private final boolean isSignalMode;
+    
+    // Execution control
+    private volatile boolean isExecuting = false;
+    private volatile boolean pendingExecution = false;
+    private final Object executionLock = new Object();
+    
     private static final String SEPARATOR = "============================================================";
     private static final String STEP = "➡️ ";
     private static final String SUCCESS = "✅";
@@ -64,8 +78,25 @@ public class ResultsProcessor {
     private static final String INFO = "ℹ️";
     private static final String WARNING = "⚠️";
     private static final String PARTY = "🎉";
+    private static final String SIGNAL = "📡";
     
     public ResultsProcessor() {
+        // Initialize signal mode configuration
+        String signalDir = getEnvironmentVariable("SIGNAL_FILE_PATH");
+        if (signalDir != null && !signalDir.isEmpty()) {
+            this.signalFilePath = signalDir + "/server_restart_signal.txt";
+            this.lastSignalFilePath = signalDir + "/last_processed_signal.txt";
+            this.isSignalMode = true;
+            logger.info("{} Signal mode enabled - watching for signals at: {}", SIGNAL, this.signalFilePath);
+        } else {
+            // Fallback to signal folder when SIGNAL_FILE_PATH is not set
+            String fallbackSignalDir = System.getProperty("user.dir") + "/signal";
+            this.signalFilePath = fallbackSignalDir + "/server_restart_signal.txt";
+            this.lastSignalFilePath = fallbackSignalDir + "/last_processed_signal.txt";
+            this.isSignalMode = true;
+            logger.info("{} Signal mode enabled with fallback path - watching for signals at: {}", SIGNAL, this.signalFilePath);
+        }
+        
         // Initialize MongoDB connection
         String mongoUri = getEnvironmentVariable("MONGODB_URI");
         if (mongoUri == null || mongoUri.isEmpty()) {
@@ -100,15 +131,20 @@ public class ResultsProcessor {
     }
     
     /**
-     * Main execution method
+     * Main execution method - runs in either one-off or signal mode
      */
     public void run() {
         try {
             // Log health information
             logHealthInformation();
             
-            // Execute all exercise tests
-            executeExerciseTests();
+            if (isSignalMode) {
+                logger.info("{} Running in signal mode - continuous operation with signal watching", SIGNAL);
+                runSignalMode();
+            } else {
+                logger.info("{} Running in one-off mode - single execution", INFO);
+                runOneOffMode();
+            }
 
         } catch (Exception e) {
             logger.error("Error during processing", e);
@@ -119,6 +155,267 @@ public class ResultsProcessor {
                 mongoClient.close();
                 logger.info("MongoDB connection closed");
             }
+        }
+    }
+    
+    /**
+     * Runs in one-off mode - executes tests once and exits
+     */
+    private void runOneOffMode() {
+        logger.info("{} Executing one-off test cycle", STEP);
+        executeExerciseTests();
+        logger.info("{} One-off execution completed", SUCCESS);
+    }
+    
+    /**
+     * Runs in signal mode - continuous operation with signal watching
+     */
+    private void runSignalMode() {
+        // Check for immediate signal and run once if signal exists
+        if (checkForServerRestartSignal()) {
+            logger.info("{} Server restart signal detected - running immediate cycle", SIGNAL);
+            handleTriggeredExecution("initial signal");
+        }
+        
+        // Continue with the existing 30-second polling loop
+        logger.info("{} Starting continuous polling mode (30-second intervals)", INFO);
+        runContinuousPolling();
+    }
+    
+    /**
+     * Runs continuous file watching with fallback polling
+     */
+    private void runContinuousPolling() {
+        try {
+            // Try to use file watching first
+            if (watchSignalFile()) {
+                return; // File watching worked, exit
+            }
+        } catch (Exception e) {
+            logger.warn("File watching failed, falling back to polling: {}", e.getMessage());
+        }
+        
+        // Fallback to traditional polling if file watching doesn't work
+        runTraditionalPolling();
+    }
+    
+    /**
+     * Watches the signal file directory for changes using Java WatchService
+     */
+    private boolean watchSignalFile() {
+        if (!isSignalMode || signalFilePath == null) {
+            return false;
+        }
+        
+        try {
+            Path signalFile = Paths.get(signalFilePath);
+            Path signalDir = signalFile.getParent();
+            
+            // Create directory if it doesn't exist
+            if (!Files.exists(signalDir)) {
+                Files.createDirectories(signalDir);
+            }
+            
+            // Set up file watcher
+            WatchService watchService = FileSystems.getDefault().newWatchService();
+            signalDir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, 
+                                          StandardWatchEventKinds.ENTRY_MODIFY);
+            
+            logger.info("{} Started file watching on directory: {}", SIGNAL, signalDir);
+            
+            // Initial check for existing signal
+            if (checkForServerRestartSignal()) {
+                logger.info("{} Found existing signal file on startup", SIGNAL);
+                handleTriggeredExecution("startup signal");
+            }
+            
+            // Watch for file changes
+            while (true) {
+                WatchKey key;
+                try {
+                    // Wait for file system events with timeout
+                    key = watchService.poll(30, TimeUnit.SECONDS);
+                    
+                    if (key == null) {
+                        // Timeout - run regular polling cycle
+                        logger.info("Running scheduled polling cycle at {}", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                        handleTriggeredExecution("scheduled timeout");
+                        continue;
+                    }
+                    
+                    // Process file system events
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        WatchEvent.Kind<?> kind = event.kind();
+                        
+                        if (kind == StandardWatchEventKinds.OVERFLOW) {
+                            continue;
+                        }
+                        
+                        @SuppressWarnings("unchecked")
+                        WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                        Path filename = ev.context();
+                        
+                        // Check if this is our signal file
+                        if (filename.toString().equals("server_restart_signal.txt")) {
+                            logger.info("{} Signal file change detected: {} {}", SIGNAL, kind.name(), filename);
+                            
+                            // Small delay to ensure file write is complete
+                            Thread.sleep(100);
+                            
+                            if (checkForServerRestartSignal()) {
+                                logger.info("{} Server restart signal detected via file watching - triggering execution", SIGNAL);
+                                handleTriggeredExecution("file watching");
+                            }
+                        }
+                    }
+                    
+                    // Reset the key
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        logger.warn("Watch key no longer valid, exiting file watcher");
+                        break;
+                    }
+                    
+                } catch (InterruptedException e) {
+                    logger.warn("File watching interrupted - shutting down gracefully");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+            
+            watchService.close();
+            return true;
+            
+        } catch (IOException e) {
+            logger.error("Failed to set up file watching: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            logger.error("Unexpected error in file watching: {}", e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Traditional polling fallback method
+     */
+    private void runTraditionalPolling() {
+        logger.info("{} Using traditional polling mode (30-second intervals)", INFO);
+        while (true) {
+            try {
+                // Check for server restart signal first
+                if (checkForServerRestartSignal()) {
+                    logger.info("{} Server restart signal detected during polling - triggering execution", SIGNAL);
+                    handleTriggeredExecution("polling signal");
+                }
+                
+                // Wait for 30 seconds before next check
+                Thread.sleep(30000);
+                
+                // Run regular polling cycle
+                logger.info("Running scheduled polling cycle at {}", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                handleTriggeredExecution("scheduled polling");
+                
+            } catch (InterruptedException e) {
+                logger.warn("Polling interrupted - shutting down gracefully");
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                logger.error("Error in polling cycle: {}", e.getMessage());
+                // Continue polling even if one cycle fails
+                try {
+                    Thread.sleep(5000); // Short delay before retrying
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Handles execution requests with concurrency control
+     */
+    private void handleTriggeredExecution(String trigger) {
+        synchronized (executionLock) {
+            if (isExecuting) {
+                logger.info("{} Tests are currently running (triggered by {}), marking pending execution", WARNING, trigger);
+                pendingExecution = true;
+                return;
+            }
+            
+            logger.info("{} Starting test execution (triggered by {})", STEP, trigger);
+            isExecuting = true;
+        }
+        
+        try {
+            executeExerciseTests();
+            
+            // Check if another execution was requested while we were running
+            synchronized (executionLock) {
+                if (pendingExecution) {
+                    logger.info("{} Pending execution detected - running additional cycle", SIGNAL);
+                    pendingExecution = false;
+                    executeExerciseTests();
+                }
+            }
+            
+        } finally {
+            synchronized (executionLock) {
+                isExecuting = false;
+                if (pendingExecution) {
+                    // If there's still a pending execution, schedule it
+                    logger.info("{} Scheduling pending execution", SIGNAL);
+                    // Use a separate thread to avoid deep recursion
+                    new Thread(() -> handleTriggeredExecution("pending")).start();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Checks for server restart signal and returns true if a new signal is detected
+     * Only works in signal mode
+     */
+    private boolean checkForServerRestartSignal() {
+        if (!isSignalMode || signalFilePath == null) {
+            return false;
+        }
+        
+        try {
+            Path signalFile = Paths.get(signalFilePath);
+            
+            // Check if signal file exists
+            if (!Files.exists(signalFile)) {
+                return false;
+            }
+            
+            // Read the signal file
+            String signalContent = Files.readString(signalFile);
+            
+            // Check if we've already processed this signal
+            Path lastSignalFile = Paths.get(lastSignalFilePath);
+            String lastProcessedSignal = "";
+            
+            if (Files.exists(lastSignalFile)) {
+                lastProcessedSignal = Files.readString(lastSignalFile);
+            }
+            
+            // If the signal content is different from last processed, we have a new signal
+            if (!signalContent.equals(lastProcessedSignal)) {
+                logger.info("{} New server restart signal detected", SIGNAL);
+                logger.debug("Signal content: {}", signalContent);
+                
+                // Update the last processed signal
+                Files.writeString(lastSignalFile, signalContent, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                
+                return true;
+            }
+            
+            return false;
+            
+        } catch (IOException e) {
+            logger.warn("Failed to check server restart signal: {}", e.getMessage());
+            return false;
         }
     }
     

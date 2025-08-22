@@ -78,6 +78,10 @@ resource "helm_release" "user_openvscode" {
           value = "/home/workspace/mongodb-airbnb-workshop/utils/eks-cluster/results-processor"
         },
         {
+          name  = "SIGNAL_FILE_PATH"
+          value = "/home/workspace/mongodb-airbnb-workshop/server/signal"
+        },
+        {
           name  = "LOG_PATH"
           value = "/home/workspace/mongodb-airbnb-workshop/server/results"
         },

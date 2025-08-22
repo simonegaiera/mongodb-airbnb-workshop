@@ -141,13 +141,8 @@ spec:
               fi
               
               echo "Starting Results Processor application..."
-              # Run the processor in a loop with delays
-              while true; do
-                echo "Running results processor cycle at $(date)"
-                java -jar target/results-processor-1.0.0.jar || echo "Processor cycle completed with errors (continuing...)"
-                echo "Sleeping for 30 seconds before next cycle..."
-                sleep 30
-              done
+              # Run the processor once - it will handle signal-based triggering internally
+              java -jar target/results-processor-1.0.0.jar
           env:
             {{- toYaml .Values.env | nindent 12 }}
             {{- toYaml .Values.extraEnv | nindent 12 }}
