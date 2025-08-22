@@ -58,9 +58,9 @@ Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
         - 3 × c6a.4xlarge: 3 × $0.76 × 24 = **$54.72/day**  
         - **Total: ~$146/day**
 
-- **LLM:** $60 for 25 people
-
----
+- **LLM:** $60 per scenario for 25 people  
+    - For 100 people: 100 / 25 = 4 scenarios  
+    - **Total LLM cost for 100 people:** 4 × $60 = **$240**
 
 ## Workshop Stats
 
