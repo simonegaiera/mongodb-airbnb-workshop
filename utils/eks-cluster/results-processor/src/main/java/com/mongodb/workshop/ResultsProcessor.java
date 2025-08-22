@@ -89,12 +89,11 @@ public class ResultsProcessor {
             this.isSignalMode = true;
             logger.info("{} Signal mode enabled - watching for signals at: {}", SIGNAL, this.signalFilePath);
         } else {
-            // Fallback to signal folder when SIGNAL_FILE_PATH is not set
-            String fallbackSignalDir = System.getProperty("user.dir") + "/signal";
-            this.signalFilePath = fallbackSignalDir + "/server_restart_signal.txt";
-            this.lastSignalFilePath = fallbackSignalDir + "/last_processed_signal.txt";
-            this.isSignalMode = true;
-            logger.info("{} Signal mode enabled with fallback path - watching for signals at: {}", SIGNAL, this.signalFilePath);
+            // When SIGNAL_FILE_PATH is empty or null, run in one-shot mode
+            this.signalFilePath = null;
+            this.lastSignalFilePath = null;
+            this.isSignalMode = false;
+            logger.info("{} SIGNAL_FILE_PATH is empty or null - running in one-shot mode", INFO);
         }
         
         // Initialize MongoDB connection

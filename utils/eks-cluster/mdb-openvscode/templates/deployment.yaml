@@ -120,7 +120,11 @@ spec:
             - "-c"
             - |
               set -e
-      
+              
+              # Create Maven home directory with proper permissions
+              export MAVEN_OPTS="-Dmaven.repo.local=/tmp/.m2/repository"
+              mkdir -p /tmp/.m2/repository
+              
               # Navigate to results-processor directory
               cd ${SCENARIO_PATH}
               
