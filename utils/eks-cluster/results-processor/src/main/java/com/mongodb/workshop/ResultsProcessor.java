@@ -176,8 +176,8 @@ public class ResultsProcessor {
             handleTriggeredExecution("initial signal", true);
         }
         
-        // Continue with the existing 30-second polling loop
-        logger.info("{} Starting continuous polling mode (30-second intervals)", INFO);
+        // Continue with hourly polling loop
+        logger.info("{} Starting continuous polling mode (1-hour intervals)", INFO);
         runContinuousPolling();
     }
     
@@ -232,8 +232,8 @@ public class ResultsProcessor {
             while (true) {
                 WatchKey key;
                 try {
-                    // Wait for file system events with timeout
-                    key = watchService.poll(30, TimeUnit.SECONDS);
+                    // Wait for file system events with timeout (1 hour)
+                    key = watchService.poll(3600, TimeUnit.SECONDS);
                     
                     if (key == null) {
                         // Timeout - run regular polling cycle
@@ -298,7 +298,7 @@ public class ResultsProcessor {
      * Traditional polling fallback method
      */
     private void runTraditionalPolling() {
-        logger.info("{} Using traditional polling mode (30-second intervals)", INFO);
+        logger.info("{} Using traditional polling mode (1-hour intervals)", INFO);
         while (true) {
             try {
                 // Check for server restart signal first
@@ -307,8 +307,8 @@ public class ResultsProcessor {
                     handleTriggeredExecution("polling signal", true);
                 }
                 
-                // Wait for 30 seconds before next check
-                Thread.sleep(30000);
+                // Wait for 1 hour before next check
+                Thread.sleep(3600000);
                 
                 // Run regular polling cycle
                 logger.info("Running scheduled polling cycle at {}", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME));
