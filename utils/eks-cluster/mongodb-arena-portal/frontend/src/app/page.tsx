@@ -114,21 +114,12 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-mongodb-dark mb-4">
             MongoDB Arena Portal
           </h1>
-          <p className="text-xl text-gray-700 flex items-center justify-center gap-2">
-            <span className="font-semibold">Instructions to:</span>
-            <a
-              href={getInstructionsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-mongodb-green font-extrabold underline hover:text-mongodb-dark transition-colors"
-              style={{ textDecorationThickness: '2px' }}
-            >
-              AI Arena
-            </a>
+          <p className="text-lg text-gray-700">
+            Welcome to the MongoDB Arena Portal
           </p>
         </div>
 
@@ -165,6 +156,103 @@ export default function Home() {
             {/* Active Participants Count - Top Right */}
             <div>
               <AvailableCount refreshTrigger={refreshKey} />
+            </div>
+          </div>
+
+          {/* Three Steps Section - Full Width */}
+          <div className="w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+              {/* <h2 className="text-2xl font-semibold text-gray-900 text-center mb-8">
+                Get Started in 3 Easy Steps
+              </h2> */}
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Step 1: Read Instructions */}
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+                      1
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Read the Instructions
+                    </h3>
+                  </div>
+                  <div className="text-center mb-4">
+                    <img 
+                      src="/step-first.png" 
+                      alt="Step 1 - Read Instructions" 
+                      className="h-48 mx-auto object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <a
+                      href={getInstructionsUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-mongodb-green text-white text-sm font-medium rounded-md hover:bg-mongodb-dark transition-colors"
+                    >
+                      Open Instructions
+                      <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Step 2: Open the Workload */}
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+                      2
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Open the Workload
+                    </h3>
+                  </div>
+                  <div className="text-center mb-4">
+                    <img 
+                      src="/step-second.png" 
+                      alt="Step 2 - Open Workload" 
+                      className="h-48 mx-auto object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
+                      Find Your Name Below
+                      <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 3: Open the App */}
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+                      3
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Open the App
+                    </h3>
+                  </div>
+                  <div className="text-center mb-4">
+                    <img 
+                      src="/step-third.png" 
+                      alt="Step 3 - Open App" 
+                      className="h-48 mx-auto object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
+                      Find Your Name Below
+                      <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
