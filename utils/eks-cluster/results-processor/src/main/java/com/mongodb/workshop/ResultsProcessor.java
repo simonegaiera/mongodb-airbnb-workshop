@@ -174,7 +174,7 @@ public class ResultsProcessor {
         // Check for immediate signal and run once if signal exists
         if (checkForServerRestartSignal()) {
             logger.info("{} Server restart signal detected - running immediate cycle", SIGNAL);
-            handleTriggeredExecution("initial signal");
+            handleTriggeredExecution("initial signal", true);
         }
         
         // Continue with the existing 30-second polling loop
@@ -226,7 +226,7 @@ public class ResultsProcessor {
             // Initial check for existing signal
             if (checkForServerRestartSignal()) {
                 logger.info("{} Found existing signal file on startup", SIGNAL);
-                handleTriggeredExecution("startup signal");
+                handleTriggeredExecution("startup signal", true);
             }
             
             // Watch for file changes
@@ -264,7 +264,7 @@ public class ResultsProcessor {
                             
                             if (checkForServerRestartSignal()) {
                                 logger.info("{} Server restart signal detected via file watching - triggering execution", SIGNAL);
-                                handleTriggeredExecution("file watching");
+                                handleTriggeredExecution("file watching", true);
                             }
                         }
                     }
@@ -305,7 +305,7 @@ public class ResultsProcessor {
                 // Check for server restart signal first
                 if (checkForServerRestartSignal()) {
                     logger.info("{} Server restart signal detected during polling - triggering execution", SIGNAL);
-                    handleTriggeredExecution("polling signal");
+                    handleTriggeredExecution("polling signal", true);
                 }
                 
                 // Wait for 30 seconds before next check
@@ -336,11 +336,25 @@ public class ResultsProcessor {
      * Handles execution requests with concurrency control
      */
     private void handleTriggeredExecution(String trigger) {
+        handleTriggeredExecution(trigger, false);
+    }
+    
+    /**
+     * Handles execution requests with concurrency control
+     * @param trigger Description of what triggered this execution
+     * @param isNewSignal Whether this execution was triggered by a new signal detection
+     */
+    private void handleTriggeredExecution(String trigger, boolean isNewSignal) {
         synchronized (executionLock) {
             if (isExecuting) {
                 logger.info("{} Tests are currently running (triggered by {}), marking pending execution", WARNING, trigger);
                 pendingExecution = true;
                 return;
+            }
+            
+            // Reset the last-execution.log file ONLY when processing a new signal
+            if (isNewSignal) {
+                resetLastExecutionLog();
             }
             
             logger.info("{} Starting test execution (triggered by {})", STEP, trigger);
@@ -366,9 +380,35 @@ public class ResultsProcessor {
                     // If there's still a pending execution, schedule it
                     logger.info("{} Scheduling pending execution", SIGNAL);
                     // Use a separate thread to avoid deep recursion
-                    new Thread(() -> handleTriggeredExecution("pending")).start();
+                    new Thread(() -> handleTriggeredExecution("pending", false)).start();
                 }
             }
+        }
+    }
+    
+    /**
+     * Resets the last-execution.log file by clearing its contents
+     */
+    private void resetLastExecutionLog() {
+        try {
+            String logPath = getEnvironmentVariable("LOG_PATH");
+            if (logPath == null || logPath.isEmpty()) {
+                logPath = "logs";
+            }
+            
+            Path lastExecutionLogPath = Paths.get(logPath, "last-execution.log");
+            
+            // Create the logs directory if it doesn't exist
+            Files.createDirectories(lastExecutionLogPath.getParent());
+            
+            // Clear the file by writing empty content (this effectively resets it)
+            Files.writeString(lastExecutionLogPath, "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            
+            logger.info("{} Reset last-execution.log for new signal processing", SIGNAL);
+            
+        } catch (IOException e) {
+            logger.warn("Failed to reset last-execution.log: {}", e.getMessage());
+            // Continue execution even if log reset fails
         }
     }
     

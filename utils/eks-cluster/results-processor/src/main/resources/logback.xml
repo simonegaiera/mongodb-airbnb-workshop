@@ -21,14 +21,15 @@
         </encoder>
     </appender>
 
-    <!-- Last execution log appender (Overwrites on each run) -->
+    <!-- Last execution log appender (Appends during execution) -->
     <appender name="LAST_EXECUTION" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_PATH:-logs}/last-execution.log</file>
-        <append>false</append> <!-- This overwrites the file on each run -->
+        <append>true</append> <!-- This appends to the file -->
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+
 
     <!-- Root logger -->
     <root level="${LOG_LEVEL:-INFO}">
@@ -36,6 +37,7 @@
         <appender-ref ref="LONG_LOG" />
         <appender-ref ref="LAST_EXECUTION" />
     </root>
+
 
     <!-- MongoDB driver logging -->
     <logger name="org.mongodb.driver" level="WARN"/>

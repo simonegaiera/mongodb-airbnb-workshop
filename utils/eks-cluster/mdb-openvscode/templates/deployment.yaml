@@ -111,6 +111,8 @@ spec:
           {{- end }}
         {{- if .Values.resultsProcessor.enabled }}
         - name: results-processor
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.resultsProcessor.image.repository }}:{{ .Values.resultsProcessor.image.tag }}"
           imagePullPolicy: {{ .Values.resultsProcessor.image.pullPolicy }}
           command:
@@ -118,7 +120,7 @@ spec:
             - "-c"
             - |
               set -e
-                            
+      
               # Navigate to results-processor directory
               cd ${SCENARIO_PATH}
               
