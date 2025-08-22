@@ -19,7 +19,7 @@
 
 ### Results
 - 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
-- 🔴 **HIGH:** On server restart, run the results-processor. Or then 30 seconds.
+- 🔴 **HIGH:** [Validation] On server restart, run the results-processor. Or then 30 seconds.
 - 🟠 **MEDIUM:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
 
 ---
@@ -27,10 +27,6 @@
 ## Terraform
 
 - 🟡 **MEDIUM:** Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
-
-### LiteLLM
-- 🔴 **HIGH:** Is there a way to force prompt caching to stay active?
-- 🟢 **LOW:** Can we cache some most asked answers to save tokens?
 
 ### test
 - 🟠 **MEDIUM:** How to deploy only certain scenarios.

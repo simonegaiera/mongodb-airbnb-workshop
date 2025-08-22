@@ -90,12 +90,18 @@ litellm:
           api_key: "os.environ/ANTHROPIC_API_KEY"
           max_tokens: 4096
           temperature: 0.7
+          cache_control_injection_points:
+            - location: message
+              role: system
       - model_name: "claude-4-sonnet"
         litellm_params:
           model: "anthropic/claude-sonnet-4-20250514"
           api_key: "os.environ/ANTHROPIC_API_KEY"
           max_tokens: 4096
           temperature: 0.7
+          cache_control_injection_points:
+            - location: message
+              role: system
     
     general_settings:
       disable_spend_logs: false
@@ -108,8 +114,14 @@ litellm:
     litellm_settings:
       set_verbose: false
       json_logs: true
-      cache: false
+      cache: true  # Enable proxy-level response caching
       disable_prompt_caching: false
+      # Enable caching globally
+      cache_params:
+        type: "redis"  # Use Redis for response caching
+        ttl: 3600  # Cache responses for 1 hour (3600 seconds)
+        namespace: "litellm.cline.cache"  # Namespace for Cline-specific caching
+        supported_call_types: ["completion", "acompletion", "embedding", "aembedding"]
       disable_extended_thinking: true
       disable_image_generation: true
       disable_vision: true

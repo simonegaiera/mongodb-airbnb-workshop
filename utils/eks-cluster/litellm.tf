@@ -33,6 +33,14 @@ resource "helm_release" "litellm" {
       }
       
       litellm = {
+        # Environment variables for Redis connection
+        env = {
+          PORT = "4000"
+          LITELLM_LOG = "INFO"
+          REDIS_HOST = local.redis_config.service.name
+          REDIS_PORT = tostring(local.redis_config.service.port)
+        }
+        
         secrets = {
           anthropicApiKey = var.anthropic_api_key
         }
@@ -42,7 +50,8 @@ resource "helm_release" "litellm" {
 
   depends_on = [
     aws_eks_cluster.eks_cluster,
-    helm_release.user_openvscode
+    helm_release.user_openvscode,
+    helm_release.redis
   ]
 }
 

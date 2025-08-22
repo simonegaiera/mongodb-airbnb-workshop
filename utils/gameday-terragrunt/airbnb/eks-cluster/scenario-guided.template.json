@@ -12,7 +12,14 @@
             "enabled": true,
             "type": "litellm",
             "service-name": "litellm-service",
-            "port": 4000
+            "port": 4000,
+            "redis": {
+                "enabled": true,
+                "service": {
+                    "name": "redis-master",
+                    "port": 6379
+                }
+            }
         },
         "mcp": true,
         "provider": "anthropic",
