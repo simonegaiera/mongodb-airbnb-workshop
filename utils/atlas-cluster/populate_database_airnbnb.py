@@ -275,6 +275,37 @@ def ensure_participants_indexes(db):
     participants.create_index(index_spec)
     print("Created compound index on participants: taken, name.", flush=True)
 
+def create_results_health_collection(db):
+    """Create results_health collection with TTL index."""
+    collection_name = "results_health"
+    
+    # Check if collection already exists
+    existing_collections = db.list_collection_names()
+    if collection_name not in existing_collections:
+        # Explicitly create the collection
+        db.create_collection(collection_name)
+        print(f"Created collection '{collection_name}'.", flush=True)
+    else:
+        print(f"Collection '{collection_name}' already exists.", flush=True)
+    
+    collection = db[collection_name]
+    
+    # Create TTL index on timestamp field (2 days = 172800 seconds)
+    ttl_seconds = 2 * 24 * 60 * 60  # 2 days in seconds
+    
+    # Check if TTL index already exists
+    indexes = collection.index_information()
+    ttl_index_exists = False
+    for idx_name, idx_info in indexes.items():
+        if idx_info.get("key") == [("timestamp", 1)] and "expireAfterSeconds" in idx_info:
+            ttl_index_exists = True
+            print(f"TTL index on timestamp already exists.", flush=True)
+            break
+    
+    if not ttl_index_exists:
+        collection.create_index("timestamp", expireAfterSeconds=ttl_seconds)
+        print(f"Created TTL index on timestamp field with 2 days expiration for results_health collection.", flush=True)
+
 def main():
     params = get_params()
     common_database = params['MONGO_DATABASE_NAME']
@@ -297,6 +328,9 @@ def main():
     # Ensure index exists before creating views
     ensure_results_index(client[params['COMMON_DATABASE']])
     ensure_participants_indexes(client[params['COMMON_DATABASE']])
+    
+    # Create results_health collection with TTL
+    create_results_health_collection(client[params['COMMON_DATABASE']])
     
     # Create views
     create_views(client, params['COMMON_DATABASE'])
