@@ -100,7 +100,7 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
           <div className="flex-shrink-0">
             <button 
               type="submit" 
-              className="bg-mongodb-green text-mongodb-light font-semibold py-2 px-6 rounded-md hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-mongodb-green transition-colors duration-200 whitespace-nowrap"
+              className="bg-mongodb-green text-mongodb-light font-semibold py-2 px-6 rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-mongodb-green transition-colors duration-200 whitespace-nowrap"
             >
               Start Challenge
             </button>
