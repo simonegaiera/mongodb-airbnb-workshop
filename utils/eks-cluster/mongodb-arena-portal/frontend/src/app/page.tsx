@@ -21,6 +21,32 @@ export default function Home() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
+  
+  // State for collapsible steps (default based on screen size)
+  const [stepsExpanded, setStepsExpanded] = useState(false)
+
+  const toggleSteps = () => {
+    setStepsExpanded(prev => !prev)
+  }
+
+  // Set initial state based on screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      // Consider screens >= 1600px as "big screens" (large desktop monitors)
+      // Most laptops are typically 1366px, 1440px, or 1536px wide
+      const isBigScreen = window.innerWidth >= 1600
+      setStepsExpanded(isBigScreen)
+    }
+
+    // Check on mount
+    checkScreenSize()
+
+    // Listen for resize events
+    window.addEventListener('resize', checkScreenSize)
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
 
   // Extract the domain from the API URL to create the instructions URL
   const getInstructionsUrl = () => {
@@ -158,14 +184,11 @@ export default function Home() {
 
           {/* Three Steps Section - Full Width */}
           <div className="w-full">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-              {/* <h2 className="text-2xl font-semibold text-gray-900 text-center mb-8">
-                Get Started in 3 Easy Steps
-              </h2> */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Step 1: Read Instructions */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       1
@@ -173,16 +196,34 @@ export default function Home() {
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the Instructions
                     </h3>
+                    <button
+                      onClick={toggleSteps}
+                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
+                    >
+                      <svg 
+                        className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </div>
-                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
-                    <div className="flex-grow flex items-start justify-center pt-4">
-                      <img 
-                        src="/step-first.png" 
-                        alt="Step 1 - Read Instructions" 
-                        className="h-52 mx-auto object-contain object-top"
-                      />
+                  
+                  {/* Collapsible Content */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${stepsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                      <div className="flex-grow flex items-start justify-center pt-4">
+                        <img 
+                          src="/step-first.png" 
+                          alt="Step 1 - Read Instructions" 
+                          className="h-52 mx-auto object-contain object-top"
+                        />
+                      </div>
                     </div>
                   </div>
+                  
                   <div className="text-center mt-auto">
                     <a
                       href={getInstructionsUrl()}
@@ -199,7 +240,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 2: Open the Workload */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       2
@@ -207,30 +248,48 @@ export default function Home() {
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the Workspace
                     </h3>
+                    <button
+                      onClick={toggleSteps}
+                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
+                    >
+                      <svg 
+                        className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </div>
-                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
-                    <div className="flex-grow flex items-start justify-center pt-4">
-                      <img 
-                        src="/step-second.png" 
-                        alt="Step 2 - Open Workload" 
-                        className="h-30 mx-auto object-contain object-top"
-                      />
-                    </div>
-                    <div className="text-gray-600 text-sm mt-2">
-                      <ul className="text-left space-y-2 mb-3">
-                        <li className="font-medium text-gray-800">- Open a new terminal:
-                          <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
-                            ☰ {'>'}  Terminal {'>'}  New Terminal
-                          </code>
-                        </li>
-                        <li className="font-medium text-gray-800">- Start the server:
-                          <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
-                            npm start
-                          </code>
-                        </li>
-                      </ul>
+                  
+                  {/* Collapsible Content */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${stepsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                      <div className="flex-grow flex items-start justify-center pt-4">
+                        <img 
+                          src="/step-second.png" 
+                          alt="Step 2 - Open Workload" 
+                          className="h-30 mx-auto object-contain object-top"
+                        />
+                      </div>
+                      <div className="text-gray-600 text-sm mt-2">
+                        <ul className="text-left space-y-2 mb-3">
+                          <li className="font-medium text-gray-800">- Open a new terminal:
+                            <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                              ☰ {'>'}  Terminal {'>'}  New Terminal
+                            </code>
+                          </li>
+                          <li className="font-medium text-gray-800">- Start the server:
+                            <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                              npm start
+                            </code>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
+                  
                   <div className="text-center mt-auto">
                     <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
                       Find Your Name Below
@@ -242,7 +301,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 3: Open the App */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       3
@@ -250,22 +309,40 @@ export default function Home() {
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the App
                     </h3>
+                    <button
+                      onClick={toggleSteps}
+                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
+                    >
+                      <svg 
+                        className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </div>
-                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
-                    <div className="pt-4">
-                      <img 
-                        src="/step-third.png" 
-                        alt="Step 3 - Open App" 
-                        className="h-30 mx-auto object-contain object-top"
-                      />
-                      <div className="text-gray-800 text-md flex items-center justify-center h-full">
-                        <p className="text-center">
-                          See your name on the homepage?<br />
-                          ✅ You're in!
-                        </p>
+                  
+                  {/* Collapsible Content */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${stepsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                      <div className="pt-4">
+                        <img 
+                          src="/step-third.png" 
+                          alt="Step 3 - Open App" 
+                          className="h-30 mx-auto object-contain object-top"
+                        />
+                        <div className="text-gray-800 text-md flex items-center justify-center h-full">
+                          <p className="text-center">
+                            See your name on the homepage?<br />
+                            ✅ You're in!<br /><br />
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  
                   <div className="text-center mt-auto">
                     <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
                       Find Your Name Below

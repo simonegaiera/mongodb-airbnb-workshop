@@ -4,8 +4,7 @@
 
 ## Docs
 
-### Portal
-- 🔴 **HIGH:** Add to the homepage the fact that they are looking for Instructions, vs code, and app. Like step 1,2,3
+*No current items.*
 
 ---
 
