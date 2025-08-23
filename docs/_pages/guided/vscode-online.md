@@ -46,7 +46,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - See your name on the homepage? ✅ You’re in!
    ![Frontend Name Display](../../assets/images/environment-working.png)
 
-   - If you see the erro message instead of your name, double-check that your backend server is running.
+   - If you see the error message instead of your name, double-check that your backend server is running.
    ![Frontend Name Display](../../assets/images/environment-notworking.png)
    - Still not working? Call your SA for help!
 
