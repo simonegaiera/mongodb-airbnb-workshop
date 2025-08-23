@@ -12,14 +12,25 @@ def get_user_id_from_email(email):
 def parse_csv(filename):
     """Parse CSV file and return users with both name and email"""
     users = OrderedDict()
-    with open(filename, mode='r') as csvfile:
-        reader = csv.DictReader(csvfile, skipinitialspace=True)
-        for row in reader:
-            user_id = get_user_id_from_email(row['email'])
-            users[user_id] = {
-                'name': f"{row['name'].strip()} {row['surname'].strip()}",
-                'email': row['email'].strip()
-            }
+    
+    # Handle null, empty, or "null" string filename
+    if not filename or filename.lower() == 'null' or filename.strip() == '':
+        return users
+    
+    try:
+        with open(filename, mode='r') as csvfile:
+            reader = csv.DictReader(csvfile, skipinitialspace=True)
+            for row in reader:
+                user_id = get_user_id_from_email(row['email'])
+                users[user_id] = {
+                    'name': f"{row['name'].strip()} {row['surname'].strip()}",
+                    'email': row['email'].strip()
+                }
+    except FileNotFoundError:
+        print(f"Warning: CSV file '{filename}' not found. Only additional users will be processed.", file=sys.stderr)
+    except Exception as e:
+        print(f"Warning: Error reading CSV file '{filename}': {e}. Only additional users will be processed.", file=sys.stderr)
+    
     return users
 
 def add_additional_users(users, count, cluster_name=None):
@@ -65,6 +76,10 @@ if __name__ == "__main__":
     output_format = sys.argv[2] if len(sys.argv) > 2 else 'email'
     additional_count = int(sys.argv[3]) if len(sys.argv) > 3 else 0
     cluster_name = sys.argv[4] if len(sys.argv) > 4 else None
+    
+    # Handle null filename from Terraform
+    if filename.lower() == 'null':
+        filename = None
     
     if output_format == 'email':
         # For Terraform external data source - returns {user_id: email}

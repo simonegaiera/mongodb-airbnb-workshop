@@ -25,13 +25,14 @@
 
 ## Terraform
 
+### Deploy
+- 🟠 **MEDIUM:** How to deploy only certain scenarios.
 
 ### Atlas cluster
 - 🟡 **MEDIUM:** Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
-- 🟠 **MEDIUM:** Validate it can be done without the csv, just with additional users
+- 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
 
 ### test
-- 🟠 **MEDIUM:** How to deploy only certain scenarios.
 - 🟢 **LOW:** Send EKS logs to S3.
 - 🟢 **LOW:** Ensure all files are present after pod failures.
 openvscode-server@vscode-callen-mdb-openvscode-c68f9d655-7jj7v:~/mongodb-airbnb-workshop$ git push
