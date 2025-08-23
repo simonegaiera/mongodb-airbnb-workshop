@@ -189,17 +189,17 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Step 1: Read Instructions */}
                 <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
-                  <div className="flex items-center justify-center mb-4">
+                  <div 
+                    className="flex items-center justify-center mb-4 cursor-pointer"
+                    onClick={toggleSteps}
+                  >
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       1
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the Instructions
                     </h3>
-                    <button
-                      onClick={toggleSteps}
-                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
-                    >
+                    <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
                       <svg 
                         className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                         fill="none" 
@@ -208,7 +208,7 @@ export default function Home() {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                    </button>
+                    </div>
                   </div>
                   
                   {/* Collapsible Content */}
@@ -241,17 +241,17 @@ export default function Home() {
 
                 {/* Step 2: Open the Workload */}
                 <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
-                  <div className="flex items-center justify-center mb-4">
+                  <div 
+                    className="flex items-center justify-center mb-4 cursor-pointer"
+                    onClick={toggleSteps}
+                  >
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       2
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the Workspace
                     </h3>
-                    <button
-                      onClick={toggleSteps}
-                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
-                    >
+                    <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
                       <svg 
                         className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                         fill="none" 
@@ -260,7 +260,7 @@ export default function Home() {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                    </button>
+                    </div>
                   </div>
                   
                   {/* Collapsible Content */}
@@ -302,17 +302,17 @@ export default function Home() {
 
                 {/* Step 3: Open the App */}
                 <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
-                  <div className="flex items-center justify-center mb-4">
+                  <div 
+                    className="flex items-center justify-center mb-4 cursor-pointer"
+                    onClick={toggleSteps}
+                  >
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       3
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">
                       Open the App
                     </h3>
-                    <button
-                      onClick={toggleSteps}
-                      className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors"
-                    >
+                    <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
                       <svg 
                         className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                         fill="none" 
@@ -321,22 +321,24 @@ export default function Home() {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                    </button>
+                    </div>
                   </div>
                   
                   {/* Collapsible Content */}
                   <div className={`overflow-hidden transition-all duration-300 ease-in-out ${stepsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                    <div className="text-center mb-4">
                       <div className="pt-4">
                         <img 
                           src="/step-third.png" 
                           alt="Step 3 - Open App" 
                           className="h-30 mx-auto object-contain object-top"
                         />
-                        <div className="text-gray-800 text-md flex items-center justify-center h-full">
-                          <p className="text-center">
+                      </div>
+                      <div className="text-gray-600 text-sm mt-2">
+                        <div className="text-center">
+                          <p className="text-gray-800 font-medium">
                             See your name on the homepage?<br />
-                            ✅ You're in!<br /><br />
+                            ✅ You're in!
                           </p>
                         </div>
                       </div>
