@@ -30,6 +30,7 @@
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
+- 🟠 **MEDIUM:** Add a flag to create the indexes in advance for the users
 
 
 ### Portal
@@ -47,8 +48,6 @@ Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 
 ## NYC .Local
-
-- 🟠 **MEDIUM:** Create the search indexes for the users. Add a flag so that is possible in general.
 
 ### Exercises
 
