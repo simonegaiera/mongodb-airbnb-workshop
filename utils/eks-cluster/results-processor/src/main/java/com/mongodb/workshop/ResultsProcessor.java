@@ -471,6 +471,7 @@ public class ResultsProcessor {
             healthDoc.append("application", "results-processor");
             healthDoc.append("status", "running");
             healthDoc.append("database", DB_NAME);
+            healthDoc.append("username", getEnvironmentVariable("DATABASE_NAME"));
             healthDoc.append("collections_accessed", Arrays.asList(RESULTS_COLLECTION, HEALTH_COLLECTION));
             
             // Add environment information
@@ -703,6 +704,7 @@ public class ResultsProcessor {
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(whoamiUrl))
                 .timeout(Duration.ofSeconds(30))
+                .header("User-Agent", "ResultsProcessor/1.0.0")
                 .GET()
                 .build();
                 
@@ -829,6 +831,9 @@ public class ResultsProcessor {
                     break;
                 case "LOG_LEVEL":
                     value = "INFO";
+                    break;
+                case "DATABASE_NAME":
+                    value = "unknown";
                     break;
                 default:
                     logger.warn("Environment variable {} is not set or empty", name);

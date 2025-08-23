@@ -7,6 +7,8 @@ docs:
     children:
       - title: "Introduction"
         url: /
+      - title: "Resources"
+        url: /resources/
 
   - title: "Guided Exercises"
     children:
@@ -20,8 +22,6 @@ docs:
         url: /test/
       - title: "Leaderboard"
         url: /leaderboard/
-      - title: "Resources"
-        url: /resources/
 
   - title: CRUD Operations (1)
     children:

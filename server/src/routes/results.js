@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { getParticipant, getParticipants, getSectionResults } from '../controllers/getResults.js';
+import { getParticipant, getParticipants, getSectionResults, getResultsByNameAndUsername } from '../controllers/getResults.js';
 
 const router = Router();
 
 router.get('/participants', getParticipants);
 router.get('/whoami', getParticipant);
+router.get('/filter', getResultsByNameAndUsername);
 router.get('/', getSectionResults);
 
 export default router;

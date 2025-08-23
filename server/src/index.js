@@ -6,6 +6,7 @@ import { port } from './config/config.js';
 import listingsAndReviews from './routes/listingsAndReviews.js';
 import results from './routes/results.js';
 import chat from './routes/chat.js';
+import { logDebug, logError } from './utils/logger.js';
 
 const app = express();
 
@@ -50,10 +51,10 @@ function createServerRestartSignal() {
     };
     
     fs.writeFileSync(signalFile, JSON.stringify(signalData, null, 2));
-    console.log(`📡 Server restart signal created at: ${signalFile}`);
-    console.log(`🔄 Signal data:`, signalData);
+    logDebug(`📡 Server restart signal created at: ${signalFile}`);
+    logDebug(`🔄 Signal data: ${JSON.stringify(signalData)}`);
   } catch (error) {
-    console.warn(`⚠️ Failed to create server restart signal: ${error.message}`);
+    logError(`⚠️ Failed to create server restart signal: ${error.message}`);
     // Don't throw - server should still start even if signal creation fails
   }
 }

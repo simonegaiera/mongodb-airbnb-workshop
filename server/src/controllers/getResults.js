@@ -1,5 +1,6 @@
 import { connectToDatabase, client } from "../utils/database.js";
 import { resultsCollectionName, participantsCollectionName, resultsDatabaseName, databaseName } from '../config/config.js';
+import { logInfo, logError } from '../utils/logger.js';
 
 
 export async function getParticipant(req, res) {
@@ -10,11 +11,10 @@ export async function getParticipant(req, res) {
 
         const items = await collection.findOne({ _id: databaseName }, { projection: { _id: 0, name: 1 } })
 
-        console.info(`[getParticipant] SUCCESS: Retrieved participant data for ${databaseName}`);
+        logInfo(req, `[getParticipant] SUCCESS: Retrieved participant data for ${databaseName}`);
         res.status(200).json(items);
     } catch (error) {
-        console.error(`[getParticipant] ERROR: Failed to retrieve participant data for ${databaseName}:`, error.message);
-        console.error(`[getParticipant] ERROR: Stack trace:`, error.stack);
+        logError(req, `[getParticipant] ERROR: Failed to retrieve participant data for ${databaseName}:`, error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -27,11 +27,10 @@ export async function getParticipants(req, res) {
 
         const items = await collection.find({}).toArray()
         
-        console.info(`[getParticipants] SUCCESS: Retrieved ${items.length} participants`);
+        logInfo(req, `[getParticipants] SUCCESS: Retrieved ${items.length} participants`);
         res.status(200).json(items);
     } catch (error) {
-        console.error(`[getParticipants] ERROR: Failed to retrieve participants:`, error.message);
-        console.error(`[getParticipants] ERROR: Stack trace:`, error.stack);
+        logError(req, `[getParticipants] ERROR: Failed to retrieve participants:`, error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -86,11 +85,44 @@ export async function getSectionResults(req, res) {
         }
         
         const resultCount = Array.isArray(items.results) ? items.results.length : Object.keys(items.results).length;
-        console.info(`[getResults] SUCCESS: ${items.leaderboardType} leaderboard response sent with ${resultCount} results`);
+        logInfo(req, `[getResults] SUCCESS: ${items.leaderboardType} leaderboard response sent with ${resultCount} results`);
         res.status(200).json(items);
     } catch (error) {
-        console.error(`[getResults] ERROR: Failed to process ${process.env.LEADERBOARD || 'timed'} leaderboard request:`, error.message);
-        console.error(`[getResults] ERROR: Stack trace:`, error.stack);
+        logError(req, `[getResults] ERROR: Failed to process ${process.env.LEADERBOARD || 'timed'} leaderboard request:`, error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export async function getResultsByNameAndUsername(req, res) {
+    try {
+        const { name } = req.query;
+        
+        if (!name) {
+            return res.status(400).json({ message: 'Name parameter is required' });
+        }
+
+        await connectToDatabase();
+        const database = client.db(resultsDatabaseName);
+        const collection = database.collection(resultsCollectionName);
+
+        // The username is derived from the database name (which represents the current user)
+        const username = databaseName;
+
+        // Filter by both name and username
+        const filter = {
+            name: name,
+            username: username
+        };
+
+        const results = await collection.findOne(filter);
+
+        logInfo(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name} - found: ${results ? 'yes' : 'no'}`);
+        res.status(200).json({
+            results: results,
+            count: results ? 1 : 0
+        });
+    } catch (error) {
+        logError(req, `[getResultsByNameAndUsername] ERROR: Failed to retrieve results:`, error);
         res.status(500).json({ message: error.message });
     }
 };

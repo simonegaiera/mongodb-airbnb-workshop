@@ -136,15 +136,32 @@ spec:
                 exit 1
               fi
               
-              echo "Compiling Java application..."
-              mvn clean compile package -q -DskipTests=true
+              # Force clean compilation on every startup
+              echo "=== FORCING FRESH COMPILATION ON CONTAINER START ==="
+              echo "Container start time: $(date)"
+              echo "Removing any existing target directory..."
+              rm -rf target/
               
+              # Clean Maven cache to ensure fresh build
+              echo "Cleaning Maven cache..."
+              rm -rf /tmp/.m2/repository/com/mongodb/workshop/results-processor
+              
+              echo "Starting fresh compilation..."
+              mvn clean compile package -q -DskipTests=true -U
+              
+              # Verify compilation success
               if [ ! -f "target/results-processor-1.0.0.jar" ]; then
-                echo "ERROR: Compiled JAR not found"
+                echo "ERROR: Compiled JAR not found after fresh compilation"
                 echo "Available files in target:"
                 ls -la target/ || echo "Target directory not found"
                 exit 1
               fi
+              
+              # Display JAR info for verification
+              echo "=== COMPILATION SUCCESSFUL ==="
+              echo "JAR file details:"
+              ls -la target/results-processor-1.0.0.jar
+              echo "JAR creation time: $(stat -c %y target/results-processor-1.0.0.jar 2>/dev/null || stat -f %Sm target/results-processor-1.0.0.jar)"
               
               echo "Starting Results Processor application..."
               # Run the processor once - it will handle signal-based triggering internally

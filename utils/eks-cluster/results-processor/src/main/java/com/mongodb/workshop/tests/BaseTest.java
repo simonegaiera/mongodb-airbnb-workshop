@@ -103,7 +103,8 @@ public abstract class BaseTest {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
             .uri(URI.create(labUrl))
             .timeout(Duration.ofSeconds(30))
-            .header("Content-Type", "application/json");
+            .header("Content-Type", "application/json")
+            .header("User-Agent", "ResultsProcessor/1.0.0");
         
         if (requestBody != null) {
             String jsonBody;

@@ -109,7 +109,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - Click **Let's go!**  
      ![cline-welcome](../../assets/images/cline-welcome.png)
 
-3. **Save and Test:**
+3. **Test Cline:**
    - Test your setup by entering a prompt in Cline (for example, ask it to tell you a joke).
      ![cline-working](../../assets/images/cline-working.png)
 
