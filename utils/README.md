@@ -10,15 +10,14 @@
 
 ## App
 
-*No current items.*
+### Results
+- 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
 
 ---
 
 ## Server
 
-### Results
-- 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
-- 🔴 **HIGH:** [Validation] On server restart, run the results-processor. Or then 30 seconds.
+### Answers
 - 🟠 **MEDIUM:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
 
 ---
@@ -29,12 +28,16 @@
 - 🟠 **MEDIUM:** How to deploy only certain scenarios.
 
 ### Atlas cluster
-- 🟡 **MEDIUM:** Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
+- ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
+
+
+### Portal
+- 🟡 **MEDIUM:** Add results to the portal
 
 ### test
 - 🟢 **LOW:** Send EKS logs to S3.
-- 🟢 **LOW:** Ensure all files are present after pod failures.
+- 🟢 **LOW:** How can I ensure all files are present after pod failures.
 openvscode-server@vscode-callen-mdb-openvscode-c68f9d655-7jj7v:~/mongodb-airbnb-workshop$ git push
 fatal: not a git repository (or any parent up to mount point /home)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
@@ -45,8 +48,7 @@ Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ## NYC .Local
 
-- Flexible Schema
-- Compound Indexing
+- 🟠 **MEDIUM:** Create the search indexes for the users. Add a flag so that is possible in general.
 
 ### Exercises
 
