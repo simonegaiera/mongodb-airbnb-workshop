@@ -44,6 +44,7 @@ const ListingsAndReviewsSearch = ({
   const fetchData = async (page, limit, facetsQuery, searchQuery) => {
     setLoading(true);
     try {
+      setError(null); // Clear any previous errors
       const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/search`, {
         method: 'POST',
         headers: {
@@ -52,10 +53,13 @@ const ListingsAndReviewsSearch = ({
         body: JSON.stringify({ page, limit, facetsQuery, searchQuery })
       });
       
-      // Try to parse the response regardless of status code
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       const result = await response.json();
       
-      // If we have data, use it even if the status code indicates an error
+      // If we have data, use it
       if (result && Array.isArray(result) && result.length > 0) {
         if (page === 1) {
           setData(result);
@@ -63,21 +67,21 @@ const ListingsAndReviewsSearch = ({
           setData(prevData => [...prevData, ...result]);
         }
         setHasMore(result.length === limit);
-        setError(null); // Clear any previous errors
-        setLoading(false);
-      } else if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
       } else {
         // Response is ok but no data
         if (page === 1) {
           setData([]);
         }
         setHasMore(false);
-        setLoading(false);
       }
     } catch (error) {
-      console.error('Fetch error:', error);
-      setError(error);
+      console.error('Error fetching search results:', error);
+      setError(error.message);
+      if (page === 1) {
+        setData([]); // Clear data on error for first page
+      }
+      setHasMore(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -102,8 +106,21 @@ const ListingsAndReviewsSearch = ({
 
   if (error) {
     return (
-      <div className="text-[rgb(255,56,92)] text-center p-4 font-bold">
-        Unable to fetch data.
+      <div className="container mx-auto px-4">
+        <div className="py-8">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+              <h3 className="text-red-800 font-medium">Unable to load search results</h3>
+            </div>
+            <p className="text-red-600 text-sm mt-1">
+              Error: {error}
+            </p>
+            <p className="text-red-600 text-xs mt-2">
+              This might indicate that the search API endpoint is not implemented or the server is not running.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }

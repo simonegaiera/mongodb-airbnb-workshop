@@ -116,7 +116,7 @@ export async function getResultsByNameAndUsername(req, res) {
 
         const results = await collection.findOne(filter);
 
-        logInfo(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name} - found: ${results ? 'yes' : 'no'}`);
+        logInfo(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Solved: ${results ? 'Yes' : 'No'}`);
         res.status(200).json({
             results: results,
             count: results ? 1 : 0

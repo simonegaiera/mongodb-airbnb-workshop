@@ -252,15 +252,42 @@ def create_views(client, common_database):
             print(f"Error creating timed_leaderboard view: {e}", flush=True)
 
 def ensure_results_index(db):
-    """Ensure compound index exists on results collection."""
-    index_spec = [("timestamp", 1), ("section", 1), ("name", 1)]
+    """Ensure compound indexes exist on results collection."""
+    # Existing compound index
+    index_spec_1 = [("timestamp", 1), ("section", 1), ("name", 1)]
     indexes = db["results"].index_information()
+    
+    # Check for existing timestamp, section, name index
+    index_1_exists = False
     for idx in indexes.values():
-        if idx.get("key") == index_spec:
-            print("Compound index on results already exists.", flush=True)
-            return
-    db["results"].create_index(index_spec)
-    print("Created compound index on results: section, name, timestamp.", flush=True)
+        if idx.get("key") == index_spec_1:
+            index_1_exists = True
+            break
+    
+    if not index_1_exists:
+        db["results"].create_index(index_spec_1)
+        print("Created compound index on results: timestamp, section, name.", flush=True)
+    else:
+        print("Compound index on results (timestamp, section, name) already exists.", flush=True)
+    
+    # New compound index for name and username
+    index_spec_2 = [("name", 1), ("username", 1)]
+    
+    # Refresh indexes information after potential creation of first index
+    indexes = db["results"].index_information()
+    
+    # Check for existing name, username index
+    index_2_exists = False
+    for idx in indexes.values():
+        if idx.get("key") == index_spec_2:
+            index_2_exists = True
+            break
+    
+    if not index_2_exists:
+        db["results"].create_index(index_spec_2)
+        print("Created compound index on results: name, username.", flush=True)
+    else:
+        print("Compound index on results (name, username) already exists.", flush=True)
 
 def ensure_participants_indexes(db):
     """Ensure indexes exist on participants collection for taken and name."""

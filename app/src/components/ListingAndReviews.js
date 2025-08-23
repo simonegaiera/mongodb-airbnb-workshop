@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ListingTile from './ListingTile';
 import PropertyDialog from './PropertyDialog';
+import ExerciseStatus from './ExerciseStatus';
 
 const ListingsAndReviews = ({ filters = {} }) => {
     const [data, setData] = useState([]);
@@ -56,7 +57,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
                 });
             }
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             const result = await response.json();
             if (append) {
@@ -65,7 +66,9 @@ const ListingsAndReviews = ({ filters = {} }) => {
                 setData(result);
             }
             setHasMore(result.length === limit);
+            setError(null); // Clear any previous errors on successful fetch
         } catch (error) {
+            console.error('Unable to fetch listings data:', error);
             setError(error);
         } finally {
             setLoading(false);
@@ -120,6 +123,15 @@ const ListingsAndReviews = ({ filters = {} }) => {
     return (
         <div className="container mx-auto">
             <div className="motion-delay-50 motion-delay-100 motion-delay-150 motion-delay-200 motion-delay-250 motion-delay-300 motion-delay-350 motion-delay-400 motion-delay-450 motion-delay-500"></div>
+            
+            {/* Exercise Status - Horizontal Layout */}
+            <div className="flex flex-wrap gap-4 px-4 py-4">
+                <ExerciseStatus exerciseName="crud-1" />
+                <ExerciseStatus exerciseName="crud-4" />
+                <ExerciseStatus exerciseName="index" />
+                <ExerciseStatus exerciseName="crud-5" />
+            </div>
+            
             <div className="p-4">
                 {data && data.length > 0 ? (
                     <>
@@ -137,10 +149,24 @@ const ListingsAndReviews = ({ filters = {} }) => {
                     </>
                 ) : (
                     loading ? (
-                        <></>
+                        <div className="flex justify-center items-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                            <span className="ml-2 text-gray-600">Loading listings...</span>
+                        </div>
                     ) : (
                         error ? (
-                            <p className="text-center text-gray-600">Unable to fetch data</p>
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <div className="flex items-center">
+                                    <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                                    <h3 className="text-red-800 font-medium">Unable to load listings</h3>
+                                </div>
+                                <p className="text-red-600 text-sm mt-1">
+                                    Error: {error.message}
+                                </p>
+                                <p className="text-red-600 text-xs mt-2">
+                                    This might indicate that the listings API endpoint is not implemented or the server is not running.
+                                </p>
+                            </div>
                         ) : (
                             <p className="text-center text-gray-600">No listings found.</p>
                         )

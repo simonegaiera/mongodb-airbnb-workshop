@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import ExerciseStatus from '../../components/ExerciseStatus';
 
 export default function Home() {
   const [username, setUsername] = useState('Stays');
@@ -154,6 +155,10 @@ export default function Home() {
 
   return (
     <div className="max-w-3xl mx-auto p-4 font-sans">
+      <div className="flex flex-wrap gap-4 px-4 py-4">
+        <ExerciseStatus exerciseName="vector-search-index" />
+        <ExerciseStatus exerciseName="vector-search-1" />
+      </div>
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-2xl font-semibold">Where to next?</h2>

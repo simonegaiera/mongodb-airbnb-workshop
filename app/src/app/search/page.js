@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FacetComponent from '@/components/Facet';
 import AutocompleteComponent from '@/components/AutocompleteSearch';
 import ListingsAndReviewsSearch from '@/components/ListingAndReviewsSearch';
+import ExerciseStatus from '@/components/ExerciseStatus';
 
 export default function Home() {
   const [selectedFacets, setSelectedFacets] = useState({
@@ -15,6 +16,9 @@ export default function Home() {
   
   return (
     <div className="container mx-auto px-4">
+      <div className="px-4 py-2 mb-2">
+        <ExerciseStatus exerciseName="search-index" />
+      </div>
       <div className="flex flex-row items-start">
         {autocompleteQuery && (
           <div className="flex-[0_0_30%] mr-4 animate-slide-in w-2/3">

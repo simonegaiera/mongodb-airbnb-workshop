@@ -1,10 +1,12 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
+import ExerciseStatus from '../../components/ExerciseStatus';
 
 function RoomDetail() {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [reviewText, setReviewText] = useState('');
   const [editingTitle, setEditingTitle] = useState(false);
@@ -20,19 +22,30 @@ function RoomDetail() {
     setId(roomId);
 
     if (roomId) {
-      fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${roomId}`)
-        .then(response => response.json())
-        .then(data => {
-          // console.log(data);
+      const fetchRoomData = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${roomId}`);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
           setRoom(data);
           setEditedTitle(data.name);
           setEditedDescription(data.description);
+        } catch (error) {
+          console.error('Error fetching room data:', error);
+          setError(error.message);
+        } finally {
           setLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching room:', error);
-          setLoading(false);
-        });
+        }
+      };
+
+      fetchRoomData();
     }
   }, []);
 
@@ -147,18 +160,65 @@ function RoomDetail() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">        
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+          <span className="ml-2 text-gray-600">Loading room details...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
+        {/* Exercise Status for crud-2 */}
+        <div className="px-4 py-2 mb-2">
+          <ExerciseStatus exerciseName="crud-2" />
+        </div>
+        
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+            <h3 className="text-red-800 font-medium">Unable to load room details</h3>
+          </div>
+          <p className="text-red-600 text-sm mt-1">
+            Error: {error}
+          </p>
+          <p className="text-red-600 text-xs mt-2">
+            This might indicate that the room API endpoint is not implemented or the server is not running.
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!room) {
-    return <div>Room not found</div>;
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
+        {/* Exercise Status for crud-2 */}
+        <div className="px-4 py-2 mb-2">
+          <ExerciseStatus exerciseName="crud-2" />
+        </div>
+        
+        <div className="text-center py-8">
+          <h2 className="text-2xl font-semibold text-gray-600">Room not found</h2>
+          <p className="text-gray-500 mt-2">The requested room could not be found.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
+      {/* Exercise Status for crud-2 */}
+      <div className="px-4 py-2 mb-2">
+          <ExerciseStatus exerciseName="crud-2" />
+      </div>
+      <div className="px-4 py-2 mb-2">
+          <ExerciseStatus exerciseName="crud-6" />
+      </div>
+
       <div className="flex items-center gap-2 mb-4">
         {editingTitle ? (
           <div className="flex items-center gap-2">
@@ -286,6 +346,11 @@ function RoomDetail() {
 
           <div>
             <h3 className="text-xl font-semibold mb-4">Reviews</h3>
+
+            <div className="px-4 py-2 mb-2">
+              <ExerciseStatus exerciseName="crud-7" />
+            </div>
+      
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">              
               <div key="add-review" className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3" onClick={() => setShowCommentBox(!showCommentBox)}>
@@ -372,6 +437,9 @@ function RoomDetail() {
       </div>
 
       <div className="mt-8 text-center">
+        <div className="px-4 py-2 mb-2">
+          <ExerciseStatus exerciseName="crud-8" />
+        </div>
         <button
           onClick={handleDelete}
           className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors"
