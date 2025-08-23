@@ -10,8 +10,7 @@
 
 ## App
 
-### Results
-- 🔴 **HIGH:** Test results should be visible in the frontend for better feedback.
+*No current items.*
 
 ---
 
