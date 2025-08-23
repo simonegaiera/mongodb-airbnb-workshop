@@ -30,9 +30,8 @@ public class Crud2Test extends BaseTest {
         try {
             MongoCollection<Document> collection = getListingsAndReviewsCollection();
 
-            // Perform the query
-            Document query = new Document();
-            Document item = collection.find(query).first();
+            // Get a random document using aggregation with $sample
+            Document item = collection.aggregate(java.util.Arrays.asList(new Document("$sample", new Document("size", 1)))).first();
 
             if (item == null || !item.containsKey("_id")) {
                 logger.warn("No document found or missing _id");
