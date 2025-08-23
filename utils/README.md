@@ -26,7 +26,10 @@
 
 ## Terraform
 
+
+### Atlas cluster
 - 🟡 **MEDIUM:** Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
+- 🟠 **MEDIUM:** Validate it can be done without the csv, just with additional users
 
 ### test
 - 🟠 **MEDIUM:** How to deploy only certain scenarios.

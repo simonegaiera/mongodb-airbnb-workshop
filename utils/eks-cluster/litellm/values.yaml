@@ -93,6 +93,8 @@ litellm:
           cache_control_injection_points:
             - location: message
               role: system
+            - location: message
+              role: user
       - model_name: "claude-4-sonnet"
         litellm_params:
           model: "anthropic/claude-sonnet-4-20250514"
@@ -102,6 +104,8 @@ litellm:
           cache_control_injection_points:
             - location: message
               role: system
+            - location: message
+              role: assistant
     
     general_settings:
       disable_spend_logs: false

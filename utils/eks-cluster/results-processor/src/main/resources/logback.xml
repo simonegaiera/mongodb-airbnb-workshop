@@ -26,7 +26,7 @@
         <file>${LOG_PATH:-logs}/last-execution.log</file>
         <append>true</append> <!-- This appends to the file -->
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
         </encoder>
     </appender>
 

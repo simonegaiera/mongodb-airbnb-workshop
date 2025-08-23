@@ -118,9 +118,6 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-mongodb-dark mb-4">
             MongoDB Arena Portal
           </h1>
-          <p className="text-lg text-gray-700">
-            Welcome to the MongoDB Arena Portal
-          </p>
         </div>
 
         {/* Alerts */}
@@ -168,30 +165,32 @@ export default function Home() {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Step 1: Read Instructions */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       1
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Read the Instructions
+                      Open the Instructions
                     </h3>
                   </div>
-                  <div className="text-center mb-4">
-                    <img 
-                      src="/step-first.png" 
-                      alt="Step 1 - Read Instructions" 
-                      className="h-48 mx-auto object-contain"
-                    />
+                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                    <div className="flex-grow flex items-start justify-center pt-4">
+                      <img 
+                        src="/step-first.png" 
+                        alt="Step 1 - Read Instructions" 
+                        className="h-52 mx-auto object-contain object-top"
+                      />
+                    </div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center mt-auto">
                     <a
                       href={getInstructionsUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center px-4 py-2 bg-mongodb-green text-white text-sm font-medium rounded-md hover:bg-mongodb-dark transition-colors"
                     >
-                      Open Instructions
+                      Instructions
                       <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
@@ -200,23 +199,39 @@ export default function Home() {
                 </div>
 
                 {/* Step 2: Open the Workload */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       2
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Open the Workload
+                      Open the Workspace
                     </h3>
                   </div>
-                  <div className="text-center mb-4">
-                    <img 
-                      src="/step-second.png" 
-                      alt="Step 2 - Open Workload" 
-                      className="h-48 mx-auto object-contain"
-                    />
+                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                    <div className="flex-grow flex items-start justify-center pt-4">
+                      <img 
+                        src="/step-second.png" 
+                        alt="Step 2 - Open Workload" 
+                        className="h-30 mx-auto object-contain object-top"
+                      />
+                    </div>
+                    <div className="text-gray-600 text-sm mt-2">
+                      <ul className="text-left space-y-2 mb-3">
+                        <li className="font-medium text-gray-800">- Open a new terminal:
+                          <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                            ☰ {'>'}  Terminal {'>'}  New Terminal
+                          </code>
+                        </li>
+                        <li className="font-medium text-gray-800">- Start the server:
+                          <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                            npm start
+                          </code>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center mt-auto">
                     <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
                       Find Your Name Below
                       <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,7 +242,7 @@ export default function Home() {
                 </div>
 
                 {/* Step 3: Open the App */}
-                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors">
+                <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col h-full">
                   <div className="flex items-center justify-center mb-4">
                     <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
                       3
@@ -236,14 +251,22 @@ export default function Home() {
                       Open the App
                     </h3>
                   </div>
-                  <div className="text-center mb-4">
-                    <img 
-                      src="/step-third.png" 
-                      alt="Step 3 - Open App" 
-                      className="h-48 mx-auto object-contain"
-                    />
+                  <div className="text-center mb-4 flex-grow flex flex-col min-h-60">
+                    <div className="pt-4">
+                      <img 
+                        src="/step-third.png" 
+                        alt="Step 3 - Open App" 
+                        className="h-30 mx-auto object-contain object-top"
+                      />
+                      <div className="text-gray-800 text-md flex items-center justify-center h-full">
+                        <p className="text-center">
+                          See your name on the homepage?<br />
+                          ✅ You're in!
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center mt-auto">
                     <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
                       Find Your Name Below
                       <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
