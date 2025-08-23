@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const Header = () => {
-  const [username, setUsername] = useState('Stays');
+  const [username, setUsername] = useState('Server Connection Error');
 
   useEffect(() => {
     fetch(`${process.env.BASE_URL}/api/results/whoami`)
@@ -37,8 +37,15 @@ const Header = () => {
             </Link>
           </div>
 
-          <div className="text-gray-900 text-sm font-semibold motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-            {username}
+          <div className="flex items-center gap-2 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
+            <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <span className="text-sm text-blue-700 font-medium">
+              {username}
+            </span>
           </div>
 
           <div className="flex space-x-1">

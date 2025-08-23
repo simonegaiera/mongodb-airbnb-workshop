@@ -6,18 +6,17 @@
 
 ### Testing
 - 🟡 **MID:** Change the validation page, test in each page, and chnage all the pictures
+- 🟡 **MID:** Change the instruction page with the new instructions for the homege up/down
 
 ---
 
 ## App
 
-- 🟡 **MID:** Change the main page so that it's immediately clear if the server is up
+*No current items.*
 
 ---
 
 ## Server
-
-*No current items.*
 
 ### Answers
 - 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.

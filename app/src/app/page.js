@@ -20,11 +20,34 @@ export default function Home() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [listShown, setListShown] = useState(true);
   const [showStatistics, setShowStatistics] = useState(false);
+  const [serverAvailable, setServerAvailable] = useState(true);
+  const [isCheckingServer, setIsCheckingServer] = useState(true);
   const filterRef = useRef(null);
 
   const handleOpenFilters = () => setFiltersOpen(true);
   const handleCloseFilters = () => setFiltersOpen(false);
   const toggleListMap = () => setListShown(!listShown);
+
+  // Check server connectivity on component mount
+  useEffect(() => {
+    const checkServerConnectivity = async () => {
+      try {
+        const response = await fetch(`${process.env.BASE_URL}/api/results/whoami`);
+        if (!response.ok) {
+          throw new Error('Server not responding');
+        }
+        await response.json();
+        setServerAvailable(true);
+      } catch (error) {
+        console.error('Server connectivity check failed:', error);
+        setServerAvailable(false);
+      } finally {
+        setIsCheckingServer(false);
+      }
+    };
+
+    checkServerConnectivity();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -42,7 +65,50 @@ export default function Home() {
     };
   }, [filtersOpen]);
 
-  
+  // Show loading state while checking server
+  if (isCheckingServer) {
+    return (
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Checking server connectivity...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error banner if server is not available
+  if (!serverAvailable) {
+    return (
+      <div className="container mx-auto px-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-8 rounded-lg mb-8 mx-4 mt-8">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-red-600 mb-4">
+                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Server Connection Error</h2>
+              <p className="text-lg mb-4">
+                Unable to connect to the server.<br />
+                Please open <b>VS Code</b> and start the server to continue.
+              </p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
+              >
+                Retry Connection
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4">
       
