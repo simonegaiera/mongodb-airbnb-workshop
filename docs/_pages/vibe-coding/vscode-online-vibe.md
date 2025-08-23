@@ -40,11 +40,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🎨 Step 2: Frontend Setup
 
 1. **Launch the App:**
-> **Note:** You can use the default customer page to access your frontend
-   - Open your app in the browser:
-     ```
-     https://<username>.<customer>.mongogameday.com/app/
-     ```
+   - Navigate to the Arena Portal and open the `App`
 
 ---
 

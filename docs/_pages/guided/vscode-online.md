@@ -10,14 +10,13 @@ classes: wide
 Welcome to your cloud-powered dev playground!  
 Let’s get you connected, coding, and exploring MongoDB in style.
 
-**Quick Check**: Navigate to `https://<customer>.mongogameday.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
-
 ---
 
 ## 🚀 Step 1: Backend Setup
 
 1. **Access VSCode Online:**
-   - Navigate to `https://<customer>.mongogameday.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
+   - Navigate to the Arena Portal and verify your name appears in the participant list. If it’s not there, complete the "New to Arena?" form.
+   - Open the `Workspace`
      ![Folder View](../../assets/images/environment-homepage.png)  
 2. **Trust the Workspace:**
    - When prompted:
@@ -41,15 +40,14 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🎨 Step 2: Frontend Setup
 
 1. **Launch the App:**
-> **Note:** You can use the default customer page to access your frontend
-   - Open your app in the browser:
-     ```
-     https://<username>.<customer>.mongogameday.com/app/
-     ```
-2. **Validate the App:**    
+   - Navigate to the Arena Portal and open the `App`
+
+2. **Validate the Frontend:**    
    - See your name on the homepage? ✅ You’re in!
-   ![Frontend Name Display](../../assets/images/environment-name.png)
-   - If you see the message **Stays** instead of your name, double-check that your backend server is running.
+   ![Frontend Name Display](../../assets/images/environment-working.png)
+
+   - If you see the erro message instead of your name, double-check that your backend server is running.
+   ![Frontend Name Display](../../assets/images/environment-notworking.png)
    - Still not working? Call your SA for help!
 
 ---
