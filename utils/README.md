@@ -17,7 +17,7 @@
 ## Server
 
 ### Answers
-- 🟠 **MEDIUM:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
+- 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
 
 ---
 
@@ -29,11 +29,11 @@
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
-- 🟠 **MEDIUM:** Add a flag to create the indexes in advance for the users
+- 🔴 **HIGH:** Add a flag to create the indexes in advance for the users
 
 
 ### Portal
-- 🟡 **MEDIUM:** Add results to the portal
+- 🟠 **MEDIUM:** Add results to the portal
 
 ### test
 - 🟢 **LOW:** Send EKS logs to S3.
