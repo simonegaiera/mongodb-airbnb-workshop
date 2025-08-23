@@ -8,10 +8,9 @@ import { collectionName } from '../config/config.js';
  * @returns {Promise<Object|null>} - A promise that resolves to the matched document or null if not found.
  */
 export async function crudOneDocument(id) {
-    const search = { _id: id }
+    const search = {}
 
     const item = await db.collection(collectionName)
-        .findOne(search);
 
     return item
 }
