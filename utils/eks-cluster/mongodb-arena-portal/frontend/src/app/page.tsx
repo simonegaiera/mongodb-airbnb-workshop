@@ -140,9 +140,9 @@ export default function Home() {
         {/* Main Content Layout */}
         <div className="space-y-8">
           {/* Top Row: Form (left) and Active Count (right) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* New to Arena Form - Top Left */}
-            <div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* New to Arena Form - Takes 3/4 width */}
+            <div className="lg:col-span-3">
               <TakeParticipantForm
                 onSuccess={handleSuccess}
                 onError={handleError}
@@ -150,8 +150,8 @@ export default function Home() {
               />
             </div>
             
-            {/* Active Participants Count - Top Right */}
-            <div>
+            {/* Active Participants Count - Takes 1/4 width */}
+            <div className="lg:col-span-1">
               <AvailableCount refreshTrigger={refreshKey} />
             </div>
           </div>
