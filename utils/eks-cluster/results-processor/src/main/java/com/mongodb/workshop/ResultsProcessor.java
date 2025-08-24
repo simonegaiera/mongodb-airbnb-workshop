@@ -626,7 +626,7 @@ public class ResultsProcessor {
         String endpoint = "api/listingsAndReviews";
 
         switch (testName) {
-            case "index":
+            case "index-1":
                 return new IndexTest(database, serviceName, endpoint);
             case "crud-1":
                 return new Crud1Test(database, serviceName, endpoint);
