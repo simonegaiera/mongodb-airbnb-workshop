@@ -1,6 +1,6 @@
 ---
 title: "Atlas Vector Search: Index Creation"
-permalink: /vector-search/index/
+permalink: /vector-search/vector-search-index/
 layout: single
 classes: wide
 ---
