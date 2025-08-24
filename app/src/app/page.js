@@ -95,9 +95,9 @@ export default function Home() {
     <div className="container mx-auto">
       <div className="flex gap-6">
         {/* Left Sidebar for Filters */}
-        <div className={`${sidebarCollapsed ? 'w-12' : 'w-80'} transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm h-fit sticky top-4`}>
+        <div className={`${sidebarCollapsed ? 'w-16' : 'w-80'} transition-all duration-300 bg-white border border-gray-200 rounded-lg shadow-sm h-fit sticky top-6`}>
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className={`flex items-center ${sidebarCollapsed ? 'justify-center p-3' : 'justify-between p-4'} border-b border-gray-200`}>
             {!sidebarCollapsed && (
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" 
@@ -110,11 +110,14 @@ export default function Home() {
             )}
             <button 
               onClick={toggleSidebar}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title={sidebarCollapsed ? "Expand filters" : "Collapse filters"}
             >
               {sidebarCollapsed ? (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" 
+                  style={{display: "block", fill: "none", height: "20px", width: "20px", stroke: "currentColor", strokeWidth: 2, overflow: "visible"}}
+                  aria-hidden="true" role="presentation" focusable="false">
+                  <path fill="none" d="M7 16H3m26 0H15M29 6h-4m-8 0H3m26 20h-4M7 16a4 4 0 1 0 8 0 4 4 0 0 0-8 0zM17 6a4 4 0 1 0 8 0 4 4 0 0 0-8 0zm0 20a4 4 0 1 0 8 0 4 4 0 0 0-8 0zm0 0H3"></path>
                 </svg>
               ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
@@ -133,10 +136,19 @@ export default function Home() {
               />
             </div>
           )}
+
+          {/* Collapsed State Content */}
+          {sidebarCollapsed && (
+            <div className="p-3 text-center">
+              {(selectedFacets.amenities?.length > 0 || selectedFacets.propertyType || selectedFacets.beds) && (
+                <div className="w-2 h-2 bg-blue-500 rounded-full mx-auto" title="Active filters"></div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 pt-0">
           {/* Toggle Buttons */}
           <div className="mb-4">
             <button 

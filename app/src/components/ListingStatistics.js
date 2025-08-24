@@ -57,23 +57,25 @@ const ListingStatistics = () => {
 
     if (error) {
         return (
-            <div className="overflow-x-auto">
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                 {/* Exercise Status for pipeline-1 */}
-                <div className="px-4 py-2 mb-2">
+                <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
                     <ExerciseStatus exerciseName="pipeline-1" />
                 </div>
                 
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center">
-                        <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-                        <h3 className="text-red-800 font-medium">Unable to load statistics</h3>
+                <div className="p-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-center">
+                            <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                            <h3 className="text-red-800 font-medium">Unable to load statistics</h3>
+                        </div>
+                        <p className="text-red-600 text-sm mt-1">
+                            Error: {error}
+                        </p>
+                        <p className="text-red-600 text-xs mt-2">
+                            This might indicate that the statistics API endpoint is not implemented or the server is not running.
+                        </p>
                     </div>
-                    <p className="text-red-600 text-sm mt-1">
-                        Error: {error}
-                    </p>
-                    <p className="text-red-600 text-xs mt-2">
-                        This might indicate that the statistics API endpoint is not implemented or the server is not running.
-                    </p>
                 </div>
             </div>
         );
@@ -82,18 +84,18 @@ const ListingStatistics = () => {
     return (
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             {/* Exercise Status for pipeline-1 */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
                 <ExerciseStatus exerciseName="pipeline-1" />
             </div>
             
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
+                <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
                             {data.map((item) => (
                                 <th
                                     key={item.id}
-                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
                                     {item.id} Beds
                                 </th>
@@ -105,13 +107,13 @@ const ListingStatistics = () => {
                             {data.map((item) => (
                                 <td
                                     key={item.id}
-                                    className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900"
+                                    className="px-3 py-3 whitespace-nowrap text-center text-sm font-medium text-gray-900"
                                 >
                                     <div className="flex flex-col">
-                                        <span className="text-2xl font-bold text-green-600">
+                                        <span className="text-lg font-bold text-green-600">
                                             ${item.value.toLocaleString()}
                                         </span>
-                                        <span className="text-xs text-gray-500 mt-1">
+                                        <span className="text-xs text-gray-500 mt-0.5">
                                             Avg Price
                                         </span>
                                     </div>
