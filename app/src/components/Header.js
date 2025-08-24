@@ -24,46 +24,62 @@ const Header = () => {
   }, []);
 
   return (
-    <header>
-      <nav className="container mx-auto pt-2 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href={`/`}>
-              <img
-                className="h-9"
-                src={`${process.env.BASE_PATH}/mongobnb.png`}
-                alt="Company Logo"
-              />
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-2 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-            <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+    <header className="bg-white">
+      {/* Top section with logo and user info */}
+      <div className="container mx-auto px-4 py-4 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
+        <div className="flex items-center justify-center space-x-4">
+          <Link href={`/`} className="flex items-center space-x-3">
+            <img
+              className="h-12 w-auto"
+              src={`${process.env.BASE_PATH}/mongobnb.png`}
+              alt="Company Logo"
+            />
+          </Link>
+          
+          <div className="flex items-center gap-3 bg-pink-50 px-4 py-2 rounded-full motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: 'rgb(255, 56, 92)'}}>
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
               </svg>
             </div>
-            <span className="text-sm text-blue-700 font-medium">
-              {username}
+            <span className="text-lg font-semibold" style={{color: 'rgb(200, 45, 75)'}}>
+              Welcome, {username}
             </span>
           </div>
-
-          <div className="flex space-x-1">
-            <Link href={`/`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-              Home
-            </Link>
-            <Link href={`/search`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-              Search
-            </Link>
-            <Link href={`/chatbot`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-              Chatbot
-            </Link>
-            <Link href={`/leaderboard`} className="px-4 py-2 text-gray-900 rounded-md hover:bg-white/5 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
-              Leaderboard
-            </Link>
-          </div>
         </div>
-      </nav>
+      </div>
+
+      {/* Toolbar section */}
+      <div className="mb-6">
+        <div className="container mx-auto px-4">
+          <nav className="bg-gray-200 rounded-lg flex items-center justify-center space-x-1">
+            <Link 
+              href={`/`} 
+              className="px-6 py-3 text-gray-700 font-medium rounded-t-lg hover:bg-gray-300 transition-colors duration-200 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]"
+            >
+              🏠 Home
+            </Link>
+            <Link 
+              href={`/search`} 
+              className="px-6 py-3 text-gray-700 font-medium rounded-t-lg hover:bg-gray-300 transition-colors duration-200 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]"
+            >
+              🔍 Search
+            </Link>
+            <Link 
+              href={`/chatbot`} 
+              className="px-6 py-3 text-gray-700 font-medium rounded-t-lg hover:bg-gray-300 transition-colors duration-200 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]"
+            >
+              💬 Chatbot
+            </Link>
+            <Link 
+              href={`/leaderboard`} 
+              className="px-6 py-3 text-gray-700 font-medium rounded-t-lg hover:bg-gray-300 transition-colors duration-200 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]"
+            >
+              🏆 Leaderboard
+            </Link>
+          </nav>
+        </div>
+      </div>
     </header>
   );
 };

@@ -15,14 +15,11 @@
 
 *No current items.*
 
-### Look and Feel
-- 🟢 **LOW:** Improve the toolbar, and center the name to the page
-
 ---
 
 ## Server
 
-*No urgent items.*
+*No urgent/current items.*
 
 ### Answers
 - 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
