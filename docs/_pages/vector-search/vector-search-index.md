@@ -44,6 +44,8 @@ Choose your favorite tool and get indexing:
 **Check Exercise Status:**  
 Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
+![vector-search-index](../../assets/images/vector-search-index.png)
+
 ---
 
 ### 🚦 What to Expect
