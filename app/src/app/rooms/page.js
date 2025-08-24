@@ -15,7 +15,7 @@ function RoomDetail() {
   const [editedDescription, setEditedDescription] = useState('');
   const [id, setId] = useState(null);
   const [currentReviewPage, setCurrentReviewPage] = useState(1);
-  const reviewsPerPage = 6;
+  const reviewsPerPage = 5;
 
   useEffect(() => {
     // Get id from URL parameters
