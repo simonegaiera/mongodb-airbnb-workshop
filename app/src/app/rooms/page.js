@@ -16,6 +16,7 @@ function RoomDetail() {
   const [id, setId] = useState(null);
   const [currentReviewPage, setCurrentReviewPage] = useState(1);
   const reviewsPerPage = 5;
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
 
   useEffect(() => {
     // Get id from URL parameters
@@ -351,13 +352,23 @@ function RoomDetail() {
           <div className="border-b pb-6 mb-6">
             <h3 className="text-xl font-semibold mb-4">What this place offers</h3>
             <div className="grid grid-cols-2 gap-4">
-              {room.amenities?.map((amenity) => (
-                <div key={amenity} className="flex items-center gap-2">
-                  <span>✓</span>
-                  <span>{amenity}</span>
-                </div>
-              ))}
+              {room.amenities
+                ?.slice(0, showAllAmenities ? room.amenities.length : 10)
+                .map((amenity) => (
+                  <div key={amenity} className="flex items-center gap-2">
+                    <span>✓</span>
+                    <span>{amenity}</span>
+                  </div>
+                ))}
             </div>
+            {room.amenities && room.amenities.length > 10 && (
+              <button
+                onClick={() => setShowAllAmenities(!showAllAmenities)}
+                className="mt-4 text-gray-600 hover:text-gray-900 font-medium underline"
+              >
+                {showAllAmenities ? 'Show less' : `Show all ${room.amenities.length} amenities`}
+              </button>
+            )}
           </div>
 
           <div>
