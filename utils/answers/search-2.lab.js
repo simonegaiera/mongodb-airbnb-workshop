@@ -12,7 +12,7 @@ import { collectionName } from '../config/config.js';
 export async function facetSearch(query) {
 	const pipeline = [{
 		'$searchMeta': {
-			'index': 'default',
+			'index': 'search_index',
 			'facet': {
 			'operator': {
 				'autocomplete': {

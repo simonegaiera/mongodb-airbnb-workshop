@@ -80,34 +80,41 @@ const ListingStatistics = () => {
     }
 
     return (
-        <div className="overflow-x-auto">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             {/* Exercise Status for pipeline-1 */}
-            <div className="px-4 py-2 mb-2">
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <ExerciseStatus exerciseName="pipeline-1" />
             </div>
             
-            <div className="bg-white shadow-md rounded-lg">
-                <table className="min-w-full bg-white shadow-md rounded">
-                    <thead className="bg-gray-100">
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
                         <tr>
-                            {data.map((item, index) => (
+                            {data.map((item) => (
                                 <th
                                     key={item.id}
-                                    className={`px-4 py-2 text-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    {item.id}
+                                    {item.id} Beds
                                 </th>
                             ))}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-200">
                         <tr>
-                            {data.map((item, index) => (
+                            {data.map((item) => (
                                 <td
                                     key={item.id}
-                                    className={`px-4 py-2 text-center ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                                    className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900"
                                 >
-                                    {item.value}
+                                    <div className="flex flex-col">
+                                        <span className="text-2xl font-bold text-green-600">
+                                            ${item.value.toLocaleString()}
+                                        </span>
+                                        <span className="text-xs text-gray-500 mt-1">
+                                            Avg Price
+                                        </span>
+                                    </div>
                                 </td>
                             ))}
                         </tr>

@@ -157,11 +157,9 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
 
   if (loading) {
     return (
-      <div className="p-4 h-[80vh] overflow-y-auto relative z-[9999] bg-white">
-        <h2 className="text-2xl font-bold mb-4">Filters</h2>
-        
+      <div className="p-4">
         {/* Exercise Status for crud-3 */}
-        <div className="px-2 py-1 mb-2">
+        <div className="px-2 py-1 mb-4">
           <ExerciseStatus exerciseName="crud-3" />
         </div>
         
@@ -175,15 +173,13 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
 
   if (error) {
     return (
-      <div className="p-4 h-[80vh] overflow-y-auto relative z-[9999] bg-white">
-        <h2 className="text-2xl font-bold mb-4">Filters</h2>
-        
+      <div className="p-4">
         {/* Exercise Status for crud-3 */}
-        <div className="px-2 py-1 mb-2">
+        <div className="px-2 py-1 mb-4">
           <ExerciseStatus exerciseName="crud-3" />
         </div>
         
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
           <div className="flex items-center">
             <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
             <h3 className="text-red-800 font-medium">Unable to load filter options</h3>
@@ -197,9 +193,8 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
         </div>
         
         {/* Still show beds filter since it doesn't depend on API */}
-        <hr className="my-4" />
-        <div className="mt-4">
-          <h3 className="text-xl font-semibold mb-2">Beds</h3>
+        <div className="border-t border-gray-200 pt-4">
+          <h3 className="text-lg font-medium mb-3">Beds</h3>
           {renderRadios('beds', beds, showAllBeds, setShowAllBeds)}
         </div>
       </div>
@@ -207,28 +202,27 @@ const Filters = ({ selectedFacets, setSelectedFacets }) => {
   }
 
   return (
-    <div className="p-4 h-[80vh] overflow-y-auto relative z-[9999] bg-white">
-      <h2 className="text-2xl font-bold mb-4">Filters</h2>
-      
+    <div className="p-4">
       {/* Exercise Status for crud-3 */}
-      <div className="px-2 py-1 mb-2">
+      <div className="px-2 py-1 mb-4">
         <ExerciseStatus exerciseName="crud-3" />
       </div>
       
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Amenities</h3>
-        {renderCheckboxes('amenities', amenities, showAllAmenities, setShowAllAmenities)}
-      </div>
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Property Types</h3>
-        {renderRadios('propertyType', propertyTypes, showAllPropertyTypes, setShowAllPropertyTypes)}
-      </div>
-      <hr className="my-4" />
-      <div className="mt-4">
-        <h3 className="text-xl font-semibold mb-2">Beds</h3>
-        {renderRadios('beds', beds, showAllBeds, setShowAllBeds)}
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-3">Amenities</h3>
+          {renderCheckboxes('amenities', amenities, showAllAmenities, setShowAllAmenities)}
+        </div>
+        
+        <div className="border-t border-gray-200 pt-6">
+          <h3 className="text-lg font-medium mb-3">Property Types</h3>
+          {renderRadios('propertyType', propertyTypes, showAllPropertyTypes, setShowAllPropertyTypes)}
+        </div>
+        
+        <div className="border-t border-gray-200 pt-6">
+          <h3 className="text-lg font-medium mb-3">Beds</h3>
+          {renderRadios('beds', beds, showAllBeds, setShowAllBeds)}
+        </div>
       </div>
     </div>
   );

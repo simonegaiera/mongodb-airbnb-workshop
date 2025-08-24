@@ -54,7 +54,7 @@ export async function getSearchItems(req, res) {
     if (searchQuery && searchQuery.trim() !== '') {
         let searchPipeline = {
             $search: {
-                index: "default",
+                index: "search_index",
                 compound: {
                     must: {
                         autocomplete: {

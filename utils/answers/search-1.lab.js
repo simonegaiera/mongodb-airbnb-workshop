@@ -14,7 +14,7 @@ export async function autocompleteSearch(query) {
 	const pipeline = [
 		{
 			'$search': {
-				'index': 'default', 
+				'index': 'search_index', 
 				'autocomplete': {
 				'query': query, 
 				'path': 'name',
