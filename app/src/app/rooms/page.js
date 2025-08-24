@@ -276,16 +276,17 @@ function RoomDetail() {
         <span>{room.address?.suburb}, {room.address?.country}</span>
       </div>
 
-      <div className="aspect-w-16 aspect-h-9 mb-8">
-        <img 
-          src={room?.images?.picture_url || '/defaultImage.png'} 
-          alt={room.name}
-          className="object-cover rounded-lg w-full h-[60vh]"
-        />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          {/* Property Image */}
+          <div className="mb-6">
+            <img 
+              src={room?.images?.picture_url || '/defaultImage.png'} 
+              alt={room.name}
+              className="object-cover rounded-lg w-full h-[40vh] md:h-[45vh]"
+            />
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
           <div className="border-b pb-6 mb-6">
             <h2 className="text-2xl font-semibold mb-2">
               {room.room_type} hosted by {room.host?.host_name || 'Unknown Host'}
@@ -373,7 +374,7 @@ function RoomDetail() {
 
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Reviews ({totalReviews})</h3>
+              <h3 className="text-lg font-semibold">Reviews ({totalReviews})</h3>
               {totalPages > 1 && (
                 <div className="text-sm text-gray-600">
                   Page {currentReviewPage} of {totalPages}
@@ -563,8 +564,8 @@ function RoomDetail() {
           </div>
         </div>
 
-        <div className="md:col-span-1">
-          <div className="sticky top-8 border rounded-xl p-6 shadow-lg">
+        <div className="lg:col-span-1">
+          <div className="sticky top-8 border rounded-xl p-6 shadow-lg bg-white">
             <div className="flex justify-between items-center mb-4">
               <div>
                 <span className="text-2xl font-bold">
