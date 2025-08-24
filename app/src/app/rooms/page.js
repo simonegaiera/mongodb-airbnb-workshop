@@ -433,11 +433,11 @@ function RoomDetail() {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-4">
+              <div className="flex justify-center items-center space-x-2 flex-wrap">
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentReviewPage === 1}
-                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
                     currentReviewPage === 1
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -446,26 +446,100 @@ function RoomDetail() {
                   ← Previous
                 </button>
                 
-                <div className="flex space-x-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentReviewPage(page)}
-                      className={`px-3 py-1 rounded-lg text-sm font-medium ${
-                        page === currentReviewPage
-                          ? 'bg-[#FF385C] text-white'
-                          : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+                <div className="flex space-x-1">
+                  {(() => {
+                    const maxVisiblePages = 5;
+                    const pages = [];
+                    let startPage, endPage;
+
+                    if (totalPages <= maxVisiblePages) {
+                      // Show all pages if total is small
+                      startPage = 1;
+                      endPage = totalPages;
+                    } else {
+                      // Calculate range around current page
+                      const halfVisible = Math.floor(maxVisiblePages / 2);
+                      
+                      if (currentReviewPage <= halfVisible + 1) {
+                        // Near the beginning
+                        startPage = 1;
+                        endPage = maxVisiblePages;
+                      } else if (currentReviewPage >= totalPages - halfVisible) {
+                        // Near the end
+                        startPage = totalPages - maxVisiblePages + 1;
+                        endPage = totalPages;
+                      } else {
+                        // In the middle
+                        startPage = currentReviewPage - halfVisible;
+                        endPage = currentReviewPage + halfVisible;
+                      }
+                    }
+
+                    // Add first page and ellipsis if needed
+                    if (startPage > 1) {
+                      pages.push(
+                        <button
+                          key={1}
+                          onClick={() => setCurrentReviewPage(1)}
+                          className="px-3 py-1 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                        >
+                          1
+                        </button>
+                      );
+                      if (startPage > 2) {
+                        pages.push(
+                          <span key="ellipsis1" className="px-2 py-1 text-gray-500">
+                            ...
+                          </span>
+                        );
+                      }
+                    }
+
+                    // Add visible pages
+                    for (let page = startPage; page <= endPage; page++) {
+                      pages.push(
+                        <button
+                          key={page}
+                          onClick={() => setCurrentReviewPage(page)}
+                          className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                            page === currentReviewPage
+                              ? 'bg-[#FF385C] text-white'
+                              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    }
+
+                    // Add ellipsis and last page if needed
+                    if (endPage < totalPages) {
+                      if (endPage < totalPages - 1) {
+                        pages.push(
+                          <span key="ellipsis2" className="px-2 py-1 text-gray-500">
+                            ...
+                          </span>
+                        );
+                      }
+                      pages.push(
+                        <button
+                          key={totalPages}
+                          onClick={() => setCurrentReviewPage(totalPages)}
+                          className="px-3 py-1 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                        >
+                          {totalPages}
+                        </button>
+                      );
+                    }
+
+                    return pages;
+                  })()}
                 </div>
                 
                 <button
                   onClick={handleNextPage}
                   disabled={currentReviewPage === totalPages}
-                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium ${
                     currentReviewPage === totalPages
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
