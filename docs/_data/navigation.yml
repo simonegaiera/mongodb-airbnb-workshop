@@ -73,7 +73,7 @@ docs:
       - title: "Search: Indexes"
         url: /search/search-index/
       - title: "Hint: Search Indexes"
-        url: /search/search-index/hint/
+        url: /search/search-index-hint/
       - title: "Search: Exercise 1"
         url: /search/1/
       - title: "Search: Exercise 2"
@@ -86,7 +86,7 @@ docs:
       - title: "Vector Search: Indexes"
         url: /vector-search/vector-search-index/
       - title: "Hint: Vector Search Indexes"
-        url: /vector-search/vector-search-index/hint/
+        url: /vector-search/vector-search-index-hint/
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
 
