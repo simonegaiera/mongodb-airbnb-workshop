@@ -38,6 +38,8 @@ In this exercise, you’ll reveal all the unique values in any field, powering u
 2. Open `crud-3-distinct-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns a list of unique values for the requested field.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

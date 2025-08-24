@@ -38,6 +38,8 @@ In this exercise, you’ll unlock the power of MongoDB’s `findOne` to fetch ex
 2. Open `crud-2-one-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns the single document you requested.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

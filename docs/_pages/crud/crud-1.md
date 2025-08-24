@@ -41,11 +41,8 @@ In this exercise, you’ll master the basics of MongoDB by finding documents, so
 2. Open `crud-1-query-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Check that the response returns the paginated results.
-5. Run the Test Suite:
-   ```bash
-   cd server/
-   npm test
-   ```
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

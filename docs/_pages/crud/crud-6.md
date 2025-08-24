@@ -41,6 +41,8 @@ In this exercise, you’ll harness the power of MongoDB’s `$set` operator to u
 2. Open `crud-6-update-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the document with the updated field.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

@@ -41,10 +41,8 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 2. Open `vector-search-1-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected, semantically relevant results.
-5. **You can also run the tests:**  
-   ```bash
-   npm test -- --test=vector-search
-   ```
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

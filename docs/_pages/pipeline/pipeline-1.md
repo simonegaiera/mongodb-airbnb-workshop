@@ -40,6 +40,8 @@ In this exercise, you’ll unleash the power of MongoDB aggregations to reveal t
 2. Open `pipeline-1-statistics-lab.http`.
 3. Click **Send Request** to hit the API.
 4. Check that you get the expected results—average prices by bed count!
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

@@ -37,14 +37,8 @@ Choose your favorite tool and get indexing:
 - In VSCode Online, locate and open the file `vector-search-index-playground.mongodb.js` (usually found in the bottom left of the Explorer).
   ![MongoDB Playground](../../assets/images/playground.png)
 
----
-
-### ✅ Test Your Index
-
-Once your index is created, you can verify your setup by running:
-```bash
-npm test -- --test=vector-search
-```
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

@@ -41,6 +41,8 @@ In this exercise, you’ll use MongoDB’s `$push` operator to add reviews (or a
 2. Open `crud-7-reviews-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the updated document with the new review.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

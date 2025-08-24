@@ -44,6 +44,8 @@ In this exercise, you’ll combine multiple filters and pagination to create a d
 2. Open `crud-4-filter-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Confirm the response returns documents matching your filters.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

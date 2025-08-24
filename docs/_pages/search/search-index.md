@@ -43,10 +43,8 @@ Craft your index with these specs:
    - **beds** (for numeric filtering)
      - `numberFacet`
      - `number`
-3. **You can also run the tests:**  
-   ```bash
-   npm test -- --test=search
-   ```
+3. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 

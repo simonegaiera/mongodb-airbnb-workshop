@@ -38,6 +38,8 @@ In this exercise, you’ll master the art of inserting documents. Every new list
 2. Open `crud-5-insert-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful insertion of the document.
+5. **Check Exercise Status:**  
+   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 <!-- ---
 
