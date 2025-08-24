@@ -1,23 +1,14 @@
 main:
-  - title: GitHub Repository
+  - title: "GitHub Repository"
     url: https://github.com/simonegaiera/mongodb-airbnb-workshop
 
 docs:
-  - title: Getting Started
+  - title: "Getting Started"
     children:
       - title: "Introduction"
         url: /
       - title: "Resources"
         url: /resources/
-
-  - title: Environment (Hybrid)
-    children:
-      - title: "Atlas Cluster"
-        url: /environment/atlas/
-      - title: "IDE: Codespace/VSCode"
-        url: /environment/codespace/
-      - title: "Validate Your Results"
-        url: /test/
 
   - title: "Vibe Coding (Scenario 1)"
     children:
@@ -45,7 +36,7 @@ docs:
       - title: "Leaderboard"
         url: /guided/leaderboard/
 
-  - title: CRUD Operations
+  - title: "CRUD Operations"
     children:
       - title: "CRUD Operations"
         url: /crud/
@@ -68,14 +59,14 @@ docs:
       - title: "CRUD: Exercise 8"
         url: /crud/8/
 
-  - title: Aggregations
+  - title: "Aggregations"
     children:
       - title: "MongoDB Aggregations"
         url: /pipeline/
       - title: "Aggregations: Exercise 1"
         url: /pipeline/1/
 
-  - title: Search
+  - title: "Search"
     children:
       - title: "MongoDB Search"
         url: /search/
@@ -86,7 +77,7 @@ docs:
       - title: "Search: Exercise 2"
         url: /search/2/
 
-  - title: Vector Search
+  - title: "Vector Search"
     children:
       - title: "MongoDB Vector Search"
         url: /vector-search/
@@ -94,3 +85,12 @@ docs:
         url: /vector-search/index/
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
+
+  - title: "Hybrid Instructions"
+    children:
+      - title: "Atlas Cluster"
+        url: /environment/atlas/
+      - title: "IDE: Codespace/VSCode"
+        url: /environment/codespace/
+      - title: "Validate Your Results"
+        url: /test/

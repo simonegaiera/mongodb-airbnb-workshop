@@ -6,7 +6,6 @@
 
 ### Testing
 - 🟡 **MID:** Change the validation page, test in each page, and chnage all the pictures
-- 🟢 **LOW:** Add Breadcrumbs
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 
 ---
