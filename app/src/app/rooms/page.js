@@ -211,12 +211,10 @@ function RoomDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
-      {/* Exercise Status for crud-2 */}
-      <div className="px-4 py-2 mb-2">
-          <ExerciseStatus exerciseName="crud-2" />
-      </div>
-      <div className="px-4 py-2 mb-2">
-          <ExerciseStatus exerciseName="crud-6" />
+      {/* Exercise Status - Horizontal Layout */}
+      <div className="flex flex-wrap gap-4 px-4 py-4">
+        <ExerciseStatus exerciseName="crud-2" />
+        <ExerciseStatus exerciseName="crud-6" />
       </div>
 
       <div className="flex items-center gap-2 mb-4">
