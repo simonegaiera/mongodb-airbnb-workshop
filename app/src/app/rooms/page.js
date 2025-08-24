@@ -14,6 +14,8 @@ function RoomDetail() {
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
   const [id, setId] = useState(null);
+  const [currentReviewPage, setCurrentReviewPage] = useState(1);
+  const reviewsPerPage = 6;
 
   useEffect(() => {
     // Get id from URL parameters
@@ -156,6 +158,22 @@ function RoomDetail() {
         console.error('Error deleting listing:', error);
       }
     }
+  };
+
+  // Calculate pagination for reviews
+  const reviews = Array.isArray(room?.reviews) ? room.reviews : [];
+  const totalReviews = reviews.length;
+  const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+  const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+  const endIndex = startIndex + reviewsPerPage;
+  const currentReviews = reviews.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentReviewPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentReviewPage(prev => Math.min(prev + 1, totalPages));
   };
 
   if (loading) {
@@ -343,13 +361,20 @@ function RoomDetail() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-4">Reviews</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold">Reviews ({totalReviews})</h3>
+              {totalPages > 1 && (
+                <div className="text-sm text-gray-600">
+                  Page {currentReviewPage} of {totalPages}
+                </div>
+              )}
+            </div>
 
             <div className="px-4 py-2 mb-2">
               <ExerciseStatus exerciseName="crud-7" />
             </div>
       
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">              
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">              
               <div key="add-review" className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3" onClick={() => setShowCommentBox(!showCommentBox)}>
                   <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer">
@@ -374,7 +399,7 @@ function RoomDetail() {
                   </div>
                 )}
               </div> 
-              {(Array.isArray(room.reviews) ? room.reviews : [])
+              {currentReviews
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .map((review) => (
                 <div key={review._id} className="bg-gray-50 rounded-lg p-4">
@@ -405,6 +430,51 @@ function RoomDetail() {
                 </div>
               ))}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center space-x-4">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentReviewPage === 1}
+                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
+                    currentReviewPage === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  ← Previous
+                </button>
+                
+                <div className="flex space-x-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentReviewPage(page)}
+                      className={`px-3 py-1 rounded-lg text-sm font-medium ${
+                        page === currentReviewPage
+                          ? 'bg-[#FF385C] text-white'
+                          : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentReviewPage === totalPages}
+                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
+                    currentReviewPage === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

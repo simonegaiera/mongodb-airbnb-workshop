@@ -20,11 +20,11 @@ function initializeModel() {
     const useProxy = process.env.LLM_PROXY_ENABLED === 'true';
     const proxyType = process.env.LLM_PROXY_TYPE;
 
-    console.log(`LLM Configuration: bedrock=${useBedrock}, proxy=${useProxy}, proxyType=${proxyType}`);
+    logDebug(`LLM Configuration: bedrock=${useBedrock}, proxy=${useProxy}, proxyType=${proxyType}`);
 
     if (useBedrock && !useProxy) {
         // Direct Bedrock connection - works with any Bedrock model (Anthropic, etc.)
-        console.log('Using direct AWS Bedrock connection');
+        logDebug('Using direct AWS Bedrock connection');
         return new ChatBedrockConverse({
             model: process.env.LLM_MODEL || "us.anthropic.claude-3-haiku-20240307-v1:0",
             region: process.env.AWS_REGION || "us-east-1",
@@ -34,7 +34,7 @@ function initializeModel() {
         });
     } else if (useProxy && proxyType === 'litellm') {
         // LiteLLM proxy - uses OpenAI-compatible interface regardless of actual provider
-        console.log(`Using LiteLLM proxy for provider: ${process.env.LLM_PROVIDER}`);
+        logDebug(`Using LiteLLM proxy for provider: ${process.env.LLM_PROVIDER}`);
         const proxyService = process.env.LLM_PROXY_SERVICE || 'litellm-service';
         const proxyPort = process.env.LLM_PROXY_PORT || '4000';
         const baseURL = `http://${proxyService}:${proxyPort}`;
@@ -50,7 +50,11 @@ function initializeModel() {
             maxTokens: 4096,
         });
     } else {
-        throw new Error(`Invalid LLM configuration. Set LLM_BEDROCK=true for direct Bedrock, or LLM_PROXY_ENABLED=true with LLM_PROXY_TYPE=litellm for proxy`);
+        const errorMessage = `Invalid LLM configuration. Set LLM_BEDROCK=true for direct Bedrock, or LLM_PROXY_ENABLED=true with LLM_PROXY_TYPE=litellm for proxy`;
+        // Create dummy req for logging since this is initialization, not a request
+        const dummyReq = { get: () => '', user: { username: 'system' } };
+        logError(dummyReq, errorMessage);
+        throw new Error(errorMessage);
     }
 }
 
