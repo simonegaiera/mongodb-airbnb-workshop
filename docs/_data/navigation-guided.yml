@@ -14,7 +14,7 @@ docs:
     children:
       - title: "AI Arena Overview"
         url: /guided/
-      - title: "IDE: VSCode Online"
+      - title: "Environment Preparation: VSCode"
         url: /guided/vscode/
       - title: "Explore Collection Structure"
         url: /guided/collection/

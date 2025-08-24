@@ -1,5 +1,5 @@
 ---
-title: "Environment Preparation: VSCode Online"
+title: "Environment Preparation: VSCode"
 permalink: /guided/vscode/
 layout: single
 classes: wide
