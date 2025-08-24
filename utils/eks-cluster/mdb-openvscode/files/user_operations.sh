@@ -26,10 +26,19 @@ if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
     URL=$(echo "$SCENARIO_CONFIG" | jq -r '.aws_route53_record_name // ""')
     ATLAS_SRV=$(echo "$SCENARIO_CONFIG" | jq -r '.atlas_standard_srv // ""')
     ATLAS_PWD=$(echo "$SCENARIO_CONFIG" | jq -r '.atlas_user_password // ""')
+    LLM_MODEL=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.model // ""')
+    LLM_REGION=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.region // ""')
+    LLM_PROVIDER=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.provider // ""')
     BACKEND_TYPE=$(echo "$SCENARIO_CONFIG" | jq -r '.backend // ""')
     REPOSITORY=$(echo "$SCENARIO_CONFIG" | jq -r '.repository // "https://github.com/simonegaiera/mongodb-airbnb-workshop"')
     BRANCH=$(echo "$SCENARIO_CONFIG" | jq -r '.branch // "main"')
     FRONTEND_TYPE=$(echo "$SCENARIO_CONFIG" | jq -r '.frontend // ""')
+    # Add LLM proxy configuration variables
+    LLM_PROXY_ENABLED=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy.enabled // false')
+    LLM_PROXY_TYPE=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy.type // ""')
+    LLM_PROXY_SERVICE=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy."service-name" // ""')
+    LLM_PROXY_PORT=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy.port // ""')
+    LLM_BEDROCK=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.bedrock // false')
 
 else
     echo_with_timestamp "Warning: Scenario config file not found at /home/workspace/scenario-config/scenario-config.json"
@@ -71,6 +80,14 @@ if [ "$BACKEND_TYPE" != "" ]; then
 PORT=5000
 MONGODB_URI=mongodb+srv://${USERNAME}:${ATLAS_PWD}@${ATLAS_HOST}/?retryWrites=true&w=majority
 DATABASE_NAME=${USERNAME}
+LLM_MODEL=${LLM_MODEL}
+LLM_PROVIDER=${LLM_PROVIDER}
+AWS_REGION=${LLM_REGION}
+LLM_PROXY_ENABLED=${LLM_PROXY_ENABLED}
+LLM_PROXY_TYPE=${LLM_PROXY_TYPE}
+LLM_PROXY_SERVICE=${LLM_PROXY_SERVICE}
+LLM_PROXY_PORT=${LLM_PROXY_PORT}
+LLM_BEDROCK=${LLM_BEDROCK}
 EOL
 
     # Copy files only for backend type
@@ -90,6 +107,12 @@ fi
 
 echo_with_timestamp "Creating $FRONTEND_TYPE directory and .env file"
 mkdir -p "$REPO_PATH/$FRONTEND_TYPE"
+
+cat <<EOL > "$REPO_PATH/$FRONTEND_TYPE/.env"
+WORKSHOP_USER=/app
+BACKEND_URL=https://${USERNAME}.${URL}/backend
+EOL
+
 echo_with_timestamp "Installing and building the app"
 cd "$REPO_PATH/$FRONTEND_TYPE"
 echo_with_timestamp "Installing app dependencies..."
