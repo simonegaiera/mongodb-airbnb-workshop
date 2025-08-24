@@ -6,7 +6,7 @@ import { ConversationSummaryBufferMemory } from "langchain/memory";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { MongoDBChatMessageHistory } from "@langchain/mongodb";
 import { db } from "../utils/database.js";
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
 
 // Store search results (keep this in memory for now)
 const sessionSearchResults = new Map();
@@ -168,7 +168,7 @@ export async function getChat(req, res) {
     const { message, sessionId = 'default', username = 'default', property_type = 'Apartment' } = req.body;
 
     if (!message) {
-        logInfo(req, `[getChat] INFO: Missing message parameter in request`);
+        logDebug(req, `[getChat] DEBUG: Missing message parameter in request`);
         return res.status(400).json({ message: 'Message parameter is required' });
     }
 
@@ -194,7 +194,7 @@ export async function getChat(req, res) {
                 searchResults, 
                 "\n\nBased on your previous search, here are the properties I found:\n\n"
             );
-            logInfo(req, `[getChat] INFO: Using ${searchResults.length} previous search results for user ${username}, session ${sessionId}`);
+            logDebug(req, `[getChat] DEBUG: Using ${searchResults.length} previous search results for user ${username}, session ${sessionId}`);
         } else {
             // Perform new vector search
             try {
@@ -205,7 +205,7 @@ export async function getChat(req, res) {
                     // Store empty results for consistency
                     sessionSearchResults.set(compositeSessionId, []);
                     contextInfo = "\n\nI couldn't find any properties matching your specific search criteria. This might be because:\n- Your search terms are very specific and no properties match exactly\n- The vector search index might need to be set up or updated\n- There might be an issue with the search functionality\n\nI recommend going back to the vector-search-1 lab to ensure your vector search implementation is working correctly. You can test it with some basic queries first, then come back to try your search again.";
-                    logInfo(req, `[getChat] INFO: No results found for vector search query: "${message}" for user ${username}, session ${sessionId}`);
+                    logDebug(req, `[getChat] DEBUG: No results found for vector search query: "${message}" for user ${username}, session ${sessionId}`);
                 } else {
                     // Store results for future reference using composite session ID
                     sessionSearchResults.set(compositeSessionId, searchResults);
@@ -324,7 +324,7 @@ export async function clearChat(req, res) {
         const newSessionId = generateNewSessionId(sessionId);
         const newCompositeSessionId = `${username}_${newSessionId}`;
         
-        logInfo(req, `[clearChat] SUCCESS: Cleared chat session for user ${username}, old session: ${sessionId}, new session: ${newSessionId}`);
+        logDebug(req, `[clearChat] SUCCESS: Cleared chat session for user ${username}, old session: ${sessionId}, new session: ${newSessionId}`);
         res.status(200).json({ 
             message: 'New conversation started',
             newSessionId: newCompositeSessionId,
@@ -332,7 +332,7 @@ export async function clearChat(req, res) {
             previousSessionId: compositeSessionId
         });
     } catch (error) {
-        logError(req, `[clearChat] ERROR: Failed to clear chat session for user ${username}:`, error);
+        logDebug(req, `[clearChat] ERROR: Failed to clear chat session for user ${username}:`, error);
         res.status(500).json({ message: error.message });
     }
 }

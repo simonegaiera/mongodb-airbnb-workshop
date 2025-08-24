@@ -1,6 +1,6 @@
 import { connectToDatabase, client } from "../utils/database.js";
 import { resultsCollectionName, participantsCollectionName, resultsDatabaseName, databaseName } from '../config/config.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
 
 
 export async function getParticipant(req, res) {
@@ -11,7 +11,7 @@ export async function getParticipant(req, res) {
 
         const items = await collection.findOne({ _id: databaseName }, { projection: { _id: 0, name: 1 } })
 
-        logInfo(req, `[getParticipant] SUCCESS: Retrieved participant data for ${databaseName}`);
+        logDebug(req, `[getParticipant] SUCCESS: Retrieved participant data for ${databaseName}`);
         res.status(200).json(items);
     } catch (error) {
         logError(req, `[getParticipant] ERROR: Failed to retrieve participant data for ${databaseName}:`, error);
@@ -27,7 +27,7 @@ export async function getParticipants(req, res) {
 
         const items = await collection.find({}).toArray()
         
-        logInfo(req, `[getParticipants] SUCCESS: Retrieved ${items.length} participants`);
+        logDebug(req, `[getParticipants] SUCCESS: Retrieved ${items.length} participants`);
         res.status(200).json(items);
     } catch (error) {
         logError(req, `[getParticipants] ERROR: Failed to retrieve participants:`, error);
@@ -85,7 +85,7 @@ export async function getSectionResults(req, res) {
         }
         
         const resultCount = Array.isArray(items.results) ? items.results.length : Object.keys(items.results).length;
-        logInfo(req, `[getResults] SUCCESS: ${items.leaderboardType} leaderboard response sent with ${resultCount} results`);
+        logDebug(req, `[getResults] SUCCESS: ${items.leaderboardType} leaderboard response sent with ${resultCount} results`);
         res.status(200).json(items);
     } catch (error) {
         logError(req, `[getResults] ERROR: Failed to process ${process.env.LEADERBOARD || 'timed'} leaderboard request:`, error);
@@ -116,7 +116,7 @@ export async function getResultsByNameAndUsername(req, res) {
 
         const results = await collection.findOne(filter);
 
-        logInfo(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Solved: ${results ? 'Yes' : 'No'}`);
+        logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Solved: ${results ? 'Yes' : 'No'}`);
         res.status(200).json({
             results: results,
             count: results ? 1 : 0

@@ -2,7 +2,7 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';
 import { autocompleteSearch } from "../lab/search-1.lab.js";
 import { facetSearch } from "../lab/search-2.lab.js";
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
 
 
 export async function getAutocomplete(req, res) {
@@ -109,7 +109,7 @@ export async function getSearchItems(req, res) {
     try {
         const items = await db.collection(collectionName).aggregate(pipeline).toArray();
         
-        logInfo(req, `[getSearchItems] SUCCESS: Retrieved ${items.length} search results for query: "${searchQuery}" (page ${page}, limit ${limit})`);
+        logDebug(req, `[getSearchItems] SUCCESS: Retrieved ${items.length} search results for query: "${searchQuery}" (page ${page}, limit ${limit})`);
         res.status(201).json(items);
     } catch (error) {
         logError(req, `[getSearchItems] ERROR: Failed to get search results for query "${searchQuery}":`, error);
