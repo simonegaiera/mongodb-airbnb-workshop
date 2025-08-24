@@ -13,13 +13,11 @@
 
 ## App
 
-- 🟡 **MID:** Add the new more complex pipeline
+*No current items.*
 
 ---
 
 ## Server
-
-*No urgent items.*
 
 ### Answers
 - 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
@@ -41,6 +39,9 @@
 openvscode-server@vscode-callen-mdb-openvscode-c68f9d655-7jj7v:~/mongodb-airbnb-workshop$ git push
 fatal: not a git repository (or any parent up to mount point /home)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+
+### Open VS Code
+- ❄️ **FROZEN:** Understand why the firewall was blocking it and how to avoid it
 
 ### OIDC
 - ❄️ **FROZEN:** Ask if it is possible to have OIDC (current SA profile does not allow).
