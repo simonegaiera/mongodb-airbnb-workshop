@@ -163,51 +163,58 @@ def take_participant():
 def get_results():
     """
     Return leaderboard results based on LEADERBOARD env variable.
+    If LEADERBOARD == 'score', return score_leaderboard view with aggregated points.
     If LEADERBOARD == 'timed', return timed_leaderboard view.
-    Otherwise, return score_leaderboard view.
-    Post-process results to aggregate points by username.
     """
     try:
-        leaderboard_type = os.getenv('LEADERBOARD', 'score')
-        view_name = 'timed_leaderboard' if leaderboard_type == 'timed' else 'score_leaderboard'
+        leaderboard = os.getenv('LEADERBOARD', 'timed')
+        
+        # Use different views based on leaderboard type
+        view_name = 'score_leaderboard' if leaderboard == 'score' else 'timed_leaderboard'
         leaderboard_collection = db[view_name]
         data = list(leaderboard_collection.find({}, {'_id': 0}))
+        
 
-        # Aggregate points by username/displayName
-        points_by_username = {}
-        for item in data:
-            users = item.get('users', [])
-            for user in users:
-                display_name = user.get('user') or user.get('username')
-                points = user.get('points', 0)
-                if display_name in points_by_username:
-                    points_by_username[display_name] += points
-                else:
-                    points_by_username[display_name] = points
-
-        # Sort by points descending
-        sorted_points_array = sorted(points_by_username.items(), key=lambda x: x[1], reverse=True)
-        sorted_points_by_username = dict(sorted_points_array)
-
-        items = {
-            'results': sorted_points_by_username,
-            'data': data
-        }
-
-        logger.info(f"Returned {len(data)} results from {view_name} with post-processing")
-        return jsonify({
-            'success': True,
-            'leaderboard': leaderboard_type,
-            'items': items,
-            'count': len(data)
-        }), 200
+        if leaderboard == 'score':
+            # Aggregate points by username for score leaderboard
+            points_by_username = {}
+            for item in data:
+                users = item.get('users', [])
+                for user in users:
+                    display_name = user.get('user') or user.get('username')
+                    points = user.get('points', 0)
+                    
+                    if display_name in points_by_username:
+                        points_by_username[display_name] += points
+                    else:
+                        points_by_username[display_name] = points
+            
+            # Convert to sorted array and back to dict (sorted by points descending)
+            sorted_points_array = sorted(points_by_username.items(), key=lambda x: x[1], reverse=True)
+            sorted_points_by_username = dict(sorted_points_array)
+            
+            items = {
+                'results': sorted_points_by_username,
+                'data': data,
+                'leaderboardType': 'score'
+            }
+        else:
+            # For timed leaderboard, return results as data
+            items = {
+                'results': data,
+                'leaderboardType': 'timed'
+            }
+        
+        # Calculate result count for logging
+        result_count = len(items['results']) if isinstance(items['results'], list) else len(items['results'])
+        logger.info(f"[getResults] SUCCESS: {items['leaderboardType']} leaderboard response sent with {result_count} results")
+        
+        return jsonify(items), 200
+        
     except Exception as e:
-        logger.error(f"Error retrieving leaderboard: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
+        logger.error(f"[getResults] ERROR: Failed to process {os.getenv('LEADERBOARD', 'timed')} leaderboard request: {str(e)}")
+        return jsonify({'message': str(e)}), 500
+    
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'

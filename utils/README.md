@@ -39,10 +39,6 @@
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
 - 🔴 **HIGH:** Add a flag to create the indexes in advance for the users
 
-
-### Portal
-- 🟠 **MEDIUM:** Add results to the portal
-
 ### test
 - 🟢 **LOW:** Send EKS logs to S3.
 - 🟢 **LOW:** How can I ensure all files are present after pod failures.

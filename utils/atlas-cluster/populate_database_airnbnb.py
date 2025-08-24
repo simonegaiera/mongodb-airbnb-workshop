@@ -218,8 +218,13 @@ def create_views(client, common_database):
                     ]
                 }, 
                 'name': {
-                    '$arrayElemAt': [
-                        '$participants_info.name', 0
+                    '$ifNull': [
+                        {
+                            '$arrayElemAt': [
+                                '$participants_info.name', 0
+                            ]
+                        },
+                        '$_id'
                     ]
                 }
             }
