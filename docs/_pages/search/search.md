@@ -3,6 +3,7 @@ title: "Atlas Search"
 permalink: /search/
 layout: single
 classes: wide
+categories: [search]
 ---
 
 ## 🔎✨ Atlas Search: Find Anything, Instantly

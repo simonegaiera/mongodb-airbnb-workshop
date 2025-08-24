@@ -3,6 +3,7 @@ title: "Atlas Vector Search"
 permalink: /vector-search/
 layout: single
 classes: wide
+categories: [vector-search]
 ---
 
 ## 🧠✨ Atlas Vector Search: Unlock AI-Powered Discovery

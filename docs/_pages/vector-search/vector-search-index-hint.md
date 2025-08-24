@@ -3,7 +3,7 @@ title: "Atlas Vector Search: Indexes"
 permalink: /vector-search/vector-search-index/hint/
 layout: single
 classes: wide
-parent: "Atlas Vector Search: Index Creation"
+categories: [vector-search, vector-search-index]
 ---
 
 ## 🚀 Hint: Atlas Vector Search Indexes—Unlock Semantic Power

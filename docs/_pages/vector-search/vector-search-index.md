@@ -3,6 +3,7 @@ title: "Atlas Vector Search: Index Creation"
 permalink: /vector-search/vector-search-index/
 layout: single
 classes: wide
+categories: [vector-search]
 ---
 
 ## 🚀 Goal: Enable Semantic Search with Atlas Vector Search Indexes

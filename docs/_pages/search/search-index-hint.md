@@ -3,7 +3,7 @@ title: "Atlas Search: Indexes"
 permalink: /search/search-index/hint/
 layout: single
 classes: wide
-parent: "Atlas Search: Indexes"
+categories: [search, search-index]
 ---
 
 ## 🚀 Hint: Atlas Search Indexes—Unleash the Power

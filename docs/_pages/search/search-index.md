@@ -3,6 +3,7 @@ title: "Atlas Search: Indexes"
 permalink: /search/search-index/
 layout: single
 classes: wide
+categories: [search]
 ---
 
 ## 🚀 Goal: Supercharge Search with Atlas Search Indexes
