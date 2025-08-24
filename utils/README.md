@@ -4,15 +4,14 @@
 
 ## Docs
 
-### Testing
-- 🟡 **MID:** Change all the screenshots to include results
+*No urgent items.*
+
+### Navigation
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 
 ---
 
 ## App
-
-*No urgent items.*
 
 - 🟡 **MID:** Add the new more complex pipeline
 

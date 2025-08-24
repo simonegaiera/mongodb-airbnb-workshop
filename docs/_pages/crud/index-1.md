@@ -51,6 +51,9 @@ Choose your favorite tool and get indexing:
 
 ---
 
-### 🚦 What to Expect
+### 🖥️ Frontend Validation
 
-Once your index is in place, searches and filters on beds and price will be noticeably faster—delivering a seamless experience for your users, no matter how big your listings get.
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
+
+![crud-index-1](../../assets/images/crud-index-1.png)
