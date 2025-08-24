@@ -38,16 +38,10 @@ In this exercise, you’ll master the art of inserting documents. Every new list
 2. Open `crud-5-insert-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful insertion of the document.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
-<!-- ---
+---
 
 ### 🖥️ Frontend Validation
 
-Add a new property or guest in the app and watch as it appears instantly in your listings—ready for the world to see. This is how your platform grows, one document at a time.
-
-With this step, you’re not just adding data—you’re opening the door to new opportunities and experiences for your users.  
-**Ready to help your platform grow? Let’s get started!**
-
-![crud-5-lab](../../assets/images/crud-5-lab.png) -->
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.

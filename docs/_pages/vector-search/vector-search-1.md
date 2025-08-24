@@ -41,14 +41,15 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 2. Open `vector-search-1-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected, semantically relevant results.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Type a natural-language query (e.g., `"best view in hawaii"`) in the search bar and watch smart, relevant suggestions appear—powered by AI and vector search!
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just building a feature—you’re enabling a new era of discovery and delight for your users.  
 **Ready to wow your guests with semantic search? Let’s get started!**

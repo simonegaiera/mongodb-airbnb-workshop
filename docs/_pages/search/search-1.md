@@ -41,14 +41,15 @@ Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autoc
 2. Open `search-1-autocomplete-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Confirm the response contains the expected results.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Type `"hawaii"` in the search bar and watch autocomplete suggestions appear like magic—fast, relevant, and user-friendly!
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just building a feature—you’re making your users happy and your platform unforgettable.  
 **Ready to wow your guests with instant search? Let’s get started!**

@@ -43,14 +43,15 @@ Faceted search lets your users slice and dice results, making it effortless to f
 2. Open `search-2-facet-lab.http`.  
 3. Click **Send Request** to call the API.  
 4. Make sure you see valid results in the response.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Type `"hawaii"` in the search bar and watch the new facets appear—instantly filter and explore your results!
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just adding filters—you’re giving your users the power to discover their perfect stay, their way.  
 **Ready to make search truly interactive? Let’s get started!**

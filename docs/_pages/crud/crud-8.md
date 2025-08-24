@@ -37,14 +37,15 @@ In this exercise, you’ll master the art of deleting documents by their ID. Wit
 2. Open `crud-8-delete-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response confirms successful deletion.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Select "Delete Listing" in the app and watch the record vanish instantly—clean, smooth, and oh-so-satisfying! This is how you keep your platform tidy and your users in control.
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just removing data—you’re building trust and keeping your platform running at its best.  
 **Ready to keep your data clean? Let’s get started!**

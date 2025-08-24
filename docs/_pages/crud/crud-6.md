@@ -41,8 +41,6 @@ In this exercise, you’ll harness the power of MongoDB’s `$set` operator to u
 2. Open `crud-6-update-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response shows the document with the updated field.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
@@ -50,6 +48,9 @@ In this exercise, you’ll harness the power of MongoDB’s `$set` operator to u
 
 Edit a field (like the Title) of a listing in the app and watch your changes stick—even after a refresh.  
 Slick, instant, and oh-so-satisfying!
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just updating data—you’re keeping your platform fresh, relevant, and responsive to every user’s needs.  
 **Ready to give your data a makeover? Let’s get started!**

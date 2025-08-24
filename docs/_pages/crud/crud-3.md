@@ -38,14 +38,15 @@ In this exercise, you’ll reveal all the unique values in any field, powering u
 2. Open `crud-3-distinct-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Verify the response returns a list of unique values for the requested field.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Open the "Filters" panel in the app and watch as all distinct values for your chosen field appear—enabling dynamic, user-friendly filtering for your guests.
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this step, you’re not just fetching data—you’re empowering your users to discover the perfect stay, their way.  
 **Ready to make your platform smarter and more interactive? Let’s get started!**

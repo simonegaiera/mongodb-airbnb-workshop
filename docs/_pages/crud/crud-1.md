@@ -41,14 +41,15 @@ In this exercise, you’ll master the basics of MongoDB by finding documents, so
 2. Open `crud-1-query-lab.http`.
 3. Click **Send Request** to execute the API call.
 4. Check that the response returns the paginated results.
-5. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
 ### 🖥️ Frontend Validation
 
 Once your backend logic is in place, refresh the homepage and watch as your listings appear—ready for your future guests to explore. Scroll through the results and see pagination in action: smooth, fast, and just how users love it.
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 With this first step, you’re not just writing code—you’re building the search experience that will help your company stand out in the rental market.  
 **Ready to help your users find their next stay? Let’s get started!**

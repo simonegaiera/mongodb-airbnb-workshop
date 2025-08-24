@@ -43,9 +43,6 @@ Craft your index with these specs:
    - **beds** (for numeric filtering)
      - `numberFacet`
      - `number`
-3. **Check Exercise Status:**  
-   Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
-
 ---
 
 ### 🛠️ How to Complete This Exercise
@@ -59,6 +56,13 @@ Choose your favorite tool and get indexing:
 - We suggest using the Playground feature for a quick and interactive experience.
 - In VSCode Online, locate and open the file `search-index-playground.mongodb.js` (usually found in the bottom left of the Explorer).
   ![MongoDB Playground](../../assets/images/playground.png)
+
+---
+
+### 🖥️ Frontend Validation
+
+**Check Exercise Status:**  
+Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ---
 
