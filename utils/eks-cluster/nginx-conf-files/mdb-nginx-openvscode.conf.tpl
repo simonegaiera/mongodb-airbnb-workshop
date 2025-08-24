@@ -45,30 +45,50 @@ server {
 
     location /react/ {
         proxy_pass http://${proxy_pass}:3001/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 3600;
+        proxy_send_timeout 3600;
+        proxy_connect_timeout 60s;
+        proxy_buffering off;
 
         rewrite ^/react/(.*)$ /$1 break;
     }
 
     location /backend/ {
         proxy_pass http://${proxy_pass}:5000/;
+        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 3600;
+        proxy_send_timeout 3600;
+        proxy_connect_timeout 60s;
+        proxy_buffering off;
 
         rewrite ^/backend/(.*)$ /$1 break;
     }
 
     location /postgres/ {
         proxy_pass http://${proxy_pass}:5001/;
+        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 3600;
+        proxy_send_timeout 3600;
+        proxy_connect_timeout 60s;
+        proxy_buffering off;
 
         rewrite ^/postgres/(.*)$ /$1 break;
     }
