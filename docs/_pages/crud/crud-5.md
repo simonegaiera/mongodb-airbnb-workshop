@@ -45,3 +45,5 @@ In this exercise, you’ll master the art of inserting documents. Every new list
 
 **Check Exercise Status:**  
 Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
+
+![crud-5-lab](../../assets/images/crud-5-lab.png)

@@ -50,4 +50,4 @@ Go to the app and check if the exercise toggle shows green, indicating your impl
 With this step, you’re not just removing data—you’re building trust and keeping your platform running at its best.  
 **Ready to keep your data clean? Let’s get started!**
 
-![crud-8-lab](../../assets/images/crud-7-lab.png)
+![crud-8-lab](../../assets/images/crud-8-lab.png)
