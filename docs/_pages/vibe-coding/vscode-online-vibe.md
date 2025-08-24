@@ -1,6 +1,6 @@
 ---
 title: "Environment Preparation: VSCode Online"
-permalink: /environment/vscode-vibe/
+permalink: /vibe/vscode-vibe/
 layout: single
 classes: wide
 ---

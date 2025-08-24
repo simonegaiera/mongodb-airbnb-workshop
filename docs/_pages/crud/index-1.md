@@ -1,6 +1,6 @@
 ---
 title: "Indexes"
-permalink: /index/
+permalink: /crud/index/
 layout: single
 classes: wide
 ---

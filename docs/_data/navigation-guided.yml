@@ -21,7 +21,7 @@ docs:
       - title: "Leaderboard"
         url: /guided/leaderboard/
 
-  - title: CRUD Operations (1)
+  - title: CRUD Operations
     children:
       - title: "CRUD Operations"
         url: /crud/
@@ -33,21 +33,8 @@ docs:
         url: /crud/3/
       - title: "CRUD: Exercise 4"
         url: /crud/4/
-
-  - title: Indexes
-    children:
       - title: "CRUD: Indexes"
-        url: /index/
-
-  - title: Aggregations
-    children:
-      - title: "MongoDB Aggregations"
-        url: /pipeline/
-      - title: "Aggregations: Exercise 1"
-        url: /pipeline/1/
-
-  - title: CRUD Operations (2)
-    children:
+        url: /crud/index/
       - title: "CRUD: Exercise 5"
         url: /crud/5/
       - title: "CRUD: Exercise 6"
@@ -56,6 +43,13 @@ docs:
         url: /crud/7/
       - title: "CRUD: Exercise 8"
         url: /crud/8/
+
+  - title: Aggregations
+    children:
+      - title: "MongoDB Aggregations"
+        url: /pipeline/
+      - title: "Aggregations: Exercise 1"
+        url: /pipeline/1/
 
   - title: Search
     children:
