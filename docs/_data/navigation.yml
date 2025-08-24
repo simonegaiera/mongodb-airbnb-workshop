@@ -72,6 +72,8 @@ docs:
         url: /search/
       - title: "Search: Indexes"
         url: /search/index/
+      - title: "Hint: Search Indexes"
+        url: /search/index/hint/
       - title: "Search: Exercise 1"
         url: /search/1/
       - title: "Search: Exercise 2"
@@ -83,6 +85,8 @@ docs:
         url: /vector-search/
       - title: "Vector Search: Indexes"
         url: /vector-search/index/
+      - title: "Hint: Vector Search Indexes"
+        url: /vector-search/index/hint/
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
 
