@@ -14,7 +14,6 @@
 
 *No urgent items.*
 
-- 🟡 **MID:** Change statistics button
 - 🟡 **MID:** Add the new more complex pipeline
 
 ---
