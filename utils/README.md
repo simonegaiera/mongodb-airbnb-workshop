@@ -5,20 +5,23 @@
 ## Docs
 
 ### Testing
-- 🟡 **MID:** Change the validation page, test in each page, and chnage all the pictures
+- 🟡 **MID:** Change all the screenshots to include results
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 
 ---
 
 ## App
 
-*No current items.*
+*No urgent items.*
+
+- 🟡 **MID:** Change statistics button
+- 🟡 **MID:** Add the new more complex pipeline
 
 ---
 
 ## Server
 
-*No urgent/current items.*
+*No urgent items.*
 
 ### Answers
 - 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
