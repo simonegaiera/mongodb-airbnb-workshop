@@ -520,7 +520,7 @@ def main():
         print("CREATE_INDEXES is True, loading index definitions...", flush=True)
         index_definitions = load_index_definitions()
     else:
-        print("CREATE_INDEXES is False, skipping index creation.", flush=True)
+        print("create_indexes is False, skipping index creation.", flush=True)
     
     for database in users:
         if database in databases:
