@@ -9,6 +9,7 @@ logo: "/assets/images/logo.png"
 breadcrumbs: true 
 plugins:
   - jekyll-include-cache
+  - jekyll-sitemap
 defaults:
   - scope:
       path: ""
