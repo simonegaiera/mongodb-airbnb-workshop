@@ -1,6 +1,6 @@
 ---
 title: "Explore Collection Structure"
-permalink: /environment/collection/
+permalink: /guided/collection/
 layout: single
 classes: wide
 ---

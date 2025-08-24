@@ -1,6 +1,6 @@
 ---
 title: "Arena Overview"
-permalink: /overview/
+permalink: /guided/
 layout: single
 classes: wide
 ---

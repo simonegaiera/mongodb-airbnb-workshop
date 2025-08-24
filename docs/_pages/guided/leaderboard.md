@@ -1,6 +1,6 @@
 ---
 title: "Leaderboard"
-permalink: /leaderboard/
+permalink: /guided/leaderboard/
 layout: single
 classes: wide
 ---

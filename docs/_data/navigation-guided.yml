@@ -13,13 +13,13 @@ docs:
   - title: "Guided Exercises"
     children:
       - title: "AI Arena Overview"
-        url: /overview/
+        url: /guided/
       - title: "IDE: VSCode Online"
-        url: /environment/vscode/
+        url: /guided/vscode/
       - title: "Explore Collection Structure"
-        url: /environment/collection/
+        url: /guided/collection/
       - title: "Leaderboard"
-        url: /leaderboard/
+        url: /guided/leaderboard/
 
   - title: CRUD Operations (1)
     children:

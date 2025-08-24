@@ -1,6 +1,6 @@
 ---
 title: "Environment Preparation: VSCode Online"
-permalink: /environment/vscode/
+permalink: /guided/vscode/
 layout: single
 classes: wide
 ---

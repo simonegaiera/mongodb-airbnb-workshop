@@ -42,13 +42,13 @@ docs:
   - title: "Guided Exercises (Scenario 2)"
     children:
       - title: "AI Arena Overview"
-        url: /overview/
+        url: /guided/
       - title: "IDE: VSCode Online"
-        url: /environment/vscode/
+        url: /guided/vscode/
       - title: "Explore Collection Structure"
-        url: /environment/collection/
+        url: /guided/collection/
       - title: "Leaderboard"
-        url: /leaderboard/
+        url: /guided/leaderboard/
 
   - title: CRUD Operations (1)
     children:
@@ -71,9 +71,9 @@ docs:
   - title: Aggregations
     children:
       - title: "MongoDB Aggregations"
-        url: /aggregations/
+        url: /pipeline/
       - title: "Aggregations: Exercise 1"
-        url: /aggregations/1/
+        url: /pipeline/1/
 
   - title: CRUD Operations (2)
     children:
