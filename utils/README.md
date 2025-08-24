@@ -34,7 +34,6 @@
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
-- 🔴 **HIGH:** Add a flag to create the indexes in advance for the users
 
 ### test
 - 🟢 **LOW:** Send EKS logs to S3.
@@ -44,7 +43,13 @@ fatal: not a git repository (or any parent up to mount point /home)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ### OIDC
-- 🟡 **MEDIUM:** Ask if it is possible to have OIDC (current SA profile does not allow).
+- ❄️ **FROZEN:** Ask if it is possible to have OIDC (current SA profile does not allow).
+
+
+## Kanopy
+
+### Deploy
+- ❄️ **FROZEN:** Deploy on Kanopy
 
 
 ## NYC .Local

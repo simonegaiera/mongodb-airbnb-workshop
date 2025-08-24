@@ -94,3 +94,9 @@ variable "additional_users_count" {
   type        = number
   default     = 0
 }
+
+variable "create_indexes" {
+  description = "Whether to create indexes"
+  type        = bool
+  default     = false
+}

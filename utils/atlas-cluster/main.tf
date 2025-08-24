@@ -311,7 +311,7 @@ locals {
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path != null ? var.user_list_path : "null"}\" \"${var.common_database_name}\" \"${var.additional_users_count}\" 2>&1"
+    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path != null ? var.user_list_path : "null"}\" \"${var.common_database_name}\" \"${var.additional_users_count}\" \"${var.create_indexes}\" 2>&1"
   }
 
   triggers = {

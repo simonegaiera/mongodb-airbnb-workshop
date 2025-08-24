@@ -48,7 +48,7 @@ public class ResultsProcessor {
     
     // Exercise test identifiers
     private static final List<String> EXERCISE_TESTS = Arrays.asList(
-        "index",                      // CRUD: Indexes
+        "index-1",                      // CRUD: Indexes
         "crud-1", "crud-2", "crud-3", "crud-4",  // CRUD Exercises 1-4
         "crud-5", "crud-6", "crud-7", "crud-8",  // CRUD Exercises 5-8
         "pipeline-1",                 // Aggregation Exercise 1

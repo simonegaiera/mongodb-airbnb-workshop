@@ -4,13 +4,16 @@ import requests
 from requests.auth import HTTPDigestAuth
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from pymongo.operations import SearchIndexModel
 import certifi
 from parse_users import get_all_users
 from datetime import datetime, timezone
+import json
+import os
 
 def get_params():
-    if len(sys.argv) != 10:
-        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT", file=sys.stderr)
+    if len(sys.argv) != 11:
+        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT CREATE_INDEXES", file=sys.stderr)
         sys.exit(1)
     return {
         'MONGO_CONNECTION_STRING': sys.argv[1],
@@ -21,7 +24,8 @@ def get_params():
         'CLUSTER_NAME': sys.argv[6],
         'CSV_FILE': sys.argv[7],
         'COMMON_DATABASE': sys.argv[8],
-        'ADDITIONAL_USERS_COUNT': int(sys.argv[9])
+        'ADDITIONAL_USERS_COUNT': int(sys.argv[9]),
+        'CREATE_INDEXES': sys.argv[10].lower() == 'true'
     }
 
 def get_client(params):
@@ -338,6 +342,149 @@ def create_results_health_collection(db):
         collection.create_index("timestamp", expireAfterSeconds=ttl_seconds)
         print(f"Created TTL index on timestamp field with 2 days expiration for results_health collection.", flush=True)
 
+def load_index_definitions():
+    """Load index definitions from JSON files in the indexes folder."""
+    indexes_dir = os.path.join(os.path.dirname(__file__), 'indexes')
+    index_definitions = {}
+    
+    # Map folder names to index types
+    folder_type_mapping = {
+        'crud': 'crud',
+        'search': 'search', 
+        'vector-search': 'vectorSearch'
+    }
+    
+    try:
+        # Scan each folder in the indexes directory
+        for folder_name in os.listdir(indexes_dir):
+            folder_path = os.path.join(indexes_dir, folder_name)
+            
+            # Skip if not a directory
+            if not os.path.isdir(folder_path):
+                continue
+                
+            # Determine index type based on folder name
+            index_type = folder_type_mapping.get(folder_name)
+            if not index_type:
+                print(f"Warning: Unknown index folder type '{folder_name}', skipping...", flush=True)
+                continue
+            
+            # Load all JSON files in this folder
+            for file_name in os.listdir(folder_path):
+                if file_name.endswith('.json'):
+                    file_path = os.path.join(folder_path, file_name)
+                    # Use filename without extension as index name
+                    index_name = os.path.splitext(file_name)[0]
+                    
+                    try:
+                        with open(file_path, 'r') as f:
+                            definition = json.load(f)
+                            index_definitions[index_name] = {
+                                'definition': definition,
+                                'type': index_type
+                            }
+                        print(f"Loaded index '{index_name}' (type: {index_type}) from {folder_name}/{file_name}", flush=True)
+                    except json.JSONDecodeError as e:
+                        print(f"Error parsing JSON in {file_path}: {e}", flush=True)
+                    except Exception as e:
+                        print(f"Error loading {file_path}: {e}", flush=True)
+                        
+    except FileNotFoundError:
+        print(f"Warning: Indexes directory not found: {indexes_dir}", flush=True)
+    except Exception as e:
+        print(f"Error scanning indexes directory: {e}", flush=True)
+    
+    return index_definitions
+
+def create_user_indexes(client, db_name, index_definitions):
+    """Create indexes for a user database."""
+    if not index_definitions:
+        return
+    
+    db = client[db_name]
+    collection = db['listingsAndReviews']
+    
+    # Iterate through all loaded index definitions
+    for index_name, index_info in index_definitions.items():
+        index_type = index_info['type']
+        index_definition = index_info['definition']
+        
+        if index_type == 'crud':
+            create_regular_index(collection, index_name, index_definition)
+        elif index_type == 'search':
+            create_search_index(collection, index_name, index_definition)
+        elif index_type == 'vectorSearch':
+            create_vector_search_index(collection, index_name, index_definition)
+        else:
+            print(f"Warning: Unknown index type '{index_type}' for index '{index_name}', skipping...", flush=True)
+
+def create_regular_index(collection, index_name, index_definition):
+    """Create a regular MongoDB index."""
+    try:
+        # Check if index already exists
+        existing_indexes = collection.index_information()
+        if index_name in existing_indexes:
+            print(f"Regular index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+            return
+        
+        # Create the index
+        collection.create_index(list(index_definition.items()), name=index_name)
+        print(f"Created regular index '{index_name}' in {collection.database.name}.{collection.name}", flush=True)
+        
+    except Exception as e:
+        print(f"Error creating regular index '{index_name}' in {collection.database.name}.{collection.name}: {e}", flush=True)
+
+def create_search_index(collection, index_name, index_definition):
+    """Create a search index using PyMongo's create_search_index method."""
+    try:
+        # Check if search index already exists
+        try:
+            existing_indexes = list(collection.list_search_indexes())
+            for idx in existing_indexes:
+                if idx.get('name') == index_name:
+                    print(f"Search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+                    return
+        except Exception:
+            # If list_search_indexes fails, continue to create the index
+            pass
+        
+        # Create the search index using the correct PyMongo syntax
+        index = {
+            "definition": index_definition,
+            "name": index_name,
+        }
+        collection.create_search_index(index)
+        print(f"Created search index '{index_name}' in {collection.database.name}.{collection.name}", flush=True)
+        
+    except Exception as e:
+        print(f"Error creating search index '{index_name}' in {collection.database.name}.{collection.name}: {e}", flush=True)
+
+def create_vector_search_index(collection, index_name, index_definition):
+    """Create a vector search index using PyMongo's SearchIndexModel."""
+    try:
+        # Check if vector search index already exists
+        try:
+            existing_indexes = list(collection.list_search_indexes())
+            for idx in existing_indexes:
+                if idx.get('name') == index_name and idx.get('type') == 'vectorSearch':
+                    print(f"Vector search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+                    return
+        except Exception:
+            # If list_search_indexes fails, continue to create the index
+            pass
+        
+        # Create the vector search index using SearchIndexModel
+        search_index_model = SearchIndexModel(
+            definition=index_definition,
+            name=index_name,
+            type="vectorSearch",
+        )
+        collection.create_search_index(model=search_index_model)
+        print(f"Created vector search index '{index_name}' in {collection.database.name}.{collection.name}", flush=True)
+        
+    except Exception as e:
+        print(f"Error creating vector search index '{index_name}' in {collection.database.name}.{collection.name}: {e}", flush=True)
+
 def main():
     params = get_params()
     common_database = params['MONGO_DATABASE_NAME']
@@ -367,12 +514,25 @@ def main():
     # Create views
     create_views(client, params['COMMON_DATABASE'])
     
+    # Load index definitions if CREATE_INDEXES is True
+    index_definitions = {}
+    if params['CREATE_INDEXES']:
+        print("CREATE_INDEXES is True, loading index definitions...", flush=True)
+        index_definitions = load_index_definitions()
+    else:
+        print("CREATE_INDEXES is False, skipping index creation.", flush=True)
+    
     for database in users:
         if database in databases:
             print(f"Database '{database}' exists.", flush=True)
         else:
             print(f"Database '{database}' does not exist. Creating.", flush=True)
             create_user_collection(database, client, common_database, collections_list)
+        
+        # Create indexes for this user database if CREATE_INDEXES is True
+        if params['CREATE_INDEXES'] and index_definitions:
+            print(f"Creating indexes for user database '{database}'...", flush=True)
+            create_user_indexes(client, database, index_definitions)
 
 if __name__ == "__main__":
     main()
