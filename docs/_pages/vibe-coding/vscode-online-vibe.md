@@ -1,5 +1,5 @@
 ---
-title: "Environment Preparation: VSCode Online"
+title: "Environment: VSCode"
 permalink: /vibe/vscode-vibe/
 layout: single
 classes: wide

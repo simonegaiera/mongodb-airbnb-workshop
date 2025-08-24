@@ -1,5 +1,5 @@
 ---
-title: "Indexes"
+title: "Index 1"
 permalink: /crud/index/
 layout: single
 classes: wide

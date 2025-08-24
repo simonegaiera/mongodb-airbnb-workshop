@@ -14,7 +14,7 @@ docs:
     children:
       - title: "Vibe Coding: Instructions"
         url: /vibe/
-      - title: "IDE: VSCode Online"
+      - title: "Environment: VSCode"
         url: /vibe/vscode-vibe/
       - title: "Hint: Python Prompt"
         url: /vibe/python-full/
@@ -29,7 +29,7 @@ docs:
     children:
       - title: "AI Arena Overview"
         url: /guided/
-      - title: "Environment Preparation: VSCode"
+      - title: "Environment: VSCode"
         url: /guided/vscode/
       - title: "Explore Collection Structure"
         url: /guided/collection/
@@ -48,7 +48,7 @@ docs:
         url: /crud/3/
       - title: "CRUD: Exercise 4"
         url: /crud/4/
-      - title: "CRUD: Indexes"
+      - title: "CRUD: Index 1"
         url: /crud/index/
       - title: "CRUD: Exercise 5"
         url: /crud/5/

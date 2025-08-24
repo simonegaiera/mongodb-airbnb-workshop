@@ -1,5 +1,5 @@
 ---
-title: "Environment Preparation: VSCode"
+title: "Environment: VSCode"
 permalink: /guided/vscode/
 layout: single
 classes: wide

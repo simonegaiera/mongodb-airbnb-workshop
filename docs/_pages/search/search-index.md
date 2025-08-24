@@ -43,6 +43,7 @@ Craft your index with these specs:
    - **beds** (for numeric filtering)
      - `numberFacet`
      - `number`
+
 ---
 
 ### 🛠️ How to Complete This Exercise
@@ -64,6 +65,8 @@ Choose your favorite tool and get indexing:
 **Check Exercise Status:**  
 Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
+![search-index](../../assets/images/search-index.png)
+
 ---
 
 ### 🚦 What to Expect
@@ -73,5 +76,3 @@ Autocomplete, faceted navigation, and instant results will be just a query away�
 
 With this step, you’re not just configuring fields—you’re building the backbone of a world-class search experience.  
 **Ready to make your data discoverable? Let’s get started!**
-
-![search-index](../../assets/images/search-index.png)
