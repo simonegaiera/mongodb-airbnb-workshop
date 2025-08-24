@@ -13,4 +13,4 @@ The **Leaderboard** tracks your progress as you and your team build the next big
 🏆 **Who will become the MongoDB AI Arena champion?**  
 Keep an eye on the rankings, celebrate your milestones, and let a little friendly competition push your skills even further.
 
-![leaderboard](../assets/images/leaderboard.png)
+![leaderboard](../../assets/images/leaderboard.png)
