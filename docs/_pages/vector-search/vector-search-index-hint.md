@@ -1,6 +1,6 @@
 ---
 title: "Atlas Vector Search: Indexes"
-permalink: /vector-search/vector-search-index/hint/
+permalink: /vector-search/vector-search-index-hint/
 layout: single
 classes: wide
 categories: [vector-search, vector-search-index]
