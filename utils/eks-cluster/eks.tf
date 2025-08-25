@@ -175,7 +175,7 @@ resource "aws_eks_addon" "metrics_server" {
 
   depends_on  = [
     aws_eks_cluster.eks_cluster,
-    kubernetes_pod.nfs_pod
+    helm_release.scenario_definition
   ]
 }
 
@@ -186,7 +186,7 @@ resource "aws_eks_addon" "observability" {
 
   depends_on = [ 
     aws_eks_cluster.eks_cluster,
-    kubernetes_pod.nfs_pod
+    helm_release.scenario_definition
   ]
 }
 
@@ -197,7 +197,7 @@ resource "aws_eks_addon" "efs_csi_driver" {
 
   depends_on = [
     aws_eks_cluster.eks_cluster,
-    kubernetes_pod.nfs_pod
+    helm_release.scenario_definition
   ]
 }
 
@@ -242,38 +242,6 @@ resource "kubernetes_storage_class" "efs" {
   ]
 }
 
-resource "kubernetes_pod" "nfs_pod" {
-  metadata {
-    name = "efs-initializer"
-  }
-
-  spec {
-    container {
-      image = "amazonlinux:2"
-      name  = "efs-setup"
-
-      command = [
-        "sh",
-        "-c",
-        format("%s && tail -f /dev/null", templatefile("${path.module}/efs_initializer.sh", {
-          aws_efs_id = aws_efs_file_system.efs.id,
-          aws_region = var.aws_region
-        }))
-      ]
-
-      security_context {
-        privileged = true
-      }
-    }
-  }
-
-  depends_on = [
-    aws_efs_mount_target.efs_mt,
-    aws_eks_cluster.eks_cluster,
-    aws_eks_addon.vpc_cni
-  ]
-}
-
 # Add S3 policy for the node role to read mongodb-gameday bucket
 resource "aws_iam_policy" "s3_mongodb_gameday_policy" {
   name        = "${local.cluster_name}-s3-mongodb-gameday-policy"
@@ -301,24 +269,4 @@ resource "aws_iam_policy" "eks_auto_mode_policy" {
 resource "aws_iam_role_policy_attachment" "cluster_eks_auto_mode_policy" {
   policy_arn = aws_iam_policy.eks_auto_mode_policy.arn
   role       = aws_iam_role.cluster.name
-}
-
-resource "kubernetes_config_map" "scenario_config" {
-  metadata {
-    name = "scenario-config-cm"
-  }
-
-  data = {
-    "scenario-config.json" = jsonencode(merge(var.scenario_config, {
-      aws_route53_record_name = local.aws_route53_record_name
-      atlas_standard_srv      = local.atlas_standard_srv
-      atlas_user_password     = local.atlas_user_password
-    }))
-  }
-
-  depends_on = [
-    aws_eks_cluster.eks_cluster,
-    aws_eks_addon.vpc_cni,
-    aws_eks_addon.efs_csi_driver
-  ]
 }

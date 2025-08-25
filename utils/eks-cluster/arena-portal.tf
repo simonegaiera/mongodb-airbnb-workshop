@@ -63,7 +63,7 @@ resource "helm_release" "portal_server" {
         {
           name = "scenario-config-volume",
           configMap = {
-            name = "scenario-config-cm"
+            name = "scenario-definition-config"
           }
         },
         {
@@ -77,7 +77,7 @@ resource "helm_release" "portal_server" {
   ]
 
   depends_on = [
-    kubernetes_config_map.scenario_config
+    helm_release.scenario_definition
   ]
 }
 
@@ -166,7 +166,7 @@ resource "helm_release" "portal_nginx" {
         {
           name = "scenario-config-volume",
           configMap = {
-            name = "scenario-config-cm"
+            name = "scenario-definition-config"
           }
         },
         {
@@ -202,7 +202,7 @@ resource "helm_release" "portal_nginx" {
 
   depends_on = [
     kubernetes_secret.nginx_tls_secret,
-    kubernetes_config_map.scenario_config,
+    helm_release.scenario_definition,
     helm_release.portal_server,
     data.kubernetes_service.portal_service
   ]

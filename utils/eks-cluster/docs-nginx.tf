@@ -78,7 +78,7 @@ resource "helm_release" "instructions_nginx" {
         {
           name = "scenario-config-volume",
           configMap = {
-            name = "scenario-config-cm"
+            name = "scenario-definition-config"
           }
         },
         {
@@ -114,7 +114,7 @@ resource "helm_release" "instructions_nginx" {
 
   depends_on = [
     kubernetes_secret.nginx_tls_secret,
-    kubernetes_config_map.scenario_config
+    helm_release.scenario_definition
   ]
 }
 

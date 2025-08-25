@@ -1,0 +1,78 @@
+# Default values for scenario-definition
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+enabled: true
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.25"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  name: scenario-definition-service
+  port: 80
+  targetPort: 80
+  protocol: TCP
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+livenessProbe: {}
+readinessProbe: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Scenario configuration
+scenario:
+  config:
+    aws_route53_record_name: ""
+    atlas_standard_srv: ""
+    atlas_user_password: ""
+    # Additional scenario configuration can be added here
