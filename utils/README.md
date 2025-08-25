@@ -41,7 +41,7 @@ fatal: not a git repository (or any parent up to mount point /home)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ### Open VS Code
-- ❄️ **FROZEN:** Understand why the firewall was blocking it and how to avoid it
+- ❄️ **FROZEN:** [Changes were made] Understand why the firewall was blocking it and how to avoid it
 
 ### OIDC
 - ❄️ **FROZEN:** Ask if it is possible to have OIDC (current SA profile does not allow).
