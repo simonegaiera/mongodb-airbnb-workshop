@@ -76,3 +76,7 @@ scenario:
     atlas_standard_srv: ""
     atlas_user_password: ""
     # Additional scenario configuration can be added here
+  git:
+    repository: "https://github.com/simonegaiera/mongodb-airbnb-workshop.git"
+    branch: "main"
+    navigationBase: "navigation.yml"

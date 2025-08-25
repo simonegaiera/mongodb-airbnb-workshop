@@ -28,6 +28,7 @@
 
 ### Deploy
 - 🟠 **MEDIUM:** How to deploy only certain scenarios.
+- 🟢 **LOW:** Cluster name change to arena-eks from gameday-eks
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!

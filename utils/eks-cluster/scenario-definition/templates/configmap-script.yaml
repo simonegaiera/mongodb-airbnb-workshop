@@ -1,0 +1,16 @@
+{{- if .Values.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scenario-definition.fullname" . }}-script
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "scenario-definition.labels" . | nindent 4 }}
+data:
+  startup.sh: |
+    {{- (.Files.Get "files/startup.sh") | nindent 4 }}
+  define-scenario.py: |
+    {{- (.Files.Get "files/define-scenario.py") | nindent 4 }}
+  requirements.txt: |
+    {{- (.Files.Get "files/requirements.txt") | nindent 4 }}
+{{- end }}

@@ -20,7 +20,54 @@ resource "helm_release" "scenario_definition" {
           atlas_standard_srv      = local.atlas_standard_srv
           atlas_user_password     = local.atlas_user_password
         })
-      }
+      },
+      env = [
+        {
+          name  = "MONGODB_URI"
+          value = "mongodb+srv://${local.atlas_admin_user}:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
+        },
+        {
+          name  = "DB_NAME"
+          value = "airbnb_arena"
+        },
+        {
+          name  = "COLLECTION_NAME"
+          value = "scenario_config"
+        }
+      ],
+      volumeMounts = [
+        {
+          name      = "script"
+          mountPath = "/scripts"
+          readOnly  = true
+        },
+        {
+          name      = "config"
+          mountPath = "/etc/scenario-config"
+          readOnly  = true
+        },
+        {
+          name      = "config"
+          mountPath = "/usr/share/nginx/html/scenario-config.json"
+          subPath   = "scenario-config.json"
+          readOnly  = true
+        }
+      ],
+      volumes = [
+        {
+          name = "config"
+          configMap = {
+            name = "scenario-definition-config"
+          }
+        },
+        {
+          name = "script"
+          configMap = {
+            name        = "scenario-definition-script"
+            defaultMode = 493
+          }
+        }
+      ]
     })
   ]
 
