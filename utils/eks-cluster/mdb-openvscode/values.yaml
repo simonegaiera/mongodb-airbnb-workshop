@@ -59,10 +59,10 @@ ingress:
 resources:
   requests:
     cpu: "1000m"
-    memory: "750Mi"
+    memory: "1.5Gi"
   limits:
     cpu: "2000m"
-    memory: "2Gi"
+    memory: "2.5Gi"
 
 livenessProbe:
   httpGet:

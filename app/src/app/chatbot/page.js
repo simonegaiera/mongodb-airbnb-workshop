@@ -21,7 +21,7 @@ export default function Home() {
 
   // Function to convert property IDs to links
   const formatMessageWithLinks = (text) => {
-    const propertyIdRegex = /Property ID:\s*([a-zA-Z0-9]+)/gi;
+    const propertyIdRegex = /Property ID:?\s*([a-zA-Z0-9]+)/gi;
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
     
     return text.replace(propertyIdRegex, (match, id) => {
