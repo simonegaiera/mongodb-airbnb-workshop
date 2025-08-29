@@ -3,14 +3,14 @@ main:
     url: https://github.com/simonegaiera/mongodb-airbnb-workshop
 
 docs:
-  - title: "Getting Started"
+  - title: "Workshop Introduction"
     children:
       - title: "Introduction"
         url: /
       - title: "Resources"
         url: /resources/
 
-  - title: "Guided Exercises"
+  - title: "Workshop Onboarding"
     children:
       - title: "AI Arena Overview"
         url: /guided/

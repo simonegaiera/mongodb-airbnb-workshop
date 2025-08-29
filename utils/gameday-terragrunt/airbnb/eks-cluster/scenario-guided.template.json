@@ -34,13 +34,13 @@
         "base": "navigation-guided.yml",
         "sections": [
             {
-                "title": "Getting Started"
+                "title": "Workshop Introduction"
             },
             {
-                "title": "Guided Exercises"
+                "title": "Workshop Onboarding"
             },
             {
-                "title": "CRUD Operations (1)",
+                "title": "CRUD Operations",
                 "content": [
                     "/crud/1/", 
                     "/crud/2/"

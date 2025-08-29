@@ -34,7 +34,7 @@
         "base": "navigation-vibe.yml",
         "sections": [
             {
-                "title": "Getting Started"
+                "title": "Workshop Introduction"
             },
             {
                 "title": "Vibe Coding"

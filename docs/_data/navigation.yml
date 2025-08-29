@@ -3,7 +3,7 @@ main:
     url: https://github.com/simonegaiera/mongodb-airbnb-workshop
 
 docs:
-  - title: "Getting Started"
+  - title: "Workshop Introduction"
     children:
       - title: "Introduction"
         url: /
@@ -25,7 +25,7 @@ docs:
       - title: "Hint: Node Prompt (Beta)"
         url: /vibe/node-express/
 
-  - title: "Guided Exercises (Scenario 2)"
+  - title: "Welcome & Setup (Scenario 2)"
     children:
       - title: "AI Arena Overview"
         url: /guided/
