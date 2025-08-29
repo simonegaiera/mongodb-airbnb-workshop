@@ -21,7 +21,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "langchain": "^0.3.30",
-    "mongodb": "^6.9.0",
+    "mongodb": "^6.18.0",
     "winston": "^3.15.0",
     "xxhashjs": "^0.2.2"
   },

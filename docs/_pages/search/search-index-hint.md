@@ -24,11 +24,9 @@ Craft custom search experiences with flexible analyzers, smart field mappings, a
     "dynamic": false,
     "fields": {
       "amenities": [
-        { "type": "stringFacet" },
         { "type": "token" }
       ],
       "beds": [
-        { "type": "numberFacet" },
         { "type": "number" }
       ],
       "name": {
@@ -39,7 +37,6 @@ Craft custom search experiences with flexible analyzers, smart field mappings, a
         "type": "autocomplete"
       },
       "property_type": [
-        { "type": "stringFacet" },
         { "type": "token" }
       ]
     }

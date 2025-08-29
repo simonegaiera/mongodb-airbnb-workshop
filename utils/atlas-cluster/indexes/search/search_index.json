@@ -5,11 +5,9 @@
     "dynamic": false,
     "fields": {
       "amenities": [
-        { "type": "stringFacet" },
         { "type": "token" }
       ],
       "beds": [
-        { "type": "numberFacet" },
         { "type": "number" }
       ],
       "name": {
@@ -20,7 +18,6 @@
         "type": "autocomplete"
       },
       "property_type": [
-        { "type": "stringFacet" },
         { "type": "token" }
       ]
     }

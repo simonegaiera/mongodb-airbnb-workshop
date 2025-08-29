@@ -119,10 +119,6 @@ public class SearchIndexTest extends BaseTest {
                 }
                 amenityTypes.add(((Document) item).getString("type"));
             }
-            if (!amenityTypes.contains("stringFacet")) {
-                logger.error("Amenities missing type 'stringFacet'");
-                return false;
-            }
             if (!amenityTypes.contains("token")) {
                 logger.error("Amenities missing type 'token'");
                 return false;
@@ -150,10 +146,6 @@ public class SearchIndexTest extends BaseTest {
                     return false;
                 }
                 bedTypes.add(((Document) item).getString("type"));
-            }
-            if (!bedTypes.contains("numberFacet")) {
-                logger.error("Beds missing type 'numberFacet'");
-                return false;
             }
             if (!bedTypes.contains("number")) {
                 logger.error("Beds missing type 'number'");
@@ -202,10 +194,6 @@ public class SearchIndexTest extends BaseTest {
                     return false;
                 }
                 propertyTypeTypes.add(((Document) item).getString("type"));
-            }
-            if (!propertyTypeTypes.contains("stringFacet")) {
-                logger.error("property_type missing type 'stringFacet'");
-                return false;
             }
             if (!propertyTypeTypes.contains("token")) {
                 logger.error("property_type missing type 'token'");

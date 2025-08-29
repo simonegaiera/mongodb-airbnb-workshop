@@ -33,15 +33,12 @@ Craft your index with these specs:
      - Fold Diacritics: `false`
    
    - **amenities** (for filtering)
-     - `stringFacet`
      - `token` (value: `none`)
 
    - **property_type** (for filtering)
-     - `stringFacet`
      - `token` (value: `none`)
 
    - **beds** (for numeric filtering)
-     - `numberFacet`
      - `number`
 
 ---
