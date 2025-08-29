@@ -1,0 +1,17 @@
+{{- if .Values.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "scenario-definition.fullname" . }}-configmap-rolebinding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "scenario-definition.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "scenario-definition.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "scenario-definition.fullname" . }}-configmap-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

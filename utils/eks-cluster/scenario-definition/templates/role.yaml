@@ -1,0 +1,13 @@
+{{- if .Values.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "scenario-definition.fullname" . }}-configmap-role
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "scenario-definition.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "create", "update", "patch"]
+{{- end }}

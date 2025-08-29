@@ -11,3 +11,4 @@ trashme
 .env
 .env.production
 .env.local
+test-scenario-config.json

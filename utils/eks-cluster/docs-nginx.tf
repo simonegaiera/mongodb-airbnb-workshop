@@ -29,6 +29,20 @@ resource "helm_release" "instructions_nginx" {
   values = [
     file("${path.module}/docs-nginx/values.yaml"),
     yamlencode({
+      env = [
+        {
+          name  = "MONGODB_URI"
+          value = "mongodb+srv://${local.atlas_admin_user}:${local.atlas_admin_password}@${replace(local.atlas_standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
+        },
+        {
+          name  = "DB_NAME"
+          value = "airbnb_arena"
+        },
+        {
+          name  = "COLLECTION_NAME"
+          value = "scenario_config"
+        }
+      ],
       volumeMounts = [
         {
           name      = "docs-nginx-config-volume",
@@ -78,7 +92,7 @@ resource "helm_release" "instructions_nginx" {
         {
           name = "scenario-config-volume",
           configMap = {
-            name = "scenario-definition-config"
+            name = "scenario-definition-enhanced-config"
           }
         },
         {

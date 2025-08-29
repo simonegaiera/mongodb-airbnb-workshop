@@ -14,7 +14,7 @@ is_enabled() {
     local feature="$1"
     local default="${2:-false}"
     
-    if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
+    if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
         echo "$SCENARIO_CONFIG" | jq -r "$feature // $default"
     else
         echo "false"
@@ -27,21 +27,21 @@ get_repo_name() {
     basename "$repo_url" .git
 }
 
-echo_with_timestamp "Reading scenario configuration"
-# Check if the scenario config file exists and read it
-if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
-    echo_with_timestamp "Scenario config found, reading configuration..."
+echo_with_timestamp "Reading enhanced scenario configuration"
+# Check if the enhanced scenario config file exists and read it
+if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
+    echo_with_timestamp "Enhanced scenario config found, reading configuration..."
     
     # Read the JSON file and extract values using jq
-    SCENARIO_CONFIG=$(cat /home/workspace/scenario-config/scenario-config.json)
+    SCENARIO_CONFIG=$(cat /home/workspace/scenario-config/enhanced-scenario-config.json)
 
-    echo_with_timestamp "Scenario configuration loaded successfully"
+    echo_with_timestamp "Enhanced scenario configuration loaded successfully"
     
     # Extract repository URL to determine folder name
     REPOSITORY=$(echo "$SCENARIO_CONFIG" | jq -r '.repository // "https://github.com/simonegaiera/mongodb-airbnb-workshop"')
     REPO_NAME=$(get_repo_name "$REPOSITORY")
 else
-    echo_with_timestamp "Warning: Scenario config file not found at /home/workspace/scenario-config/scenario-config.json"
+    echo_with_timestamp "Warning: Enhanced scenario config file not found at /home/workspace/scenario-config/enhanced-scenario-config.json"
     SCENARIO_CONFIG="{}"
     # Default repository if config not found
     REPO_NAME="mongodb-airbnb-workshop"

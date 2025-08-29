@@ -184,7 +184,7 @@ resource "helm_release" "user_openvscode" {
         {
           name = "scenario-config-volume"
           configMap = {
-            name = "scenario-definition-config"
+            name = "scenario-definition-enhanced-config"
           }
         }
       ],

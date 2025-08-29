@@ -12,17 +12,17 @@ get_repo_name() {
     basename "$repo_url" .git
 }
 
-echo_with_timestamp "Reading scenario configuration"
-# Check if the scenario config file exists and read it
-if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
-    echo_with_timestamp "Scenario config found, reading configuration..."
+echo_with_timestamp "Reading enhanced scenario configuration"
+# Check if the enhanced scenario config file exists and read it
+if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
+    echo_with_timestamp "Enhanced scenario config found, reading configuration..."
     
     # Read the JSON file and extract values using jq
-    SCENARIO_CONFIG=$(cat /home/workspace/scenario-config/scenario-config.json)
+    SCENARIO_CONFIG=$(cat /home/workspace/scenario-config/enhanced-scenario-config.json)
 
-    echo_with_timestamp "Scenario configuration loaded successfully"
+    echo_with_timestamp "Enhanced scenario configuration loaded successfully"
     
-    # Extract values from scenario config
+    # Extract values from enhanced scenario config
     URL=$(echo "$SCENARIO_CONFIG" | jq -r '.aws_route53_record_name // ""')
     ATLAS_SRV=$(echo "$SCENARIO_CONFIG" | jq -r '.atlas_standard_srv // ""')
     ATLAS_PWD=$(echo "$SCENARIO_CONFIG" | jq -r '.atlas_user_password // ""')
@@ -41,7 +41,7 @@ if [ -f "/home/workspace/scenario-config/scenario-config.json" ]; then
     # LLM_BEDROCK=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.bedrock // false')
 
 else
-    echo_with_timestamp "Warning: Scenario config file not found at /home/workspace/scenario-config/scenario-config.json"
+    echo_with_timestamp "Warning: Enhanced scenario config file not found at /home/workspace/scenario-config/enhanced-scenario-config.json"
     # Set defaults if config file not found
     REPOSITORY="https://github.com/simonegaiera/mongodb-airbnb-workshop"
     BRANCH="main"
