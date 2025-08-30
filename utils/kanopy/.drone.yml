@@ -1,0 +1,101 @@
+---
+kind: pipeline
+type: kubernetes
+name: default
+platform:
+  arch: arm64
+
+trigger:
+  branch:
+  - main
+
+steps:
+- name: publish
+  image: plugins/kaniko-ecr
+  settings:
+    create_repository: true
+    registry: 979559056307.dkr.ecr.us-east-2.amazonaws.com
+    repo: ai-arena-mdb-openvscode
+    tags:
+    - git-${DRONE_COMMIT_SHA:0:7}
+    - latest
+    - ${DRONE_BUILD_NUMBER}
+    context: utils/docker
+    dockerfile: utils/docker/mdb-openvscode.dockerfile
+    access_key:
+      from_secret: ecr_access_key
+    secret_key:
+      from_secret: ecr_secret_key
+  when:
+    event:
+    - push
+
+- name: deploy-scenario-definition
+  image: public.ecr.aws/kanopy/drone-helm:v3
+  settings:
+    chart: utils/eks-cluster/scenario-definition
+    chart_version: 0.1.5
+    namespace: default
+    release: scenario-definition
+    values_files:
+      - utils/eks-cluster/scenario-definition/values.yaml
+    values: |
+      scenario:
+        config:
+          aws_route53_record_name: airbnb-workshop.staging.corp.mongodb.com
+          atlas_standard_srv:
+            from_secret: atlas_standard_srv
+          atlas_user_password:
+            from_secret: atlas_user_password
+        git:
+          repository: https://github.com/simonegaiera/mongodb-airbnb-workshop.git
+          branch: main
+      env:
+        - name: MONGODB_URI
+          value:
+            from_secret: mongodb_uri
+        - name: DB_NAME
+          value: airbnb_arena
+        - name: COLLECTION_NAME
+          value: scenario_config
+    api_server: https://api.staging.corp.mongodb.com
+    kubernetes_token:
+      from_secret: staging_kubernetes_token
+  when:
+    event:
+    - push
+
+- name: deploy-staging
+  image: public.ecr.aws/kanopy/drone-helm:v3
+  settings:
+    chart: utils/eks-cluster/mdb-openvscode
+    chart_version: 0.1.2
+    namespace: airbnb-workshop
+    release: mdb-openvscode
+    values_files:
+      - utils/eks-cluster/mdb-openvscode/values.yaml
+    values: |
+      image:
+        tag: git-${DRONE_COMMIT_SHA:0:7}
+        repository: 979559056307.dkr.ecr.us-east-2.amazonaws.com/ai-arena-mdb-openvscode
+        pullPolicy: Always
+      persistence:
+        enabled: true
+      serviceAccount:
+        create: true
+      env:
+        - name: MONGODB_URI
+          value:
+            from_secret: mongodb_uri
+        - name: DATABASE_NAME
+          value: workshop-user
+        - name: ENVIRONMENT
+          value: staging
+    api_server: https://api.staging.corp.mongodb.com
+    kubernetes_token:
+      from_secret: staging_kubernetes_token
+  when:
+    event:
+    - push
+  depends_on:
+    - deploy-scenario-definition
