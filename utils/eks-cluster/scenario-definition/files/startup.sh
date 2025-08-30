@@ -76,7 +76,7 @@ echo "Scenario config path set to: $SCENARIO_CONFIG_PATH"
 export LAB_PATH="/tmp/$REPO_NAME/server/src/lab"
 echo "Lab path set to: $LAB_PATH"
 
-# Navigate to docs directory
+# Set navigation file path for Python script
 DOCS_PATH="/tmp/$REPO_NAME/docs"
 if [ ! -d "$DOCS_PATH" ]; then
     echo "ERROR: docs directory not found at $DOCS_PATH"
@@ -85,23 +85,17 @@ fi
 
 echo "Found docs directory: $DOCS_PATH"
 
-# Check for navigation file and copy if exists
+# Set navigation file path as environment variable
 NAVIGATION_SOURCE="$DOCS_PATH/_data/$NAVIGATION_BASE"
-NAVIGATION_TARGET="/shared/navigation.yml"
-
 if [ -f "$NAVIGATION_SOURCE" ]; then
-    echo "Copying $NAVIGATION_BASE to /shared/navigation.yml"
-    mkdir -p /shared
-    cp "$NAVIGATION_SOURCE" "$NAVIGATION_TARGET"
-    echo "Navigation file copied successfully!"
+    export NAVIGATION_FILE_PATH="$NAVIGATION_SOURCE"
+    echo "Navigation file path set to: $NAVIGATION_FILE_PATH"
 else
-    echo "WARNING: $NAVIGATION_BASE not found in _data/, using default navigation.yml"
-    # Copy default navigation.yml if it exists
+    echo "WARNING: $NAVIGATION_BASE not found in _data/, trying default navigation.yml"
     DEFAULT_NAV="$DOCS_PATH/_data/navigation.yml"
     if [ -f "$DEFAULT_NAV" ]; then
-        mkdir -p /shared
-        cp "$DEFAULT_NAV" "$NAVIGATION_TARGET"
-        echo "Default navigation.yml copied"
+        export NAVIGATION_FILE_PATH="$DEFAULT_NAV"
+        echo "Navigation file path set to: $NAVIGATION_FILE_PATH (default)"
     else
         echo "ERROR: No navigation file found"
         exit 1
@@ -112,7 +106,7 @@ fi
 # Run MongoDB Operations
 #########################################
 echo "Running MongoDB operations..."
-python3 /scripts/define-scenario.py "$NAVIGATION_TARGET"
+python3 /scripts/define-scenario.py
 
 # Clean up repository after Python script completes
 rm -rf "/tmp/$REPO_NAME"

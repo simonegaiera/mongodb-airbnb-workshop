@@ -278,46 +278,30 @@ def identify_needed_answer_files(nav_content):
         }
 
 def get_navigation_from_config(config):
-    """Extract navigation file path from scenario config and read it."""
+    """Load navigation file using environment variable path and apply filtering."""
     try:
-        # Check if config has instructions with base navigation file
-        instructions = config.get('instructions', {})
-        base_navigation = instructions.get('base')
+        # Use environment variable NAVIGATION_FILE_PATH (set by startup script)
+        nav_file_path = os.getenv("NAVIGATION_FILE_PATH")
         
-        if base_navigation:
-            # Try different navigation file paths for flexibility
-            navigation_paths = [
-                f"/workspace/docs/_data/{base_navigation}",  # Container path
-                f"../../../../docs/_data/{base_navigation}",  # Local relative path
-                os.getenv("NAVIGATION_BASE_PATH", "") + f"/{base_navigation}" if os.getenv("NAVIGATION_BASE_PATH") else "",
-            ]
-            
-            print(f"Found base navigation file in config: {base_navigation}")
-            
-            navigation_path = None
-            for path in navigation_paths:
-                if path and os.path.exists(path):
-                    navigation_path = path
-                    break
-            
-            if not navigation_path:
-                print(f"Navigation file not found. Tried paths: {[p for p in navigation_paths if p]}")
-                return None
-                
-            print(f"Using navigation file at: {navigation_path}")
-            nav_content = read_navigation_file(navigation_path)
-            
-            # Apply section filtering if navigation content was loaded
-            if nav_content:
-                nav_content = filter_navigation_based_on_sections(nav_content, config)
-            
-            return nav_content
-        else:
-            print("No base navigation file specified in config")
+        if not nav_file_path:
+            print("NAVIGATION_FILE_PATH environment variable not set")
             return None
             
+        if not os.path.exists(nav_file_path):
+            print(f"Navigation file not found at: {nav_file_path}")
+            return None
+            
+        print(f"Using navigation file from environment variable: {nav_file_path}")
+        nav_content = read_navigation_file(nav_file_path)
+        
+        # Apply section filtering if navigation content was loaded
+        if nav_content:
+            nav_content = filter_navigation_based_on_sections(nav_content, config)
+        
+        return nav_content
+            
     except Exception as e:
-        print(f"Error extracting navigation from config: {e}")
+        print(f"Error loading navigation from environment variable: {e}")
         return None
 
 def create_enhanced_configmap(enhanced_config):
@@ -459,7 +443,7 @@ def main():
     # Try to get navigation content from the scenario config first
     navigation_content = get_navigation_from_config(config)
     
-    # If no navigation found in config, check if navigation file path is provided as argument
+    # If no navigation found in config, check if navigation file path is provided as argument (backward compatibility)
     if not navigation_content and len(sys.argv) > 1:
         navigation_path = sys.argv[1]
         print(f"Navigation file path provided as argument: {navigation_path}")
