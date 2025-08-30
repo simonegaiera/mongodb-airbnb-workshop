@@ -3,6 +3,23 @@
 # Set debconf to non-interactive mode to avoid prompts
 export DEBIAN_FRONTEND=noninteractive
 
+# Exit immediately if any command fails
+set -e
+set -o pipefail
+
+# Function to handle errors
+handle_error() {
+    local exit_code=$1
+    local line_number=$2
+    local command="$3"
+    echo_with_timestamp "ERROR: Command '$command' failed with exit code $exit_code at line $line_number"
+    echo_with_timestamp "FATAL: Startup script failed - pod should be restarted"
+    exit $exit_code
+}
+
+# Set error trap
+trap 'handle_error $? $LINENO "$BASH_COMMAND"' ERR
+
 # Function to echo with timestamp for long operations
 echo_with_timestamp() {
     local message="$1"
@@ -66,6 +83,9 @@ else
 fi
 
 echo_with_timestamp "Executing user-specific operations script"
-sudo -u openvscode-server bash /tmp/user_operations.sh
+if ! sudo -u openvscode-server bash /tmp/user_operations.sh; then
+    echo_with_timestamp "FATAL: User operations script failed"
+    exit 1
+fi
 
 echo_with_timestamp "Script executed successfully"

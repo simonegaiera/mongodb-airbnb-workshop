@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# Exit immediately if any command fails
+set -e
+set -o pipefail
+
+# Function to handle errors
+handle_error() {
+    local exit_code=$1
+    local line_number=$2
+    local command="$3"
+    echo_with_timestamp "ERROR: Command '$command' failed with exit code $exit_code at line $line_number"
+    echo_with_timestamp "FATAL: Setup lab exercises script failed"
+    exit $exit_code
+}
+
+# Set error trap
+trap 'handle_error $? $LINENO "$BASH_COMMAND"' ERR
+
 # Function to echo with timestamp for long operations
 echo_with_timestamp() {
     local message="$1"
@@ -29,8 +46,8 @@ setup_lab_exercises() {
         
         # Check if source directory exists
         if [ ! -d "$SOURCE_DIR" ]; then
-            echo_with_timestamp "Warning: Source directory $SOURCE_DIR does not exist"
-            return 1
+            echo_with_timestamp "FATAL: Source directory $SOURCE_DIR does not exist"
+            exit 1
         fi
         
         # Check if destination directory exists, create if needed
@@ -47,23 +64,22 @@ setup_lab_exercises() {
                 
                 if [ -f "$source_file" ]; then
                     echo_with_timestamp "Copying $filename from answers to lab folder"
-                    cp "$source_file" "$dest_file"
-                    
-                    if [ $? -eq 0 ]; then
-                        echo_with_timestamp "Successfully copied $filename"
-                    else
-                        echo_with_timestamp "Failed to copy $filename"
+                    if ! cp "$source_file" "$dest_file"; then
+                        echo_with_timestamp "FATAL: Failed to copy $filename"
+                        exit 1
                     fi
+                    echo_with_timestamp "Successfully copied $filename"
                 else
-                    echo_with_timestamp "Warning: Source file $source_file does not exist"
+                    echo_with_timestamp "FATAL: Required source file $source_file does not exist"
+                    exit 1
                 fi
             fi
         done
         
         echo_with_timestamp "Lab exercises setup completed"
     else
-        echo_with_timestamp "Warning: Enhanced scenario config file not found, skipping lab exercises setup"
-        return 1
+        echo_with_timestamp "FATAL: Enhanced scenario config file not found, cannot setup lab exercises"
+        exit 1
     fi
 }
 

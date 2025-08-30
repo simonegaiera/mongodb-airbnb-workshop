@@ -1,5 +1,22 @@
 #!/bin/bash
 
+# Exit immediately if any command fails
+set -e
+set -o pipefail
+
+# Function to handle errors
+handle_error() {
+    local exit_code=$1
+    local line_number=$2
+    local command="$3"
+    echo_with_timestamp "ERROR: Command '$command' failed with exit code $exit_code at line $line_number"
+    echo_with_timestamp "FATAL: User operations script failed - pod should be restarted"
+    exit $exit_code
+}
+
+# Set error trap
+trap 'handle_error $? $LINENO "$BASH_COMMAND"' ERR
+
 # Function to echo with timestamp for long operations
 echo_with_timestamp() {
     local message="$1"
@@ -59,10 +76,26 @@ echo_with_timestamp "Repository folder: $REPO_NAME"
 if [ -d "$REPO_PATH/.git" ]; then
     echo_with_timestamp "Repository exists. Pulling latest changes..."
     git config --global --add safe.directory "$REPO_PATH"
-    cd "$REPO_PATH" && git pull || echo_with_timestamp "Failed to pull latest changes"
+    cd "$REPO_PATH"
+    
+    # Validate we are in a git repository before attempting git operations
+    if ! git rev-parse --git-dir > /dev/null 2>&1; then
+        echo_with_timestamp "FATAL: Directory exists but is not a valid git repository: $REPO_PATH"
+        exit 1
+    fi
+    
+    # Attempt to pull changes - fail if unsuccessful
+    if ! git pull; then
+        echo_with_timestamp "FATAL: Failed to pull latest changes from repository"
+        exit 1
+    fi
 else
     echo_with_timestamp "Repository does not exist. Cloning..."
-    git clone -b "$BRANCH" "$REPOSITORY" "$REPO_PATH" || echo_with_timestamp "Failed to clone repository"
+    # Attempt to clone - fail if unsuccessful
+    if ! git clone -b "$BRANCH" "$REPOSITORY" "$REPO_PATH"; then
+        echo_with_timestamp "FATAL: Failed to clone repository $REPOSITORY"
+        exit 1
+    fi
 fi
 
 # Get the values from settings.json
@@ -85,15 +118,38 @@ EOL
     # Copy files only for backend type
     if [ "$BACKEND_TYPE" = "backend" ]; then
         echo_with_timestamp "Copying files to backend folder"
-        cp "$REPO_PATH/docs/assets/files/swagger.json" "$REPO_PATH/backend/" || echo_with_timestamp "Failed to copy swagger.json"
-        cp -r "$REPO_PATH/server/src/lab/rest-lab" "$REPO_PATH/backend/" || echo_with_timestamp "Failed to copy rest-lab folder"
+        
+        # Validate source files exist before copying
+        if [ ! -f "$REPO_PATH/docs/assets/files/swagger.json" ]; then
+            echo_with_timestamp "FATAL: Required file swagger.json not found at $REPO_PATH/docs/assets/files/"
+            exit 1
+        fi
+        
+        if [ ! -d "$REPO_PATH/server/src/lab/rest-lab" ]; then
+            echo_with_timestamp "FATAL: Required directory rest-lab not found at $REPO_PATH/server/src/lab/"
+            exit 1
+        fi
+        
+        cp "$REPO_PATH/docs/assets/files/swagger.json" "$REPO_PATH/backend/"
+        cp -r "$REPO_PATH/server/src/lab/rest-lab" "$REPO_PATH/backend/"
     fi
 
     # Install dependencies only for server
     if [ "$BACKEND_TYPE" = "server" ]; then
         echo_with_timestamp "Installing server dependencies"
         cd "$REPO_PATH/$BACKEND_TYPE"
-        npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm install failed in $BACKEND_TYPE"
+        
+        # Validate package.json exists
+        if [ ! -f "package.json" ]; then
+            echo_with_timestamp "FATAL: package.json not found in $REPO_PATH/$BACKEND_TYPE"
+            exit 1
+        fi
+        
+        # Attempt npm install with better error handling
+        if ! npm install --legacy-peer-deps > /dev/null 2>&1; then
+            echo_with_timestamp "FATAL: npm install failed in $BACKEND_TYPE"
+            exit 1
+        fi
     fi
 fi
 
@@ -107,10 +163,24 @@ EOL
 
 echo_with_timestamp "Installing and building the app"
 cd "$REPO_PATH/$FRONTEND_TYPE"
+
+# Validate package.json exists for frontend
+if [ ! -f "package.json" ]; then
+    echo_with_timestamp "FATAL: package.json not found in $REPO_PATH/$FRONTEND_TYPE"
+    exit 1
+fi
+
 echo_with_timestamp "Installing app dependencies..."
-npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm install failed in $FRONTEND_TYPE"
+if ! npm install --legacy-peer-deps > /dev/null 2>&1; then
+    echo_with_timestamp "FATAL: npm install failed in $FRONTEND_TYPE"
+    exit 1
+fi
+
 echo_with_timestamp "Building the app..."
-npm run build > /dev/null 2>&1 || echo_with_timestamp "npm build failed in $FRONTEND_TYPE"
+if ! npm run build > /dev/null 2>&1; then
+    echo_with_timestamp "FATAL: npm build failed in $FRONTEND_TYPE"
+    exit 1
+fi
 
 # Source and call the lab exercises setup script conditionally
 if [ "$BACKEND_TYPE" = "server" ]; then

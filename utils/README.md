@@ -35,11 +35,6 @@
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
 
-### test
-- 🟢 **LOW:** How can I ensure all files are present after pod failures.
-openvscode-server@vscode-callen-mdb-openvscode-c68f9d655-7jj7v:~/mongodb-airbnb-workshop$ git push
-fatal: not a git repository (or any parent up to mount point /home)
-Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 
 ### Open VS Code
 - ❄️ **FROZEN:** [Changes were made] Understand why the firewall was blocking it and how to avoid it
