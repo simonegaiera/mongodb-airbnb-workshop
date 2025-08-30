@@ -74,12 +74,14 @@ else
     echo_with_timestamp "uv installation skipped (PostgreSQL and MCP not both enabled in scenario config)"
 fi
 
-echo_with_timestamp "Checking if directory /home/workspace/$REPO_NAME is empty"
-if [ -z "$(ls -A /home/workspace/$REPO_NAME)" ]; then
-    echo_with_timestamp "Directory is empty. Changing ownership."
+echo_with_timestamp "Checking directory /home/workspace/$REPO_NAME"
+if [ ! -d "/home/workspace/$REPO_NAME" ]; then
+    echo_with_timestamp "Directory does not exist. Skipping directory operations."
+elif [ -z "$(ls -A /home/workspace/$REPO_NAME 2>/dev/null)" ]; then
+    echo_with_timestamp "Directory exists but is empty. Changing ownership."
     chown -R openvscode-server:openvscode-server /home/workspace/$REPO_NAME
 else
-    echo_with_timestamp "Directory is not empty. Ownership not changed."
+    echo_with_timestamp "Directory exists and is not empty. Ownership not changed."
 fi
 
 echo_with_timestamp "Executing user-specific operations script"

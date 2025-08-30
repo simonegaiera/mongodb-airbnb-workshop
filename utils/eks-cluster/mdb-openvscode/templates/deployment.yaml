@@ -130,7 +130,7 @@ spec:
               
               # Check if source code exists
               if [ ! -f "pom.xml" ]; then
-                echo "ERROR: pom.xml not found in ${SCENARIO_PATH}/eks-cluster/results-processor"
+                echo "ERROR: pom.xml not found in ${SCENARIO_PATH}"
                 echo "Available files:"
                 ls -la ${SCENARIO_PATH} || echo "Directory not found"
                 exit 1
