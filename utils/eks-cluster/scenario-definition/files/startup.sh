@@ -61,6 +61,21 @@ git clone -b $BRANCH $REPOSITORY
 REPO_NAME=$(basename "$REPOSITORY" .git)
 echo "Repository name: $REPO_NAME"
 
+# Export REPO_NAME for use by Python script
+export REPO_NAME
+
+# Set answers path for Python script
+export ANSWERS_PATH="/tmp/$REPO_NAME/utils/answers"
+echo "Answers path set to: $ANSWERS_PATH"
+
+# Set scenario config path for Python script
+export SCENARIO_CONFIG_PATH="/etc/scenario-config/scenario-config.json"
+echo "Scenario config path set to: $SCENARIO_CONFIG_PATH"
+
+# Set lab path for Python script
+export LAB_PATH="/tmp/$REPO_NAME/server/src/lab"
+echo "Lab path set to: $LAB_PATH"
+
 # Navigate to docs directory
 DOCS_PATH="/tmp/$REPO_NAME/docs"
 if [ ! -d "$DOCS_PATH" ]; then
@@ -93,14 +108,14 @@ else
     fi
 fi
 
-# Clean up repository
-rm -rf "/tmp/$REPO_NAME"
-echo "Repository cleanup completed"
-
 #########################################
 # Run MongoDB Operations
 #########################################
 echo "Running MongoDB operations..."
 python3 /scripts/define-scenario.py "$NAVIGATION_TARGET"
+
+# Clean up repository after Python script completes
+rm -rf "/tmp/$REPO_NAME"
+echo "Repository cleanup completed"
 
 echo "Scenario definition setup completed successfully!"

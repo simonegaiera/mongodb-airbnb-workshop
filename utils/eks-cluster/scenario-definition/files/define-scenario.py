@@ -17,11 +17,11 @@ from kubernetes.client.rest import ApiException
 def read_config_from_configmap():
     """Read scenario configuration from the mounted ConfigMap or local file."""
     try:
-        # Try different config paths for flexibility (container vs local testing)
+        # Try environment variable first (set by startup script), then fallback paths
         config_paths = [
+            os.getenv("SCENARIO_CONFIG_PATH", ""),        # Environment variable from startup script (priority)
             "/etc/scenario-config/scenario-config.json",  # Container path
             "./test-scenario-config.json",                # Local test file
-            os.getenv("SCENARIO_CONFIG_PATH", ""),        # Environment variable override
         ]
         
         config_path = None
@@ -180,11 +180,10 @@ def get_available_answer_files():
     """Get list of available answer files."""
     answer_files = set()
     
-    # Try different answer folder paths for flexibility
+    # Try environment variable first (set by startup script), then fallback paths
     answer_paths = [
-        "/workspace/utils/answers",  # Container path
+        os.getenv("ANSWERS_PATH", ""),  # Environment variable from startup script (priority)
         "../../../../utils/answers",  # Local relative path
-        os.getenv("ANSWERS_PATH", ""),  # Environment variable override
     ]
     
     answers_dir = None
@@ -209,11 +208,10 @@ def get_available_lab_files():
     """Get list of available lab files."""
     lab_files = set()
     
-    # Try different lab folder paths for flexibility
+    # Try environment variable first (set by startup script), then fallback paths
     lab_paths = [
-        "/workspace/server/src/lab",  # Container path
+        os.getenv("LAB_PATH", ""),  # Environment variable from startup script (priority)
         "../../../../server/src/lab",  # Local relative path
-        os.getenv("LAB_PATH", ""),  # Environment variable override
     ]
     
     lab_dir = None
