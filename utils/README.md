@@ -69,6 +69,8 @@
     - 3 × c6a.2xlarge
     - 3 × c6a.4xlarge
 
+- **LLM:** $60 per scenario for 25 people  
+
 ## Workshop Stats
 
 - 10 out of 25 completed all the exercises in 2.5 hours.
