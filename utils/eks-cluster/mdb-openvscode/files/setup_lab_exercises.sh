@@ -6,252 +6,66 @@ echo_with_timestamp() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $message"
 }
 
-# Function to setup lab exercises based on instructions configuration
 setup_lab_exercises() {
-    local repo_path="$1"
-    local scenario_config="$2"
+    echo_with_timestamp "Setting up lab exercises..."
     
-    echo_with_timestamp "Setting up lab exercises based on configuration"
-    
-    # Extract instructions from scenario config
-    local instructions=$(echo "$scenario_config" | jq -r '.instructions // empty')
-    
-    if [ -z "$instructions" ] || [ "$instructions" = "null" ]; then
-        echo_with_timestamp "No instructions found in configuration, keeping all lab exercises as-is"
-        return 0
-    fi
-    
-    # Extract base navigation file
-    local base_nav=$(echo "$instructions" | jq -r '.base // "navigation-guided.yml"')
-    echo_with_timestamp "Using base navigation: $base_nav"
-    
-    # Extract sections array
-    local sections=$(echo "$instructions" | jq -r '.sections // []')
-    
-    if [ "$sections" = "[]" ] || [ "$sections" = "null" ]; then
-        echo_with_timestamp "No sections specified, all exercises will be available"
-        return 0
-    fi
-    
-    # Create arrays to track which exercises should be kept vs replaced with answers
-    local exercises_to_keep=()
-    local exercises_to_replace=()
-    
-    # Get all available lab files
-    local all_lab_files=($(ls "$repo_path/server/src/lab/"*.lab.js 2>/dev/null | xargs -n 1 basename))
-    
-    # Initialize all exercises as needing replacement (answers)
-    for lab_file in "${all_lab_files[@]}"; do
-        exercises_to_replace+=("$lab_file")
-    done
-    
-    # Process each section in the instructions
-    local section_count=$(echo "$sections" | jq '. | length')
-    
-    for ((i=0; i<section_count; i++)); do
-        local section=$(echo "$sections" | jq -r ".[$i]")
-        local section_title=$(echo "$section" | jq -r '.title // ""')
-        local section_content=$(echo "$section" | jq -r '.content // []')
+    # Read the enhanced scenario configuration
+    if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
+        SCENARIO_CONFIG=$(cat /home/workspace/scenario-config/enhanced-scenario-config.json)
         
-        echo_with_timestamp "Processing section: $section_title"
+        # Extract the files needed for unlisted exercises
+        FILES_NEEDED=$(echo "$SCENARIO_CONFIG" | jq -r '.needed_answer_files.summary.files_needed_for_unlisted_exercises[]? // empty')
         
-        # Process section content - if content is empty/null, try to infer from title
-        if [ "$section_content" = "[]" ] || [ "$section_content" = "null" ]; then
-            # Try to infer exercise type from section title
-            infer_exercises_from_title "$section_title" "exercises_to_keep" "exercises_to_replace" "$repo_path"
-        else
-            # Process specific content items
-            process_section_content "$section_content" "exercises_to_keep" "exercises_to_replace"
-        fi
-    done
-    
-    # Apply the exercise setup
-    apply_exercise_setup "$repo_path" exercises_to_keep exercises_to_replace
-}
-
-# Function to mark exercises to keep based on pattern
-mark_exercises_to_keep() {
-    local pattern="$1"
-    local keep_array_name="$2"
-    local replace_array_name="$3"
-    local repo_path="$4"
-    
-    # Use different variable names to avoid circular reference
-    local -n keep_array_ref=$keep_array_name
-    local -n replace_array_ref=$replace_array_name
-    
-    # Convert shell glob pattern to regex pattern for grep
-    local regex_pattern="$pattern"
-    # Escape dots first
-    regex_pattern=$(echo "$regex_pattern" | sed 's/\./\\./g')
-    # Convert * to .* for regex (simple approach)
-    regex_pattern=$(echo "$regex_pattern" | sed 's/\*/.*/g')
-    # Anchor the pattern
-    regex_pattern="^${regex_pattern}$"
-    
-    # Find matching files
-    for lab_file in $(ls "$repo_path/server/src/lab/" | grep -E "$regex_pattern" 2>/dev/null); do
-        # Add to keep array if not already there
-        if [[ ! " ${keep_array_ref[@]} " =~ " ${lab_file} " ]]; then
-            keep_array_ref+=("$lab_file")
-            echo_with_timestamp "    Adding $lab_file to keep list"
+        if [ -z "$FILES_NEEDED" ]; then
+            echo_with_timestamp "No answer files need to be copied"
+            return 0
         fi
         
-        # Remove from replace array - create new array without the matched element
-        local temp_array=()
-        for item in "${replace_array_ref[@]}"; do
-            if [[ "$item" != "$lab_file" ]]; then
-                temp_array+=("$item")
+        echo_with_timestamp "Found files that need to be copied from answers to lab folder"
+        
+        # Define source and destination directories
+        SOURCE_DIR="$REPO_PATH/utils/answers"
+        DEST_DIR="$REPO_PATH/server/src/lab"
+        
+        # Check if source directory exists
+        if [ ! -d "$SOURCE_DIR" ]; then
+            echo_with_timestamp "Warning: Source directory $SOURCE_DIR does not exist"
+            return 1
+        fi
+        
+        # Check if destination directory exists, create if needed
+        if [ ! -d "$DEST_DIR" ]; then
+            echo_with_timestamp "Creating destination directory $DEST_DIR"
+            mkdir -p "$DEST_DIR"
+        fi
+        
+        # Copy each needed file
+        echo "$FILES_NEEDED" | while IFS= read -r filename; do
+            if [ -n "$filename" ]; then
+                source_file="$SOURCE_DIR/$filename"
+                dest_file="$DEST_DIR/$filename"
+                
+                if [ -f "$source_file" ]; then
+                    echo_with_timestamp "Copying $filename from answers to lab folder"
+                    cp "$source_file" "$dest_file"
+                    
+                    if [ $? -eq 0 ]; then
+                        echo_with_timestamp "Successfully copied $filename"
+                    else
+                        echo_with_timestamp "Failed to copy $filename"
+                    fi
+                else
+                    echo_with_timestamp "Warning: Source file $source_file does not exist"
+                fi
             fi
         done
-        replace_array_ref=("${temp_array[@]}")
-        echo_with_timestamp "    Removed $lab_file from replace list"
-    done
-}
-
-# Function to infer exercises from section title when content is empty
-infer_exercises_from_title() {
-    local section_title="$1"
-    local keep_array_name="$2"
-    local replace_array_name="$3"
-    local repo_path="$4"
-    
-    echo_with_timestamp "Inferring exercises from title: $section_title"
-    
-    # Convert title to lowercase for pattern matching
-    local title_lower=$(echo "$section_title" | tr '[:upper:]' '[:lower:]')
-    
-    # Pattern matching for different exercise types
-    if [[ "$title_lower" =~ crud.*operations.*\(1\)|crud.*\(1\)|crud.*1 ]]; then
-        echo_with_timestamp "Detected CRUD Operations (1) - including crud-1 to crud-4"
-        mark_exercises_to_keep "crud-[1-4].lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ crud.*operations.*\(2\)|crud.*\(2\)|crud.*2 ]]; then
-        echo_with_timestamp "Detected CRUD Operations (2) - including crud-5 to crud-8"
-        mark_exercises_to_keep "crud-[5-8].lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ crud ]]; then
-        echo_with_timestamp "Detected CRUD section - including all crud exercises"
-        mark_exercises_to_keep "crud-*.lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ aggregation ]]; then
-        echo_with_timestamp "Detected Aggregations section - including pipeline exercises"
-        mark_exercises_to_keep "pipeline-*.lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ pipeline ]]; then
-        echo_with_timestamp "Detected Pipeline section - including pipeline exercises"
-        mark_exercises_to_keep "pipeline-*.lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ vector.*search ]]; then
-        echo_with_timestamp "Detected Vector Search section - including vector-search exercises"
-        mark_exercises_to_keep "vector-search-*.lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ search ]]; then
-        echo_with_timestamp "Detected Search section - including search exercises"
-        mark_exercises_to_keep "search-*.lab.js" "$keep_array_name" "$replace_array_name" "$repo_path"
-    elif [[ "$title_lower" =~ index ]]; then
-        echo_with_timestamp "Detected Indexes section - navigation only (no lab files)"
-    else
-        echo_with_timestamp "Could not infer exercise type from title: $section_title"
-        echo_with_timestamp "Available patterns: crud, aggregation/pipeline, search, vector search, index"
-    fi
-}
-
-# Function to process section content (specific exercise URLs)
-process_section_content() {
-    local content="$1"
-    local keep_array_name="$2"
-    local replace_array_name="$3"
-    
-    local -n keep_ref=$keep_array_name
-    local -n replace_ref=$replace_array_name
-    
-    local content_count=$(echo "$content" | jq '. | length')
-    
-    for ((j=0; j<content_count; j++)); do
-        local content_item=$(echo "$content" | jq -r ".[$j]")
         
-        # Extract exercise number from URL pattern like "/crud/1/" or "/search/2/"
-        if [[ "$content_item" =~ ^/([^/]+)/([0-9]+)/$ ]]; then
-            local exercise_type="${BASH_REMATCH[1]}"
-            local exercise_num="${BASH_REMATCH[2]}"
-            local lab_file="${exercise_type}-${exercise_num}.lab.js"
-            
-            echo_with_timestamp "Including exercise: $lab_file"
-            
-            # Add to keep array if not already there
-            if [[ ! " ${keep_ref[@]} " =~ " ${lab_file} " ]]; then
-                keep_ref+=("$lab_file")
-            fi
-            
-            # Remove from replace array - use same approach as mark_exercises_to_keep
-            local temp_array=()
-            for item in "${replace_ref[@]}"; do
-                if [[ "$item" != "$lab_file" ]]; then
-                    temp_array+=("$item")
-                fi
-            done
-            replace_ref=("${temp_array[@]}")
-        fi
-    done
-}
-
-# Function to apply the exercise setup (keep labs or replace with answers)
-apply_exercise_setup() {
-    local repo_path="$1"
-    local -n keep_array=$2
-    local -n replace_array=$3
-    
-    echo_with_timestamp "Applying exercise setup..."
-    
-    # Keep exercises that should remain as labs
-    echo_with_timestamp "Exercises to keep as labs:"
-    for exercise in "${keep_array[@]}"; do
-        echo_with_timestamp "  - $exercise (keeping as lab)"
-    done
-    
-    # Replace exercises with answers
-    echo_with_timestamp "Exercises to replace with answers:"
-    for exercise in "${replace_array[@]}"; do
-        if [ -f "$repo_path/utils/answers/$exercise" ]; then
-            echo_with_timestamp "  - $exercise (replacing with answer)"
-            cp "$repo_path/utils/answers/$exercise" "$repo_path/server/src/lab/$exercise"
-        else
-            echo_with_timestamp "  - $exercise (answer file not found, keeping as lab)"
-        fi
-    done
-}
-
-# Function to setup navigation based on instructions
-setup_navigation() {
-    local repo_path="$1"
-    local scenario_config="$2"
-    
-    echo_with_timestamp "Setting up navigation based on configuration"
-    
-    # Extract instructions from scenario config
-    local instructions=$(echo "$scenario_config" | jq -r '.instructions // empty')
-    
-    if [ -z "$instructions" ] || [ "$instructions" = "null" ]; then
-        echo_with_timestamp "No instructions found, using default navigation"
-        return 0
-    fi
-    
-    # Extract base navigation file
-    local base_nav=$(echo "$instructions" | jq -r '.base // "navigation-guided.yml"')
-}
-
-# Main function to be called from user_operations.sh
-main() {
-    local repo_path="$1"
-    local scenario_config="$2"
-    local backend_type="$3"
-    
-    # Only process if backend is server and we have navigation instructions
-    if [ "$backend_type" = "server" ]; then
-        echo_with_timestamp "Backend is server, processing navigation and lab exercises"
-        setup_navigation "$repo_path" "$scenario_config"
-        setup_lab_exercises "$repo_path" "$scenario_config"
+        echo_with_timestamp "Lab exercises setup completed"
     else
-        echo_with_timestamp "Backend is not server ($backend_type), skipping navigation and lab setup"
+        echo_with_timestamp "Warning: Enhanced scenario config file not found, skipping lab exercises setup"
+        return 1
     fi
 }
 
-# If script is run directly (not sourced), execute main with provided arguments
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
-fi
+# Export the function so it can be called from other scripts
+export -f setup_lab_exercises

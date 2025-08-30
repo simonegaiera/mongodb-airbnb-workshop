@@ -112,15 +112,29 @@ npm install --legacy-peer-deps > /dev/null 2>&1 || echo_with_timestamp "npm inst
 echo_with_timestamp "Building the app..."
 npm run build > /dev/null 2>&1 || echo_with_timestamp "npm build failed in $FRONTEND_TYPE"
 
-# Source and call the lab exercises setup script if backend is server
-# if [ "$BACKEND_TYPE" = "server" ]; then
-#     echo_with_timestamp "Setting up lab exercises and navigation for server backend"
+# Source and call the lab exercises setup script conditionally
+if [ "$BACKEND_TYPE" = "server" ]; then
+    echo_with_timestamp "Server backend detected, checking if lab exercises setup is needed"
     
-#     # Source the setup script
-#     source "$(dirname "$0")/setup_lab_exercises.sh"
-    
-#     # Call the main function with required parameters
-#     main "$REPO_PATH" "$SCENARIO_CONFIG" "$BACKEND_TYPE"
-# fi
+    # Check if enhanced scenario config exists and get total_answer_files_needed
+    if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
+        TOTAL_ANSWER_FILES_NEEDED=$(echo "$SCENARIO_CONFIG" | jq -r '.needed_answer_files.summary.total_answer_files_needed // 0')
+        
+        echo_with_timestamp "Total answer files needed: $TOTAL_ANSWER_FILES_NEEDED"
+        
+        # Only run setup if total_answer_files_needed is not zero
+        if [ "$TOTAL_ANSWER_FILES_NEEDED" -ne 0 ]; then
+            echo_with_timestamp "Answer files needed, setting up lab exercises"
+            
+            # Source the setup script and call the function
+            source "$(dirname "$0")/setup_lab_exercises.sh"
+            setup_lab_exercises
+        else
+            echo_with_timestamp "No answer files needed, skipping lab exercises setup"
+        fi
+    else
+        echo_with_timestamp "Enhanced scenario config not found, skipping lab exercises setup"
+    fi
+fi
 
 echo_with_timestamp "User operations script completed successfully."
