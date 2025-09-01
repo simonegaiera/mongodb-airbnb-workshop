@@ -6,7 +6,7 @@ resource "helm_release" "scenario_definition" {
   name       = "scenario-definition"
   chart      = "./scenario-definition"
   namespace  = "default"
-  version    = "0.1.5"
+  version    = "0.1.6"
   
   wait          = true
   wait_for_jobs = true

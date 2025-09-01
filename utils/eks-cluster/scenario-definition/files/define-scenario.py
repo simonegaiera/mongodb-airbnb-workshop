@@ -391,11 +391,6 @@ def store_config_in_mongodb(config, navigation_content=None):
         from datetime import datetime, timezone
         config['created_at'] = datetime.now(timezone.utc).isoformat()
         
-        # Remove sensitive fields before storing
-        if 'atlas_user_password' in config:
-            config.pop('atlas_user_password')
-            print("Removed atlas_user_password field for security")
-        
         # Add navigation content if available
         if navigation_content:
             config['navigation'] = navigation_content

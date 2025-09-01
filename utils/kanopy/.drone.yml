@@ -3,7 +3,7 @@ kind: pipeline
 type: kubernetes
 name: default
 platform:
-  arch: arm64
+  arch: amd64
 
 trigger:
   branch:
@@ -65,16 +65,78 @@ steps:
     event:
     - push
 
-- name: deploy-staging
+- name: deploy-docs-nginx
   image: public.ecr.aws/kanopy/drone-helm:v3
   settings:
-    chart: utils/eks-cluster/mdb-openvscode
-    chart_version: 0.1.2
-    namespace: airbnb-workshop
-    release: mdb-openvscode
+    chart: utils/eks-cluster/docs-nginx
+    chart_version: 0.1.1
+    namespace: default
+    release: docs-nginx
     values_files:
-      - utils/eks-cluster/mdb-openvscode/values.yaml
+      - utils/eks-cluster/docs-nginx/values.yaml
     values: |
+      image:
+        repository: nginx
+        tag: stable
+        pullPolicy: IfNotPresent
+      service:
+        type: LoadBalancer
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 80
+      env:
+        - name: MONGODB_URI
+          value:
+            from_secret: mongodb_uri
+        - name: DB_NAME
+          value: airbnb_arena
+        - name: COLLECTION_NAME
+          value: scenario_config
+      nginx:
+        config:
+          from_secret: docs_nginx_config
+        html:
+          from_secret: docs_nginx_html
+        error:
+          from_secret: docs_nginx_error
+        notfound:
+          from_secret: docs_nginx_notfound
+        favicon:
+          from_secret: docs_nginx_favicon
+    api_server: https://api.staging.corp.mongodb.com
+    kubernetes_token:
+      from_secret: staging_kubernetes_token
+  when:
+    event:
+    - push
+  depends_on:
+    - deploy-scenario-definition
+
+- name: deploy-users-script
+  image: alpine:latest
+  commands:
+    - apk add --no-cache curl helm kubectl
+    - |
+      echo "Deploying OpenVSCode instances for multiple users..."
+      echo "User list: $USER_LIST"
+      
+      # Install helm if not available
+      if ! command -v helm &> /dev/null; then
+        wget https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz
+        tar -zxvf helm-v3.10.0-linux-amd64.tar.gz
+        mv linux-amd64/helm /usr/local/bin/helm
+      fi
+      
+      # Deploy for each user in the list
+      IFS=',' read -ra USERS <<< "$USER_LIST"
+      for user in "${USERS[@]}"; do
+        user=$(echo "$user" | xargs) # trim whitespace
+        echo "Deploying OpenVSCode for user: $user"
+        
+        # Create user-specific values file
+        cat > /tmp/values-$user.yaml << EOF
       image:
         tag: git-${DRONE_COMMIT_SHA:0:7}
         repository: 979559056307.dkr.ecr.us-east-2.amazonaws.com/ai-arena-mdb-openvscode
@@ -85,15 +147,49 @@ steps:
         create: true
       env:
         - name: MONGODB_URI
-          value:
-            from_secret: mongodb_uri
-        - name: DATABASE_NAME
-          value: workshop-user
+          value: mongodb+srv://$user:$ATLAS_USER_PASSWORD@$ATLAS_CLUSTER_HOST/?retryWrites=true&w=majority
         - name: ENVIRONMENT
           value: staging
-    api_server: https://api.staging.corp.mongodb.com
-    kubernetes_token:
-      from_secret: staging_kubernetes_token
+        - name: LOG_LEVEL
+          value: INFO
+        - name: SERVICE_NAME
+          value: http://localhost:5000
+        - name: SCENARIO_PATH
+          value: /home/workspace/mongodb-airbnb-workshop/utils/eks-cluster/results-processor
+        - name: SIGNAL_FILE_PATH
+          value: /home/workspace/mongodb-airbnb-workshop/server/signal
+        - name: LOG_PATH
+          value: /home/workspace/mongodb-airbnb-workshop/server/results
+        - name: WORKSHOP_USER
+          value: /app
+        - name: BACKEND_URL
+          value: https://$user.airbnb-workshop.staging.corp.mongodb.com/backend
+        - name: DATABASE_NAME
+          value: $user
+        - name: MDB_MCP_CONNECTION_STRING
+          value: mongodb+srv://$user:$ATLAS_USER_PASSWORD@$ATLAS_CLUSTER_HOST/$user
+      EOF
+        
+        # Deploy using helm
+        helm upgrade --install vscode-$user ./utils/eks-cluster/mdb-openvscode \
+          --namespace airbnb-workshop \
+          --create-namespace \
+          --version 0.1.2 \
+          --values ./utils/eks-cluster/mdb-openvscode/values.yaml \
+          --values /tmp/values-$user.yaml \
+          --wait --timeout 600s
+          
+        echo "Deployed OpenVSCode for user: $user"
+      done
+      
+      echo "All user deployments completed!"
+  environment:
+    USER_LIST:
+      from_secret: workshop_user_list
+    ATLAS_USER_PASSWORD:
+      from_secret: atlas_user_password
+    ATLAS_CLUSTER_HOST:
+      from_secret: atlas_cluster_host
   when:
     event:
     - push
