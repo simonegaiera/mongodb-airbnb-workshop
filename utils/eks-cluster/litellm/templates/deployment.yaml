@@ -54,6 +54,13 @@ spec:
                   name: {{ include "litellm.fullname" . }}-secrets
                   key: anthropic-api-key
             {{- end }}
+            {{- if .Values.litellm.secrets.azureOpenaiApiKey }}
+            - name: AZURE_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "litellm.fullname" . }}-secrets
+                  key: azure-openai-api-key
+            {{- end }}
           args:
             - "--config"
             - "/app/config.yaml"

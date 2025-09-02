@@ -36,4 +36,5 @@ inputs = {
   aws_region = "us-east-2"
   domain_email = "simone.gaiera@mongodb.com"
   anthropic_api_key = "api-key-here"
+  azure_openai_api_key = "api-key-here"
 }

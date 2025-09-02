@@ -70,6 +70,13 @@ variable "anthropic_api_key" {
   default     = ""
 }
 
+variable "azure_openai_api_key" {
+  description = "Azure OpenAI API key for LiteLLM"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "scenario_config" {
   description = "Scenario configuration"
   type        = any

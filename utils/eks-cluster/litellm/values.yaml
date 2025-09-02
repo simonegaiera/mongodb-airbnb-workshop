@@ -79,7 +79,8 @@ litellm:
   
   # API keys - these should be provided as secrets externally
   secrets:
-    anthropicApiKey: ""  # Will be provided via external secret
+    anthropicApiKey: ""
+    azureOpenaiApiKey: ""
   
   # LiteLLM configuration
   config:
@@ -97,6 +98,17 @@ litellm:
         litellm_params:
           model: "anthropic/claude-sonnet-4-20250514"
           api_key: "os.environ/ANTHROPIC_API_KEY"
+          max_tokens: 4096
+          temperature: 0.7
+          cache_control_injection_points:
+            - location: message
+              role: system
+      - model_name: "gpt-5-mini"
+        litellm_params:
+          model: "azure/gpt-5-mini"
+          api_key: "os.environ/AZURE_OPENAI_API_KEY"
+          api_base: "https://solutionsconsultingopenai.openai.azure.com"
+          api_version: "2025-04-01-preview"
           max_tokens: 4096
           temperature: 0.7
           cache_control_injection_points:

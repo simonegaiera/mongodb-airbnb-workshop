@@ -19,6 +19,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
+  version    = "0.1.3"
   
   wait          = true
   wait_for_jobs = true
@@ -43,6 +44,7 @@ resource "helm_release" "litellm" {
         
         secrets = {
           anthropicApiKey = var.anthropic_api_key
+          azureOpenaiApiKey = var.azure_openai_api_key
         }
       }
     })
