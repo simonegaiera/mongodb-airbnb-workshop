@@ -114,6 +114,17 @@ litellm:
           cache_control_injection_points:
             - location: message
               role: system
+      - model_name: "gpt-5-chat"
+        litellm_params:
+          model: "azure/gpt-5-chat"
+          api_key: "os.environ/AZURE_OPENAI_API_KEY"
+          api_base: "https://solutionsconsultingopenai.openai.azure.com"
+          api_version: "2025-04-01-preview"
+          max_tokens: 4096
+          temperature: 0.7
+          cache_control_injection_points:
+            - location: message
+              role: system
     
     general_settings:
       disable_spend_logs: false

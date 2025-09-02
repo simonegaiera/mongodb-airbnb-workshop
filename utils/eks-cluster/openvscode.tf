@@ -102,10 +102,6 @@ resource "helm_release" "user_openvscode" {
           value = tostring(try(var.scenario_config.llm.model, false))
         },
         {
-          name  = "LLM_PROVIDER"
-          value = tostring(try(var.scenario_config.llm.provider, false))
-        },
-        {
           name  = "AWS_REGION"
           value = tostring(try(var.scenario_config.llm.region, false))
         },

@@ -1,3 +1,6 @@
+import { db } from "../utils/database.js";  
+import { collectionName } from '../config/config.js';  
+
 /**
  * Finds all documents that match the specified `query`.
  * Sorts results by `_id` in ascending order.

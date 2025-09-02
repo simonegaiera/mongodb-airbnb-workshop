@@ -50,7 +50,6 @@ if [ -f "/home/workspace/scenario-config/enhanced-scenario-config.json" ]; then
     # Add LLM proxy configuration variables
     # LLM_MODEL=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.model // ""')
     # LLM_REGION=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.region // ""')
-    # LLM_PROVIDER=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.provider // ""')
     # LLM_PROXY_ENABLED=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy.enabled // false')
     # LLM_PROXY_TYPE=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy.type // ""')
     # LLM_PROXY_SERVICE=$(echo "$SCENARIO_CONFIG" | jq -r '.llm.proxy."service-name" // ""')
