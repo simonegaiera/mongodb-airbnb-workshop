@@ -22,7 +22,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - When prompted:
      - Click **Yes, I trust the author**
      - Click **Mark Done**
-  ![Trust Prompt](../../assets/images/environment-folder-trust.png)
+   ![Trust Prompt](../../assets/images/environment-folder-trust.png)
 
 3. **Start the Server:**
    - Open a new terminal:
@@ -93,7 +93,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - Enter the following LiteLLM settings:
      - **Base URL:** `http://litellm-service:4000`
      - **API Key:** `noop`
-     - **Model:** `claude-4-sonnet`
+     - **Model:** `gpt-5-mini`
      - Select **Use Prompt Caching (GA)**
    - Click **Let's go!**  
      ![cline-welcome](../../assets/images/cline-welcome.png)
