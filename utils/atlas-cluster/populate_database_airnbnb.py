@@ -77,31 +77,52 @@ def create_user_collection(db_name, client, common_database, collections_list):
         client[common_database][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])
 
 def upsert_users(users_map, client, common_database):
-    collection = client[common_database]['participants']
+    participants_collection = client[common_database]['participants']
+    # Create a new collection for user details including email (not accessible to users)
+    user_details_collection = client[common_database]['user_details']
+    
     for user_id, user_data in users_map.items():
-        # Prepare the document data
-        document_data = {}
+        # Prepare the document data for participants collection (no email)
+        participants_document = {}
         if user_data.get('name'):
-            document_data['name'] = user_data['name']
+            participants_document['name'] = user_data['name']
+        
+        # Prepare the document data for user_details collection (name, email, timestamp)
+        user_details_document = {}
+        if user_data.get('name'):
+            user_details_document['name'] = user_data['name']
         if user_data.get('email'):
-            document_data['email'] = user_data['email']
+            user_details_document['email'] = user_data['email']
+        user_details_document['timestamp'] = datetime.now(timezone.utc)
         
         if user_data.get('email') is None:
             # For generated users (no email), only set data on insert and include 'taken' field
-            document_data['taken'] = False
-            collection.update_one(
+            participants_document['taken'] = False
+            participants_collection.update_one(
                 {'_id': user_id},
-                {'$setOnInsert': document_data},
+                {'$setOnInsert': participants_document},
+                upsert=True
+            )
+            # For generated users, still add to user_details collection but without email
+            user_details_collection.update_one(
+                {'_id': user_id},
+                {'$setOnInsert': user_details_document},
                 upsert=True
             )
         else:
-            # For CSV users, set name/email and add timestamp on insert
-            collection.update_one(
+            # For CSV users, set name only in participants collection
+            participants_collection.update_one(
                 {'_id': user_id},
                 {
-                    '$set': document_data,
+                    '$set': {'name': user_data['name']},
                     '$setOnInsert': {'insert_timestamp': datetime.now(timezone.utc)}
                 },
+                upsert=True
+            )
+            # For CSV users, set name, email, and timestamp in user_details collection
+            user_details_collection.update_one(
+                {'_id': user_id},
+                {'$set': user_details_document},
                 upsert=True
             )
         print(f"Upserted user with _id: {user_id}", flush=True)

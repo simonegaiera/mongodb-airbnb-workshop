@@ -185,10 +185,6 @@ resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
       collection_name = "results_health"
       database_name   = var.common_database_name
     }
-    resources {
-      collection_name = "scenario_config"
-      database_name   = var.common_database_name
-    }
   }
   actions {
     action = "LIST_COLLECTIONS"
