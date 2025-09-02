@@ -29,6 +29,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      ```
      ☰ > Terminal > New Terminal
      ```
+     ![MongoDB Playground](../../assets/images/environment-terminal.png)
    - Fire up the backend:
      ```bash
      npm start
