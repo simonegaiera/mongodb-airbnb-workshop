@@ -43,7 +43,7 @@ db.<COLLECTION-NAME>.aggregate([
       "path": "<FIELD-NAME>", 
       "query": "<QUERY-TEXT>", 
       "numCandidates": <NUMBER-OF-CANDIDATES-TO-CONSIDER>, 
-      "limit": <NUMBER-OF-DOCUMENTS-TO-RETURN>
+      "limit": <NUMBER-OF-DOCUMENTS-TO-RETURN>,
       "filter": { category: "example_category" }
     }
   }
@@ -56,7 +56,7 @@ db.<COLLECTION-NAME>.aggregate([
 
 
 ## Testing
-- Help run tests (`npm run test`), explain failures, and guide checking implementation.
+- Help run tests (`npm start`), explain failures, and guide checking implementation.
 - Help with HTTP client testing in `.http` files.
 
 _Remember: Learning is the goal. Guidance over answers._

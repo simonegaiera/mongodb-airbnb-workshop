@@ -27,6 +27,9 @@
 
 ## Terraform
 
+### Atlas
+- create 2 collection, 1 with emails, 1 w/o emails
+
 ### Deploy
 - ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
 - ❄️ **FROZEN:** S3 bucket change to mongodb-arena from mongodb-gameday
