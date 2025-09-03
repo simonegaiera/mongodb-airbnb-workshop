@@ -492,10 +492,13 @@ public class ResultsProcessor {
     }
     
     /**
-     * Executes all exercise tests based on ENVIRONMENT variable
+     * Executes all exercise tests based on scenario configuration from MongoDB
      */
     private void executeExerciseTests() {
-        logger.info("\n{}\n{} Starting test execution for {} exercises \n{}", SEPARATOR, STEP, EXERCISE_TESTS.size(), SEPARATOR);
+        // Get the exercise list from scenario_config collection or fallback to hardcoded list
+        List<String> exercisesToTest = getExerciseListFromConfig();
+        
+        logger.info("\n{}\n{} Starting test execution for {} exercises \n{}", SEPARATOR, STEP, exercisesToTest.size(), SEPARATOR);
         
         // Get service name and environment
         String environment = getEnvironmentVariable("ENVIRONMENT");
@@ -514,12 +517,12 @@ public class ResultsProcessor {
         }
         
         logger.info("Executing tests for {} environment with service: {}", environment, serviceName);
-        List<Document> testResults = executeTestsForEnvironment(serviceName, environment, currentUser);
+        List<Document> testResults = executeTestsForEnvironment(exercisesToTest, serviceName, environment, currentUser);
         
         // Store results in MongoDB
         storeResults(testResults, currentUser);
 
-        int totalTests = EXERCISE_TESTS.size();
+        int totalTests = exercisesToTest.size();
         int passedTests = getCompletedTests(currentUser).size();
 
         logger.info("{} Summary: Total tests: {}, Passed tests: {}", INFO, totalTests, passedTests);
@@ -530,19 +533,19 @@ public class ResultsProcessor {
             logger.info("{} Some tests are still pending. Keep going!", WARNING);
         }
 
-        logger.info("{} Test execution completed. Executed {} tests for {} environment", SUCCESS, EXERCISE_TESTS.size(), environment);
+        logger.info("{} Test execution completed. Executed {} tests for {} environment", SUCCESS, exercisesToTest.size(), environment);
     }
     
     /**
      * Executes all exercise tests for a specific environment using Java test methods
      */
-    private List<Document> executeTestsForEnvironment(String serviceName, String environment, String user) {
+    private List<Document> executeTestsForEnvironment(List<String> exerciseTests, String serviceName, String environment, String user) {
         List<Document> testResults = new ArrayList<>();
         
         // Get existing results to check what's already passed
         Set<String> completedTests = getCompletedTests(user);
         
-        for (String testName : EXERCISE_TESTS) {
+        for (String testName : exerciseTests) {
             // Skip tests that have already been completed
             if (completedTests.contains(testName)) {
                 logger.info("Test {} already completed for user {}, skipping", testName, user);
@@ -567,6 +570,42 @@ public class ResultsProcessor {
         }
         
         return testResults;
+    }
+
+    /**
+     * Gets the exercise list from scenario_config collection or falls back to hardcoded list
+     */
+    private List<String> getExerciseListFromConfig() {
+        try {
+            MongoCollection<Document> scenarioCollection = database.getCollection("scenario_config");
+            
+            // Find the scenario configuration document
+            Document scenarioDoc = scenarioCollection.find().first();
+            
+            if (scenarioDoc != null) {
+                Document neededAnswerFiles = scenarioDoc.get("needed_answer_files", Document.class);
+                if (neededAnswerFiles != null) {
+                    Document analysis = neededAnswerFiles.get("analysis", Document.class);
+                    if (analysis != null) {
+                        @SuppressWarnings("unchecked")
+                        List<String> listedExercises = analysis.get("listed_exercises", List.class);
+                        if (listedExercises != null && !listedExercises.isEmpty()) {
+                            logger.info("{} Using exercise list from scenario_config: {}", INFO, listedExercises);
+                            return new ArrayList<>(listedExercises);
+                        }
+                    }
+                }
+            }
+            
+            logger.info("{} No exercises found in scenario_config, falling back to hardcoded list", WARNING);
+            
+        } catch (Exception e) {
+            logger.warn("{} Failed to fetch exercises from scenario_config, using fallback: {}", WARNING, e.getMessage());
+        }
+        
+        // Fallback to hardcoded exercise list
+        logger.info("{} Using fallback hardcoded exercise list: {}", INFO, EXERCISE_TESTS);
+        return new ArrayList<>(EXERCISE_TESTS);
     }
     
     /**
