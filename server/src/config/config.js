@@ -11,3 +11,4 @@ export const collectionName = 'listingsAndReviews';
 export const resultsDatabaseName = 'airbnb_arena';
 export const resultsCollectionName = 'results';
 export const participantsCollectionName = 'participants';
+export const scenarioCollectionName = 'scenario_config';

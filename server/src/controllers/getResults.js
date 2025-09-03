@@ -1,5 +1,5 @@
 import { connectToDatabase, client } from "../utils/database.js";
-import { resultsCollectionName, participantsCollectionName, resultsDatabaseName, databaseName } from '../config/config.js';
+import { resultsCollectionName, participantsCollectionName, resultsDatabaseName, databaseName, scenarioCollectionName } from '../config/config.js';
 import { logInfo, logError, logDebug } from '../utils/logger.js';
 
 
@@ -104,10 +104,22 @@ export async function getResultsByNameAndUsername(req, res) {
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
         const collection = database.collection(resultsCollectionName);
+        const scenarioCollection = database.collection(scenarioCollectionName);
 
         // The username is derived from the database name (which represents the current user)
         const username = databaseName;
 
+        // Get scenario configuration to check if exercise is in listed_exercises
+        const scenarioConfig = await scenarioCollection.findOne({});
+        let listedExercises = [];
+        
+        if (scenarioConfig && scenarioConfig.needed_answer_files && scenarioConfig.needed_answer_files.analysis) {
+            listedExercises = scenarioConfig.needed_answer_files.analysis.listed_exercises || [];
+        }
+
+        // Check if the exercise name is in the listed exercises
+        const isExerciseListed = listedExercises.includes(name);
+        
         // Filter by both name and username
         const filter = {
             name: name,
@@ -115,11 +127,22 @@ export async function getResultsByNameAndUsername(req, res) {
         };
 
         const results = await collection.findOne(filter);
+        
+        // Count simply reflects the number of results found
+        let count;
+        if (isExerciseListed) {
+            // If exercise is in listed_exercises, return count based on results (1 if solved, 0 if not)
+            count = results ? 1 : 0;
+        } else {
+            // If exercise is not in listed_exercises, always return count of 0
+            count = 0;
+        }
 
-        logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Solved: ${results ? 'Yes' : 'No'}`);
+        logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Listed: ${isExerciseListed}, Solved: ${results ? 'Yes' : 'No'}, Count: ${count}`);
         res.status(200).json({
             results: results,
-            count: results ? 1 : 0
+            count: count,
+            isListed: isExerciseListed
         });
     } catch (error) {
         logError(req, `[getResultsByNameAndUsername] ERROR: Failed to retrieve results:`, error);

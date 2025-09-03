@@ -65,6 +65,11 @@ const ExerciseStatus = ({ exerciseName }) => {
         return null;
     }
 
+    // Hide exercise if it's not listed in the scenario
+    if (status.isListed === false) {
+        return null;
+    }
+
     const isCompleted = status.count === 1;
 
     return (
