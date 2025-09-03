@@ -56,10 +56,13 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 ## 🔗 Step 3: Connect the MongoDB Extension
 
 1. **Grab Your Connection String:**  
-   - Open `.env` file and copy your MongoDB URI:
+   - After starting your backend server (npm start), you'll see the connection string displayed in the terminal output.
      ```markdown
-     MONGODB_URI=`mongodb+srv://<username>:<password>@<cluster>.mongodb.net`/?retryWrites=true&w=majority
+     =============================
+      🍃 MongoDB Connection String: `mongodb+srv://mongodb-airbnb1:MongoGameDay123@mongodb-airbnb.akkzw.mongodb.net/`
+      =============================
      ```
+   ![Connection String](../../assets/images/environment-conn-string.png)
 
 2. **Connect in VSCode:**
    - Click the **MongoDB extension** in the sidebar.
