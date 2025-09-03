@@ -37,7 +37,7 @@ Supercharge your workflow with these extensions:
 1. In `server`, create a `.env` file from `.env.template`.
 2. Paste your MongoDB connection string:
    ```
-   MONGODB_URI=mongodb+srv://user@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
+   MONGODB_URI=mongodb+srv://credentials@cluster.vrkei.mongodb.net/?retryWrites=true&w=majority
    ```
 3. Open a terminal and run:
    ```bash
