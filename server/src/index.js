@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
-import { port } from './config/config.js';
+import { port, mongodbUri } from './config/config.js';
 import listingsAndReviews from './routes/listingsAndReviews.js';
 import results from './routes/results.js';
 import chat from './routes/chat.js';
@@ -62,6 +62,14 @@ function createServerRestartSignal() {
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  
+  // Display MongoDB connection string without query parameters
+  if (mongodbUri) {
+    const strippedUri = mongodbUri.split('?')[0]; // Remove everything after the first '?'
+    console.log('\n' + '='.repeat(29));
+    console.log(`🍃 MongoDB Connection String: ${strippedUri}`);
+    console.log('='.repeat(29) + '\n');
+  }
   
   // Create restart signal after successful server startup
   createServerRestartSignal();

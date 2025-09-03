@@ -5,7 +5,7 @@ export const mongodbUri = process.env.MONGODB_URI;
 
 const regex = /mongodb\+srv:\/\/(.*?):.*?@/;
 const match = mongodbUri.match(regex);
-export const databaseName = match ? match[1] : 'error';
+export const databaseName = process.env.DATABASE_NAME || (match ? match[1] : 'error');
 
 export const collectionName = 'listingsAndReviews';
 export const resultsDatabaseName = 'airbnb_arena';

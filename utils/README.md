@@ -22,10 +22,13 @@
 
 ### Answers
 - 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
-
+- 🟡 **MID:** Show the connection string when reconnecting
 ---
 
 ## Terraform
+
+## Result processor
+- 🟡 **MID:** should exclude the answer when getting the results
 
 ### Deploy
 - ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
