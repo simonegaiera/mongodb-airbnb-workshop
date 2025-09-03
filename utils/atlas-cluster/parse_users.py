@@ -39,13 +39,11 @@ def add_additional_users(users, count, cluster_name=None):
         if cluster_name:
             user_id = f"{cluster_name}{i}"
             users[user_id] = {
-                'name': f"{cluster_name} User {i}",
                 'email': None
             }
         else:
             user_id = f"user{i}"
             users[user_id] = {
-                'name': f"User {i}",
                 'email': None
             }
     return users

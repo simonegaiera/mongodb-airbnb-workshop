@@ -23,11 +23,13 @@ logger = logging.getLogger(__name__)
 MONGODB_URI = os.getenv('MONGODB_URI')
 DB_NAME = os.getenv('DB_NAME')
 PARTICIPANTS_COLLECTION = os.getenv('PARTICIPANTS')
+USER_DETAILS_COLLECTION = os.getenv('USER_DETAILS', 'user_details')
 
 # MongoDB client
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
 participants_collection = db[PARTICIPANTS_COLLECTION]
+user_details_collection = db[USER_DETAILS_COLLECTION]
 
 @app.route('/api/health')
 def health_check():
@@ -123,10 +125,9 @@ def take_participant():
         name = data['name']
         email = data['email']
         
-        # Create update document
-        update_data = {
+        # Create update document for participants collection (no email)
+        participant_update_data = {
             'name': name,
-            'email': email,
             'taken': True,
             'taken_timestamp': datetime.now(timezone.utc).isoformat()
         }
@@ -134,9 +135,9 @@ def take_participant():
         # Use findOneAndUpdate with atomic operation to prevent race conditions
         updated_participant = participants_collection.find_one_and_update(
             {'taken': False},
-            {'$set': update_data},
+            {'$set': participant_update_data},
             return_document=True,
-            projection={'_id': 0}
+            projection={'_id': 1, 'name': 1, 'taken': 1, 'taken_timestamp': 1}
         )
         
         if not updated_participant:
@@ -144,12 +145,34 @@ def take_participant():
                 'success': False,
                 'error': 'No available participants found'
             }), 404
+        
+        # Store email and other details in user_details collection
+        participant_id = updated_participant['_id']
+        user_details_data = {
+            'name': name,
+            'email': email,
+            'timestamp': datetime.now(timezone.utc)
+        }
+        
+        user_details_collection.update_one(
+            {'_id': participant_id},
+            {'$set': user_details_data},
+            upsert=True
+        )
+        
+        # Return response without email for security
+        response_data = {
+            '_id': updated_participant['_id'],
+            'name': updated_participant['name'],
+            'taken': updated_participant['taken'],
+            'taken_timestamp': updated_participant['taken_timestamp']
+        }
             
-        logger.info(f"Successfully assigned participant {updated_participant.get('id', 'unknown')} to {name}")
+        logger.info(f"Successfully assigned participant {participant_id} to {name}")
         return jsonify({
             'success': True,
             'message': f'Participant successfully assigned to {name}',
-            'data': updated_participant
+            'data': response_data
         }), 200
         
     except Exception as e:

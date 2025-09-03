@@ -43,6 +43,10 @@ resource "helm_release" "portal_server" {
           value = "participants"
         },
         {
+          name  = "USER_DETAILS"
+          value = "user_details"
+        },
+        {
           name  = "LEADERBOARD"
           value = tostring(var.scenario_config.leaderboard)
         }

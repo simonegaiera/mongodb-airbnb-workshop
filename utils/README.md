@@ -21,8 +21,7 @@
 ## Server
 
 ### Answers
-- 🟡 **MID:** [Validation] Use the LLM to release the answers after a period of time. Add something in the guideline to do it.
-- 🟡 **MID:** Show the connection string when reconnecting
+- 🟡 **MID:** Adjust the guidelines to better answer to users
 ---
 
 ## Terraform
@@ -40,7 +39,7 @@
 - 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
 
 
-### Open VS Code
+### Open VSCode
 - ❄️ **FROZEN:** [Changes were made] Understand why the firewall was blocking it and how to avoid it
 
 ### OIDC
