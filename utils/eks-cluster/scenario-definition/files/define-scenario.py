@@ -151,15 +151,17 @@ def filter_navigation_based_on_sections(nav_content, config):
 def extract_exercises_from_navigation(nav_content):
     """Extract exercise identifiers from navigation content."""
     exercises = set()
+    index_exercises = set()
     
     if not nav_content or 'docs' not in nav_content:
-        return exercises
+        return exercises, index_exercises
     
     # Navigate through the structure to find exercises
     for section in nav_content.get('docs', []):
         if 'children' in section:
             for child in section['children']:
                 url = child.get('url', '')
+                
                 # Extract exercise patterns from URLs
                 # Examples: /crud/1/, /pipeline/1/, /search/2/, /vector-search/1/
                 match = re.search(r'/([^/]+)/(\d+)/', url)
@@ -173,8 +175,24 @@ def extract_exercises_from_navigation(nav_content):
                         exercises.add(f'vector-search-{number}')
                     else:
                         exercises.add(f'{category}-{number}')
+                
+                # Also check for index exercises
+                # Examples: /crud/index/, /search/index/, /vector-search/index/
+                index_match = re.search(r'/([^/]+)/index/', url)
+                if index_match:
+                    category = index_match.group(1)
+                    # Convert URL pattern to file pattern for index exercises
+                    if category == 'vector-search':
+                        index_exercises.add(f'vector-search-index')
+                    elif category == 'search':
+                        index_exercises.add(f'search-index')
+                    elif category == 'crud':
+                        index_exercises.add(f'crud-index')
+                    else:
+                        # For any other category, use the pattern category-index
+                        index_exercises.add(f'{category}-index')
     
-    return exercises
+    return exercises, index_exercises
 
 def get_available_answer_files():
     """Get list of available answer files."""
@@ -235,34 +253,50 @@ def get_available_lab_files():
 def identify_needed_answer_files(nav_content):
     """Identify which answer files are needed based on navigation content."""
     try:
-        # Get exercises listed in navigation
-        listed_exercises = extract_exercises_from_navigation(nav_content)
-        print(f"Found {len(listed_exercises)} exercises listed in navigation")
+        # Get exercises and index exercises from navigation
+        exercises, index_exercises = extract_exercises_from_navigation(nav_content)
+        
+        # Combine both for the full list of exercises
+        all_listed_exercises = exercises | index_exercises
+        
+        print(f"Found {len(exercises)} regular exercises and {len(index_exercises)} index exercises in navigation")
+        print(f"Total listed exercises: {len(all_listed_exercises)}")
+        print(f"Index exercises: {sorted(list(index_exercises))}")
+        
+        # Index exercises don't need answer files - only regular exercises do
+        exercises_needing_answers = exercises
+        print(f"Index exercises will be ignored for answer file calculation")
         
         # Get available files
         available_answers = get_available_answer_files()
         available_labs = get_available_lab_files()
         
         # Find answer files needed (those NOT in navigation but have answer files)
-        needed_answers = available_answers - listed_exercises
+        # Index exercises are excluded from this calculation
+        needed_answers = available_answers - exercises_needing_answers
         
         # Create analysis result
         analysis = {
-            "listed_exercises": sorted(list(listed_exercises)),
+            "listed_exercises": sorted(list(all_listed_exercises)),
+            "exercises_needing_answers": sorted(list(exercises_needing_answers)),
+            "index_exercises_ignored": sorted(list(index_exercises)),
             "available_answer_files": sorted(list(available_answers)),
             "available_lab_files": sorted(list(available_labs)),
             "needed_answer_files": sorted(list(needed_answers)),
-            "not_needed_answer_files": sorted(list(available_answers & listed_exercises))
+            "not_needed_answer_files": sorted(list(available_answers & exercises_needing_answers))
         }
         
         summary = {
-            "total_exercises_listed": len(listed_exercises),
+            "total_exercises_listed": len(all_listed_exercises),
+            "total_exercises_needing_answers": len(exercises_needing_answers),
+            "total_index_exercises_ignored": len(index_exercises),
             "total_answer_files_available": len(available_answers),
             "total_answer_files_needed": len(needed_answers),
             "files_needed_for_unlisted_exercises": [f"{answer}.lab.js" for answer in sorted(needed_answers)]
         }
         
         print(f"Analysis complete: {len(needed_answers)} answer files needed for unlisted exercises")
+        print(f"Index exercises ignored: {sorted(list(index_exercises))}")
         
         return {
             "analysis": analysis,

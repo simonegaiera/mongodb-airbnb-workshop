@@ -26,9 +26,6 @@
 
 ## Terraform
 
-## Result processor
-- 🟡 **MID:** should exclude the answer when getting the results
-
 ### Deploy
 - ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
 - ❄️ **FROZEN:** S3 bucket change to mongodb-arena from mongodb-gameday

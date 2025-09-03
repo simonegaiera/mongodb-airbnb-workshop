@@ -56,4 +56,4 @@ Choose your favorite tool and get indexing:
 **Check Exercise Status:**  
 Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
-![crud-index-1](../../assets/images/crud-index-1.png)
+![crud-index](../../assets/images/crud-index.png)

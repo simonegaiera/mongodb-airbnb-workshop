@@ -128,7 +128,7 @@ const ListingsAndReviews = ({ filters = {} }) => {
             <div className="flex flex-wrap gap-4 px-4 py-4">
                 <ExerciseStatus exerciseName="crud-1" />
                 <ExerciseStatus exerciseName="crud-4" />
-                <ExerciseStatus exerciseName="index-1" />
+                <ExerciseStatus exerciseName="crud-index" />
                 <ExerciseStatus exerciseName="crud-5" />
             </div>
             

@@ -48,7 +48,7 @@ public class ResultsProcessor {
     
     // Exercise test identifiers
     private static final List<String> EXERCISE_TESTS = Arrays.asList(
-        "index-1",                      // CRUD: Indexes
+        "crud-index",                      // CRUD: Indexes
         "crud-1", "crud-2", "crud-3", "crud-4",  // CRUD Exercises 1-4
         "crud-5", "crud-6", "crud-7", "crud-8",  // CRUD Exercises 5-8
         "pipeline-1",                 // Aggregation Exercise 1
@@ -665,7 +665,7 @@ public class ResultsProcessor {
         String endpoint = "api/listingsAndReviews";
 
         switch (testName) {
-            case "index-1":
+            case "crud-index":
                 return new IndexTest(database, serviceName, endpoint);
             case "crud-1":
                 return new Crud1Test(database, serviceName, endpoint);

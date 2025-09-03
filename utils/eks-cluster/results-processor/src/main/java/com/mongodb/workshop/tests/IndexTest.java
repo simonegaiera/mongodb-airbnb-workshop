@@ -18,7 +18,7 @@ public class IndexTest extends BaseTest {
     
     @Override
     public String getTestName() {
-        return "index-1";
+        return "crud-index";
     }
     
     @Override
