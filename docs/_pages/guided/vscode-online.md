@@ -60,7 +60,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
    - **Copy** the entire connection string from the terminal.
      ```markdown
      =============================
-      🍃 MongoDB Connection String: `mongodb+srv://mongodb-airbnb1:MongoGameDay123@mongodb-airbnb.akkzw.mongodb.net/`
+      🍃 MongoDB Connection String: `mongodb+srv://user:password@mongodb-airbnb.akkzw.mongodb.net/`
      =============================
      ```
    ![Connection String](../../assets/images/environment-conn-string.png)
