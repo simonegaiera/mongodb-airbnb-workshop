@@ -1,5 +1,5 @@
 ---
-title: "MongoDB Aggregations"
+title: "Property Investment Market Analysis"
 permalink: /pipeline/1/
 layout: single
 classes: wide
@@ -10,27 +10,46 @@ classes: wide
 <p><strong>Associated Lab File:</strong> <code>pipeline-1.lab.js</code></p>
 </details>
 
-## 🚀 Goal: Analyze Listings with Aggregations
+## 🚀 Goal: Smart Property Investment Analytics
 
-Your platform is buzzing with activity, and your team wants to make smarter decisions—fast. Imagine being able to spot trends, set competitive prices, or help guests find the best value for their needs. As the backend engineer, you’re the data wizard who can turn mountains of raw listings into actionable insights.
+Your platform has caught the attention of real estate investors who need data-driven insights to make informed investment decisions. They want to understand market segments, pricing patterns, and property performance across different bed counts. As the backend engineer, you're tasked with creating a market analysis that reveals investment opportunities.
 
-In this exercise, you’ll unleash the power of MongoDB aggregations to reveal the average price of listings by number of beds. With just a few pipeline stages, you’ll transform your data into knowledge that drives your business forward.
+In this foundational aggregation exercise, you'll learn essential MongoDB pipeline concepts by analyzing property market segments. You'll work with real-world data challenges like filtering invalid data, calculating meaningful business metrics, and formatting results for investment decision-making.
 
 ---
 
-### 🧩 Exercise: Craft Your Aggregation Pipeline
+### 🎯 Exercise Desiderata: What You Need to Build
+
+Your mission is to create an aggregation pipeline that provides clean investment market analysis by:
+
+**🔍 Data Quality Control:**
+- Filter for legitimate investment properties: `price > 0` and `number_of_reviews > 0`
+- Focus on residential properties with `beds` between 0-10 and `accommodates > 0`
+- Exclude test data and extreme outliers that would distort market analysis
+
+**📊 Market Segmentation:**
+- Group properties by bed count to create meaningful market segments
+- Calculate key investment metrics: average pricing, market size, and guest activity
+- Generate insights for each segment from studios (0 beds) to large homes (10 beds)
+
+**🎨 Business-Ready Output:**
+- Transform technical data into investor-friendly format
+- Round numerical values appropriately for financial presentation
+- Remove technical MongoDB fields for clean business reports
+
+### 🧩 Exercise: Step-by-Step Implementation
 
 1. **Open the File**  
-   Head to `server/src/lab/` and crack open `pipeline-1.lab.js`.
+   Navigate to `server/src/lab/` and open `pipeline-1.lab.js`.
 
 2. **Find the Function**  
-   Locate the `aggregationPipeline` function.
+   Locate the `aggregationPipeline` function with detailed instructions.
 
-3. **Shape the Pipeline**  
-   - **$match**: Filter for documents with both `beds` and `price` fields.  
-   - **$group**: Group by number of beds and calculate the average price.  
-   - **$sort**: Sort by beds (ascending).  
-   - **$project**: Return only `beds` and `price` fields.
+3. **Build the 4-Stage Pipeline**  
+   - **Stage 1 - $match**: Filter for quality investment properties (`price > 0`, `number_of_reviews > 0`, `beds` between 0-10, `accommodates > 0`)
+   - **Stage 2 - $group**: Group by `beds` field and calculate `averagePrice`, `propertyCount`, and `averageReviews`
+   - **Stage 3 - $project**: Transform output with `_id: 0`, `beds`, `averagePrice` (rounded to 2 decimals), `propertyCount`, `averageReviews` (rounded to 1 decimal)
+   - **Stage 4 - $sort**: Sort by `beds` field ascending (1) for logical progression from studios to large homes
 
 ---
 
@@ -39,18 +58,20 @@ In this exercise, you’ll unleash the power of MongoDB aggregations to reveal t
 1. Go to `server/src/lab/rest-lab`.
 2. Open `pipeline-1-statistics-lab.http`.
 3. Click **Send Request** to hit the API.
-4. Check that you get the expected results—average prices by bed count!
+4. Verify you get market segments with pricing and property counts for beds 0-10!
 
 ---
 
 ### 🖥️ Frontend Validation
 
-- Tick the "Show Statistics" checkbox to see your aggregated results come alive in the table.
+- Check the "Show Statistics" section to see your market analysis in action.
+- Each segment should display as a row with investment insights.
 
 **Check Exercise Status:**  
-Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
+Go to the app and verify the exercise toggle shows green, confirming your aggregation mastery.
 
-With this step, you’re not just crunching numbers—you’re giving your company the insights it needs to shine in the rental market.  
-**Ready to turn data into strategy? Let’s get started!**
+This exercise introduces core aggregation concepts you'll need for advanced analytics. You're building the foundation for complex business intelligence pipelines!
+
+**Ready to unlock market insights through data aggregation? Let's dive in!**
 
 ![pipeline-1-lab](../../assets/images/pipeline-1-lab.png)

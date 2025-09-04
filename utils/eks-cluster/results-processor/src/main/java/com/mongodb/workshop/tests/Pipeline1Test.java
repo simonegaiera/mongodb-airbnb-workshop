@@ -9,9 +9,10 @@ import org.bson.Document;
 import org.json.JSONArray;
 
 /**
- * Test for: pipeline-1 (Aggregation Pipeline Exercise 1)
+ * Test for: pipeline-1 (Property Investment Market Analysis)
  * Tests the aggregationPipeline function implementation
- * Expected: Function should compute average price by bed count using aggregation pipeline
+ * Expected: Function should provide investment market analysis grouped by bed count
+ * with filtering for quality properties and comprehensive metrics
  */
 public class Pipeline1Test extends BaseTest {
     
@@ -51,8 +52,9 @@ public class Pipeline1Test extends BaseTest {
                 var result = results.getJSONObject(i);
                 
                 // Check if required fields are present
-                if (!result.has("beds") || !result.has("price")) {
-                    logger.warn("Pipeline-1 test failed: Missing required fields (beds, price) in result {}", i);
+                if (!result.has("beds") || !result.has("averagePrice") || 
+                    !result.has("propertyCount") || !result.has("averageReviews")) {
+                    logger.warn("Pipeline-1 test failed: Missing required fields (beds, averagePrice, propertyCount, averageReviews) in result {}", i);
                     return false;
                 }
                 
@@ -64,28 +66,27 @@ public class Pipeline1Test extends BaseTest {
                     return false;
                 }
                 
-                // Verify price is a number (average price) - handle both regular number and $numberDecimal formats
+                // Verify averagePrice is a number
                 try {
-                    if (result.has("price")) {
-                        // Try to get as double first (regular number)
-                        try {
-                            result.getDouble("price");
-                        } catch (Exception e) {
-                            // If that fails, check if it's a $numberDecimal object
-                            if (result.get("price") instanceof org.json.JSONObject) {
-                                org.json.JSONObject priceJsonObj = result.getJSONObject("price");
-                                if (!priceJsonObj.has("$numberDecimal")) {
-                                    throw new Exception("Price object doesn't contain $numberDecimal field");
-                                }
-                                // Try to parse the $numberDecimal string as double
-                                Double.parseDouble(priceJsonObj.getString("$numberDecimal"));
-                            } else {
-                                throw e; // Re-throw if it's neither format
-                            }
-                        }
-                    }
+                    result.getDouble("averagePrice");
                 } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: price field is not a valid number in result {}", i);
+                    logger.warn("Pipeline-1 test failed: averagePrice field is not a number in result {}", i);
+                    return false;
+                }
+                
+                // Verify propertyCount is a number
+                try {
+                    result.getInt("propertyCount");
+                } catch (Exception e) {
+                    logger.warn("Pipeline-1 test failed: propertyCount field is not a number in result {}", i);
+                    return false;
+                }
+                
+                // Verify averageReviews is a number
+                try {
+                    result.getDouble("averageReviews");
+                } catch (Exception e) {
+                    logger.warn("Pipeline-1 test failed: averageReviews field is not a number in result {}", i);
                     return false;
                 }
             }
@@ -94,16 +95,29 @@ public class Pipeline1Test extends BaseTest {
             MongoCollection<Document> collection = getListingsAndReviewsCollection();
 
 
-            // Java equivalent of the provided pipeline
+            // Java equivalent of the new property investment analysis pipeline
             List<Document> pipeline = Arrays.asList(
-                new Document("$match", new Document("beds", new Document("$exists", true))
-                    .append("price", new Document("$exists", true))),
+                // Stage 1: Filter for quality investment properties
+                new Document("$match", new Document("price", new Document("$gt", 0))
+                    .append("number_of_reviews", new Document("$gt", 0))
+                    .append("beds", new Document("$gte", 0).append("$lte", 10))
+                    .append("accommodates", new Document("$gt", 0))),
+                    
+                // Stage 2: Group by bed count and calculate investment metrics
                 new Document("$group", new Document("_id", "$beds")
-                    .append("price", new Document("$avg", "$price"))),
-                new Document("$sort", new Document("_id", 1)),
+                    .append("averagePrice", new Document("$avg", "$price"))
+                    .append("propertyCount", new Document("$sum", 1))
+                    .append("averageReviews", new Document("$avg", "$number_of_reviews"))),
+                    
+                // Stage 3: Format output for business presentation
                 new Document("$project", new Document("_id", 0)
                     .append("beds", "$_id")
-                    .append("price", 1))
+                    .append("averagePrice", new Document("$round", Arrays.asList("$averagePrice", 2)))
+                    .append("propertyCount", 1)
+                    .append("averageReviews", new Document("$round", Arrays.asList("$averageReviews", 1)))),
+                    
+                // Stage 4: Sort by bed count ascending
+                new Document("$sort", new Document("beds", 1))
             );
 
 
@@ -118,56 +132,29 @@ public class Pipeline1Test extends BaseTest {
                 org.json.JSONObject apiResult = results.getJSONObject(0);
 
                 int bedsMongo = mongoResult.getInteger("beds");
-                double priceMongo;
-                
-                // Handle both regular number and $numberDecimal types
-                Object priceObj = mongoResult.get("price");
-                if (priceObj instanceof Document) {
-                    // Handle $numberDecimal format
-                    Document priceDoc = (Document) priceObj;
-                    if (priceDoc.containsKey("$numberDecimal")) {
-                        priceMongo = Double.parseDouble(priceDoc.getString("$numberDecimal"));
-                    } else {
-                        priceMongo = priceDoc.getDouble("$numberDecimal");
-                    }
-                } else if (priceObj instanceof Number) {
-                    // Handle regular number format
-                    priceMongo = ((Number) priceObj).doubleValue();
-                } else {
-                    logger.warn("Pipeline-1 test failed: Unexpected price field type: {}", priceObj.getClass());
-                    return false;
-                }
+                double averagePriceMongo = mongoResult.getDouble("averagePrice");
+                int propertyCountMongo = mongoResult.getInteger("propertyCount");
+                double averageReviewsMongo = mongoResult.getDouble("averageReviews");
 
                 int bedsApi = apiResult.getInt("beds");
-                double priceApi;
-                
-                // Handle both regular number and $numberDecimal types for API result
-                try {
-                    priceApi = apiResult.getDouble("price");
-                } catch (Exception e) {
-                    // If that fails, check if it's a $numberDecimal object
-                    if (apiResult.get("price") instanceof org.json.JSONObject) {
-                        org.json.JSONObject priceJsonObj = apiResult.getJSONObject("price");
-                        if (priceJsonObj.has("$numberDecimal")) {
-                            priceApi = Double.parseDouble(priceJsonObj.getString("$numberDecimal"));
-                        } else {
-                            logger.warn("Pipeline-1 test failed: API price object doesn't contain $numberDecimal field");
-                            return false;
-                        }
-                    } else {
-                        logger.warn("Pipeline-1 test failed: API price field is not a valid number");
-                        return false;
-                    }
-                }
+                double averagePriceApi = apiResult.getDouble("averagePrice");
+                int propertyCountApi = apiResult.getInt("propertyCount");
+                double averageReviewsApi = apiResult.getDouble("averageReviews");
 
-                if (bedsMongo != bedsApi || Math.abs(priceMongo - priceApi) > 0.01) { // Allow small floating point difference
-                    logger.warn("Pipeline-1 test failed: First result mismatch. MongoDB: beds={}, price={}; API: beds={}, price={}",
-                        bedsMongo, priceMongo, bedsApi, priceApi);
+                // Compare all fields with small tolerance for floating point differences
+                if (bedsMongo != bedsApi || 
+                    Math.abs(averagePriceMongo - averagePriceApi) > 0.01 ||
+                    propertyCountMongo != propertyCountApi ||
+                    Math.abs(averageReviewsMongo - averageReviewsApi) > 0.1) {
+                    
+                    logger.warn("Pipeline-1 test failed: First result mismatch. MongoDB: beds={}, averagePrice={}, propertyCount={}, averageReviews={}; API: beds={}, averagePrice={}, propertyCount={}, averageReviews={}",
+                        bedsMongo, averagePriceMongo, propertyCountMongo, averageReviewsMongo,
+                        bedsApi, averagePriceApi, propertyCountApi, averageReviewsApi);
                     return false;
                 }
             }
 
-            logger.info("Pipeline-1 test passed: Found {} aggregated results with average prices by bed count", results.length());
+            logger.info("Pipeline-1 test passed: Found {} investment market segments with comprehensive metrics by bed count", results.length());
             return true;
             
         } catch (Exception e) {
