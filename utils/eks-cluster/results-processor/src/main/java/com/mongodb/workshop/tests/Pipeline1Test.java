@@ -124,9 +124,9 @@ public class Pipeline1Test extends BaseTest {
                 org.json.JSONObject apiResult = results.getJSONObject(0);
 
                 int bedsMongo = mongoResult.getInteger("beds");
-                double averagePriceMongo = mongoResult.getDouble("averagePrice");
+                double averagePriceMongo = extractMongoNumericValue(mongoResult, "averagePrice");
                 int propertyCountMongo = mongoResult.getInteger("propertyCount");
-                double averageReviewsMongo = mongoResult.getDouble("averageReviews");
+                double averageReviewsMongo = extractMongoNumericValue(mongoResult, "averageReviews");
 
                 int bedsApi = apiResult.getInt("beds");
                 double averagePriceApi = extractNumericValue(apiResult, "averagePrice", "double");
@@ -221,5 +221,35 @@ public class Pipeline1Test extends BaseTest {
         }
         
         throw new Exception("Unknown expectedType: " + expectedType);
+    }
+
+    private double extractMongoNumericValue(Document document, String fieldName) throws Exception {
+        if (!document.containsKey(fieldName)) {
+            throw new Exception("Field " + fieldName + " is missing from MongoDB result");
+        }
+        
+        Object fieldValue = document.get(fieldName);
+        
+        // Handle regular Double
+        if (fieldValue instanceof Double) {
+            return (Double) fieldValue;
+        }
+        
+        // Handle org.bson.types.Decimal128
+        if (fieldValue instanceof org.bson.types.Decimal128) {
+            return ((org.bson.types.Decimal128) fieldValue).doubleValue();
+        }
+        
+        // Handle Integer (should convert to double)
+        if (fieldValue instanceof Integer) {
+            return ((Integer) fieldValue).doubleValue();
+        }
+        
+        // Handle Long (should convert to double)
+        if (fieldValue instanceof Long) {
+            return ((Long) fieldValue).doubleValue();
+        }
+        
+        throw new Exception("Field " + fieldName + " has unexpected type: " + fieldValue.getClass().getName());
     }
 }
