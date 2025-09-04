@@ -52,6 +52,7 @@ public class ResultsProcessor {
         "crud-1", "crud-2", "crud-3", "crud-4",  // CRUD Exercises 1-4
         "crud-5", "crud-6", "crud-7", "crud-8",  // CRUD Exercises 5-8
         "pipeline-1",                 // Aggregation Exercise 1
+        "pipeline-2",                 // Aggregation Exercise 2
         "search-index",               // Search: Indexes
         "search-1", "search-2",       // Search Exercises 1-2
         "vector-search-index",        // Vector Search: Indexes
@@ -685,6 +686,8 @@ public class ResultsProcessor {
                 return new Crud8Test(database, serviceName, endpoint);
             case "pipeline-1":
                 return new Pipeline1Test(database, serviceName, String.format("%s/statistics", endpoint));
+            case "pipeline-2":
+                return new Pipeline2Test(database, serviceName, String.format("%s/hostAnalytics", endpoint));
             case "search-index":
                 return new SearchIndexTest(database, serviceName, endpoint);
             case "search-1":
