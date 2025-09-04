@@ -254,6 +254,8 @@ def create_views(client, common_database):
                 }
             }
         }, {
+            '$unset': "participants_info"
+        }, {
             '$sort': {
                 'count': -1, 
                 'delta': 1
