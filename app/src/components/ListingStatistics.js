@@ -14,19 +14,8 @@ const ListingStatistics = () => {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 const result = await response.json();
-                // Process result to round average price to the nearest integer
-                const processedData = result.map(item => {
-                    // Handle both response formats
-                    const price = item.price?.$numberDecimal 
-                        ? parseFloat(item.price.$numberDecimal)
-                        : parseFloat(item.price);
-                    
-                    return {
-                        id: item.beds,
-                        value: Math.round(price),
-                    };
-                });
-                setData(processedData);
+                // New format includes comprehensive investment metrics
+                setData(result);
                 setError(null); // Clear any previous errors
             } catch (error) {
                 console.error('Unable to fetch statistics data:', error);
@@ -92,36 +81,58 @@ const ListingStatistics = () => {
                 <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            {data.map((item) => (
-                                <th
-                                    key={item.id}
-                                    className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                >
-                                    {item.id} Beds
-                                </th>
-                            ))}
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Market Segment
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Average Price
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Properties
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Avg Reviews
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        <tr>
-                            {data.map((item) => (
-                                <td
-                                    key={item.id}
-                                    className="px-3 py-3 whitespace-nowrap text-center text-sm font-medium text-gray-900"
-                                >
-                                    <div className="flex flex-col">
-                                        <span className="text-lg font-bold text-green-600">
-                                            ${item.value.toLocaleString()}
-                                        </span>
-                                        <span className="text-xs text-gray-500 mt-0.5">
-                                            Avg Price
+                        {data.map((item) => (
+                            <tr key={item.beds} className="hover:bg-gray-50">
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500 mr-3"></div>
+                                        <span className="text-sm font-medium text-gray-900">
+                                            {item.beds === 0 ? 'Studio' : `${item.beds} Bedroom${item.beds > 1 ? 's' : ''}`}
                                         </span>
                                     </div>
                                 </td>
-                            ))}
-                        </tr>
+                                <td className="px-4 py-3 whitespace-nowrap text-right">
+                                    <span className="text-sm font-bold text-green-600">
+                                        ${item.averagePrice?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-right">
+                                    <span className="text-sm text-gray-900">
+                                        {item.propertyCount?.toLocaleString()}
+                                    </span>
+                                    <span className="text-xs text-gray-500 ml-1">units</span>
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-right">
+                                    <span className="text-sm text-gray-900">
+                                        {item.averageReviews?.toFixed(1)}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
+                
+                {data.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                        <p className="text-sm">No investment data available</p>
+                        <p className="text-xs mt-1">Complete the pipeline-1 exercise to see market segments</p>
+                    </div>
+                )}
             </div>
         </div>
     );
