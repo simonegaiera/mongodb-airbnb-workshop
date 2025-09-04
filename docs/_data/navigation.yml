@@ -65,6 +65,8 @@ docs:
         url: /pipeline/
       - title: "Aggregations: Exercise 1"
         url: /pipeline/1/
+      - title: "Aggregations: Exercise 2"
+        url: /pipeline/2/
 
   - title: "Search"
     children:

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllItems, getOneItem, getDistinct, getFilters, insertItem, insertReview, updateValue, deleteItem  } from '../controllers/crudController.js';
-import { getPriceStatistics } from '../controllers/aggregateController.js';
+import { getPriceStatistics, getHostAnalytics } from '../controllers/aggregateController.js';
 import { getAutocomplete, getFacet, getSearchItems } from '../controllers/searchController.js';
 import { getVectorSearch } from '../controllers/vectorSearchController.js';
 
@@ -15,6 +15,7 @@ router.get('/distinct', getDistinct);
 router.post('/filter', getFilters);
 
 router.get('/statistics', getPriceStatistics);
+router.get('/hostanalytics', getHostAnalytics);
 
 router.post('/autocomplete', getAutocomplete);
 router.post('/facet', getFacet);
