@@ -13,7 +13,7 @@ locals {
 
 # Deploy Redis using local Helm chart
 resource "helm_release" "redis" {
-  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled && local.redis_config.enabled ? 1 : 0
 
   name       = "redis"
   chart      = "./redis"
@@ -39,7 +39,7 @@ resource "helm_release" "redis" {
 
 # Create a Kubernetes secret for Redis credentials
 resource "kubernetes_secret" "redis_credentials" {
-  count = local.llm_config.enabled && local.llm_config.proxy.enabled ? 1 : 0
+  count = local.llm_config.enabled && local.llm_config.proxy.enabled && local.redis_config.enabled ? 1 : 0
 
   metadata {
     name      = "redis-credentials"
@@ -61,12 +61,12 @@ resource "kubernetes_secret" "redis_credentials" {
 
 # Output Redis connection information
 output "redis_endpoint" {
-  value = local.llm_config.enabled && local.llm_config.proxy.enabled ? "${local.redis_config.service.name}:${local.redis_config.service.port}" : "Redis not enabled"
+  value = local.llm_config.enabled && local.llm_config.proxy.enabled && local.redis_config.enabled ? "${local.redis_config.service.name}:${local.redis_config.service.port}" : "Redis not enabled"
   description = "Redis internal endpoint"
 }
 
 output "redis_connection_string" {
-  value = local.llm_config.enabled && local.llm_config.proxy.enabled ? "redis://${local.redis_config.service.name}:${local.redis_config.service.port}" : "Redis not enabled"
+  value = local.llm_config.enabled && local.llm_config.proxy.enabled && local.redis_config.enabled ? "redis://${local.redis_config.service.name}:${local.redis_config.service.port}" : "Redis not enabled"
   description = "Redis connection string"
   sensitive = true
 }

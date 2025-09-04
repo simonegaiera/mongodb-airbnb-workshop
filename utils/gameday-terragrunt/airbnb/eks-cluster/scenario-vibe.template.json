@@ -22,6 +22,7 @@
             }
         },
         "mcp": true,
+        "provider": "anthropic|openai",
         "model": "claude-3-haiku|gpt-5-chat",
         "bedrock": false,
         "region": "us-east-2"

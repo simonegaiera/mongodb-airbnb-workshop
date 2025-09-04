@@ -4,6 +4,7 @@ locals {
   # LLM configuration with defaults
   llm_config = merge({
     enabled = false
+    provider = "anthropic"  # Default to anthropic, can be "openai" or "anthropic"
     proxy = {
       enabled = false
       service-name = "litellm-service"
@@ -19,7 +20,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
-  version    = "0.1.4"
+  version    = "0.1.8"
   
   wait          = true
   wait_for_jobs = true
@@ -33,20 +34,110 @@ resource "helm_release" "litellm" {
         port = local.llm_config.proxy.port
       }
       
-      litellm = {
+      litellm = merge({
         # Environment variables for Redis connection
-        env = {
+        env = merge({
           PORT = "4000"
           LITELLM_LOG = "INFO"
+        }, local.redis_config.enabled ? {
           REDIS_HOST = local.redis_config.service.name
           REDIS_PORT = tostring(local.redis_config.service.port)
-        }
+        } : {})
         
-        secrets = {
-          anthropicApiKey = var.anthropic_api_key
-          azureOpenaiApiKey = var.azure_openai_api_key
+        secrets = merge(
+          local.llm_config.provider == "anthropic" ? {
+            anthropicApiKey = var.anthropic_api_key
+          } : {},
+          local.llm_config.provider == "openai" ? {
+            azureOpenaiApiKey = var.azure_openai_api_key
+          } : {}
+        )
+      }, {
+        config = {
+          model_list = local.llm_config.provider == "openai" ? [
+            {
+              model_name = "gpt-5-mini"
+              litellm_params = {
+                model = "azure/gpt-5-mini"
+                api_key = "os.environ/AZURE_OPENAI_API_KEY"
+                api_base = "https://solutionsconsultingopenai.openai.azure.com"
+                api_version = "2025-04-01-preview"
+                max_tokens = 4096
+                temperature = 0.7
+                cache_control_injection_points = [
+                  {
+                    location = "message"
+                    role = "system"
+                  }
+                ]
+              }
+            },
+            {
+              model_name = "gpt-5-chat"
+              litellm_params = {
+                model = "azure/gpt-5-chat"
+                api_key = "os.environ/AZURE_OPENAI_API_KEY"
+                api_base = "https://solutionsconsultingopenai.openai.azure.com"
+                api_version = "2025-04-01-preview"
+                max_tokens = 4096
+                temperature = 0.7
+                cache_control_injection_points = [
+                  {
+                    location = "message"
+                    role = "system"
+                  }
+                ]
+              }
+            }
+          ] : [
+            {
+              model_name = "claude-3-haiku"
+              litellm_params = {
+                model = "anthropic/claude-3-haiku-20240307"
+                api_key = "os.environ/ANTHROPIC_API_KEY"
+                api_base = null
+                api_version = null
+                max_tokens = 4096
+                temperature = 0.7
+                cache_control_injection_points = [
+                  {
+                    location = "message"
+                    role = "system"
+                  }
+                ]
+              }
+            },
+            {
+              model_name = "claude-4-sonnet"
+              litellm_params = {
+                model = "anthropic/claude-sonnet-4-20250514"
+                api_key = "os.environ/ANTHROPIC_API_KEY"
+                api_base = null
+                api_version = null
+                max_tokens = 4096
+                temperature = 0.7
+                cache_control_injection_points = [
+                  {
+                    location = "message"
+                    role = "system"
+                  }
+                ]
+              }
+            }
+          ]
+          
+          litellm_settings = merge({
+            cache = local.redis_config.enabled
+          }, local.redis_config.enabled ? {
+            cache_params = {
+              type = "redis"
+              ttl = 3600
+              namespace = "litellm.cline.cache"
+              supported_call_types = ["completion", "acompletion", "embedding", "aembedding"]
+            }
+          } : {})
         }
-      }
+      })
     })
   ]
 
