@@ -66,27 +66,19 @@ public class Pipeline1Test extends BaseTest {
                     return false;
                 }
                 
-                // Verify averagePrice is a number
+                // Verify numeric fields are numbers (handle both regular numbers and $numberDecimal format)
                 try {
-                    result.getDouble("averagePrice");
+                    // Handle averagePrice - can be regular double or $numberDecimal
+                    validateNumericField(result, "averagePrice", "double");
+                    
+                    // Handle propertyCount - should always be a regular int but validate to be safe
+                    validateNumericField(result, "propertyCount", "int");
+                    
+                    // Handle averageReviews - can be regular double or $numberDecimal
+                    validateNumericField(result, "averageReviews", "double");
+                    
                 } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: averagePrice field is not a number in result {}", i);
-                    return false;
-                }
-                
-                // Verify propertyCount is a number
-                try {
-                    result.getInt("propertyCount");
-                } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: propertyCount field is not a number in result {}", i);
-                    return false;
-                }
-                
-                // Verify averageReviews is a number
-                try {
-                    result.getDouble("averageReviews");
-                } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: averageReviews field is not a number in result {}", i);
+                    logger.warn("Pipeline-1 test failed: Invalid numeric field in result {}: {}", i, e.getMessage());
                     return false;
                 }
             }
@@ -137,9 +129,9 @@ public class Pipeline1Test extends BaseTest {
                 double averageReviewsMongo = mongoResult.getDouble("averageReviews");
 
                 int bedsApi = apiResult.getInt("beds");
-                double averagePriceApi = apiResult.getDouble("averagePrice");
-                int propertyCountApi = apiResult.getInt("propertyCount");
-                double averageReviewsApi = apiResult.getDouble("averageReviews");
+                double averagePriceApi = extractNumericValue(apiResult, "averagePrice", "double");
+                int propertyCountApi = (int) extractNumericValue(apiResult, "propertyCount", "int");
+                double averageReviewsApi = extractNumericValue(apiResult, "averageReviews", "double");
 
                 // Compare all fields with small tolerance for floating point differences
                 if (bedsMongo != bedsApi || 
@@ -161,5 +153,73 @@ public class Pipeline1Test extends BaseTest {
             logger.error("Pipeline-1 test failed with exception: {}", e.getMessage());
             return false;
         }
+    }
+
+    private void validateNumericField(org.json.JSONObject jsonObject, String fieldName, String expectedType) throws Exception {
+        if (!jsonObject.has(fieldName)) {
+            throw new Exception("Field " + fieldName + " is missing");
+        }
+        
+        Object fieldValue = jsonObject.get(fieldName);
+        
+        // Try to get as regular number first
+        try {
+            if (expectedType.equals("double")) {
+                jsonObject.getDouble(fieldName);
+            } else if (expectedType.equals("int")) {
+                jsonObject.getInt(fieldName);
+            }
+            return; // Success - it's a regular number
+        } catch (Exception e) {
+            // If that fails, check if it's a $numberDecimal object
+            if (fieldValue instanceof org.json.JSONObject) {
+                org.json.JSONObject numericJsonObj = (org.json.JSONObject) fieldValue;
+                if (!numericJsonObj.has("$numberDecimal")) {
+                    throw new Exception(fieldName + " object doesn't contain $numberDecimal field");
+                }
+                // Try to parse the $numberDecimal string as the expected type
+                String decimalStr = numericJsonObj.getString("$numberDecimal");
+                if (expectedType.equals("double")) {
+                    Double.parseDouble(decimalStr);
+                } else if (expectedType.equals("int")) {
+                    // For int, we can parse as double first then convert to int
+                    Double.parseDouble(decimalStr);
+                }
+            } else {
+                throw new Exception(fieldName + " field is not a valid number");
+            }
+        }
+    }
+
+    private double extractNumericValue(org.json.JSONObject jsonObject, String fieldName, String expectedType) throws Exception {
+        if (!jsonObject.has(fieldName)) {
+            throw new Exception("Field " + fieldName + " is missing");
+        }
+        
+        Object fieldValue = jsonObject.get(fieldName);
+        
+        // Try to get as regular number first
+        try {
+            if (expectedType.equals("double")) {
+                return jsonObject.getDouble(fieldName);
+            } else if (expectedType.equals("int")) {
+                return jsonObject.getInt(fieldName);
+            }
+        } catch (Exception e) {
+            // If that fails, check if it's a $numberDecimal object
+            if (fieldValue instanceof org.json.JSONObject) {
+                org.json.JSONObject numericJsonObj = (org.json.JSONObject) fieldValue;
+                if (!numericJsonObj.has("$numberDecimal")) {
+                    throw new Exception(fieldName + " object doesn't contain $numberDecimal field");
+                }
+                // Parse the $numberDecimal string as double
+                String decimalStr = numericJsonObj.getString("$numberDecimal");
+                return Double.parseDouble(decimalStr);
+            } else {
+                throw new Exception(fieldName + " field is not a valid number");
+            }
+        }
+        
+        throw new Exception("Unknown expectedType: " + expectedType);
     }
 }

@@ -6,6 +6,28 @@ const ListingStatistics = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Helper function to format price values that might be MongoDB $numberDecimal objects
+    const formatPrice = (price) => {
+        if (!price) return '0.00';
+        
+        // Handle MongoDB $numberDecimal format
+        if (typeof price === 'object' && price.$numberDecimal) {
+            return parseFloat(price.$numberDecimal).toFixed(2);
+        }
+        
+        // Handle regular numbers
+        if (typeof price === 'number') {
+            return price.toFixed(2);
+        }
+        
+        // Handle string numbers
+        if (typeof price === 'string') {
+            return parseFloat(price).toFixed(2);
+        }
+        
+        return '0.00';
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -77,55 +99,46 @@ const ListingStatistics = () => {
                 <ExerciseStatus exerciseName="pipeline-1" />
             </div>
             
-            <div className="overflow-x-auto">
-                <table className="w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Market Segment
-                            </th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Average Price
-                            </th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Properties
-                            </th>
-                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Avg Reviews
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {data.map((item) => (
-                            <tr key={item.beds} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        <div className="w-2 h-2 rounded-full bg-blue-500 mr-3"></div>
-                                        <span className="text-sm font-medium text-gray-900">
-                                            {item.beds === 0 ? 'Studio' : `${item.beds} Bedroom${item.beds > 1 ? 's' : ''}`}
-                                        </span>
+            <div className="p-3">
+                <div className="flex flex-wrap gap-2">
+                    {data.map((item) => (
+                        <div key={item.beds} className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-lg p-2">
+                            {/* Market Segment Header */}
+                            <div className="text-center mb-2">
+                                <span className="text-xs font-semibold text-blue-800">
+                                    {item.beds === 0 ? 'Studio' : `${item.beds}BR`}
+                                </span>
+                            </div>
+
+                            {/* Investment Metrics - Compact */}
+                            <div className="space-y-1 text-center">
+                                {/* Average Price */}
+                                <div>
+                                    <div className="text-xs text-gray-500">Price</div>
+                                    <div className="text-xs font-bold text-green-600">
+                                        ${formatPrice(item.averagePrice)}
                                     </div>
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-right">
-                                    <span className="text-sm font-bold text-green-600">
-                                        ${item.averagePrice?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-right">
-                                    <span className="text-sm text-gray-900">
+                                </div>
+
+                                {/* Property Count */}
+                                <div>
+                                    <div className="text-xs text-gray-500">Units</div>
+                                    <div className="text-xs font-bold text-blue-600">
                                         {item.propertyCount?.toLocaleString()}
-                                    </span>
-                                    <span className="text-xs text-gray-500 ml-1">units</span>
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-right">
-                                    <span className="text-sm text-gray-900">
+                                    </div>
+                                </div>
+
+                                {/* Average Reviews */}
+                                <div>
+                                    <div className="text-xs text-gray-500">Reviews</div>
+                                    <div className="text-xs font-bold text-purple-600">
                                         {item.averageReviews?.toFixed(1)}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 
                 {data.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
