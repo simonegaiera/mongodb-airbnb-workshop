@@ -31,6 +31,8 @@ docs:
         url: /guided/
       - title: "Environment: VSCode"
         url: /guided/vscode/
+      - title: "Environment: VSCode"
+        url: /guided/vscode-nop/
       - title: "Explore Collection Structure"
         url: /guided/collection/
       - title: "Leaderboard"

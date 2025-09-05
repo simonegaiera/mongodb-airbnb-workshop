@@ -27,7 +27,7 @@ Harness the magic of MongoDB Atlas Search to build a slick, lightning-fast autoc
    Locate the `autocompleteSearch` function.
 
 3. **Shape the Pipeline**  
-   - Add a `$search` stage on the `default` index.  
+   - Add a `$search` stage on the `search_index` index.  
    - Use `autocomplete` on the `name` field.  
    - Enable `fuzzy` search for typo-tolerant results.  
    - Limit results to 10 documents.  

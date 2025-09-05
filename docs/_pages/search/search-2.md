@@ -27,7 +27,7 @@ Faceted search lets your users slice and dice results, making it effortless to f
    Find the `facetSearch` function in the file.
 
 3. **Shape the Pipeline**  
-   - Use `$searchMeta` on the `default` index.  
+   - Use `$searchMeta` on the `search_index` index.  
    - Apply `facet` in your pipeline.  
    - For the `operator`, reuse the `autocomplete` search from the previous exercise.  
    - Create these facets:  

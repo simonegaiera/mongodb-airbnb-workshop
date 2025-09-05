@@ -27,7 +27,7 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
    Locate the `vectorSearch` function.
 
 3. **Shape the Pipeline**  
-   - Add a `$vectorSearch` stage using your vector index.  
+   - Add a `$vectorSearch` stage using your `vector_index` index.  
    - Use the `description` field as the vector search path.  
    - Pass the user’s query string as the `query` parameter.  
    - Add a filter on `property_type` for more relevant results.  
