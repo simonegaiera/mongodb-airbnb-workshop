@@ -13,6 +13,7 @@
             "type": "litellm",
             "service-name": "litellm-service",
             "port": 4000,
+            "cache": true,
             "redis": {
                 "enabled": true,
                 "service": {

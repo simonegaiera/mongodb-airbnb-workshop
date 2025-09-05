@@ -99,10 +99,8 @@ litellm:
       disable_prompt_caching: false
       # Enable caching globally
       cache_params:
-        type: "redis" 
+        type: "in-memory"
         ttl: 3600
-        namespace: "litellm.cline.cache"
-        supported_call_types: ["completion", "acompletion", "embedding", "aembedding"]
       disable_extended_thinking: true
       disable_image_generation: true
       disable_vision: true

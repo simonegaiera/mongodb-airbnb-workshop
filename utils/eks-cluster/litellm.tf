@@ -4,9 +4,10 @@ locals {
   # LLM configuration with defaults
   llm_config = merge({
     enabled = false
-    provider = "anthropic"  # Default to anthropic, can be "openai" or "anthropic"
+    provider = "openai"  # Default to openai, can be "openai" or "anthropic"
     proxy = {
       enabled = false
+      cache = true
       service-name = "litellm-service"
       port = 4000
     }
@@ -20,7 +21,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
-  version    = "0.1.8"
+  version    = "0.1.10"
   
   wait          = true
   wait_for_jobs = true
@@ -127,7 +128,7 @@ resource "helm_release" "litellm" {
           ]
           
           litellm_settings = merge({
-            cache = local.redis_config.enabled
+            cache = local.llm_config.proxy.cache
           }, local.redis_config.enabled ? {
             cache_params = {
               type = "redis"
