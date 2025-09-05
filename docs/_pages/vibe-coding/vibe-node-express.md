@@ -9,7 +9,7 @@ classes: wide
 
 ### 📋 Instructions
 
-This page contains the comprehensive prompt for implementing the MongoDB Airbnb Workshop REST API in Node.js with Express. Use this prompt with Cline to generate a complete Node.js Express application.
+This page contains the comprehensive prompt for implementing the MongoDB Workshop REST API in Node.js with Express. Use this prompt with Cline to generate a complete Node.js Express application.
 
 ### 🎯 How to Use This Prompt
 
@@ -240,7 +240,7 @@ Update your package.json with LangChain and AWS Bedrock dependencies:
 - Use modern JavaScript features (ES6+, async/await, destructuring)
 
 **Chat Features to Implement:**
-- **Context-Aware Responses**: Use RAG to provide relevant information about Airbnb listings
+- **Context-Aware Responses**: Use RAG to provide relevant information about listings
 - **Conversation History**: Maintain chat sessions and history
 - **Error Handling**: Graceful handling of AI service failures
 - **Response Streaming**: If supported, implement streaming responses
@@ -277,4 +277,4 @@ After receiving your generated code, verify:
 
 ## 🚀 Ready to Code?
 
-Copy the prompt above and start building your MongoDB Airbnb Workshop API in Node.js with Express!
+Copy the prompt above and start building your MongoDB Workshop API in Node.js with Express!

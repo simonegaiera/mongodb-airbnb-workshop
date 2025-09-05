@@ -9,7 +9,7 @@ classes: wide
 
 ### 📋 Instructions
 
-This page contains the comprehensive prompt for implementing the MongoDB Airbnb Workshop REST API in Python. Use this prompt with Cline to generate a complete Python application.
+This page contains the comprehensive prompt for implementing the MongoDB Workshop REST API in Python. Use this prompt with Cline to generate a complete Python application.
 
 ### 🎯 How to Use This Prompt
 

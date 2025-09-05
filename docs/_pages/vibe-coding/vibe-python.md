@@ -9,7 +9,7 @@ classes: wide
 
 ### 📋 Instructions
 
-This page contains the comprehensive prompt for implementing the MongoDB Airbnb Workshop REST API in Python. Use this prompt with Cline to generate a complete Python application.
+This page contains the comprehensive prompt for implementing the MongoDB Workshop REST API in Python. Use this prompt with Cline to generate a complete Python application.
 
 ### 🎯 How to Use This Prompt
 
@@ -234,7 +234,7 @@ Update your requirements.txt with LangChain and AWS Bedrock dependencies:
 - Use modern Python features (type hints, async/await if applicable)
 
 **Chat Features to Implement:**
-- **Context-Aware Responses**: Use RAG to provide relevant information about Airbnb listings
+- **Context-Aware Responses**: Use RAG to provide relevant information about listings
 - **Conversation History**: Maintain chat sessions and history
 - **Error Handling**: Graceful handling of AI service failures
 - **Response Streaming**: If supported, implement streaming responses
@@ -268,4 +268,4 @@ After receiving your generated code, verify:
 
 ## 🚀 Ready to Code?
 
-Copy the prompt above and start building your MongoDB Airbnb Workshop API in Python!
+Copy the prompt above and start building your MongoDB Workshop API in Python!

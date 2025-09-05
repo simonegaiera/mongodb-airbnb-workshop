@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "MongoDB Airbnb Workshop API",
-    "description": "API for MongoDB Airbnb Workshop - includes CRUD operations, search functionality, aggregations, and vector search capabilities",
+    "title": "MongoDB Workshop API",
+    "description": "API for MongoDB Workshop - includes CRUD operations, search functionality, aggregations, and vector search capabilities",
     "version": "1.0.0"
   },
   "servers": [
@@ -609,7 +609,7 @@
       "post": {
         "tags": ["AI & Vector Search"],
         "summary": "Send message to AI chatbot",
-        "description": "Send a message to the AI-powered chatbot system that uses Atlas Vector Search for retrieval-augmented generation (RAG) to provide intelligent responses about Airbnb listings. The chatbot leverages AWS Bedrock LLM integration and maintains conversation history in MongoDB.",
+        "description": "Send a message to the AI-powered chatbot system that uses Atlas Vector Search for retrieval-augmented generation (RAG) to provide intelligent responses about listings. The chatbot leverages AWS Bedrock LLM integration and maintains conversation history in MongoDB.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1382,7 +1382,7 @@
   "tags": [
     {
       "name": "Listings & Analytics",
-      "description": "Comprehensive operations for Airbnb listings including CRUD operations, reviews management, filtering using MongoDB aggregation pipelines, and statistical analysis with aggregated data operations"
+      "description": "Comprehensive operations for listings including CRUD operations, reviews management, filtering using MongoDB aggregation pipelines, and statistical analysis with aggregated data operations"
     },
     {
       "name": "Atlas Search",

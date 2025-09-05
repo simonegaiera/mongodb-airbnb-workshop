@@ -5,11 +5,11 @@ layout: single
 classes: wide
 ---
 
-## MongoDB Airbnb AI Arena (Vibe Coding Edition)
+## MongoDB AI Arena (Vibe Coding Edition)
 
-Welcome to the **MongoDB Airbnb AI Arena**! 🚀 
+Welcome to the **MongoDB AI Arena**! 🚀 
 
-Your mission is to **create the best backend possible** for this Airbnb application. The frontend is already built and waiting for you, and all API endpoints are clearly defined below. Now it's time to **vibe code your backend** and bring this application to life!
+Your mission is to **create the best backend possible** for this application. The frontend is already built and waiting for you, and all API endpoints are clearly defined below. Now it's time to **vibe code your backend** and bring this application to life!
 
 **Your Challenge:**
 - ✨ Implement robust API endpoints that power the frontend
@@ -21,7 +21,7 @@ Your mission is to **create the best backend possible** for this Airbnb applicat
 **What's Provided:**
 - 🎨 **Frontend**: Fully functional React application
 - 📋 **API Spec**: Complete endpoint definitions and schemas
-- 🗄️ **Database**: MongoDB Atlas with sample Airbnb data
+- 🗄️ **Database**: MongoDB Atlas with sample rental data
 - 🛠️ **Tools**: All the development tools you need
 
 **Your Goal**: Make the frontend work flawlessly by implementing these API endpoints. Show off your skills, get creative, and build something amazing! 💪

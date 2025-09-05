@@ -36,7 +36,7 @@ Your instructor will provide everything you need!
 ### 3️⃣ Success Check
 
 - If you see databases in the left panel, you’re in!
-- Look for the Airbnb sample dataset collections.
+- Look for the Short Rental sample dataset collections.
 
 ![MongoDB Compass Connection Screen](../../assets/images/compass.png)
 

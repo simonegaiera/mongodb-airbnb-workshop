@@ -9,7 +9,7 @@ classes: wide
 
 ### 📋 Instructions
 
-This page contains the comprehensive prompt for implementing the MongoDB Airbnb Workshop REST API in Java Spring Boot. Use this prompt with Cline to generate a complete Java Spring Boot application.
+This page contains the comprehensive prompt for implementing the MongoDB Workshop REST API in Java Spring Boot. Use this prompt with Cline to generate a complete Java Spring Boot application.
 
 ### 🎯 How to Use This Prompt
 
@@ -238,7 +238,7 @@ Update your pom.xml with LangChain4j and AWS Bedrock dependencies:
 - Add appropriate logging for AI operations
 
 **Chat Features to Implement:**
-- **Context-Aware Responses**: Use RAG to provide relevant information about Airbnb listings
+- **Context-Aware Responses**: Use RAG to provide relevant information about listings
 - **Conversation History**: Maintain chat sessions and history
 - **Error Handling**: Graceful handling of AI service failures
 - **Response Streaming**: If supported, implement streaming responses
@@ -276,4 +276,4 @@ After receiving your generated code, verify:
 
 ## 🚀 Ready to Code?
 
-Copy the prompt above and start building your MongoDB Airbnb Workshop API in Java Spring Boot!
+Copy the prompt above and start building your MongoDB Workshop API in Java Spring Boot!
