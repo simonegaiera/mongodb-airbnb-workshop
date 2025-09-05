@@ -2,7 +2,7 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';  
 
 /**
- * Uses $searchMeta on the default index to create and query facets based on the autocomplete operator.
+ * Uses $searchMeta on the 'search_index' index to create and query facets based on the autocomplete operator.
  * This pipeline includes string facets for 'amenities' and 'property_type' 
  * and a numeric facet for 'beds' with boundaries from 0 to 9, defaulting to "Other".
  *
