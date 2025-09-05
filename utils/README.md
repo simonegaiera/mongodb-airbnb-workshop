@@ -22,6 +22,8 @@
 
 ### Answers
 - 🟡 **MID:** Adjust the guidelines to better answer to users
+- 🔴 **HIGH:** Can I use 2 folders when deciding the scenario. lab and answer.
+
 ---
 
 ## Terraform
