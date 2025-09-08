@@ -15,6 +15,9 @@ resource "helm_release" "scenario_definition" {
   # Configure values including the scenario configuration data
   values = [
     yamlencode({
+      podAnnotations = {
+        "scenario-config-checksum" = sha256(jsonencode(var.scenario_config))
+      },
       scenario = {
         config = merge(var.scenario_config, {
           aws_route53_record_name = local.aws_route53_record_name
