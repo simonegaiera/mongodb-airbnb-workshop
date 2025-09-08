@@ -2,6 +2,16 @@
 
 ---
 
+## Legend
+
+- 🔴 **HIGH:** High priority / urgent
+- 🟠 **MEDIUM:** Medium priority
+- 🟡 **LOW:** Low priority
+- 🟢 **MINOR:** Minor / nice to have
+- ❄️ **FROZEN:** Frozen / blocked / on hold
+
+---
+
 ## Docs
 
 *No urgent items.*
@@ -10,7 +20,7 @@
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
-- 🔴 **HIGH:** Replace the correct email for Arena in the Portal
+- 🟡 **LOW:** Replace the correct email for Arena in the Portal
 - 🔴 **HIGH:** Exercise with RankFusion
 
 ---
@@ -24,7 +34,7 @@
 ## Server
 
 ### Answers
-- 🔴 **HIGH:** Adjust the guidelines to better answer to users
+- 🟠 **MEDIUM:** Adjust the guidelines to better answer to users
 - 🔴 **HIGH:** Can I use 2 folders when deciding the scenario. lab and answer.
 
 ---
@@ -34,11 +44,12 @@
 ### Deploy
 - ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
 - ❄️ **FROZEN:** S3 bucket change to mongodb-arena from mongodb-gameday
+- 🔴 **HIGH:** Save the exercise output in Atlas, and show in the frontend via tooltip
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
-- 🟢 **LOW:** Can I filter the Load Sample Dataset to the single database
+- ❄️ **FROZEN:** Can I filter the Load Sample Dataset to the single database
 
 
 ### Open VSCode
