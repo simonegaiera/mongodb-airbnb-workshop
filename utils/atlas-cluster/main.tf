@@ -159,7 +159,7 @@ locals {
   mongodb_atlas_database_username = "${var.cluster_name}-admin"
 }
 
-resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
+resource "mongodbatlas_custom_db_role" "arena_shared_role" {
   project_id = data.mongodbatlas_project.project.id
   role_name  = "${var.cluster_name}-arena-role"
 
@@ -270,7 +270,7 @@ resource "mongodbatlas_database_user" "users" {
 
   depends_on = [ 
     data.mongodbatlas_project.project,
-    mongodbatlas_custom_db_role.airbnb_arena_role
+    mongodbatlas_custom_db_role.arena_shared_role
   ]
 }
 

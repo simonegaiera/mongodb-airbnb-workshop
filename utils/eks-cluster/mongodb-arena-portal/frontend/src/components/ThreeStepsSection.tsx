@@ -39,13 +39,13 @@ const ThreeStepsSection: React.FC = () => {
       
       // If it's localhost or IP, use fallback
       if (hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-        return 'https://mongogameday.com/'
+        return 'https://mongoarena.com/'
       }
       
-      // Extract the base domain (preserve mongoai.mongogameday.com structure)
+      // Extract the base domain (preserve mongoai.mongoarena.com structure)
       const parts = hostname.split('.')
       if (parts.length >= 3) {
-        // For mongoai.mongogameday.com structure, keep the full domain
+        // For mongoai.mongoarena.com structure, keep the full domain
         const baseDomain = parts.slice(-3).join('.')
         return `https://instructions.${baseDomain}/`
       } else if (parts.length >= 2) {
@@ -58,7 +58,7 @@ const ThreeStepsSection: React.FC = () => {
       return `https://instructions.${hostname}/`
     } catch (error) {
       // Fallback for invalid URLs
-      return 'https://.mongogameday.com/'
+      return 'https://.mongoarena.com/'
     }
   }
 

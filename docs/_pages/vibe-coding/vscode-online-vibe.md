@@ -10,7 +10,7 @@ classes: wide
 Welcome to your cloud-powered dev playground!  
 Let’s get you connected, coding, and exploring MongoDB in style.
 
-**Quick Check**: Navigate to `https://<customer>.mongogameday.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
+**Quick Check**: Navigate to `https://<customer>.mongoarena.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
 
 ---
 
@@ -51,7 +51,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
    - Go to:
      ```
-     https://<username>.<customer>.mongogameday.com/
+     https://<username>.<customer>.mongoarena.com/
      ```
    - In the `Explorer`, click **Open Folder** and navigate to:
      ```

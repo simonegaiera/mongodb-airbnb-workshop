@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.nio.file.*;
-import java.nio.file.StandardOpenOption;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +33,7 @@ import java.security.cert.X509Certificate;
 /**
  * MongoDB Results Processor
  * 
- * This application connects to MongoDB and processes results from the airbnb_arena database.
+ * This application connects to MongoDB and processes results from the arena_shared database.
  * It executes test methods for each exercise based on environment configuration.
  */
 public class ResultsProcessor {
@@ -44,7 +43,7 @@ public class ResultsProcessor {
     private static boolean participantNameLogged = false;
     
     // Database and collection constants
-    private static final String DB_NAME = "airbnb_arena";
+    private static final String DB_NAME = "arena_shared";
     private static final String RESULTS_COLLECTION = "results";
     private static final String HEALTH_COLLECTION = "results_health";
     

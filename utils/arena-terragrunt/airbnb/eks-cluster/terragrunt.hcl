@@ -6,7 +6,7 @@ dependency "atlas" {
   config_path = "../atlas-cluster"
 
   mock_outputs = {
-    standard_srv  = "mongodb+srv://mongodb-airbnb.abcdef.mongodb.net"
+    standard_srv  = "mongodb+srv://mongodb-arena.abcdef.mongodb.net"
     user_list     = ["mockUserA","mockUserB"]
     user_password = "superSecret123"
     admin_user = "superSecret123"

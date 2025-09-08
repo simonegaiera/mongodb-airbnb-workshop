@@ -3,7 +3,7 @@ title_separator: ""
 subtitle: ""
 description: Hands-on experience with MongoDB
 baseurl: "/"
-url: "https://mongogameday.com"
+url: "https://mongoarena.com"
 remote_theme: mmistakes/minimal-mistakes@master
 logo: "/assets/images/logo.png"
 breadcrumbs: true 

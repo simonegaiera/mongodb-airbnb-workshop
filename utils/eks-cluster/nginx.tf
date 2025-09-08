@@ -54,7 +54,7 @@ resource "kubernetes_secret" "nginx_tls_secret" {
   ]
 }
 
-resource "helm_release" "airbnb_gameday_nginx" {
+resource "helm_release" "airbnb_arena_nginx" {
   name       = "mdb-nginx"
   repository = "local"
   chart      = "./mdb-nginx"
@@ -151,12 +151,12 @@ resource "helm_release" "airbnb_gameday_nginx" {
 
 data "kubernetes_service" "nginx_service" {
   metadata {
-    name      = helm_release.airbnb_gameday_nginx.name
-    namespace = helm_release.airbnb_gameday_nginx.namespace
+    name      = helm_release.airbnb_arena_nginx.name
+    namespace = helm_release.airbnb_arena_nginx.namespace
   }
 
   depends_on = [
-    helm_release.airbnb_gameday_nginx
+    helm_release.airbnb_arena_nginx
   ]
 }
 

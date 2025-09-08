@@ -32,7 +32,7 @@ Your mission is to **create the best backend possible** for this application. Th
 
 **Technical Specifications:**
 - 🌐 **Server Port**: Must run on `http://localhost:5000`
-- 🌐 **Public Link**: Run on `https://<username>.<customer>.mongogameday.com/backend`
+- 🌐 **Public Link**: Run on `https://<username>.<customer>.mongoarena.com/backend`
 - 📋 **Documentation Format**: OpenAPI 3.0
 - 🛠️ **Language**: Build in **any programming language** you prefer
 - 🎯 **Framework**: Use any web framework (Express.js, FastAPI, Spring Boot, etc.)
@@ -232,7 +232,7 @@ Your mission is to **create the best backend possible** for this application. Th
 - 🔍 **Atlas Search**: Search endpoints (`/autocomplete`, `/facet`, `/search`) operate on the `listingsAndReviews` collection
 - 🧠 **Vector Search**: The `/vectorsearch` endpoint uses the `listingsAndReviews` collection with automated embeddings
 - 💬 **Chat System**: Chat endpoints (`/api/chat/*`) use the `listingsAndReviews` collection for RAG operations
-- 📊 **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_arena` database
+- 📊 **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `arena_shared` database
 
 **MCP Integration Available**: There is a Model Context Protocol (MCP) available that can help you understand the structure and schema of the two collections. This MCP provides insights into:
 - Field types and structures

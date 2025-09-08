@@ -64,7 +64,7 @@ Create a Java Spring Boot REST API application based on the swagger.json specifi
 
 **Database Collection Usage:**
 - **Primary Collection**: All listing-related endpoints (`/api/listingsAndReviews/*`) use the `listingsAndReviews` collection
-- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `airbnb_arena` database
+- **Results Data**: Only the Results endpoints (`/api/results/*`) use data from the `arena_shared` database
 
 **Required Deliverables for Part 1:**
 1. **Complete Java Spring Boot application** with proper package organization

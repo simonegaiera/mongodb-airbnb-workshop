@@ -4,8 +4,8 @@ This document outlines the process for backing up and restoring PostgreSQL datab
 
 ## Configuration Details
 
-- **Database**: `jdbc:postgresql://mongoai-gameday-eks-aurora-cluster.cluster-c2fwyhwvkqkf.us-east-2.rds.amazonaws.com:5432/simone-gaiera`
-- **S3 Bucket**: `mongodb-gameday`
+- **Database**: `jdbc:postgresql://mongoai-arena-eks-aurora-cluster.cluster-c2fwyhwvkqkf.us-east-2.rds.amazonaws.com:5432/simone-gaiera`
+- **S3 Bucket**: `mongodb-arena`
 - **S3 Region**: `us-east-1`
 - **AWS Profile**: `Solution-Architects.User-979559056307`
 
@@ -25,7 +25,7 @@ export AWS_PROFILE="Solution-Architects.User-979559056307"
 
 # Verify configuration
 aws configure list --profile "Solution-Architects.User-979559056307"
-aws s3 ls s3://mongodb-gameday --profile "Solution-Architects.User-979559056307"
+aws s3 ls s3://mongodb-arena --profile "Solution-Architects.User-979559056307"
 ```
 
 ## Backup Process
@@ -36,13 +36,13 @@ aws s3 ls s3://mongodb-gameday --profile "Solution-Architects.User-979559056307"
 # Set environment variables
 export PGPASSWORD="your_database_password"
 export AWS_PROFILE="Solution-Architects.User-979559056307"
-export S3_BUCKET="mongodb-gameday"
+export S3_BUCKET="mongodb-arena"
 export BACKUP_NAME="airbnb-backup"
 export DATABASE_NAME="simone-gaiera"
 
 # Backup database to S3 (without comments, which includes extension comments)
 pg_dump \
-  -h mongoai-gameday-eks-aurora-cluster.cluster-c2fwyhwvkqkf.us-east-2.rds.amazonaws.com \
+  -h mongoai-arena-eks-aurora-cluster.cluster-c2fwyhwvkqkf.us-east-2.rds.amazonaws.com \
   -U postgres \
   -d $DATABASE_NAME \
   --verbose --no-owner --no-privileges --no-comments \

@@ -8,7 +8,7 @@ const match = mongodbUri.match(regex);
 export const databaseName = process.env.DATABASE_NAME || (match ? match[1] : 'error');
 
 export const collectionName = 'listingsAndReviews';
-export const resultsDatabaseName = 'airbnb_arena';
+export const resultsDatabaseName = 'arena_shared';
 export const resultsCollectionName = 'results';
 export const participantsCollectionName = 'participants';
 export const scenarioCollectionName = 'scenario_config';

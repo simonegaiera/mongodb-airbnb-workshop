@@ -19,7 +19,7 @@ variable "aws_region" {
 variable "aws_route53_hosted_zone" {
   description = "The name of the Hosted Zone for the specific customer"
   type        = string
-  default     = "mongogameday.com."
+  default     = "mongoarena.com."
 }
 
 variable "domain_email" {

@@ -68,4 +68,4 @@ Welcome to the AI Arena preparation guide! Follow these steps to ensure a smooth
    terraform apply
    ```
 
-Following these steps will help ensure a smooth setup for your Atlas GameDay environment.
+Following these steps will help ensure a smooth setup for your Atlas Arena environment.

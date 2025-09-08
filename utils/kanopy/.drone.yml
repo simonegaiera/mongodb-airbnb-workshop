@@ -55,7 +55,7 @@ steps:
           value:
             from_secret: mongodb_uri
         - name: DB_NAME
-          value: airbnb_arena
+          value: arena_shared
         - name: COLLECTION_NAME
           value: scenario_config
     api_server: https://api.staging.corp.mongodb.com
@@ -91,7 +91,7 @@ steps:
           value:
             from_secret: mongodb_uri
         - name: DB_NAME
-          value: airbnb_arena
+          value: arena_shared
         - name: COLLECTION_NAME
           value: scenario_config
       nginx:

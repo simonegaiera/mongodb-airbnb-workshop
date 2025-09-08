@@ -399,7 +399,7 @@ def store_config_in_mongodb(config, navigation_content=None):
     try:
         # Get MongoDB connection details from environment variables
         mongodb_uri = os.getenv('MONGODB_URI')
-        db_name = os.getenv('DB_NAME', 'airbnb_arena')
+        db_name = os.getenv('DB_NAME', 'arena_shared')
         collection_name = os.getenv('COLLECTION_NAME', 'scenario_config')
         
         if not mongodb_uri:

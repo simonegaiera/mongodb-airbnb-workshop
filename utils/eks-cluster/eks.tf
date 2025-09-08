@@ -128,7 +128,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     Name        = local.cluster_name
     "expire-on" = local.expire_timestamp
     "owner"     = local.domain_user
-    "purpose"   = "gameday"
+    "purpose"   = "arena"
   }
 
   depends_on = [
@@ -242,20 +242,20 @@ resource "kubernetes_storage_class" "efs" {
   ]
 }
 
-# Add S3 policy for the node role to read mongodb-gameday bucket
-resource "aws_iam_policy" "s3_mongodb_gameday_policy" {
-  name        = "${local.cluster_name}-s3-mongodb-gameday-policy"
-  description = "Policy for reading mongodb-gameday S3 bucket"
+# Add S3 policy for the node role to read mongodb-arena bucket
+resource "aws_iam_policy" "s3_mongodb_arena_policy" {
+  name        = "${local.cluster_name}-s3-mongodb-arena-policy"
+  description = "Policy for reading mongodb-arena S3 bucket"
   policy     = file("${path.module}/aws_policies/s3.json")
 }
 
-resource "aws_iam_role_policy_attachment" "node_s3_mongodb_gameday_policy" {
-  policy_arn = aws_iam_policy.s3_mongodb_gameday_policy.arn
+resource "aws_iam_role_policy_attachment" "node_s3_mongodb_arena_policy" {
+  policy_arn = aws_iam_policy.s3_mongodb_arena_policy.arn
   role       = aws_iam_role.node.name
 
   depends_on = [
     aws_iam_role.node,
-    aws_iam_policy.s3_mongodb_gameday_policy
+    aws_iam_policy.s3_mongodb_arena_policy
   ]
 }
 

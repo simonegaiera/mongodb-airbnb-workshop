@@ -8,7 +8,7 @@ resource "aws_db_subnet_group" "aurora_subnet_group" {
     Name        = "${local.cluster_name}-aurora-subnet-group"
     "expire-on" = local.expire_timestamp
     "owner"     = local.domain_user
-    "purpose"   = "gameday"
+    "purpose"   = "arena"
   }
 
   depends_on = [aws_subnet.eks_subnet]
@@ -54,7 +54,7 @@ resource "aws_security_group" "aurora_sg" {
   tags = {
     Name        = "${local.cluster_name}-aurora-sg"
     "owner"     = local.domain_user
-    "purpose"   = "gameday"
+    "purpose"   = "arena"
   }
 
   depends_on = [aws_vpc.eks_vpc, aws_security_group.eks_sg]
@@ -88,7 +88,7 @@ resource "aws_rds_cluster" "aurora_cluster" {
     Name        = "${local.cluster_name}-aurora-cluster"
     "expire-on" = local.expire_timestamp
     "owner"     = local.domain_user
-    "purpose"   = "gameday"
+    "purpose"   = "arena"
   }
 
   depends_on = [
@@ -110,7 +110,7 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
   tags = {
     Name        = "${local.cluster_name}-aurora-instance"
     "owner"     = local.domain_user
-    "purpose"   = "gameday"
+    "purpose"   = "arena"
   }
 
   depends_on = [aws_rds_cluster.aurora_cluster]
@@ -305,7 +305,7 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
               # Check if backup already exists locally
               if [ ! -f /backup/airbnb-backup.sql ]; then
                 echo "Downloading backup from S3..."
-                /usr/local/bin/aws s3 cp "s3://mongodb-gameday/postgres-backups/airbnb-backup.sql.gz" /backup/airbnb-backup.sql.gz \
+                /usr/local/bin/aws s3 cp "s3://mongodb-arena/postgres-backups/airbnb-backup.sql.gz" /backup/airbnb-backup.sql.gz \
                   --region us-east-1 \
                   --no-cli-pager
                 
@@ -428,7 +428,7 @@ resource "kubernetes_job_v1" "restore_backup_to_users" {
     postgresql_database.user_databases,
     postgresql_role.atlas_users,
     aws_eks_cluster.eks_cluster,
-    aws_iam_role_policy_attachment.node_s3_mongodb_gameday_policy
+    aws_iam_role_policy_attachment.node_s3_mongodb_arena_policy
   ]
 }
 

@@ -36,7 +36,7 @@ resource "helm_release" "instructions_nginx" {
         },
         {
           name  = "DB_NAME"
-          value = "airbnb_arena"
+          value = "arena_shared"
         },
         {
           name  = "COLLECTION_NAME"

@@ -20,7 +20,7 @@ set +a
 mkdir -p logs
 
 echo "Starting MongoDB Results Processor..."
-echo "Database: airbnb_arena"
+echo "Database: arena_shared"
 echo "Environment: $ENVIRONMENT"
 echo "Log Level: $LOG_LEVEL"
 echo ""

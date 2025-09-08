@@ -36,7 +36,7 @@ resource "helm_release" "portal_server" {
         },
         {
           name  = "DB_NAME"
-          value = "airbnb_arena"
+          value = "arena_shared"
         },
         {
           name  = "PARTICIPANTS"

@@ -30,7 +30,7 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
       
       // If it's localhost or IP, use fallback
       if (hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
-        return 'mongogameday.com'
+        return 'mongoarena.com'
       }
       
       // Extract the base domain (last two parts of the hostname)
@@ -45,7 +45,7 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
       return hostname
     } catch (error) {
       // Fallback for invalid URLs
-      return 'mongogameday.com'
+      return 'mongoarena.com'
     }
   }
 

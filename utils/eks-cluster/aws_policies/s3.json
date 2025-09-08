@@ -8,8 +8,8 @@
         ],
         "Effect": "Allow",
         "Resource": [
-          "arn:aws:s3:::mongodb-gameday",
-          "arn:aws:s3:::mongodb-gameday/*"
+          "arn:aws:s3:::mongodb-arena",
+          "arn:aws:s3:::mongodb-arena/*"
         ]
       }
     ]
