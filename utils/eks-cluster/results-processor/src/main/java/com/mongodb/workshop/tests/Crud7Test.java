@@ -25,7 +25,7 @@ public class Crud7Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-7 test - Testing crudAddToArray function");
         
         try {
@@ -54,43 +54,56 @@ public class Crud7Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(itemEndpoint, requestBody);
             
             if (response.statusCode() != 201) {
-                logger.warn("CRUD-7 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 201 for PATCH request, check if your crudAddToArray endpoint is implemented correctly", response.statusCode());
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON object (update result)
-            JSONObject result = parseJsonResponse(response.body());
+            JSONObject result;
+            try {
+                result = parseJsonResponse(response.body());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON object - expected update result object but got: %s", response.body());
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
             
             // Validate the update result
             if (result == null || result.length() == 0) {
-                logger.warn("CRUD-7 test failed: No update result returned");
-                return false;
+                String errorMessage = "API returned empty response - check if your crudAddToArray function returns the MongoDB update result";
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if the result indicates successful update
             if (!result.has("acknowledged") || !result.getBoolean("acknowledged")) {
-                logger.warn("CRUD-7 test failed: Update not acknowledged");
-                return false;
+                String errorMessage = "Update operation not acknowledged - check if your crudAddToArray function properly updates the document and returns the result";
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if matchedCount is present and > 0
             if (!result.has("matchedCount") || result.getInt("matchedCount") == 0) {
-                logger.warn("CRUD-7 test failed: No documents matched for update");
-                return false;
+                String errorMessage = "No documents matched for update - check if your crudAddToArray function uses the correct document ID in the update query";
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if modifiedCount is present and > 0
             if (!result.has("modifiedCount") || result.getInt("modifiedCount") == 0) {
-                logger.warn("CRUD-7 test failed: No documents were modified");
-                return false;
+                String errorMessage = "No documents were modified - check if your crudAddToArray function properly applies the $push operation to add reviews";
+                logger.warn("CRUD-7 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             logger.info("CRUD-7 test passed: Successfully added review and updated {} document(s)", result.getInt("modifiedCount"));
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-7 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudAddToArray function implementation and database connection", e.getMessage());
+            logger.error("CRUD-7 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

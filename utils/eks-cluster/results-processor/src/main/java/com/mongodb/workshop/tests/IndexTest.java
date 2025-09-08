@@ -22,7 +22,7 @@ public class IndexTest extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing Index test - Testing index operations");
         
         try {
@@ -38,17 +38,18 @@ public class IndexTest extends BaseTest {
             }
 
             if (!found) {
-                logger.warn("Index 'beds_1_price_1' not found");
-                return false;
+                String errorMessage = "Required index 'beds_1_price_1' not found on listingsAndReviews collection - please create this compound index on beds and price fields";
+                logger.warn("Index test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             logger.info("Index 'beds_1_price_1' exists");
-            
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("Index test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Index validation failed with exception: %s - check database connection and collection access", e.getMessage());
+            logger.error("Index test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

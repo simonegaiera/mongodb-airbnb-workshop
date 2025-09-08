@@ -23,7 +23,7 @@ public class Search2Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing Search-2 test - Testing facetSearch function");
         
         try {
@@ -34,8 +34,9 @@ public class Search2Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
             
             if (response.statusCode() != 201) {
-                logger.warn("Search-2 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 201 for POST request, check if your facetedSearch endpoint is implemented correctly", response.statusCode());
+                logger.warn("Search-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON array (should contain one facet metadata object)
@@ -43,22 +44,25 @@ public class Search2Test extends BaseTest {
             
             // Validate the response
             if (results.length() == 0) {
-                logger.warn("Search-2 test failed: No facet results returned");
-                return false;
+                String errorMessage = "API returned empty results array - check if your facetedSearch function properly executes the search with facets and returns data";
+                logger.warn("Search-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Should have exactly one result containing facet metadata
             if (results.length() != 1) {
-                logger.warn("Search-2 test failed: Expected 1 facet result, got {}", results.length());
-                return false;
+                String errorMessage = String.format("Expected exactly 1 facet result but got %d - check if your faceted search pipeline groups facet data into a single result document", results.length());
+                logger.warn("Search-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             JSONObject facetResult = results.getJSONObject(0);
             
             // Check if facet structure is present
             if (!facetResult.has("facet")) {
-                logger.warn("Search-2 test failed: Missing 'facet' field in result");
-                return false;
+                String errorMessage = "Missing 'facet' field in result - check if your faceted search pipeline includes a $searchMeta stage with facets";
+                logger.warn("Search-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             JSONObject facet = facetResult.getJSONObject("facet");
@@ -67,37 +71,42 @@ public class Search2Test extends BaseTest {
             String[] expectedFacets = {"amenities", "property_type", "beds"};
             for (String expectedFacet : expectedFacets) {
                 if (!facet.has(expectedFacet)) {
-                    logger.warn("Search-2 test failed: Missing '{}' facet", expectedFacet);
-                    return false;
+                    String errorMessage = String.format("Missing '%s' facet - check if your faceted search includes all required facets (amenities, property_type, beds)", expectedFacet);
+                    logger.warn("Search-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Each facet should have buckets
                 JSONObject facetData = facet.getJSONObject(expectedFacet);
                 if (!facetData.has("buckets")) {
-                    logger.warn("Search-2 test failed: Missing 'buckets' in '{}' facet", expectedFacet);
-                    return false;
+                    String errorMessage = String.format("Missing 'buckets' in '%s' facet - check if your faceted search properly configures facet buckets", expectedFacet);
+                    logger.warn("Search-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 JSONArray buckets = facetData.getJSONArray("buckets");
                 if (buckets.length() == 0) {
-                    logger.warn("Search-2 test failed: No buckets in '{}' facet", expectedFacet);
-                    return false;
+                    String errorMessage = String.format("No buckets found in '%s' facet - check if your data contains values for this field and facet configuration is correct", expectedFacet);
+                    logger.warn("Search-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Verify bucket structure
                 for (int i = 0; i < buckets.length(); i++) {
                     JSONObject bucket = buckets.getJSONObject(i);
                     if (!bucket.has("_id") || !bucket.has("count")) {
-                        logger.warn("Search-2 test failed: Invalid bucket structure in '{}' facet", expectedFacet);
-                        return false;
+                        String errorMessage = String.format("Invalid bucket structure in '%s' facet - buckets should have '_id' and 'count' fields", expectedFacet);
+                        logger.warn("Search-2 test failed: {}", errorMessage);
+                        return TestResult.failure(errorMessage);
                     }
                 }
             }
             
             // Verify count field is present at the top level
             if (!facetResult.has("count")) {
-                logger.warn("Search-2 test failed: Missing 'count' field in facet result");
-                return false;
+                String errorMessage = "Missing 'count' field in facet result - check if your $searchMeta stage includes count metadata";
+                logger.warn("Search-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Extract count object and get lowerBound value
@@ -106,11 +115,12 @@ public class Search2Test extends BaseTest {
             
             logger.info("Search-2 test passed: Found valid faceted search results with {} total count", 
                 totalCount);
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("Search-2 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your facetedSearch function implementation, search index setup, and database connection", e.getMessage());
+            logger.error("Search-2 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

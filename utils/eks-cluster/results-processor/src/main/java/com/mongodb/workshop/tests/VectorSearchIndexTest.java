@@ -24,7 +24,7 @@ public class VectorSearchIndexTest extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing VectorSearchIndex test - Testing vector search index operations");
         
         try {
@@ -43,8 +43,9 @@ public class VectorSearchIndexTest extends BaseTest {
             }
             
             if (!found) {
-                logger.warn("Atlas Search index 'vector_index' not found");
-                return false;
+                String errorMessage = "Atlas Search index 'vector_index' not found - check if the vector search index was created properly on the listingsAndReviews collection";
+                logger.warn("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // --- Begin field checks ---
@@ -60,8 +61,9 @@ public class VectorSearchIndexTest extends BaseTest {
             
             // Check that fields array exists and has 2 elements
             if (fields == null || fields.size() != 2) {
-                logger.error("fields array is missing or does not have 2 elements");
-                return false;
+                String errorMessage = "fields array is missing or does not have 2 elements - check if your vector_index definition includes both 'description' and 'property_type' fields";
+                logger.error("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check description field
@@ -71,12 +73,14 @@ public class VectorSearchIndexTest extends BaseTest {
                 .orElse(null);
             
             if (descriptionField == null) {
-                logger.error("description field not found");
-                return false;
+                String errorMessage = "description field not found in vector_index - check if your index definition includes a field with path 'description'";
+                logger.error("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             if (!"text".equals(descriptionField.getString("type"))) {
-                logger.error("description field should have type 'text'");
-                return false;
+                String errorMessage = "description field should have type 'text' - check if your description field in the vector_index is configured with type 'text' for vector search";
+                logger.error("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             // Uncomment if you want to check the model
             // if (!"voyage-3-large".equals(descriptionField.getString("model"))) {
@@ -91,22 +95,25 @@ public class VectorSearchIndexTest extends BaseTest {
                 .orElse(null);
             
             if (propertyTypeField == null) {
-                logger.error("property_type field not found");
-                return false;
+                String errorMessage = "property_type field not found in vector_index - check if your index definition includes a field with path 'property_type'";
+                logger.error("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             if (!"filter".equals(propertyTypeField.getString("type"))) {
-                logger.error("property_type field should have type 'filter'");
-                return false;
+                String errorMessage = "property_type field should have type 'filter' - check if your property_type field in the vector_index is configured with type 'filter' for filtering";
+                logger.error("VectorSearchIndex test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             // --- End field checks ---
             
             logger.info("Atlas Search index 'vector_index' exists and fields are correct");
             logger.info("SearchIndex test passed: Atlas Search index operation completed successfully");
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("VectorSearchIndex test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your vector search index configuration and database connection", e.getMessage());
+            logger.error("VectorSearchIndex test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

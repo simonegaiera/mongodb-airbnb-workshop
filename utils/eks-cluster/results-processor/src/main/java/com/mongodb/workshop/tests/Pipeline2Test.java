@@ -25,7 +25,7 @@ public class Pipeline2Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing Pipeline-2 test - Testing hostPerformanceAnalytics function");
         
         try {
@@ -33,8 +33,9 @@ public class Pipeline2Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(endpoint);
             
             if (response.statusCode() != 200) {
-                logger.warn("Pipeline-2 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 200 for GET request, check if your superhostAnalytics endpoint is implemented correctly", response.statusCode());
+                logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON array
@@ -42,14 +43,16 @@ public class Pipeline2Test extends BaseTest {
             
             // Validate the response
             if (results.length() == 0) {
-                logger.warn("Pipeline-2 test failed: No aggregation results returned");
-                return false;
+                String errorMessage = "API returned empty results array - check if your superhostAnalytics function properly executes the aggregation and returns data";
+                logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // We expect exactly 2 results (Superhost and Regular Host)
             if (results.length() != 2) {
-                logger.warn("Pipeline-2 test failed: Expected 2 results (Superhost and Regular Host), got {}", results.length());
-                return false;
+                String errorMessage = String.format("Expected exactly 2 results (Superhost and Regular Host) but got %d - check if your aggregation properly groups by host_is_superhost field", results.length());
+                logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Verify the structure of aggregation results
@@ -60,16 +63,18 @@ public class Pipeline2Test extends BaseTest {
                 String[] requiredFields = {"hostType", "avgRating", "avgReviews", "avgListings", "avgPrice", "totalProperties", "avgResponseRate"};
                 for (String field : requiredFields) {
                     if (!result.has(field)) {
-                        logger.warn("Pipeline-2 test failed: Missing required field '{}' in result {}", field, i);
-                        return false;
+                        String errorMessage = String.format("Missing required field '%s' in result %d - check if your aggregation pipeline includes all necessary $group fields for superhost analytics", field, i);
+                        logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                        return TestResult.failure(errorMessage);
                     }
                 }
                 
                 // Verify hostType is either "Superhost" or "Regular Host"
                 String hostType = result.getString("hostType");
                 if (!hostType.equals("Superhost") && !hostType.equals("Regular Host")) {
-                    logger.warn("Pipeline-2 test failed: Invalid hostType '{}' in result {}", hostType, i);
-                    return false;
+                    String errorMessage = String.format("Invalid hostType '%s' in result %d - expected 'Superhost' or 'Regular Host', check your $cond expression for mapping host_is_superhost values", hostType, i);
+                    logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Verify numeric fields are numbers (handle both regular numbers and $numberDecimal format)
@@ -93,8 +98,9 @@ public class Pipeline2Test extends BaseTest {
                     validateNumericField(result, "avgResponseRate", "double");
                     
                 } catch (Exception e) {
-                    logger.warn("Pipeline-2 test failed: Invalid numeric field in result {}: {}", i, e.getMessage());
-                    return false;
+                    String errorMessage = String.format("Invalid numeric field in result %d: %s - check if your aggregation properly calculates averages using $avg operator", i, e.getMessage());
+                    logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
             }
 
@@ -131,9 +137,10 @@ public class Pipeline2Test extends BaseTest {
 
             // Compare the results count
             if (resultsFromMongo.size() != results.length()) {
-                logger.warn("Pipeline-2 test failed: Result count mismatch. MongoDB: {}, API: {}", 
+                String errorMessage = String.format("Result count mismatch between API and MongoDB aggregation. MongoDB: %d, API: %d - check if your superhostAnalytics function returns the same grouping as the expected pipeline", 
                     resultsFromMongo.size(), results.length());
-                return false;
+                logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             // Compare specific results (verify that both Superhost and Regular Host are present)
@@ -160,32 +167,36 @@ public class Pipeline2Test extends BaseTest {
                         double apiAvgRating = getNumericValue(apiResult, "avgRating");
                         double mongoAvgRating = getNumericValue(mongoResult, "avgRating");
                         if (Math.abs(apiAvgRating - mongoAvgRating) > 0.1) {
-                            logger.warn("Pipeline-2 test failed: avgRating mismatch for {}: API={}, MongoDB={}", 
+                            String errorMessage = String.format("avgRating mismatch for %s: API=%.2f, MongoDB=%.2f - check if your aggregation correctly calculates average ratings for superhost analytics", 
                                 hostType, apiAvgRating, mongoAvgRating);
-                            return false;
+                            logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                            return TestResult.failure(errorMessage);
                         }
                         break;
                     }
                 }
                 
                 if (!foundMatchingMongoResult) {
-                    logger.warn("Pipeline-2 test failed: No matching MongoDB result found for hostType: {}", hostType);
-                    return false;
+                    String errorMessage = String.format("No matching MongoDB result found for hostType: %s - check if your aggregation properly groups by host_is_superhost values", hostType);
+                    logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
             }
             
             if (!foundSuperhost || !foundRegularHost) {
-                logger.warn("Pipeline-2 test failed: Missing required host types. Superhost: {}, Regular Host: {}", 
+                String errorMessage = String.format("Missing required host types in results. Found Superhost: %s, Found Regular Host: %s - check if your aggregation includes both true and false values for host_is_superhost", 
                     foundSuperhost, foundRegularHost);
-                return false;
+                logger.warn("Pipeline-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             logger.info("Pipeline-2 test passed: Found {} host performance analytics results with Superhost and Regular Host data", results.length());
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("Pipeline-2 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your superhostAnalytics function implementation and database connection", e.getMessage());
+            logger.error("Pipeline-2 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
     

@@ -24,7 +24,7 @@ public class Crud8Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-8 test - Testing crudDelete function");
         
         String testId = "test-crud-8-" + System.currentTimeMillis();
@@ -40,8 +40,9 @@ public class Crud8Test extends BaseTest {
             // Verify the document was created
             Document createdDoc = collection.find(new Document("_id", testId)).first();
             if (createdDoc == null) {
-                logger.error("Failed to create dummy listing in MongoDB");
-                return false;
+                String errorMessage = "Failed to create test document in MongoDB - check database connection and write permissions";
+                logger.error("CRUD-8 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Step 2: Test the delete API endpoint
@@ -51,64 +52,79 @@ public class Crud8Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(deleteEndpoint, null, "DELETE");
             
             if (response.statusCode() != 202) {
-                logger.warn("CRUD-8 delete API failed: HTTP status {}", response.statusCode());
+                String errorMessage = String.format("HTTP request failed with status %d - expected 202 for DELETE request, check if your crudDelete endpoint is implemented correctly", response.statusCode());
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 logger.warn("Response body: {}", response.body());
                 
                 // Clean up: ensure the test document is deleted
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON object (delete result)
-            JSONObject result = parseJsonResponse(response.body());
-            logger.debug("Delete API response: {}", result.toString());
+            JSONObject result;
+            try {
+                result = parseJsonResponse(response.body());
+                logger.debug("Delete API response: {}", result.toString());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON object - expected delete result object but got: %s", response.body());
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
+                cleanupTestDocument(collection, testId);
+                return TestResult.failure(errorMessage);
+            }
             
             // Validate the delete result
             if (result == null || result.length() == 0) {
-                logger.warn("CRUD-8 test failed: No delete result returned");
+                String errorMessage = "API returned empty response - check if your crudDelete function returns the MongoDB delete result";
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             // Check if the result indicates successful operation
             if (!result.has("acknowledged") || !result.getBoolean("acknowledged")) {
-                logger.warn("CRUD-8 test failed: Delete not acknowledged");
+                String errorMessage = "Delete operation not acknowledged - check if your crudDelete function properly deletes the document and returns the result";
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             // Check if deletedCount is present
             if (!result.has("deletedCount")) {
-                logger.warn("CRUD-8 test failed: No deletedCount in result");
+                String errorMessage = "Delete result missing 'deletedCount' field - check if your crudDelete function returns the complete MongoDB delete result";
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             int deletedCount = result.getInt("deletedCount");
             
             // For our test document that exists, deletedCount should be 1
             if (deletedCount != 1) {
-                logger.warn("CRUD-8 test failed: Expected deletedCount=1, got {}", deletedCount);
+                String errorMessage = String.format("Expected exactly 1 document to be deleted but got deletedCount=%d - check if your crudDelete function targets the correct document", deletedCount);
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             // Step 3: Verify the document was actually deleted from MongoDB
             Document deletedDoc = collection.find(new Document("_id", testId)).first();
             if (deletedDoc != null) {
-                logger.warn("CRUD-8 test failed: Document still exists in MongoDB after delete");
+                String errorMessage = "Document still exists in database after delete operation - check if your crudDelete function properly removes the document from the collection";
+                logger.warn("CRUD-8 test failed: {}", errorMessage);
                 cleanupTestDocument(collection, testId);
-                return false;
+                return TestResult.failure(errorMessage);
             }
             
             logger.info("CRUD-8 test passed: Delete operation completed successfully, deleted {} document(s)", deletedCount);
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-8 test failed with exception: {}", e.getMessage());
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudDelete function implementation and database connection", e.getMessage());
+            logger.error("CRUD-8 test failed: {}", errorMessage);
             // Clean up: ensure the test document is deleted
             cleanupTestDocument(collection, testId);
-            return false;
+            return TestResult.failure(errorMessage);
         }
     }
     

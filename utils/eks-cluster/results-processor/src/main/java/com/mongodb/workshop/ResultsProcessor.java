@@ -682,7 +682,8 @@ public class ResultsProcessor {
             logger.info("{} Executing test: {}", STEP, testName);
             
             // Execute the specific test method based on test name
-            testSuccess = executeSpecificTest(testName, user);
+            BaseTest.TestResult testResult = executeSpecificTest(testName, user);
+            testSuccess = testResult.isSuccess();
             
             logger.info("{} Test {} {}", testSuccess ? SUCCESS : FAIL, testName, testSuccess ? "passed" : "failed");
             
@@ -697,8 +698,12 @@ public class ResultsProcessor {
                 result.append("timestamp", new Date());
                 return result;
             } else {
-                failureReason = "Test execution returned false";
+                failureReason = testResult.getErrorMessage();
+                if (failureReason == null || failureReason.isEmpty()) {
+                    failureReason = "Test execution returned false with no specific reason";
+                }
                 exerciseResults.put(testName, new ExerciseResult(false, failureReason));
+                logger.warn("{} Test {} failed: {}", WARNING, testName, failureReason);
             }
             
         } catch (Exception e) {
@@ -722,18 +727,20 @@ public class ResultsProcessor {
     /**
      * Executes the specific test based on test name using separate test classes
      */
-    private boolean executeSpecificTest(String testName, String user) {
+    private BaseTest.TestResult executeSpecificTest(String testName, String user) {
         try {
             BaseTest test = createTest(testName, user);
             if (test != null) {
                 return test.execute();
             } else {
-                logger.warn("Unknown test: {}", testName);
-                return false;
+                String errorMessage = "Unknown test: " + testName;
+                logger.warn(errorMessage);
+                return BaseTest.TestResult.failure(errorMessage);
             }
         } catch (Exception e) {
-            logger.warn("Test {} failed: {}", testName, e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s", e.getMessage());
+            logger.warn("Test {} failed: {}", testName, errorMessage);
+            return BaseTest.TestResult.failure(errorMessage);
         }
     }
     

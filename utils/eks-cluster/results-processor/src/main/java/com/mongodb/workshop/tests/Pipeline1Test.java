@@ -26,7 +26,7 @@ public class Pipeline1Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing Pipeline-1 test - Testing aggregationPipeline function");
         
         try {
@@ -34,8 +34,9 @@ public class Pipeline1Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(endpoint);
             
             if (response.statusCode() != 200) {
-                logger.warn("Pipeline-1 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 200 for GET request, check if your aggregationPipeline endpoint is implemented correctly", response.statusCode());
+                logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON array
@@ -43,8 +44,9 @@ public class Pipeline1Test extends BaseTest {
             
             // Validate the response
             if (results.length() == 0) {
-                logger.warn("Pipeline-1 test failed: No aggregation results returned");
-                return false;
+                String errorMessage = "API returned empty results array - check if your aggregationPipeline function properly executes the aggregation and returns data";
+                logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Verify the structure of aggregation results
@@ -54,16 +56,18 @@ public class Pipeline1Test extends BaseTest {
                 // Check if required fields are present
                 if (!result.has("beds") || !result.has("averagePrice") || 
                     !result.has("propertyCount") || !result.has("averageReviews")) {
-                    logger.warn("Pipeline-1 test failed: Missing required fields (beds, averagePrice, propertyCount, averageReviews) in result {}", i);
-                    return false;
+                    String errorMessage = String.format("Missing required fields (beds, averagePrice, propertyCount, averageReviews) in result %d - check if your aggregation pipeline includes all necessary $group fields", i);
+                    logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Verify beds is a number
                 try {
                     result.getInt("beds");
                 } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: beds field is not a number in result {}", i);
-                    return false;
+                    String errorMessage = String.format("beds field is not a valid integer in result %d - check if your aggregation properly groups by beds field", i);
+                    logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Verify numeric fields are numbers (handle both regular numbers and $numberDecimal format)
@@ -78,8 +82,9 @@ public class Pipeline1Test extends BaseTest {
                     validateNumericField(result, "averageReviews", "double");
                     
                 } catch (Exception e) {
-                    logger.warn("Pipeline-1 test failed: Invalid numeric field in result {}: {}", i, e.getMessage());
-                    return false;
+                    String errorMessage = String.format("Invalid numeric field in result %d: %s - check if your aggregation properly calculates averages using $avg operator", i, e.getMessage());
+                    logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
             }
 
@@ -139,19 +144,21 @@ public class Pipeline1Test extends BaseTest {
                     propertyCountMongo != propertyCountApi ||
                     Math.abs(averageReviewsMongo - averageReviewsApi) > 0.1) {
                     
-                    logger.warn("Pipeline-1 test failed: First result mismatch. MongoDB: beds={}, averagePrice={}, propertyCount={}, averageReviews={}; API: beds={}, averagePrice={}, propertyCount={}, averageReviews={}",
+                    String errorMessage = String.format("API results don't match MongoDB aggregation results. MongoDB: beds=%d, averagePrice=%.2f, propertyCount=%d, averageReviews=%.2f; API: beds=%d, averagePrice=%.2f, propertyCount=%d, averageReviews=%.2f - check if your aggregation pipeline correctly groups by beds and calculates averages",
                         bedsMongo, averagePriceMongo, propertyCountMongo, averageReviewsMongo,
                         bedsApi, averagePriceApi, propertyCountApi, averageReviewsApi);
-                    return false;
+                    logger.warn("Pipeline-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
             }
 
             logger.info("Pipeline-1 test passed: Found {} investment market segments with comprehensive metrics by bed count", results.length());
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("Pipeline-1 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your aggregationPipeline function implementation and database connection", e.getMessage());
+            logger.error("Pipeline-1 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 

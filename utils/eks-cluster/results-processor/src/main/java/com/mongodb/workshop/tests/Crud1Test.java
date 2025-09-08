@@ -29,7 +29,7 @@ public class Crud1Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-1 test - Testing crudFind function");
 
         try {
@@ -41,12 +41,20 @@ public class Crud1Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(url);
 
             if (response.statusCode() != 200) {
-                logger.warn("CRUD-1 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - check if the lab endpoint is running and accessible", response.statusCode());
+                logger.warn("CRUD-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             // Parse response as JSON array
-            JSONArray results = parseJsonArrayResponse(response.body());
+            JSONArray results;
+            try {
+                results = parseJsonArrayResponse(response.body());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON array - expected array format but got: %s", response.body());
+                logger.warn("CRUD-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
 
             // Get results from MongoDB
             MongoCollection<Document> collection = getListingsAndReviewsCollection();
@@ -70,8 +78,15 @@ public class Crud1Test extends BaseTest {
 
             // Compare size first
             if (itemList.size() != results.length()) {
-                logger.warn("Mismatch in number of results: DB={}, API={}", itemList.size(), results.length());
-                return false;
+                String errorMessage = String.format("Result count mismatch - database returned %d documents but API returned %d - check your find operation implementation", itemList.size(), results.length());
+                logger.warn("CRUD-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
+
+            if (itemList.isEmpty()) {
+                String errorMessage = "No results returned from either database or API - check if listingsAndReviews collection has data and your find operation works";
+                logger.warn("CRUD-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             // Compare first _id between DB and API results
@@ -79,16 +94,18 @@ public class Crud1Test extends BaseTest {
             Object apiFirstId = results.getJSONObject(0).get("_id");
 
             if (!dbFirstId.equals(apiFirstId)) {
-                logger.warn("First _id mismatch: DB={}, API={}", dbFirstId, apiFirstId);
-                return false;
+                String errorMessage = String.format("Document order mismatch - first document _id should be '%s' but API returned '%s' - check your sort implementation (should sort by _id ascending)", dbFirstId, apiFirstId);
+                logger.warn("CRUD-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             logger.info("CRUD-1 test passed: Found {} properly filtered and sorted results", results.length());
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-1 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudFind function implementation and database connection", e.getMessage());
+            logger.error("CRUD-1 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

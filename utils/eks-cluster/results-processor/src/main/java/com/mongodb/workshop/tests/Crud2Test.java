@@ -24,7 +24,7 @@ public class Crud2Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-2 test - Testing crudOneDocument function");
         
         try {
@@ -34,8 +34,9 @@ public class Crud2Test extends BaseTest {
             Document item = collection.aggregate(java.util.Arrays.asList(new Document("$sample", new Document("size", 1)))).first();
 
             if (item == null || !item.containsKey("_id")) {
-                logger.warn("No document found or missing _id");
-                return false;
+                String errorMessage = "No documents found in listingsAndReviews collection or documents missing _id field - check if collection has data";
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             String itemId = item.get("_id").toString();
@@ -44,43 +45,56 @@ public class Crud2Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(urlWithId);
             
             if (response.statusCode() != 200) {
-                logger.warn("CRUD-2 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - check if your crudOneDocument endpoint is implemented and accessible", response.statusCode());
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON object
-            JSONObject result = parseJsonResponse(response.body());
+            JSONObject result;
+            try {
+                result = parseJsonResponse(response.body());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON object - expected object format but got: %s", response.body());
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
             
             // Validate the response
             if (result == null || result.length() == 0) {
-                logger.warn("CRUD-2 test failed: No document returned");
-                return false;
+                String errorMessage = "API returned empty response - check if your crudOneDocument function properly queries and returns the document";
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if the returned document has the correct _id
             if (!result.has("_id")) {
-                logger.warn("CRUD-2 test failed: Returned document missing _id field");
-                return false;
+                String errorMessage = "Returned document missing '_id' field - check if your crudOneDocument function includes all document fields";
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             String returnedId = result.getString("_id");
             if (!itemId.equals(returnedId)) {
-                logger.warn("CRUD-2 test failed: Expected _id '{}', got '{}'", itemId, returnedId);
-                return false;
+                String errorMessage = String.format("Document ID mismatch - requested ID '%s' but API returned ID '%s' - check your findOne query logic", itemId, returnedId);
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Verify it's a complete document with expected fields
             if (!result.has("name") || !result.has("property_type")) {
-                logger.warn("CRUD-2 test failed: Returned document missing expected fields");
-                return false;
+                String errorMessage = "Returned document missing essential fields 'name' or 'property_type' - check if your query returns complete documents";
+                logger.warn("CRUD-2 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             logger.info("CRUD-2 test passed: Found document with _id '{}'", returnedId);
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-2 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudOneDocument function implementation and database connection", e.getMessage());
+            logger.error("CRUD-2 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

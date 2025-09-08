@@ -25,7 +25,7 @@ public class Crud6Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-6 test - Testing crudUpdateElement function");
         
         try {
@@ -34,6 +34,13 @@ public class Crud6Test extends BaseTest {
             // Perform the query
             Document query = new Document();
             Document item = collection.find(query).first();
+            
+            if (item == null) {
+                String errorMessage = "No documents found in listingsAndReviews collection - check if collection has data";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
+            
             String itemId = item.get("_id").toString();
 
             // Concatenate itemId to the endpoint URL
@@ -47,57 +54,72 @@ public class Crud6Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(itemEndpoint, requestBody, "PATCH");
             
             if (response.statusCode() != 201) {
-                logger.warn("CRUD-6 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 201 for PATCH request, check if your crudUpdate endpoint is implemented correctly", response.statusCode());
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON object (update result)
-            JSONObject result = parseJsonResponse(response.body());
+            JSONObject result;
+            try {
+                result = parseJsonResponse(response.body());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON object - expected update result object but got: %s", response.body());
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
             
             // Validate the update result
             if (result == null || result.length() == 0) {
-                logger.warn("CRUD-6 test failed: No update result returned");
-                return false;
+                String errorMessage = "API returned empty response - check if your crudUpdate function returns the MongoDB update result";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if the result indicates successful update
             if (!result.has("acknowledged") || !result.getBoolean("acknowledged")) {
-                logger.warn("CRUD-6 test failed: Update not acknowledged");
-                return false;
+                String errorMessage = "Update operation not acknowledged - check if your crudUpdate function properly updates the document and returns the result";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if matchedCount is present and > 0
             if (!result.has("matchedCount") || result.getInt("matchedCount") == 0) {
-                logger.warn("CRUD-6 test failed: No documents matched for update");
-                return false;
+                String errorMessage = "No documents matched for update - check if your crudUpdate function uses the correct document ID in the update query";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if modifiedCount is present and > 0
             if (!result.has("modifiedCount") || result.getInt("modifiedCount") == 0) {
-                logger.warn("CRUD-6 test failed: No documents were modified");
-                return false;
+                String errorMessage = "No documents were modified - check if your crudUpdate function properly applies the $set operation";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             Document checkQuery = new Document("_id", itemId);
             Document updatedItem = collection.find(checkQuery).first();
 
             if (updatedItem == null) {
-                logger.warn("CRUD-6 test failed: Updated document not found");
-                return false;
+                String errorMessage = "Updated document not found in database - this may indicate an issue with the update operation";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             // Verify the updated field
             if (!updatedItem.containsKey("accommodates") || updatedItem.getInteger("accommodates") != 9) {
-                logger.warn("CRUD-6 test failed: Document field not updated correctly");
-                return false;
+                String errorMessage = "Document field 'accommodates' was not updated correctly - expected value 9, check your $set operation implementation";
+                logger.warn("CRUD-6 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             logger.info("CRUD-6 test passed: Successfully updated {} document(s)", result.getInt("modifiedCount"));
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-6 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudUpdate function implementation and database connection", e.getMessage());
+            logger.error("CRUD-6 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

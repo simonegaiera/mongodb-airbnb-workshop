@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const ExerciseStatus = ({ exerciseName }) => {
     const [status, setStatus] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [showTooltip, setShowTooltip] = useState(false);
+    const [showDetailsBox, setShowDetailsBox] = useState(false);
+    const detailsRef = useRef(null);
 
     const fetchExerciseStatus = async (name) => {
         if (!name) return;
@@ -39,6 +40,28 @@ const ExerciseStatus = ({ exerciseName }) => {
     useEffect(() => {
         fetchExerciseStatus(exerciseName);
     }, [exerciseName]);
+
+    // Close modal when escape key is pressed
+    useEffect(() => {
+        const handleEscapeKey = (event) => {
+            if (event.key === 'Escape' && showDetailsBox) {
+                setShowDetailsBox(false);
+            }
+        };
+
+        if (showDetailsBox) {
+            document.addEventListener('keydown', handleEscapeKey);
+            return () => {
+                document.removeEventListener('keydown', handleEscapeKey);
+            };
+        }
+    }, [showDetailsBox]);
+
+    const handleStatusClick = () => {
+        if (hasFailureReason) {
+            setShowDetailsBox(!showDetailsBox);
+        }
+    };
 
     if (!exerciseName) {
         return null;
@@ -108,28 +131,62 @@ const ExerciseStatus = ({ exerciseName }) => {
     return (
         <div className="flex items-center gap-2 relative">
             <div 
-                className={`w-4 h-4 rounded-full flex items-center justify-center ${getStatusColor()} ${hasFailureReason ? 'cursor-help' : ''}`}
-                onMouseEnter={() => hasFailureReason && setShowTooltip(true)}
-                onMouseLeave={() => hasFailureReason && setShowTooltip(false)}
+                className={`w-4 h-4 rounded-full flex items-center justify-center ${getStatusColor()} ${hasFailureReason ? 'cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all' : ''}`}
+                onClick={handleStatusClick}
             >
                 {getStatusIcon()}
             </div>
-            <span className={`text-sm ${getTextColor()}`}>
+            <span 
+                className={`text-sm ${getTextColor()} ${hasFailureReason ? 'cursor-pointer hover:underline' : ''}`}
+                onClick={handleStatusClick}
+            >
                 {exerciseName}
             </span>
             
-            {/* Tooltip for failure reason */}
-            {hasFailureReason && showTooltip && (
-                <div className="absolute z-50 bottom-full left-0 mb-2 p-2 bg-gray-900 text-white text-xs rounded shadow-lg max-w-xs">
-                    <div className="font-medium mb-1">Exercise Failed:</div>
-                    <div>{status.failure_reason}</div>
-                    {status.last_updated && (
-                        <div className="text-gray-300 mt-1 text-xs">
-                            Last updated: {new Date(status.last_updated).toLocaleString()}
+            {/* Details box for failure reason */}
+            {hasFailureReason && showDetailsBox && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                    onClick={() => setShowDetailsBox(false)}
+                >
+                    <div 
+                        ref={detailsRef}
+                        className="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4 relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-lg font-semibold text-red-600">Exercise Failed</h3>
+                            <button 
+                                onClick={() => setShowDetailsBox(false)}
+                                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+                            >
+                                ×
+                            </button>
                         </div>
-                    )}
-                    {/* Tooltip arrow */}
-                    <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                        
+                        <div className="mb-4">
+                            <h4 className="font-medium text-gray-700 mb-2">Exercise: {exerciseName}</h4>
+                            <div className="bg-red-50 border border-red-200 rounded p-3">
+                                <p className="text-red-800 text-sm">{status.failure_reason}</p>
+                            </div>
+                        </div>
+                        
+                        {status.last_updated && (
+                            <div className="text-gray-500 text-sm">
+                                Last updated: {new Date(status.last_updated).toLocaleString()}
+                            </div>
+                        )}
+                        
+                        <div className="mt-4 flex justify-end">
+                            <button 
+                                onClick={() => setShowDetailsBox(false)}
+                                className="px-4 py-2 text-white rounded transition-colors hover:opacity-90"
+                                style={{ backgroundColor: 'rgb(255, 56, 92)' }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

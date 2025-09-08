@@ -176,10 +176,39 @@ public abstract class BaseTest {
     /**
      * Abstract method that each test must implement
      */
-    public abstract boolean execute();
+    public abstract TestResult execute();
     
     /**
      * Gets the test name for logging and identification
      */
     public abstract String getTestName();
+    
+    /**
+     * Test result class to encapsulate success status and error messages
+     */
+    public static class TestResult {
+        private final boolean success;
+        private final String errorMessage;
+        
+        private TestResult(boolean success, String errorMessage) {
+            this.success = success;
+            this.errorMessage = errorMessage;
+        }
+        
+        public static TestResult success() {
+            return new TestResult(true, null);
+        }
+        
+        public static TestResult failure(String errorMessage) {
+            return new TestResult(false, errorMessage);
+        }
+        
+        public boolean isSuccess() {
+            return success;
+        }
+        
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+    }
 }

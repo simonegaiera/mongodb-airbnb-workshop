@@ -22,7 +22,7 @@ public class Search1Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing Search-1 test - Testing autocompleteSearch function");
         
         try {
@@ -33,8 +33,9 @@ public class Search1Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
             
             if (response.statusCode() != 201) {
-                logger.warn("Search-1 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 201 for POST request, check if your textSearch endpoint is implemented correctly", response.statusCode());
+                logger.warn("Search-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON array
@@ -42,14 +43,16 @@ public class Search1Test extends BaseTest {
             
             // Validate the response
             if (results.length() == 0) {
-                logger.warn("Search-1 test failed: No search results returned");
-                return false;
+                String errorMessage = "API returned empty results array - check if your textSearch function properly executes the text search and returns data, and verify the text index exists";
+                logger.warn("Search-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Check if we get at most 10 results (as per the limit in the pipeline)
             if (results.length() > 10) {
-                logger.warn("Search-1 test failed: Too many results returned (expected max 10, got {})", results.length());
-                return false;
+                String errorMessage = String.format("Too many results returned (expected max 10, got %d) - check if your text search pipeline includes a $limit stage", results.length());
+                logger.warn("Search-1 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Verify the structure of search results
@@ -58,35 +61,40 @@ public class Search1Test extends BaseTest {
                 
                 // Check if only 'name' field is present (as per projection)
                 if (!result.has("name")) {
-                    logger.warn("Search-1 test failed: Missing 'name' field in result {}", i);
-                    return false;
+                    String errorMessage = String.format("Missing 'name' field in result %d - check if your text search pipeline includes 'name' in the $project stage", i);
+                    logger.warn("Search-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Check that _id is not present (as per projection with _id: 0)
                 if (result.has("_id")) {
-                    logger.warn("Search-1 test failed: Unexpected '_id' field in result {}", i);
-                    return false;
+                    String errorMessage = String.format("Unexpected '_id' field in result %d - check if your text search pipeline uses {_id: 0} in the $project stage", i);
+                    logger.warn("Search-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
                 
                 // Verify name is a string
                 try {
                     String name = result.getString("name");
                     if (name == null || name.isEmpty()) {
-                        logger.warn("Search-1 test failed: Empty name in result {}", i);
-                        return false;
+                        String errorMessage = String.format("Empty name field in result %d - check if your text search returns valid documents with name values", i);
+                        logger.warn("Search-1 test failed: {}", errorMessage);
+                        return TestResult.failure(errorMessage);
                     }
                 } catch (Exception e) {
-                    logger.warn("Search-1 test failed: name field is not a string in result {}", i);
-                    return false;
+                    String errorMessage = String.format("name field is not a valid string in result %d - check if your text search returns properly formatted name fields", i);
+                    logger.warn("Search-1 test failed: {}", errorMessage);
+                    return TestResult.failure(errorMessage);
                 }
             }
             
             logger.info("Search-1 test passed: Found {} autocomplete search results", results.length());
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("Search-1 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your textSearch function implementation, text index setup, and database connection", e.getMessage());
+            logger.error("Search-1 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }

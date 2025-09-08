@@ -29,7 +29,7 @@ public class Crud4Test extends BaseTest {
     }
     
     @Override
-    public boolean execute() {
+    public TestResult execute() {
         logger.info("Executing CRUD-4 test - Testing crudFilter function");
         
         try {
@@ -50,17 +50,26 @@ public class Crud4Test extends BaseTest {
             HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
             
             if (response.statusCode() != 201) {
-                logger.warn("CRUD-4 test failed: HTTP status {}", response.statusCode());
-                return false;
+                String errorMessage = String.format("HTTP request failed with status %d - expected 201 for POST request, check if your crudFilter endpoint is implemented correctly", response.statusCode());
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
             
             // Parse response as JSON array
-            JSONArray results = parseJsonArrayResponse(response.body());
+            JSONArray results;
+            try {
+                results = parseJsonArrayResponse(response.body());
+            } catch (Exception e) {
+                String errorMessage = String.format("Failed to parse API response as JSON array - expected array format but got: %s", response.body());
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
             
             // Validate the response
             if (results.length() == 0) {
-                logger.warn("CRUD-4 test failed: No results returned");
-                return false;
+                String errorMessage = "No results returned for filter query - check if your crudFilter function properly handles amenities ('24-hour check-in', 'Accessible-height bed'), property_type ('Apartment'), and beds range (1-2)";
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
 
@@ -94,8 +103,15 @@ public class Crud4Test extends BaseTest {
 
             // Compare size first
             if (itemList.size() != results.length()) {
-                logger.warn("Mismatch in number of results: DB={}, API={}", itemList.size(), results.length());
-                return false;
+                String errorMessage = String.format("Result count mismatch - database returned %d documents but API returned %d - check your filter implementation for amenities, property_type, and beds range", itemList.size(), results.length());
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
+            }
+
+            if (itemList.isEmpty()) {
+                String errorMessage = "No matching documents found in database for the specified filters - this may indicate a data issue or incorrect filter logic";
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             // Compare first _id between DB and API results
@@ -103,16 +119,18 @@ public class Crud4Test extends BaseTest {
             Object apiFirstId = results.getJSONObject(0).get("_id");
 
             if (!dbFirstId.equals(apiFirstId)) {
-                logger.warn("First _id mismatch: DB={}, API={}", dbFirstId, apiFirstId);
-                return false;
+                String errorMessage = String.format("Document order mismatch - first document _id should be '%s' but API returned '%s' - check your query logic and sorting", dbFirstId, apiFirstId);
+                logger.warn("CRUD-4 test failed: {}", errorMessage);
+                return TestResult.failure(errorMessage);
             }
 
             logger.info("CRUD-4 test passed: Found {} filtered results", results.length());
-            return true;
+            return TestResult.success();
             
         } catch (Exception e) {
-            logger.error("CRUD-4 test failed with exception: {}", e.getMessage());
-            return false;
+            String errorMessage = String.format("Test execution failed with exception: %s - check your crudFilter function implementation and database connection", e.getMessage());
+            logger.error("CRUD-4 test failed: {}", errorMessage);
+            return TestResult.failure(errorMessage);
         }
     }
 }
