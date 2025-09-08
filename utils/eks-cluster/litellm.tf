@@ -132,7 +132,7 @@ resource "helm_release" "litellm" {
           }, local.redis_config.enabled ? {
             cache_params = {
               type = "redis"
-              ttl = 3600
+              ttl = 1800
               namespace = "litellm.cline.cache"
               supported_call_types = ["completion", "acompletion", "embedding", "aembedding"]
             }
