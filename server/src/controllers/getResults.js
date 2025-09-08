@@ -103,7 +103,8 @@ export async function getResultsByNameAndUsername(req, res) {
 
         await connectToDatabase();
         const database = client.db(resultsDatabaseName);
-        const collection = database.collection(resultsCollectionName);
+        const resultsCollection = database.collection(resultsCollectionName);
+        const healthCollection = database.collection('results_health');
         const scenarioCollection = database.collection(scenarioCollectionName);
 
         // The username is derived from the database name (which represents the current user)
@@ -120,30 +121,56 @@ export async function getResultsByNameAndUsername(req, res) {
         // Check if the exercise name is in the listed exercises
         const isExerciseListed = listedExercises.includes(name);
         
-        // Filter by both name and username
-        const filter = {
+        // First check results collection for completed exercise
+        const completedResult = await resultsCollection.findOne({
             name: name,
             username: username
+        });
+
+        let response = {
+            results: completedResult,
+            count: 0,
+            isListed: isExerciseListed,
+            status: 'not_attempted'
         };
 
-        const results = await collection.findOne(filter);
-        
-        // Count simply reflects the number of results found
-        let count;
-        if (isExerciseListed) {
-            // If exercise is in listed_exercises, return count based on results (1 if solved, 0 if not)
-            count = results ? 1 : 0;
+        if (completedResult) {
+            // Exercise is completed
+            response.count = isExerciseListed ? 1 : 0;
+            response.status = 'completed';
+            
+            logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved completed results for name: ${name}. Listed: ${isExerciseListed}, Status: completed, Count: ${response.count}`);
+        } else if (isExerciseListed) {
+            // Exercise not completed, check health collection for failure reason
+            const healthDoc = await healthCollection.findOne({ _id: username });
+            
+            if (healthDoc && healthDoc.exercise_results) {
+                const exerciseResult = healthDoc.exercise_results.find(
+                    exercise => exercise.exercise_name === name
+                );
+                
+                if (exerciseResult) {
+                    response.status = exerciseResult.passed ? 'completed' : 'failed';
+                    response.count = exerciseResult.passed ? 1 : 0;
+                    
+                    if (!exerciseResult.passed && exerciseResult.failure_reason) {
+                        response.failure_reason = exerciseResult.failure_reason;
+                    }
+                    
+                    if (healthDoc.last_updated) {
+                        response.last_updated = healthDoc.last_updated;
+                    }
+                } else {
+                    response.status = 'not_attempted';
+                }
+            }
+            
+            logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved exercise status for name: ${name}. Listed: ${isExerciseListed}, Status: ${response.status}, Count: ${response.count}${response.failure_reason ? ', Failure: ' + response.failure_reason : ''}`);
         } else {
-            // If exercise is not in listed_exercises, always return count of 0
-            count = 0;
+            logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Exercise not listed for name: ${name}. Listed: ${isExerciseListed}, Status: ${response.status}, Count: ${response.count}`);
         }
 
-        logDebug(req, `[getResultsByNameAndUsername] SUCCESS: Retrieved results for name: ${name}. Listed: ${isExerciseListed}, Solved: ${results ? 'Yes' : 'No'}, Count: ${count}`);
-        res.status(200).json({
-            results: results,
-            count: count,
-            isListed: isExerciseListed
-        });
+        res.status(200).json(response);
     } catch (error) {
         logError(req, `[getResultsByNameAndUsername] ERROR: Failed to retrieve results:`, error);
         res.status(500).json({ message: error.message });

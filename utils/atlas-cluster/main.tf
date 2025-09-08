@@ -230,6 +230,13 @@ resource "mongodbatlas_custom_db_role" "airbnb_arena_role" {
       database_name   = var.common_database_name
     }
   }
+  actions {
+    action = "UPDATE"
+    resources {
+      collection_name = "results_health"
+      database_name   = var.common_database_name
+    }
+  }
 }
 
 # Create a database user for each user

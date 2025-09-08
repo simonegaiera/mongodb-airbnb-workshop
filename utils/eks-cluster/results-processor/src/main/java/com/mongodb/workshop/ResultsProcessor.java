@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.ReplaceOptions;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -464,16 +465,12 @@ public class ResultsProcessor {
      */
     private void logHealthInformation() {
         try {
+            String currentUser = extractUsernameFromMongoUri();
             MongoCollection<Document> healthCollection = database.getCollection(HEALTH_COLLECTION);
             
-            // Create health document
+            // Create minimal health document for application startup
             Document healthDoc = new Document();
-            healthDoc.append("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-            healthDoc.append("application", "results-processor");
-            healthDoc.append("status", "running");
-            healthDoc.append("database", DB_NAME);
-            healthDoc.append("username", getEnvironmentVariable("DATABASE_NAME"));
-            healthDoc.append("collections_accessed", Arrays.asList(RESULTS_COLLECTION, HEALTH_COLLECTION));
+            healthDoc.append("_id", currentUser);
             
             // Add environment information
             Map<String, String> envInfo = new HashMap<>();
@@ -482,13 +479,55 @@ public class ResultsProcessor {
             envInfo.put("service_name", getEnvironmentVariable("SERVICE_NAME"));
             healthDoc.append("environment_info", envInfo);
             
-            // Insert health document
-            healthCollection.insertOne(healthDoc);
-            logger.info("Health information logged to {} collection", HEALTH_COLLECTION);
+            // Initialize empty exercise results - will be updated after execution
+            healthDoc.append("exercise_results", new ArrayList<>());
+            healthDoc.append("execution_status", "started");
+            
+            // Upsert health document (replace if exists, insert if not)
+            healthCollection.replaceOne(Filters.eq("_id", currentUser), healthDoc, 
+                new ReplaceOptions().upsert(true));
+            logger.info("Health information logged to {} collection for user {}", HEALTH_COLLECTION, currentUser);
             
         } catch (Exception e) {
             logger.error("Failed to log health information", e);
             throw e;
+        }
+    }
+    
+    /**
+     * Updates health information with exercise results and failure reasons
+     */
+    private void updateHealthWithExerciseResults(Map<String, ExerciseResult> exerciseResults) {
+        try {
+            String currentUser = extractUsernameFromMongoUri();
+            MongoCollection<Document> healthCollection = database.getCollection(HEALTH_COLLECTION);
+            
+            // Convert exercise results to documents
+            List<Document> exerciseResultDocs = new ArrayList<>();
+            for (Map.Entry<String, ExerciseResult> entry : exerciseResults.entrySet()) {
+                Document resultDoc = new Document();
+                resultDoc.append("exercise_name", entry.getKey());
+                resultDoc.append("passed", entry.getValue().isPassed());
+                if (!entry.getValue().isPassed() && entry.getValue().getFailureReason() != null) {
+                    resultDoc.append("failure_reason", entry.getValue().getFailureReason());
+                }
+                exerciseResultDocs.add(resultDoc);
+            }
+            
+            // Update the health document with exercise results
+            Document update = new Document("$set", new Document()
+                .append("exercise_results", exerciseResultDocs)
+                .append("execution_status", "completed")
+                .append("last_updated", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .append("total_exercises", exerciseResults.size())
+                .append("passed_exercises", exerciseResults.values().stream().mapToInt(r -> r.isPassed() ? 1 : 0).sum()));
+            
+            healthCollection.updateOne(Filters.eq("_id", currentUser), update);
+            logger.info("Updated health information with exercise results for user {}", currentUser);
+            
+        } catch (Exception e) {
+            logger.error("Failed to update health information with exercise results", e);
+            // Don't throw - we want to continue even if health update fails
         }
     }
     
@@ -508,20 +547,38 @@ public class ResultsProcessor {
         
         if (serviceName == null || serviceName.isEmpty()) {
             logger.error("SERVICE_NAME environment variable not configured. Cannot proceed with testing.");
+            // Update health with error status
+            Map<String, ExerciseResult> errorResults = new HashMap<>();
+            for (String testName : exercisesToTest) {
+                errorResults.put(testName, new ExerciseResult(false, "SERVICE_NAME not configured"));
+            }
+            updateHealthWithExerciseResults(errorResults);
             return;
         }
         
         // Check if service is available before running tests
         if (!checkServiceAvailability(serviceName)) {
             logger.error("Service {} is not available. Cannot proceed with testing.", serviceName);
+            // Update health with service unavailable status
+            Map<String, ExerciseResult> errorResults = new HashMap<>();
+            for (String testName : exercisesToTest) {
+                errorResults.put(testName, new ExerciseResult(false, "Service not available: " + serviceName));
+            }
+            updateHealthWithExerciseResults(errorResults);
             return;
         }
         
         logger.info("Executing tests for {} environment with service: {}", environment, serviceName);
-        List<Document> testResults = executeTestsForEnvironment(exercisesToTest, serviceName, environment, currentUser);
+        
+        // Execute tests and collect both regular results and exercise results
+        Map<String, ExerciseResult> exerciseResults = new HashMap<>();
+        List<Document> testResults = executeTestsForEnvironment(exercisesToTest, serviceName, environment, currentUser, exerciseResults);
         
         // Store results in MongoDB
         storeResults(testResults, currentUser);
+        
+        // Update health collection with exercise results
+        updateHealthWithExerciseResults(exerciseResults);
 
         int totalTests = exercisesToTest.size();
         int passedTests = getCompletedTests(currentUser).size();
@@ -540,20 +597,21 @@ public class ResultsProcessor {
     /**
      * Executes all exercise tests for a specific environment using Java test methods
      */
-    private List<Document> executeTestsForEnvironment(List<String> exerciseTests, String serviceName, String environment, String user) {
+    private List<Document> executeTestsForEnvironment(List<String> exerciseTests, String serviceName, String environment, String user, Map<String, ExerciseResult> exerciseResults) {
         List<Document> testResults = new ArrayList<>();
         
         // Get existing results to check what's already passed
         Set<String> completedTests = getCompletedTests(user);
         
         for (String testName : exerciseTests) {
-            // Skip tests that have already been completed
+            // Check if test was already completed
             if (completedTests.contains(testName)) {
-                logger.info("Test {} already completed for user {}, skipping", testName, user);
+                logger.info("Test {} already completed for user {}, marking as passed", testName, user);
+                exerciseResults.put(testName, new ExerciseResult(true, null));
                 continue;
             }
             
-            Document testResult = executeTest(testName, serviceName, environment, user);
+            Document testResult = executeTest(testName, serviceName, environment, user, exerciseResults);
             
             // Only add successful test results
             if (testResult != null) {
@@ -612,27 +670,45 @@ public class ResultsProcessor {
     /**
      * Executes a single test using Java test methods
      */
-    private Document executeTest(String testName, String serviceName, String environment, String user) {
+    private Document executeTest(String testName, String serviceName, String environment, String user, Map<String, ExerciseResult> exerciseResults) {
+        String failureReason = null;
+        boolean testSuccess = false;
+        
         try {
             logger.info("{} Executing test: {}", STEP, testName);
             
             // Execute the specific test method based on test name
-            boolean testSuccess = executeSpecificTest(testName, user);
+            testSuccess = executeSpecificTest(testName, user);
             
             logger.info("{} Test {} {}", testSuccess ? SUCCESS : FAIL, testName, testSuccess ? "passed" : "failed");
             
-            // Only create result document if test passes (first time)
+            // Record the exercise result
             if (testSuccess) {
+                exerciseResults.put(testName, new ExerciseResult(true, null));
+                
+                // Only create result document if test passes (first time)
                 Document result = new Document();
                 result.append("name", testName);
                 result.append("username", user);
                 result.append("timestamp", new Date());
                 return result;
+            } else {
+                failureReason = "Test execution returned false";
+                exerciseResults.put(testName, new ExerciseResult(false, failureReason));
             }
             
         } catch (Exception e) {
-            // Ignore errors as requested, but log them
-            logger.warn("{} Failed to execute test {} (ignoring error): {}", WARNING, testName, e.getMessage());
+            // Capture the exception as failure reason
+            failureReason = e.getMessage();
+            if (failureReason == null || failureReason.isEmpty()) {
+                failureReason = e.getClass().getSimpleName();
+            }
+            
+            // Record the exercise result with failure reason
+            exerciseResults.put(testName, new ExerciseResult(false, failureReason));
+            
+            // Log the error
+            logger.warn("{} Failed to execute test {} (error): {}", WARNING, testName, failureReason);
         }
         
         // Return null if test failed or had error - will be filtered out
@@ -895,5 +971,26 @@ public class ResultsProcessor {
         }
 
         return value;
+    }
+    
+    /**
+     * Helper class to store exercise test results with failure reasons
+     */
+    private static class ExerciseResult {
+        private final boolean passed;
+        private final String failureReason;
+        
+        public ExerciseResult(boolean passed, String failureReason) {
+            this.passed = passed;
+            this.failureReason = failureReason;
+        }
+        
+        public boolean isPassed() {
+            return passed;
+        }
+        
+        public String getFailureReason() {
+            return failureReason;
+        }
     }
 }
