@@ -10,7 +10,7 @@
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
-- 🔴 **HIGH:** If this was helpful write to us at: ...@mongodb.com
+- 🔴 **HIGH:** Replace the correct email for Arena in the Portal
 - 🔴 **HIGH:** Exercise with RankFusion
 
 ---
@@ -25,7 +25,6 @@
 
 ### Answers
 - 🔴 **HIGH:** Adjust the guidelines to better answer to users
-- 🔴 **HIGH:** Highlight Auto-Embedding in the pages, and filename. Ask the LLM to specify why it matters (auto-embedding, filter).
 - 🔴 **HIGH:** Can I use 2 folders when deciding the scenario. lab and answer.
 
 ---

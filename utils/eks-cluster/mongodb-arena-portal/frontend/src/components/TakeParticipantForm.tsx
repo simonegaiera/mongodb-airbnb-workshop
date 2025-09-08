@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface TakeParticipantFormProps {
   onSuccess: () => void
@@ -13,6 +13,87 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
     name: '',
     email: ''
   })
+  
+  const [isMobile, setIsMobile] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+    
+    const detectMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
+      
+      // Check for mobile user agents
+      const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i
+      const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase())
+      
+      // Check for touch capability and screen size
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const isSmallScreen = window.innerWidth <= 768
+      
+      // Consider it mobile if it has mobile user agent OR (is touch device AND small screen)
+      return isMobileUserAgent || (isTouchDevice && isSmallScreen)
+    }
+    
+    setIsMobile(detectMobile())
+    
+    // Also check on window resize
+    const handleResize = () => {
+      setIsMobile(detectMobile())
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+  
+  // Don't render anything until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-200 rounded mb-4 w-1/3"></div>
+          <div className="space-y-3">
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Show mobile restriction message if user is on mobile
+  if (isMobile) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6">
+        <div className="text-center">
+          <div className="mb-4">
+            <svg
+              className="mx-auto h-12 w-12 text-red-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 18.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Laptop Required
+          </h3>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+            <p className="text-sm text-yellow-800">
+              💻 Please switch to a laptop or desktop computer to join the MongoDB Arena challenge.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

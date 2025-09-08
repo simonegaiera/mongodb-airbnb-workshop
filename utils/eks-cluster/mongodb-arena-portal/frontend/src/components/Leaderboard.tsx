@@ -304,6 +304,48 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
 
       {/* Collapsible Content */}
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${leaderboardExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
+        {/* More Scenarios Section */}
+        <div className="mb-6 p-6 bg-gradient-to-r from-mongodb-light to-green-50 rounded-lg border border-mongodb-green/20">
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-3">
+              <svg className="w-8 h-8 text-mongodb-green mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <h3 className="text-xl font-semibold text-gray-900">
+                Want More Challenges?
+              </h3>
+            </div>
+            <p className="text-gray-700 mb-4">
+              Loved this challenge? We've got even more exciting MongoDB scenarios waiting for your team!
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex items-center text-mongodb-green font-medium">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>Reach out at:</span>
+              </div>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText('arena@mongodb.com').then(() => {
+                    // Could add a toast notification here if desired
+                    console.log('Email copied to clipboard');
+                  }).catch(() => {
+                    // Fallback: try to open mailto as backup
+                    window.location.href = 'mailto:arena@mongodb.com';
+                  });
+                }}
+                className="inline-flex items-center px-4 py-2 bg-mongodb-green text-white font-medium rounded-md hover:bg-mongodb-dark transition-colors duration-200 shadow-sm"
+              >
+                arena@mongodb.com
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Search Bar */}
         <div className="mb-4">
           <div className="relative">
