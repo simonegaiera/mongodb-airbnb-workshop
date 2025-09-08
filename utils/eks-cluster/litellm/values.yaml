@@ -9,7 +9,7 @@ replicaCount: 2
 image:
   repository: ghcr.io/berriai/litellm
   pullPolicy: IfNotPresent
-  tag: "main-latest"
+  tag: "main-stable"
 
 imagePullSecrets: []
 nameOverride: ""

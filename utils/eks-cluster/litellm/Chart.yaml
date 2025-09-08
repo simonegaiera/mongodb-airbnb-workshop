@@ -4,6 +4,6 @@ description: A Helm chart for LiteLLM proxy service
 
 type: application
 
-version: 0.1.11
+version: 0.1.12
 
-appVersion: "main-latest"
+appVersion: "main-stable"
