@@ -77,10 +77,44 @@ def create_user_collection(db_name, client, common_database, collections_list):
     for collection in collections_list:
         client[common_database][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])
 
+def decommission_unwanted_users(users_map, client, common_database):
+    """Decommission any existing participants that are not in the current wanted list."""
+    participants_collection = client[common_database]['participants']
+    
+    # Get all existing participant IDs
+    existing_participants = list(participants_collection.find({}, {'_id': 1}))
+    existing_ids = {doc['_id'] for doc in existing_participants}
+    
+    # Get current wanted user IDs
+    wanted_ids = set(users_map.keys())
+    
+    # Find participants that exist but are not wanted anymore
+    to_decommission = existing_ids - wanted_ids
+    
+    if to_decommission:
+        # Mark unwanted users as decommissioned
+        result = participants_collection.update_many(
+            {'_id': {'$in': list(to_decommission)}},
+            {
+                '$set': {
+                    'decommissioned': True,
+                    'decommissioned_timestamp': datetime.now(timezone.utc)
+                }
+            }
+        )
+        print(f"Decommissioned {result.modified_count} users that are no longer in the wanted list: {sorted(to_decommission)}", flush=True)
+        return result.modified_count
+    else:
+        print("No users need to be decommissioned.", flush=True)
+        return 0
+
 def upsert_users(users_map, client, common_database):
     participants_collection = client[common_database]['participants']
     # Create a new collection for user details including email (not accessible to users)
     user_details_collection = client[common_database]['user_details']
+    
+    # First, decommission any unwanted users
+    decommission_unwanted_users(users_map, client, common_database)
     
     for user_id, user_data in users_map.items():
         # Prepare the document data for participants collection (no email)
@@ -99,11 +133,23 @@ def upsert_users(users_map, client, common_database):
         if user_data.get('email') is None:
             # For generated users (no email), only set data on insert and include 'taken' field
             participants_document['taken'] = False
-            participants_collection.update_one(
-                {'_id': user_id},
-                {'$setOnInsert': participants_document},
-                upsert=True
-            )
+            
+            # Check if user already exists
+            existing_user = participants_collection.find_one({'_id': user_id})
+            if existing_user:
+                # User exists - remove decommissioned flags if present
+                participants_collection.update_one(
+                    {'_id': user_id},
+                    {'$unset': {'decommissioned': "", 'decommissioned_timestamp': ""}}
+                )
+            else:
+                # New user - insert with decommissioned: false
+                participants_document['decommissioned'] = False
+                participants_collection.update_one(
+                    {'_id': user_id},
+                    {'$setOnInsert': participants_document},
+                    upsert=True
+                )
             # For generated users, still add to user_details collection but without email
             user_details_collection.update_one(
                 {'_id': user_id},
@@ -111,15 +157,30 @@ def upsert_users(users_map, client, common_database):
                 upsert=True
             )
         else:
-            # For CSV users, set name only in participants collection
-            participants_collection.update_one(
-                {'_id': user_id},
-                {
-                    '$set': {'name': user_data['name']},
-                    '$setOnInsert': {'insert_timestamp': datetime.now(timezone.utc)}
-                },
-                upsert=True
-            )
+            # For CSV users, set name in participants collection
+            # Check if user already exists
+            existing_user = participants_collection.find_one({'_id': user_id})
+            if existing_user:
+                # User exists - update name and remove decommissioned flags if present
+                participants_collection.update_one(
+                    {'_id': user_id},
+                    {
+                        '$set': {'name': user_data['name']},
+                        '$unset': {'decommissioned': "", 'decommissioned_timestamp': ""}
+                    }
+                )
+            else:
+                # New user - insert with name and timestamp
+                participants_collection.update_one(
+                    {'_id': user_id},
+                    {
+                        '$setOnInsert': {
+                            'name': user_data['name'],
+                            'insert_timestamp': datetime.now(timezone.utc)
+                        }
+                    },
+                    upsert=True
+                )
             # For CSV users, set name, email, and timestamp in user_details collection
             user_details_collection.update_one(
                 {'_id': user_id},
@@ -306,17 +367,17 @@ def ensure_results_index(db):
         print("Compound index on results (name, username) already exists.", flush=True)
 
 def ensure_participants_indexes(db):
-    """Ensure indexes exist on participants collection for taken and name."""
+    """Ensure indexes exist on participants collection for taken, decommissioned and name."""
     participants = db["participants"]
-    # Compound index for taken and name
-    index_spec = [("taken", 1), ("taken_timestamp", 1), ("name", 1)]
+    # Compound index for taken, decommissioned and name
+    index_spec = [("taken", 1), ("decommissioned", 1), ("taken_timestamp", 1), ("name", 1)]
     indexes = participants.index_information()
     for idx in indexes.values():
         if idx.get("key") == index_spec:
-            print("Compound index on participants (taken, name) already exists.", flush=True)
+            print("Compound index on participants (taken, decommissioned, name) already exists.", flush=True)
             return
     participants.create_index(index_spec)
-    print("Created compound index on participants: taken, name.", flush=True)
+    print("Created compound index on participants: taken, decommissioned, name.", flush=True)
 
 def create_results_health_collection(db):
     """Create results_health collection."""

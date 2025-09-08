@@ -21,9 +21,24 @@ def parse_csv(filename):
         with open(filename, mode='r') as csvfile:
             reader = csv.DictReader(csvfile, skipinitialspace=True)
             for row in reader:
+                # Email is required to generate user_id
+                if 'email' not in row or not row['email']:
+                    print(f"Warning: Skipping row with missing email: {row}", file=sys.stderr)
+                    continue
+                    
                 user_id = get_user_id_from_email(row['email'])
+                
+                # Build name from available fields
+                name_parts = []
+                if 'name' in row and row['name']:
+                    name_parts.append(row['name'].strip())
+                if 'surname' in row and row['surname']:
+                    name_parts.append(row['surname'].strip())
+                
+                full_name = ' '.join(name_parts) if name_parts else user_id  # Fallback to user_id if no name
+                
                 users[user_id] = {
-                    'name': f"{row['name'].strip()} {row['surname'].strip()}",
+                    'name': full_name,
                     'email': row['email'].strip()
                 }
     except FileNotFoundError:

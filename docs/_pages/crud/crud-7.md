@@ -31,7 +31,7 @@ In this exercise, you’ll use MongoDB’s `$push` operator to add reviews (or a
    - The function receives two parameters:
      - `id`: The document's `_id`
      - `review`: The review object to add
-   - _(Bonus)_ Use `$inc` to increment the `number_of_reviews` field by 1.
+   - Use `$inc` to increment the `number_of_reviews` field by 1.
 
 ---
 
