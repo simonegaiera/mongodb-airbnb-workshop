@@ -33,9 +33,9 @@ def parse_csv(filename):
     
     return users
 
-def add_additional_users(users, count, cluster_name=None):
-    """Add additional numbered users (clustername1, clustername2, etc.)"""
-    for i in range(1, count + 1):
+def add_additional_users(users, count, cluster_name=None, start_index=0):
+    """Add additional numbered users (clustername0, clustername1, etc.)"""
+    for i in range(start_index, start_index + count):
         if cluster_name:
             user_id = f"{cluster_name}{i}"
             users[user_id] = {
@@ -48,32 +48,33 @@ def add_additional_users(users, count, cluster_name=None):
             }
     return users
 
-def get_all_users(filename, additional_count=0, cluster_name=None):
+def get_all_users(filename, additional_count=0, cluster_name=None, start_index=0):
     """Get all users (from CSV + additional) in unified format"""
     users = parse_csv(filename)
-    users = add_additional_users(users, additional_count, cluster_name)
+    users = add_additional_users(users, additional_count, cluster_name, start_index)
     return users
 
-def get_user_ids(filename, additional_count=0, cluster_name=None):
+def get_user_ids(filename, additional_count=0, cluster_name=None, start_index=0):
     """Get just the user IDs (for Terraform compatibility)"""
-    users = get_all_users(filename, additional_count, cluster_name)
+    users = get_all_users(filename, additional_count, cluster_name, start_index)
     return list(users.keys())
 
-def get_user_emails(filename, additional_count=0, cluster_name=None):
+def get_user_emails(filename, additional_count=0, cluster_name=None, start_index=0):
     """Get user ID to email mapping (for Terraform compatibility)"""
-    users = get_all_users(filename, additional_count, cluster_name)
+    users = get_all_users(filename, additional_count, cluster_name, start_index)
     # Return format expected by Terraform external data source
     return {user_id: user_data['email'] for user_id, user_data in users.items()}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python3 parse_users.py <csv_file> [output_format] [additional_count] [cluster_name]", file=sys.stderr)
+        print("Usage: python3 parse_users.py <csv_file> [output_format] [additional_count] [cluster_name] [start_index]", file=sys.stderr)
         sys.exit(1)
     
     filename = sys.argv[1]
     output_format = sys.argv[2] if len(sys.argv) > 2 else 'email'
     additional_count = int(sys.argv[3]) if len(sys.argv) > 3 else 0
     cluster_name = sys.argv[4] if len(sys.argv) > 4 else None
+    start_index = int(sys.argv[5]) if len(sys.argv) > 5 else 0
     
     # Handle null filename from Terraform
     if filename.lower() == 'null':
@@ -81,12 +82,12 @@ if __name__ == "__main__":
     
     if output_format == 'email':
         # For Terraform external data source - returns {user_id: email}
-        result = get_user_emails(filename, additional_count, cluster_name)
+        result = get_user_emails(filename, additional_count, cluster_name, start_index)
     elif output_format == 'ids':
         # Returns list of user IDs
-        result = get_user_ids(filename, additional_count, cluster_name)
+        result = get_user_ids(filename, additional_count, cluster_name, start_index)
     else:
         # Full user data - returns {user_id: {name, email}}
-        result = get_all_users(filename, additional_count, cluster_name)
+        result = get_all_users(filename, additional_count, cluster_name, start_index)
     
     print(json.dumps(result))

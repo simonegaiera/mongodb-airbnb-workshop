@@ -89,6 +89,12 @@ variable "user_list_path" {
   nullable    = true
 }
 
+variable "user_start_index" {
+  description = "Starting index for additional database users (e.g., 1 means users start from clustername1, 10 means users start from clustername10)"
+  type        = number
+  default     = 0
+}
+
 variable "additional_users_count" {
   description = "Number of additional database users to create beyond those in the CSV file"
   type        = number

@@ -12,8 +12,8 @@ import json
 import os
 
 def get_params():
-    if len(sys.argv) != 11:
-        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT CREATE_INDEXES", file=sys.stderr)
+    if len(sys.argv) != 12:
+        print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT CREATE_INDEXES USER_START_INDEX", file=sys.stderr)
         sys.exit(1)
     return {
         'MONGO_CONNECTION_STRING': sys.argv[1],
@@ -25,7 +25,8 @@ def get_params():
         'CSV_FILE': sys.argv[7],
         'COMMON_DATABASE': sys.argv[8],
         'ADDITIONAL_USERS_COUNT': int(sys.argv[9]),
-        'CREATE_INDEXES': sys.argv[10].lower() == 'true'
+        'CREATE_INDEXES': sys.argv[10].lower() == 'true',
+        'USER_START_INDEX': int(sys.argv[11])
     }
 
 def get_client(params):
@@ -486,7 +487,7 @@ def main():
 
     csv_file = params['CSV_FILE']
 
-    users_map = get_all_users(csv_file, params['ADDITIONAL_USERS_COUNT'], params['CLUSTER_NAME'])
+    users_map = get_all_users(csv_file, params['ADDITIONAL_USERS_COUNT'], params['CLUSTER_NAME'], params['USER_START_INDEX'])
     upsert_users(users_map, client, params['COMMON_DATABASE'])
     users = list(users_map.keys())
     collections_list = client[common_database].list_collection_names()

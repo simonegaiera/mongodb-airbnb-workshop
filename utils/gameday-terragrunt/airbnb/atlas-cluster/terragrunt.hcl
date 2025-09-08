@@ -27,6 +27,7 @@ inputs = {
     customer_user_password                  = "MongoArenaDummy"
     # Set user_list_path to null if you only want to have unassigned users (no CSV file will be used)
     user_list_path                          = local.user_list_path
+    user_start_index                        = 0
     additional_users_count                  = 0
     create_indexes                          = false
 }

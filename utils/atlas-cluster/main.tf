@@ -150,7 +150,7 @@ resource "mongodbatlas_database_user" "user-main" {
 
 
 data "external" "user_data" {
-  program = ["python3", "${path.module}/parse_users.py", var.user_list_path != null ? var.user_list_path : "null", "email", tostring(var.additional_users_count), var.cluster_name]
+  program = ["python3", "${path.module}/parse_users.py", var.user_list_path != null ? var.user_list_path : "null", "email", tostring(var.additional_users_count), var.cluster_name, tostring(var.user_start_index)]
 }
 
 locals {
@@ -322,7 +322,7 @@ locals {
 # Define another null resource to execute the Python script
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path != null ? var.user_list_path : "null"}\" \"${var.common_database_name}\" \"${var.additional_users_count}\" \"${var.create_indexes}\" 2>&1"
+    command = "python3 ${path.module}/populate_database_airnbnb.py \"${local.mongodb_atlas_connection_string}\" \"${var.sample_database_name}\" \"${var.public_key}\" \"${var.private_key}\" \"${data.mongodbatlas_project.project.id}\" \"${var.cluster_name}\" \"${var.user_list_path != null ? var.user_list_path : "null"}\" \"${var.common_database_name}\" \"${var.additional_users_count}\" \"${var.create_indexes}\" \"${var.user_start_index}\" 2>&1"
   }
 
   triggers = {
