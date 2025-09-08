@@ -219,11 +219,6 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
                       participant.decommissioned ? 'text-gray-500' : 'text-gray-900'
                     }`}>
                       {participant.name || 'Unnamed Participant'}
-                      {participant.decommissioned && (
-                        <span className="ml-2 text-xs text-gray-500 font-normal">
-                          (Decommissioned)
-                        </span>
-                      )}
                     </h3>
                     
                     {/* Show workspace links for all participants but dim for decommissioned */}
