@@ -18,6 +18,7 @@ resource "helm_release" "redis" {
   name       = "redis"
   chart      = "./redis"
   namespace  = "default"
+  version    = "0.1.1"
   
   wait          = true
   wait_for_jobs = true

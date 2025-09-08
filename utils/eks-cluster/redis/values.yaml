@@ -37,11 +37,11 @@ service:
 
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 2000m
+    memory: 8Gi
   requests:
-    cpu: 100m
-    memory: 256Mi
+    cpu: 1000m
+    memory: 6Gi
 
 livenessProbe:
   exec:
@@ -83,6 +83,6 @@ redis:
   
   # Configuration
   config:
-    maxmemory: "256mb"
+    maxmemory: "6gb"
     maxmemoryPolicy: "allkeys-lru"
     save: "900 1 300 10 60 10000"
