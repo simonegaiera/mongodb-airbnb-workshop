@@ -285,27 +285,10 @@ def create_views(client, common_database):
 
 def ensure_results_index(db):
     """Ensure compound indexes exist on results collection."""
-    # Existing compound index
-    index_spec_1 = [("timestamp", 1), ("section", 1), ("name", 1)]
-    indexes = db["results"].index_information()
-    
-    # Check for existing timestamp, section, name index
-    index_1_exists = False
-    for idx in indexes.values():
-        if idx.get("key") == index_spec_1:
-            index_1_exists = True
-            break
-    
-    if not index_1_exists:
-        db["results"].create_index(index_spec_1)
-        print("Created compound index on results: timestamp, section, name.", flush=True)
-    else:
-        print("Compound index on results (timestamp, section, name) already exists.", flush=True)
-    
-    # New compound index for name and username
+    # Compound index for name and username
     index_spec_2 = [("name", 1), ("username", 1)]
     
-    # Refresh indexes information after potential creation of first index
+    # Get indexes information
     indexes = db["results"].index_information()
     
     # Check for existing name, username index
@@ -335,7 +318,7 @@ def ensure_participants_indexes(db):
     print("Created compound index on participants: taken, name.", flush=True)
 
 def create_results_health_collection(db):
-    """Create results_health collection with TTL index."""
+    """Create results_health collection."""
     collection_name = "results_health"
     
     # Check if collection already exists
@@ -346,24 +329,6 @@ def create_results_health_collection(db):
         print(f"Created collection '{collection_name}'.", flush=True)
     else:
         print(f"Collection '{collection_name}' already exists.", flush=True)
-    
-    collection = db[collection_name]
-    
-    # Create TTL index on timestamp field (2 days = 172800 seconds)
-    ttl_seconds = 2 * 24 * 60 * 60  # 2 days in seconds
-    
-    # Check if TTL index already exists
-    indexes = collection.index_information()
-    ttl_index_exists = False
-    for idx_name, idx_info in indexes.items():
-        if idx_info.get("key") == [("timestamp", 1)] and "expireAfterSeconds" in idx_info:
-            ttl_index_exists = True
-            print(f"TTL index on timestamp already exists.", flush=True)
-            break
-    
-    if not ttl_index_exists:
-        collection.create_index("timestamp", expireAfterSeconds=ttl_seconds)
-        print(f"Created TTL index on timestamp field with 2 days expiration for results_health collection.", flush=True)
 
 def load_index_definitions():
     """Load index definitions from JSON files in the indexes folder."""

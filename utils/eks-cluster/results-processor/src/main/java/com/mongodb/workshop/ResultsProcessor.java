@@ -40,6 +40,7 @@ import java.security.cert.X509Certificate;
 public class ResultsProcessor {
     
     private static final Logger logger = LoggerFactory.getLogger(ResultsProcessor.class);
+    private static final String VERSION = "1.1.0";
     private static boolean participantNameLogged = false;
     
     // Database and collection constants
@@ -119,6 +120,7 @@ public class ResultsProcessor {
      */
     public static void main(String[] args) {
         logger.info("\n{}\n{} Starting Results Processor application... {}\n{}", SEPARATOR, PARTY, PARTY, SEPARATOR);
+        logger.info("{} Results Processor Version: {}", INFO, VERSION);
         
         try {
             ResultsProcessor processor = new ResultsProcessor();
@@ -471,6 +473,7 @@ public class ResultsProcessor {
             // Create minimal health document for application startup
             Document healthDoc = new Document();
             healthDoc.append("_id", currentUser);
+            healthDoc.append("version", VERSION);
             
             // Add environment information
             Map<String, String> envInfo = new HashMap<>();
@@ -516,6 +519,7 @@ public class ResultsProcessor {
             
             // Update the health document with exercise results
             Document update = new Document("$set", new Document()
+                .append("version", VERSION)
                 .append("exercise_results", exerciseResultDocs)
                 .append("execution_status", "completed")
                 .append("last_updated", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
