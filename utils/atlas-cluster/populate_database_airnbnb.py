@@ -370,7 +370,7 @@ def ensure_participants_indexes(db):
     """Ensure indexes exist on participants collection for taken, decommissioned and name."""
     participants = db["participants"]
     # Compound index for taken, decommissioned and name
-    index_spec = [("taken", 1), ("decommissioned", 1), ("taken_timestamp", 1), ("name", 1)]
+    index_spec = [("taken", 1), ("taken_timestamp", 1), ("name", 1)]
     indexes = participants.index_information()
     for idx in indexes.values():
         if idx.get("key") == index_spec:

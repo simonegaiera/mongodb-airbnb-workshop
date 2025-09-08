@@ -8,6 +8,8 @@ interface Participant {
   email?: string
   taken?: boolean
   insert_timestamp?: string
+  decommissioned?: boolean
+  decommissioned_timestamp?: string
 }
 
 export default function ParticipantsGrid({ participants, onRefresh }: {
@@ -205,21 +207,38 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
             return (
               <div 
                 key={participant._id || index} 
-                className="relative rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md border-gray-200 bg-gray-50"
+                className={`relative rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md ${
+                  participant.decommissioned 
+                    ? 'border-gray-300 bg-gray-100 opacity-60' 
+                    : 'border-gray-200 bg-gray-50'
+                }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-medium text-gray-900 truncate">
+                    <h3 className={`text-lg font-medium truncate ${
+                      participant.decommissioned ? 'text-gray-500' : 'text-gray-900'
+                    }`}>
                       {participant.name || 'Unnamed Participant'}
+                      {participant.decommissioned && (
+                        <span className="ml-2 text-xs text-gray-500 font-normal">
+                          (Decommissioned)
+                        </span>
+                      )}
                     </h3>
                     
-                    {/* Always show workspace links for all participants */}
-                    <div className="mt-2 flex items-center space-x-4">
+                    {/* Show workspace links for all participants but dim for decommissioned */}
+                    <div className={`mt-2 flex items-center space-x-4 ${
+                      participant.decommissioned ? 'opacity-60' : ''
+                    }`}>
                       <a 
                         href={workspaceUrls.server} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-md hover:bg-green-200 transition-colors"
+                        className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                          participant.decommissioned 
+                            ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                            : 'bg-green-100 text-green-800 hover:bg-green-200'
+                        }`}
                       >
                         🖥️ Workspace
                       </a>
@@ -227,7 +246,11 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
                         href={workspaceUrls.app} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-md hover:bg-blue-200 transition-colors"
+                        className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                          participant.decommissioned 
+                            ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                            : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                        }`}
                       >
                         📱 App
                       </a>
@@ -238,13 +261,26 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
                         <span className="font-medium">Created:</span> {new Date(participant.insert_timestamp).toLocaleString()}
                       </p>
                     )}
+                    
+                    {participant.decommissioned_timestamp && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        <span className="font-medium">Decommissioned:</span> {new Date(participant.decommissioned_timestamp).toLocaleString()}
+                      </p>
+                    )}
                   </div>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    participant.taken || participant.insert_timestamp
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-blue-100 text-blue-800'
+                    participant.decommissioned
+                      ? 'bg-gray-200 text-gray-600' 
+                      : participant.taken || participant.insert_timestamp
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-blue-100 text-blue-800'
                   }`}>
-                    {participant.taken || participant.insert_timestamp ? 'Assigned' : 'Available'}
+                    {participant.decommissioned 
+                      ? 'Decommissioned' 
+                      : participant.taken || participant.insert_timestamp 
+                        ? 'Assigned' 
+                        : 'Available'
+                    }
                   </span>
                 </div>
               </div>

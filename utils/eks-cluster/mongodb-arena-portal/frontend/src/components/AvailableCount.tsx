@@ -7,6 +7,7 @@ interface AvailableCountProps {
 }
 
 export default function AvailableCount({ refreshTrigger }: AvailableCountProps) {
+  const [availableCount, setAvailableCount] = useState<number | null>(null)
   const [activeCount, setActiveCount] = useState<number | null>(null)
   const [totalCount, setTotalCount] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
@@ -20,16 +21,19 @@ export default function AvailableCount({ refreshTrigger }: AvailableCountProps) 
       const data = await response.json()
       
       if (data.success) {
+        setAvailableCount(data.available_count)
         setActiveCount(data.active_count)
         setTotalCount(data.total_count)
         setError('')
       } else {
         setError(data.error || 'Failed to fetch participant count')
+        setAvailableCount(null)
         setActiveCount(null)
         setTotalCount(null)
       }
     } catch (err) {
       setError('Network error: ' + (err as Error).message)
+      setAvailableCount(null)
       setActiveCount(null)
       setTotalCount(null)
     } finally {
@@ -79,7 +83,7 @@ export default function AvailableCount({ refreshTrigger }: AvailableCountProps) 
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="text-center">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Active Participants
+          Available Participants
         </h3>
         <div className="flex items-center justify-center space-x-2">
           <button 
@@ -91,26 +95,26 @@ export default function AvailableCount({ refreshTrigger }: AvailableCountProps) 
           </svg>
         </button>
           <div className={`text-3xl font-bold ${
-            activeCount === totalCount ? 'text-red-500' : 
-            activeCount && totalCount && (activeCount / totalCount) > 0.8 ? 'text-yellow-500' : 
+            availableCount === 0 ? 'text-red-500' : 
+            activeCount && availableCount !== null && (availableCount / activeCount) < 0.2 ? 'text-yellow-500' : 
             'text-mongodb-green'
           }`}>
-            {activeCount}
+            {activeCount && availableCount !== null ? (activeCount - availableCount) : 0}
           </div>
           <div className="text-2xl font-bold text-gray-400">/</div>
           <div className="text-2xl font-bold text-gray-600">
-            {totalCount}
+            {activeCount}
           </div>
         </div>
         <div className="mt-2">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            activeCount === totalCount ? 'bg-red-100 text-red-800' :
-            activeCount && totalCount && (activeCount / totalCount) > 0.8 ? 'bg-yellow-100 text-yellow-800' :
+            availableCount === 0 ? 'bg-red-100 text-red-800' :
+            activeCount && availableCount !== null && (availableCount / activeCount) < 0.2 ? 'bg-yellow-100 text-yellow-800' :
             'bg-green-100 text-green-800'
           }`}>
-            {activeCount === totalCount ? 'All taken' :
-             activeCount && totalCount && (activeCount / totalCount) > 0.8 ? 'Nearly full' :
-             'Participants available'}
+            {availableCount === 0 ? 'All assigned' :
+             activeCount && availableCount !== null && (availableCount / activeCount) < 0.2 ? 'Nearly full' :
+             `${availableCount || 0} available`}
           </span>
         </div>
       </div>

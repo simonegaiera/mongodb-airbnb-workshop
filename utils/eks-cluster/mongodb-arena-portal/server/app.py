@@ -50,7 +50,7 @@ def get_participants():
         filter_query = {"$or": [{"taken": True}, {"taken": {"$exists": False}}]}
         participants = list(participants_collection.find(
             filter_query, 
-            {'_id': 1, 'name': 1, 'taken': 1}
+            {'_id': 1, 'name': 1, 'taken': 1, 'decommissioned': 1, 'decommissioned_timestamp': 1}
         ).sort([("taken_timestamp", -1), ("name", 1)]))
         
         logger.info(f"Retrieved {len(participants)} participants matching filter")
@@ -69,20 +69,31 @@ def get_participants():
 
 @app.route('/api/participants/available', methods=['GET'])
 def get_available_participants_count():
-    """Get the count of active participants (taken or no taken field) and total participants"""
+    """Get available and active participant counts"""
     try:
-        # Count active participants (taken=true or no taken field)
-        active_count = participants_collection.count_documents({"$or": [{"taken": True}, {"taken": {"$exists": False}}]})
+        # Available = users with taken: false and not decommissioned
+        available_count = participants_collection.count_documents({
+            "$and": [
+                {"$or": [{"taken": False}, {"taken": {"$exists": False}}]},
+                {"$or": [{"decommissioned": {"$ne": True}}, {"decommissioned": {"$exists": False}}]}
+            ]
+        })
         
-        # Count total participants
+        # Active (non-decommissioned) = all users that are not decommissioned
+        active_count = participants_collection.count_documents({
+            "$or": [{"decommissioned": {"$ne": True}}, {"decommissioned": {"$exists": False}}]
+        })
+        
+        # Total participants (including decommissioned)
         total_count = participants_collection.count_documents({})
         
-        logger.info(f"Found {active_count} active participants out of {total_count} total")
+        logger.info(f"Available: {available_count}, Active: {active_count}, Total: {total_count}")
         return jsonify({
             'success': True,
+            'available_count': available_count,
             'active_count': active_count,
             'total_count': total_count,
-            'message': f'{active_count}/{total_count} participants active'
+            'message': f'{available_count} available, {active_count} active, {total_count} total'
         }), 200
         
     except Exception as e:
