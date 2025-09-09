@@ -40,17 +40,25 @@ resource "acme_certificate" "mongosa_cert" {
     provider = "route53"
 
     config = {
-      AWS_DEFAULT_REGION = "us-east-1"
-      AWS_PROFILE = var.aws_profile
+      AWS_DEFAULT_REGION      = "us-east-1"
+      AWS_PROFILE            = var.aws_profile
+      AWS_HOSTED_ZONE_ID     = data.aws_route53_zone.hosted_zone.zone_id
+      AWS_MAX_RETRIES        = "10"
+      AWS_POLLING_INTERVAL   = "30"
+      AWS_PROPAGATION_TIMEOUT = "300"
+      AWS_TTL                = "60"
     }
   }
 
+  recursive_nameservers = ["8.8.8.8:53", "1.1.1.1:53"]
+  disable_complete_propagation = true
+
   depends_on = [
     acme_registration.account,
-    tls_cert_request.prod_request
+    tls_cert_request.prod_request,
+    data.aws_route53_zone.hosted_zone
   ]
 }
-
 
 data "aws_route53_zone" "hosted_zone" {
   name         = var.aws_route53_hosted_zone

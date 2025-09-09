@@ -34,7 +34,6 @@
 ## Server
 
 ### Answers
-- 🟠 **MEDIUM:** Adjust the guidelines to better answer to users
 - 🔴 **HIGH:** Can I use 2 folders when deciding the scenario. lab and answer.
 
 ---
@@ -44,7 +43,8 @@
 ### Deploy
 - ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
 - ❄️ **FROZEN:** S3 bucket change to mongodb-arena from mongodb-gameday
-- 🔴 **HIGH:** Save the exercise output in Atlas, and show in the frontend via tooltip
+- 🔴 **HIGH:** Redis depends to scenario too
+- 🔴 **HIGH:** MountVolume.MountDevice failed for volume "pvc-c6da3730-60e3-4676-a052-a4cf85f0df69" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!

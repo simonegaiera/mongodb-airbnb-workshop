@@ -7,7 +7,7 @@ terraform {
     }
     acme = {
       source  = "vancluever/acme"
-      version = "~> 2.34"
+      version = "~> 2.35.1"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
