@@ -103,7 +103,7 @@ resource "helm_release" "portal_nginx" {
   name       = "portal-nginx"
   repository = "local"
   chart      = "./portal-nginx"
-  version    = "0.1.0"
+  version    = "0.1.1"
 
   values = [
     file("${path.module}/portal-nginx/values.yaml"),

@@ -24,7 +24,7 @@ resource "helm_release" "instructions_nginx" {
   name       = "docs-nginx"
   repository = "local"
   chart      = "./docs-nginx"
-  version    = "0.1.1"
+  version    = "0.1.2"
 
   values = [
     file("${path.module}/docs-nginx/values.yaml"),

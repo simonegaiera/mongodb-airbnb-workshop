@@ -96,3 +96,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# Pod Disruption Budget - protects against mass CLI deletions
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

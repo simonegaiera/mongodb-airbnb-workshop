@@ -21,7 +21,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
-  version    = "0.1.12"
+  version    = "0.1.13"
   
   wait          = true
   wait_for_jobs = true

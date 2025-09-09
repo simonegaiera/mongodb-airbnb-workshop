@@ -58,7 +58,7 @@ resource "helm_release" "airbnb_arena_nginx" {
   name       = "mdb-nginx"
   repository = "local"
   chart      = "./mdb-nginx"
-  version    = "0.1.1"
+  version    = "0.1.2"
 
   values = [
     file("${path.module}/mdb-nginx/values.yaml"),
