@@ -222,7 +222,8 @@ resource "helm_release" "user_openvscode" {
     aws_efs_mount_target.efs_mt,
     kubernetes_storage_class.efs,
     aws_rds_cluster_instance.aurora_instance,
-    helm_release.scenario_definition
+    helm_release.scenario_definition,
+    aws_eks_addon.efs_csi_driver
   ]
 }
 

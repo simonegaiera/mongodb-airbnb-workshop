@@ -34,7 +34,8 @@ resource "helm_release" "redis" {
   ]
 
   depends_on = [
-    aws_eks_cluster.eks_cluster
+    aws_eks_cluster.eks_cluster,
+    helm_release.scenario_definition
   ]
 }
 

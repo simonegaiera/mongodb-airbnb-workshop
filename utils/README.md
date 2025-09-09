@@ -41,9 +41,6 @@
 ## Terraform
 
 ### Deploy
-- ❄️ **FROZEN:** Cluster name change to arena-eks from gameday-eks
-- ❄️ **FROZEN:** S3 bucket change to mongodb-arena from mongodb-gameday
-- 🔴 **HIGH:** Redis depends to scenario too
 - 🔴 **HIGH:** MountVolume.MountDevice failed for volume "pvc-c6da3730-60e3-4676-a052-a4cf85f0df69" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
 
 ### Atlas cluster
