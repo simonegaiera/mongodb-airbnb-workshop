@@ -42,7 +42,11 @@
 
 ### Deploy
 
-*No current items.*
+- 🟡 **LOW:** Limit the type of nodes the EKS cluster can use, to avoid the scenario where giant nodes can be used
+- 🔴 **HIGH:** 
+vscode-arena-sa25-mdb-openvscode-54b4bc8dfb-dwsdn
+vscode-arena-sa2-mdb-openvscode-54dd54868-rv485
+MountVolume.MountDevice failed for volume "pvc-425020ec-7a15-4b5c-834b-4c126fffb66e" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!

@@ -81,7 +81,8 @@ resource "helm_release" "portal_server" {
   ]
 
   depends_on = [
-    helm_release.scenario_definition
+    helm_release.scenario_definition,
+    helm_release.airbnb_arena_nginx
   ]
 }
 

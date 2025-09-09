@@ -128,7 +128,8 @@ resource "helm_release" "instructions_nginx" {
 
   depends_on = [
     kubernetes_secret.nginx_tls_secret,
-    helm_release.scenario_definition
+    helm_release.scenario_definition,
+    helm_release.airbnb_arena_nginx
   ]
 }
 
