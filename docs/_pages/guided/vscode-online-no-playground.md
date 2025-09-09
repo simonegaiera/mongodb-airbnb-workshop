@@ -10,6 +10,8 @@ classes: wide
 Welcome to your cloud-powered dev playground!  
 Let’s get you connected, coding, and exploring MongoDB in style.
 
+**We’re here to _vibe code_ this experience together—let’s make it unforgettable! 🚀🎶**
+
 ---
 
 ## 🚀 Step 1: Backend Setup

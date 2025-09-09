@@ -23,9 +23,6 @@
 - 🟡 **LOW:** Replace the correct email for Arena in the Portal
 - 🟢 **MINOR:** Exercise with RankFusion
 
-- 🔴 **HIGH:** Explain the user you need to vibe code
-- 🔴 **HIGH:** MCP Server, improve the prompt
-
 ---
 
 ## App

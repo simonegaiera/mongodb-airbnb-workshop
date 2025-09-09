@@ -10,7 +10,7 @@ classes: wide
 Welcome to your cloud-powered dev playground!  
 Let’s get you connected, coding, and exploring MongoDB in style.
 
-**Quick Check**: Navigate to `https://<customer>.mongoarena.com/` and verify your name appears in the participant list. If it’s not there, please ask your SA before proceeding.
+**We’re here to _vibe code_ this experience together—let’s make it unforgettable! 🚀🎶**
 
 ---
 
