@@ -48,9 +48,6 @@
 
 ## Terraform
 
-### Portal
-- 🟠 **MEDIUM:** Add to the portal where the winner will be announced
-
 ### Deploy
 
 - 🟡 **LOW:** Limit the type of nodes the EKS cluster can use, to avoid the scenario where giant nodes can be used
