@@ -92,16 +92,16 @@ const HostAnalytics = () => {
     }
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden relative">
             {/* Exercise Status for pipeline-2 */}
-            <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
+            <div className="px-3 py-2 bg-gray-50 border-b border-gray-200 relative z-10">
                 <ExerciseStatus exerciseName="pipeline-2" />
             </div>
             
             <div className="p-3">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 relative z-0">
                     {data.map((item, index) => (
-                        <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                        <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3 relative">
                             {/* Host Type Header */}
                             <div className="text-center mb-3">
                                 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${

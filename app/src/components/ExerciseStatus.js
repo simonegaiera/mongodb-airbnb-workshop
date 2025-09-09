@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 const ExerciseStatus = ({ exerciseName }) => {
     const [status, setStatus] = useState(null);
@@ -58,9 +59,7 @@ const ExerciseStatus = ({ exerciseName }) => {
     }, [showDetailsBox]);
 
     const handleStatusClick = () => {
-        if (hasFailureReason) {
-            setShowDetailsBox(!showDetailsBox);
-        }
+        setShowDetailsBox(!showDetailsBox);
     };
 
     if (!exerciseName) {
@@ -131,31 +130,35 @@ const ExerciseStatus = ({ exerciseName }) => {
     return (
         <div className="flex items-center gap-2 relative">
             <div 
-                className={`w-4 h-4 rounded-full flex items-center justify-center ${getStatusColor()} ${hasFailureReason ? 'cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all' : ''}`}
+                className={`w-4 h-4 rounded-full flex items-center justify-center ${getStatusColor()} cursor-pointer hover:ring-2 hover:ring-blue-300 transition-all`}
                 onClick={handleStatusClick}
             >
                 {getStatusIcon()}
             </div>
             <span 
-                className={`text-sm ${getTextColor()} ${hasFailureReason ? 'cursor-pointer hover:underline' : ''}`}
+                className={`text-sm ${getTextColor()} cursor-pointer hover:underline`}
                 onClick={handleStatusClick}
             >
                 {exerciseName}
             </span>
             
-            {/* Details box for failure reason */}
-            {hasFailureReason && showDetailsBox && (
+            {/* Details box for exercise status */}
+            {showDetailsBox && typeof document !== 'undefined' && createPortal(
                 <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50"
                     onClick={() => setShowDetailsBox(false)}
+                    style={{ zIndex: 999999 }}
                 >
                     <div 
                         ref={detailsRef}
                         className="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4 relative"
                         onClick={(e) => e.stopPropagation()}
+                        style={{ zIndex: 1000000 }}
                     >
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-lg font-semibold text-red-600">Exercise Failed</h3>
+                            <h3 className={`text-lg font-semibold ${isCompleted ? 'text-green-600' : isFailed ? 'text-red-600' : 'text-gray-600'}`}>
+                                Exercise {isCompleted ? 'Completed' : isFailed ? 'Failed' : 'Status'}
+                            </h3>
                             <button 
                                 onClick={() => setShowDetailsBox(false)}
                                 className="text-gray-400 hover:text-gray-600 text-xl leading-none"
@@ -166,8 +169,23 @@ const ExerciseStatus = ({ exerciseName }) => {
                         
                         <div className="mb-4">
                             <h4 className="font-medium text-gray-700 mb-2">Exercise: {exerciseName}</h4>
-                            <div className="bg-red-50 border border-red-200 rounded p-3">
-                                <p className="text-red-800 text-sm">{status.failure_reason}</p>
+                            <div className={`border rounded p-3 ${
+                                isCompleted ? 'bg-green-50 border-green-200' : 
+                                isFailed ? 'bg-red-50 border-red-200' : 
+                                'bg-gray-50 border-gray-200'
+                            }`}>
+                                <p className={`text-sm ${
+                                    isCompleted ? 'text-green-800' : 
+                                    isFailed ? 'text-red-800' : 
+                                    'text-gray-800'
+                                }`}>
+                                    Status: <span className="font-medium capitalize">{exerciseStatus.replace('_', ' ')}</span>
+                                </p>
+                                {isFailed && status.failure_reason && (
+                                    <p className="text-red-800 text-sm mt-2">
+                                        <strong>Reason:</strong> {status.failure_reason}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         
@@ -187,7 +205,8 @@ const ExerciseStatus = ({ exerciseName }) => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
