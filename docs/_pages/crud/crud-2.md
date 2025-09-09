@@ -37,16 +37,20 @@ In this exercise, you’ll unlock the power of MongoDB’s `findOne` to fetch ex
 1. Go to `server/src/lab/rest-lab`.
 2. Open `crud-2-one-lab.http`.
 3. Click **Send Request** to execute the API call.
+![test-rest-lab](../../assets/images/test-rest-lab.png)
 4. Verify the response returns the single document you requested.
 
 ---
 
 ### 🖥️ Frontend Validation
 
-Select a listing in the app and watch as all the details for that property appear—fast, focused, and flawless. This is the experience that keeps guests coming back, and it all starts with your code.
+> **Important:**  
+> To check if your implementation works, **go to the homepage of the app and select a listing**.  
+> This will open the details page for that property and trigger your new API code.
 
-**Check Exercise Status:**  
-Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
+- When you select a listing, all the details for that property should appear—fast, focused, and flawless.
+- **Check Exercise Status:**  
+  Look for the exercise toggle on the details page. If it shows green, your implementation is correct!
 
 With this step, you’re not just retrieving data—you’re bringing each listing to life for your users.  
 **Ready to deliver the details that make your platform shine? Let’s get started!**

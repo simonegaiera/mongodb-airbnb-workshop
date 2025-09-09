@@ -18,7 +18,7 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
 }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(20) // Show 20 participants per page by default
+  const [itemsPerPage, setItemsPerPage] = useState(10) // Show 10 participants per page by default
 
   // Get base domain for workspace URLs
   const getBaseDomain = () => {

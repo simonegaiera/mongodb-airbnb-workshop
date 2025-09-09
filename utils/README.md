@@ -21,7 +21,12 @@
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
 - 🟡 **LOW:** Replace the correct email for Arena in the Portal
-- 🔴 **HIGH:** Exercise with RankFusion
+- 🟢 **MINOR:** Exercise with RankFusion
+
+
+
+- 🔴 **HIGH:** Explain the user you need to vibe code
+- 🔴 **HIGH:** MCP Server, improve the prompt
 
 ---
 
@@ -29,25 +34,28 @@
 
 *No current items.*
 
+- 🔴 **HIGH:** Link to properties does not work
+- 🔴 **HIGH:** Link did not work here:🏆 1. THE ABSOLUTE BEST EXPERIENCE – Property ID: 7073250 (Oʻahu)
+
 ---
 
 ## Server
 
 ### Answers
-- 🔴 **HIGH:** Can I use 2 folders when deciding the scenario. lab and answer.
+- 🔴 **HIGH:** Can I use 2 folders when deciding the scenario (lab and answer)
 
 ---
 
 ## Terraform
 
+### Portal
+- 🟠 **MEDIUM:** Add to the portal where the winner will be announced
+
 ### Deploy
 
 - 🟡 **LOW:** Limit the type of nodes the EKS cluster can use, to avoid the scenario where giant nodes can be used
 - 🟡 **LOW:** Make sure that if someone delete all the pod, they get recreated and they don't go OOM
-- 🔴 **HIGH:** 
-vscode-arena-sa25-mdb-openvscode-54b4bc8dfb-dwsdn
-vscode-arena-sa2-mdb-openvscode-54dd54868-rv485
-MountVolume.MountDevice failed for volume "pvc-425020ec-7a15-4b5c-834b-4c126fffb66e" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
+- 🟢 **MINOR:** MountVolume.MountDevice failed for volume "pvc-425020ec-7a15-4b5c-834b-4c126fffb66e" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
@@ -63,17 +71,6 @@ MountVolume.MountDevice failed for volume "pvc-425020ec-7a15-4b5c-834b-4c126fffb
 ### Deploy
 - ❄️ **FROZEN:** Deploy on Kanopy
 
-
-## NYC .Local
-
-### Exercises
-
-- (Meh) Simple Find
-- (Meh) Simple Create
-- (X) Insert Reviews (Update with increment)
-- More complicated aggregation pipeline
-- (X) Search
-- (X) Vector and auto-embedding
 
 ---
 

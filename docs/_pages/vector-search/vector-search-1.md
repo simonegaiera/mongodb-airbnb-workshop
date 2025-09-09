@@ -39,7 +39,7 @@ Harness the power of MongoDB Atlas Vector Search to build a semantic search feat
 
 1. Go to `server/src/lab/rest-lab`.  
 2. Open `vector-search-1-lab.http`.  
-3. Click **Send Request** to call the API.  
+3. Click **Send Request** to call the API.
 4. Confirm the response contains the expected, semantically relevant results.
 
 ---

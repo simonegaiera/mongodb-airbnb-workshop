@@ -40,6 +40,7 @@ In this exercise, you’ll master the basics of MongoDB by finding documents, so
 1. Go to `server/src/lab/rest-lab`.
 2. Open `crud-1-query-lab.http`.
 3. Click **Send Request** to execute the API call.
+![test-rest-lab](../../assets/images/test-rest-lab.png)
 4. Check that the response returns the paginated results.
 
 ---
