@@ -132,6 +132,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 
   depends_on = [
+    aws_efs_mount_target.efs_mt,
     aws_subnet.eks_subnet,
     aws_route_table_association.rt_assoc,
     aws_security_group.eks_sg,
