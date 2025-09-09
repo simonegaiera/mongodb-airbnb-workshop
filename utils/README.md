@@ -23,8 +23,6 @@
 - 🟡 **LOW:** Replace the correct email for Arena in the Portal
 - 🟢 **MINOR:** Exercise with RankFusion
 
-
-
 - 🔴 **HIGH:** Explain the user you need to vibe code
 - 🔴 **HIGH:** MCP Server, improve the prompt
 
@@ -33,9 +31,6 @@
 ## App
 
 *No current items.*
-
-- 🔴 **HIGH:** Link to properties does not work
-- 🔴 **HIGH:** Link did not work here:🏆 1. THE ABSOLUTE BEST EXPERIENCE – Property ID: 7073250 (Oʻahu)
 
 ---
 

@@ -21,11 +21,14 @@ export default function Home() {
 
   // Function to convert property IDs to links
   const formatMessageWithLinks = (text) => {
-    const propertyIdRegex = /Property ID:?\s*([a-zA-Z0-9]+)/gi;
+    // More robust regex to handle various whitespace and property ID formats
+    const propertyIdRegex = /Property\s+ID:?\s*([a-zA-Z0-9\-_\.]+)/giu;
+    const basePath = process.env.BASE_PATH || '';
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+    const fullBaseUrl = basePath ? `${baseUrl}/${basePath}` : baseUrl;
     
     return text.replace(propertyIdRegex, (match, id) => {
-      return `Property ID: [${id}](${baseUrl}/rooms?id=${id})`;
+      return `Property ID: [${id}](${fullBaseUrl}/rooms?id=${id})`;
     });
   };
 
