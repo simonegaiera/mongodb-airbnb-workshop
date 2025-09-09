@@ -41,16 +41,13 @@
 ## Terraform
 
 ### Deploy
-- 🔴 **HIGH:** MountVolume.MountDevice failed for volume "pvc-c6da3730-60e3-4676-a052-a4cf85f0df69" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
+
+*No current items.*
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 - ❄️ **FROZEN:** Can I filter the Load Sample Dataset to the single database
-
-
-### Open VSCode
-- ❄️ **FROZEN:** [Changes were made] Understand why the firewall was blocking it and how to avoid it
 
 ### OIDC
 - ❄️ **FROZEN:** Ask if it is possible to have OIDC (current SA profile does not allow).
