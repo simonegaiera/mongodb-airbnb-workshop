@@ -70,6 +70,16 @@ tolerations: []
 
 affinity: {}
 
+# Topology spread constraints for pod distribution
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: litellm
+        app.kubernetes.io/instance: litellm
+
 # LiteLLM specific configuration
 litellm:
   # Environment variables

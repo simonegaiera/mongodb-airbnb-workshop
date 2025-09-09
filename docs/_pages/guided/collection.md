@@ -23,11 +23,11 @@ We’ll use **Cline** and the **MongoDB MCP** to quickly describe the structure 
 
 #### 2. Paste This Prompt
 
-Copy and paste the following prompt into Cline:
+**⬇️ Copy and paste this prompt into Cline:**
 
-```
+`
 Use the MongoDB MCP to describe the structure and main fields of the `listingsAndReviews` collection in my database.
-```
+`
 
 #### 3. Review the Response
 

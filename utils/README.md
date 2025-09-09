@@ -45,10 +45,6 @@
 
 ### Deploy
 
-- 🟡 **LOW:** Limit the type of nodes the EKS cluster can use, to avoid the scenario where giant nodes can be used
-- 🟡 **LOW:** Make sure that if someone delete all the pod, they get recreated and they don't go OOM
-- 🟢 **MINOR:** MountVolume.MountDevice failed for volume "pvc-425020ec-7a15-4b5c-834b-4c126fffb66e" : kubernetes.io/csi: attacher.MountDevice failed to create newCsiDriverClient: driver name efs.csi.aws.com not found in the list of registered CSI drivers
-
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token

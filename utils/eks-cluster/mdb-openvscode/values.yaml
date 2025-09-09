@@ -86,8 +86,6 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 1
-  # targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
 volumes: []
@@ -132,3 +130,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
