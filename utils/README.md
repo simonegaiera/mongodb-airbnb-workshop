@@ -43,6 +43,7 @@
 ### Deploy
 
 - 🟡 **LOW:** Limit the type of nodes the EKS cluster can use, to avoid the scenario where giant nodes can be used
+- 🟡 **LOW:** Make sure that if someone delete all the pod, they get recreated and they don't go OOM
 - 🔴 **HIGH:** 
 vscode-arena-sa25-mdb-openvscode-54b4bc8dfb-dwsdn
 vscode-arena-sa2-mdb-openvscode-54dd54868-rv485
