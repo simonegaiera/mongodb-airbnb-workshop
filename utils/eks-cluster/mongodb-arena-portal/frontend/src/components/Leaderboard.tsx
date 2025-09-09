@@ -315,12 +315,13 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Want More Challenges?
+                  What's Next?
                 </h3>
               </div>
-              <p className="text-gray-700 mb-4">
-                Loved this challenge? We've got even more exciting MongoDB scenarios waiting for your team!
-              </p>
+               <p className="text-gray-700 mb-4">
+                 Having trouble or need assistance? We're here to help! <br />
+                 Loved this challenge? We've got more scenarios for your team!
+               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <div className="flex items-center text-mongodb-green font-medium">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

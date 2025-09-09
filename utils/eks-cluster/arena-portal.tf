@@ -111,7 +111,7 @@ resource "helm_release" "portal_nginx" {
       env = [
         {
           name  = "NEXT_PUBLIC_API_URL"
-          value = "https://portal.${local.aws_route53_record_name}/backend/"
+          value = "https://portal.${local.aws_route53_record_name}/backend"
         },
         {
           name  = "NEXT_PUBLIC_REPO_NAME"
