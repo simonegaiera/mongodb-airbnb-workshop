@@ -74,7 +74,7 @@ def get_available_participants_count():
         # Available = users with taken: false and not decommissioned
         available_count = participants_collection.count_documents({
             "$and": [
-                {"$or": [{"taken": False}, {"taken": {"$exists": False}}]},
+                {"taken": False},
                 {"$or": [{"decommissioned": {"$ne": True}}, {"decommissioned": {"$exists": False}}]}
             ]
         })
