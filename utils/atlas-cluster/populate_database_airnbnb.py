@@ -77,6 +77,37 @@ def create_user_collection(db_name, client, common_database, collections_list):
     for collection in collections_list:
         client[common_database][collection].aggregate([{'$out': {'db': db_name, 'coll': collection}}])
 
+def delete_user_databases(user_ids, client):
+    """Delete databases for decommissioned users."""
+    deleted_databases = []
+    errors = []
+    
+    for user_id in user_ids:
+        try:
+            # Check if database exists
+            databases = client.list_database_names()
+            if user_id in databases:
+                # Delete the database
+                client.drop_database(user_id)
+                deleted_databases.append(user_id)
+                print(f"Successfully deleted database for user: {user_id}", flush=True)
+            else:
+                print(f"Database for user {user_id} does not exist, skipping deletion.", flush=True)
+        except Exception as e:
+            error_msg = f"Error deleting database for user {user_id}: {e}"
+            errors.append(error_msg)
+            print(error_msg, flush=True)
+    
+    if deleted_databases:
+        print(f"Successfully deleted {len(deleted_databases)} user databases: {sorted(deleted_databases)}", flush=True)
+    
+    if errors:
+        print(f"Encountered {len(errors)} errors during database deletion.", flush=True)
+        for error in errors:
+            print(f"  - {error}", flush=True)
+    
+    return deleted_databases, errors
+
 def decommission_unwanted_users(users_map, client, common_database):
     """Decommission any existing participants that are not in the current wanted list."""
     participants_collection = client[common_database]['participants']
@@ -103,6 +134,15 @@ def decommission_unwanted_users(users_map, client, common_database):
             }
         )
         print(f"Decommissioned {result.modified_count} users that are no longer in the wanted list: {sorted(to_decommission)}", flush=True)
+        
+        # Delete the databases for decommissioned users
+        if result.modified_count > 0:
+            print("Proceeding to delete databases for decommissioned users...", flush=True)
+            deleted_databases, deletion_errors = delete_user_databases(list(to_decommission), client)
+            
+            if deletion_errors:
+                print("WARNING: Some user databases could not be deleted. Check the errors above.", flush=True)
+            
         return result.modified_count
     else:
         print("No users need to be decommissioned.", flush=True)
