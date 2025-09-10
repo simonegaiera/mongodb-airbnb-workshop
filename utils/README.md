@@ -20,6 +20,9 @@
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
+
+- 🟠 **MEDIUM:** Implement the next button between pages
+- 🟠 **MEDIUM:**  Change the left menu to make it less engineer and more business reason oriented (e.g. instead of search, etc talk about rental discovery)
 - 🟡 **LOW:** Replace the correct email for Arena in the Portal
 - 🟢 **MINOR:** Exercise with RankFusion
 
