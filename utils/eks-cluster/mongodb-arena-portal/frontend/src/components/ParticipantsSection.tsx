@@ -9,6 +9,8 @@ interface Participant {
   email?: string
   taken?: boolean
   insert_timestamp?: string
+  decommissioned?: boolean
+  decommissioned_timestamp?: string
 }
 
 interface ParticipantsSectionProps {
@@ -22,10 +24,22 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({ refreshTrigge
   
   // State for collapsible participants (default expanded)
   const [participantsExpanded, setParticipantsExpanded] = useState(true)
+  
+  // State for showing decommissioned participants (default hidden)
+  const [showDecommissioned, setShowDecommissioned] = useState(false)
 
   const toggleParticipants = () => {
     setParticipantsExpanded(prev => !prev)
   }
+
+  const toggleShowDecommissioned = () => {
+    setShowDecommissioned(prev => !prev)
+  }
+
+  // Filter participants based on decommissioned status
+  const filteredParticipants = participants.filter(participant => 
+    showDecommissioned || !participant.decommissioned
+  )
 
   const fetchParticipants = async () => {
     try {
@@ -109,8 +123,26 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({ refreshTrigge
         </div>
         <div className="flex items-center space-x-3">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-mongodb-light text-mongodb-dark">
-            {participants.length} total
+            {filteredParticipants.length} of {participants.length} total
           </span>
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation() // Prevent triggering the collapse toggle
+              toggleShowDecommissioned()
+            }}
+            className={`inline-flex items-center px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+              showDecommissioned
+                ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L12 12m-3.172-3.172a4 4 0 005.656 0M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            </svg>
+            {showDecommissioned ? 'Hide Decommissioned' : 'Show Decommissioned'}
+          </button>
+          
           <button 
             onClick={(e) => {
               e.stopPropagation() // Prevent triggering the collapse toggle
@@ -130,7 +162,7 @@ const ParticipantsSection: React.FC<ParticipantsSectionProps> = ({ refreshTrigge
       {/* Collapsible Content */}
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${participantsExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
         <ParticipantsGrid 
-          participants={participants} 
+          participants={filteredParticipants} 
           onRefresh={fetchParticipants} 
         />
       </div>
