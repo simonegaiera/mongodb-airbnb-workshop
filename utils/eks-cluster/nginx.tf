@@ -44,7 +44,7 @@ resource "kubernetes_secret" "nginx_tls_secret" {
   type = "kubernetes.io/tls"
 
   data = {
-    "tls.crt" = acme_certificate.mongosa_cert.certificate_pem
+    "tls.crt" = "${acme_certificate.mongosa_cert.certificate_pem}${acme_certificate.mongosa_cert.issuer_pem}"
     "tls.key" = tls_private_key.request_key.private_key_pem
   }
 
