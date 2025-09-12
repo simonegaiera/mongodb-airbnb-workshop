@@ -56,3 +56,5 @@ With this step, you’re not just retrieving data—you’re bringing each listi
 **Ready to deliver the details that make your platform shine? Let’s get started!**
 
 ![crud-2-lab](../../assets/images/crud-2-lab.png)
+
+{% include simple_next_nav.html %}

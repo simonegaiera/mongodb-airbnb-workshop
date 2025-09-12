@@ -10,6 +10,7 @@ breadcrumbs: true
 plugins:
   - jekyll-include-cache
   - jekyll-sitemap
+  - jekyll-remote-theme
 defaults:
   - scope:
       path: ""

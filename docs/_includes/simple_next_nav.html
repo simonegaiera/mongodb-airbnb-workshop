@@ -1,0 +1,39 @@
+<!-- Simple Next Page Navigation -->
+{% comment %}
+A simplified version that just shows next page navigation.
+Include this at the bottom of any page with: {% include simple_next_nav.html %}
+{% endcomment %}
+
+{% assign current_url = page.permalink | default: page.url %}
+{% assign next_page_url = null %}
+{% assign next_page_title = null %}
+
+{% comment %}Find the next page in navigation{% endcomment %}
+{% assign found_current = false %}
+{% for section in site.data.navigation-guided.docs %}
+  {% for child in section.children %}
+    {% if found_current %}
+      {% assign next_page_url = child.url %}
+      {% assign next_page_title = child.title %}
+      {% break %}
+    {% endif %}
+    
+    {% if child.url == current_url %}
+      {% assign found_current = true %}
+    {% endif %}
+  {% endfor %}
+  {% if next_page_url %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% comment %}Display next page link if found{% endcomment %}
+{% if next_page_url %}
+<div style="margin-top: 2rem; padding: 1rem; background-color: #f8f9fa; border-radius: 0.375rem; text-align: center;">
+  <p style="margin-bottom: 0.5rem; font-weight: 600; color: #495057;">Ready for the next challenge?</p>
+  <a href="{{ next_page_url | relative_url }}" class="btn btn--primary" style="text-decoration: none; display: inline-block;">
+    Continue to: {{ next_page_title }}
+    <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+  </a>
+</div>
+{% endif %}

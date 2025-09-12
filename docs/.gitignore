@@ -1,0 +1,7 @@
+*.lock
+.bundle/
+_site/
+vendor/
+.DS_Store
+.env
+.jenkill-cache

@@ -56,3 +56,5 @@ With this first step, you’re not just writing code—you’re building the sea
 **Ready to help your users find their next stay? Let’s get started!**
 
 ![crud-1-lab](../../assets/images/crud-1-lab.png)
+
+{% include simple_next_nav.html %}

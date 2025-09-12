@@ -1,0 +1,22 @@
+
+source "https://rubygems.org"
+
+gem "jekyll", "~> 4.3"
+gem "csv"
+gem "base64"
+gem "webrick"
+gem "bigdecimal"
+gem "logger"
+gem "ostruct"
+
+group :jekyll_plugins do
+  gem "jekyll-include-cache"
+  gem "jekyll-feed"
+  gem "jekyll-sitemap"
+  gem "jekyll-gist"
+  gem "jekyll-paginate"
+  gem "jekyll-remote-theme"
+end
+
+# Theme
+gem "minimal-mistakes-jekyll"

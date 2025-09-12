@@ -1,0 +1,117 @@
+<!-- Next Page Navigation Component -->
+{% comment %}
+This include automatically generates next page navigation based on the navigation structure.
+It finds the current page in the navigation and provides a link to the next page.
+{% endcomment %}
+
+{% assign current_url = page.permalink | default: page.url %}
+{% assign next_page_url = null %}
+{% assign next_page_title = null %}
+{% assign prev_page_url = null %}
+{% assign prev_page_title = null %}
+{% assign found_current = false %}
+{% assign page_index = -1 %}
+
+{% comment %}Flatten the navigation structure{% endcomment %}
+{% assign all_pages = "" | split: "" %}
+{% for section in site.data.navigation-guided.docs %}
+  {% for child in section.children %}
+    {% assign page_item = child %}
+    {% assign all_pages = all_pages | push: page_item %}
+  {% endfor %}
+{% endfor %}
+
+{% comment %}Find current page and determine next/previous{% endcomment %}
+{% for nav_page in all_pages %}
+  {% assign page_index = page_index | plus: 1 %}
+  
+  {% if nav_page.url == current_url %}
+    {% assign found_current = true %}
+    
+    {% comment %}Get previous page{% endcomment %}
+    {% if page_index > 0 %}
+      {% assign prev_index = page_index | minus: 1 %}
+      {% assign prev_page_url = all_pages[prev_index].url %}
+      {% assign prev_page_title = all_pages[prev_index].title %}
+    {% endif %}
+    
+    {% comment %}Get next page{% endcomment %}
+    {% assign next_index = page_index | plus: 1 %}
+    {% if next_index < all_pages.size %}
+      {% assign next_page_url = all_pages[next_index].url %}
+      {% assign next_page_title = all_pages[next_index].title %}
+    {% endif %}
+    
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% comment %}Only show navigation if we found the current page in the structure{% endcomment %}
+{% if found_current %}
+<div class="page-navigation" style="margin-top: 3rem; padding: 1.5rem; border-top: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center;">
+  
+  {% comment %}Previous page link{% endcomment %}
+  <div class="nav-previous">
+    {% if prev_page_url %}
+      <a href="{{ prev_page_url | relative_url }}" class="btn btn--primary btn--small" style="text-decoration: none;">
+        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+        Previous: {{ prev_page_title }}
+      </a>
+    {% else %}
+      <div></div>
+    {% endif %}
+  </div>
+
+  {% comment %}Page counter{% endcomment %}
+  <div class="nav-counter" style="font-size: 0.9rem; color: #6c757d;">
+    Page {{ page_index | plus: 1 }} of {{ all_pages.size }}
+  </div>
+
+  {% comment %}Next page link{% endcomment %}
+  <div class="nav-next">
+    {% if next_page_url %}
+      <a href="{{ next_page_url | relative_url }}" class="btn btn--primary btn--small" style="text-decoration: none;">
+        Next: {{ next_page_title }}
+        <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+      </a>
+    {% else %}
+      <div></div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% comment %}Add some responsive styling{% endcomment %}
+<style>
+@media (max-width: 768px) {
+  .page-navigation {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+  
+  .nav-previous, .nav-next {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-counter {
+    order: -1;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.page-navigation .btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+@media (max-width: 480px) {
+  .page-navigation .btn {
+    max-width: 200px;
+    font-size: 0.8rem;
+  }
+}
+</style>
+{% endif %}
