@@ -24,6 +24,7 @@ Throughout Arena, you’ll tackle these core challenges:
 1. ✏️ **CRUD Operations** – Master creating, reading, updating, and deleting documents in MongoDB.
 2. 📊 **MongoDB Aggregations** – Unlock powerful data insights using the aggregation framework.
 3. 🔎 **Atlas Search** – Add lightning-fast, full-text search to your app.
+4. 🧠 **Vector Search** – Supercharge your platform with semantic search and AI-powered recommendations, enabling features like an in-app chatbot that can answer user questions.
 
 Are you ready to level up your MongoDB skills and help your company succeed in the rental market?  
 **Let’s get started and make some data magic happen!** 🚀
