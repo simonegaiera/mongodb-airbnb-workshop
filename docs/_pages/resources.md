@@ -63,3 +63,5 @@ Unlock your potential with these hand-picked resources—perfect for leveling up
 - 🔍 [$vectorSearch](https://www.mongodb.com/docs/atlas/atlas-search/aggregation-stages/vectorSearch/) — Harness the power of semantic matching.
 
 Ready to explore? Dive in and supercharge your MongoDB journey! 🚀
+
+{% include simple_next_nav.html %}

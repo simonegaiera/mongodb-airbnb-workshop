@@ -21,3 +21,5 @@ Challenge yourself, race against the clock, and climb the leaderboard as you tac
 
 Are you ready to show what you've got?  
 **Let the competition begin and may the best innovator win!** 🌟
+
+{% include simple_next_nav.html %}
