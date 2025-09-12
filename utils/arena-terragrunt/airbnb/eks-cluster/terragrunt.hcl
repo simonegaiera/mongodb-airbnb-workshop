@@ -34,7 +34,7 @@ inputs = {
   aws_profile = "Solution-Architects.User-979559056307"
   customer_name = "airbnb"
   aws_region = "us-east-2"
-  domain_email = "simone.gaiera@mongodb.com"
+  domain_email = "arena@mongodb.com"
   anthropic_api_key = "api-key-here"
   azure_openai_api_key = "api-key-here"
 }
