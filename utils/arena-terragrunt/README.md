@@ -138,4 +138,5 @@ Always review any plan before applying changes. Destroy resources only when they
   - Additional reputation and security checks can be performed using:
     - [Talos Intelligence Reputation Center](https://talosintelligence.com/reputation_center/)  
     - [FortiGuard Web Filter](https://www.fortiguard.com/webfilter)  
-    - [Broadcom Bluecoat Site Review](https://sitereview.bluecoat.com/)  
+    - [Broadcom Bluecoat Site Review](https://sitereview.bluecoat.com/)
+    - [Palo Alto Networks URL Filtering](https://urlfiltering.paloaltonetworks.com/)
