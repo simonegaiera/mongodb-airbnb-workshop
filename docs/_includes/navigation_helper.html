@@ -7,7 +7,7 @@ to enable automatic next/previous page detection.
 {% assign flat_nav = "" | split: "" %}
 {% assign current_section = "" %}
 
-{% for section in site.data.navigation-guided.docs %}
+{% for section in site.data.navigation.docs %}
   {% for child in section.children %}
     {% assign page_data = child.url | append: "|" | append: child.title %}
     {% assign flat_nav = flat_nav | push: page_data %}

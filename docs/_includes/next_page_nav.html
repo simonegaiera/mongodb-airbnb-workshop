@@ -14,7 +14,7 @@ It finds the current page in the navigation and provides a link to the next page
 
 {% comment %}Flatten the navigation structure{% endcomment %}
 {% assign all_pages = "" | split: "" %}
-{% for section in site.data.navigation-guided.docs %}
+{% for section in site.data.navigation.docs %}
   {% for child in section.children %}
     {% assign page_item = child %}
     {% assign all_pages = all_pages | push: page_item %}

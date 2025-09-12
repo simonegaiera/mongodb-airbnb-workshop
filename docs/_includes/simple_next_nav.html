@@ -10,7 +10,7 @@ Include this at the bottom of any page with: {% include simple_next_nav.html %}
 
 {% comment %}Find the next page in navigation{% endcomment %}
 {% assign found_current = false %}
-{% for section in site.data.navigation-guided.docs %}
+{% for section in site.data.navigation.docs %}
   {% for child in section.children %}
     {% if found_current %}
       {% assign next_page_url = child.url %}

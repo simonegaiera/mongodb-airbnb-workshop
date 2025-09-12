@@ -164,6 +164,8 @@ bundle install
 echo "Updating _config.yml to use gem-based theme..."
 # Replace remote_theme with theme for proper gem installation
 sed -i 's|remote_theme: mmistakes/minimal-mistakes@master|theme: minimal-mistakes-jekyll|g' _config.yml
+# Remove jekyll-remote-theme from plugins since we're using gem-based theme
+sed -i '/jekyll-remote-theme/d' _config.yml
 
 echo "Final _config.yml content:"
 cat _config.yml

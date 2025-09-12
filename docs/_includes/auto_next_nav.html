@@ -8,7 +8,7 @@ show next page navigation on all pages that are part of the workshop navigation.
 {% assign is_workshop_page = false %}
 
 {% comment %}Check if current page is in the workshop navigation{% endcomment %}
-{% for section in site.data.navigation-guided.docs %}
+{% for section in site.data.navigation.docs %}
   {% for child in section.children %}
     {% if child.url == current_url %}
       {% assign is_workshop_page = true %}
