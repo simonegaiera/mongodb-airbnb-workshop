@@ -135,3 +135,6 @@ Always review any plan before applying changes. Destroy resources only when they
   SSL configuration has already been ensured and the environment is rated **A+**.
   - You can verify your domain with [SSL Labs SSL Test](https://www.ssllabs.com/ssltest/analyze.html).
   - You can also check with [Zscaler Zulu URL Risk Analyzer](https://zulu.zscaler.com/).
+  - Additional reputation and security checks can be performed using:
+    - [Talos Intelligence Reputation Center](https://talosintelligence.com/reputation_center/)
+    - [FortiGuard Web Filter](https://www.fortiguard.com/webfilter)
