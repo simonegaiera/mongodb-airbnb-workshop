@@ -109,10 +109,10 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
     
-    # Security Headers
+    # Security Headers - VSCode Extension Friendly
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
-    add_header X-Frame-Options DENY always;
-    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options SAMEORIGIN always;  # Allow same-origin iframes for extensions
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    # Note: X-Content-Type-Options removed to allow extension content types
 }
