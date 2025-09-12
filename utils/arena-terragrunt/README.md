@@ -128,3 +128,10 @@
      ```
 
 Always review any plan before applying changes. Destroy resources only when they are no longer needed.
+
+## Additional Notes
+
+- **SSL Verification:**  
+  SSL configuration has already been ensured and the environment is rated **A+**.
+  - You can verify your domain with [SSL Labs SSL Test](https://www.ssllabs.com/ssltest/analyze.html).
+  - You can also check with [Zscaler Zulu URL Risk Analyzer](https://zulu.zscaler.com/).
