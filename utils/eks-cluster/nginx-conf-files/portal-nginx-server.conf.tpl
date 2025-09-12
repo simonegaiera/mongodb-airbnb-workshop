@@ -41,6 +41,20 @@ server {
         internal;
     }
 
+    # Serve static portal files
+    location / {
+        root ${index_path};
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location = /favicon.ico {
+        alias /usr/share/nginx/html/favicon.ico;
+        log_not_found   off;
+        access_log      off;
+        default_type    image/x-icon;
+    }
+
     location /backend/ {
         proxy_pass http://${proxy_pass}:5000/;
         proxy_set_header Host $host;

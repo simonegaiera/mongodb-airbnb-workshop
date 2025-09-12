@@ -10,7 +10,8 @@ locals {
 
   portal_backend_nginx_config = templatefile("${path.module}/nginx-conf-files/portal-nginx-server.conf.tpl", {
     server_name = "portal.${local.aws_route53_record_name}",
-    proxy_pass = lookup(data.kubernetes_service.portal_service.metadata[0], "name", "default-ip")
+    proxy_pass = lookup(data.kubernetes_service.portal_service.metadata[0], "name", "default-ip"),
+    index_path = "/usr/share/nginx/html/portal"
   })
 
   portal_combined_nginx_config = join("\n\n", [
