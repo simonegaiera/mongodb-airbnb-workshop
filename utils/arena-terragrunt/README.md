@@ -136,5 +136,6 @@ Always review any plan before applying changes. Destroy resources only when they
   - You can verify your domain with [SSL Labs SSL Test](https://www.ssllabs.com/ssltest/analyze.html).
   - You can also check with [Zscaler Zulu URL Risk Analyzer](https://zulu.zscaler.com/).
   - Additional reputation and security checks can be performed using:
-    - [Talos Intelligence Reputation Center](https://talosintelligence.com/reputation_center/)
-    - [FortiGuard Web Filter](https://www.fortiguard.com/webfilter)
+    - [Talos Intelligence Reputation Center](https://talosintelligence.com/reputation_center/)  
+    - [FortiGuard Web Filter](https://www.fortiguard.com/webfilter)  
+    - [Broadcom Bluecoat Site Review](https://sitereview.bluecoat.com/)  
