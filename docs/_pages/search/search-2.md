@@ -57,3 +57,5 @@ With this step, you’re not just adding filters—you’re giving your users th
 **Ready to make search truly interactive? Let’s get started!**
 
 ![search-2-lab](../../assets/images/search-2-lab.png)
+
+{% include simple_next_nav.html %}

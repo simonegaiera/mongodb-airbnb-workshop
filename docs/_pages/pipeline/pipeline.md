@@ -16,3 +16,4 @@ In this chapter, you’ll master MongoDB’s aggregation framework—your toolki
 - 🔀 **Sort**: Rank and order your results.
 - 🪄 **Project**: Reshape and craft your perfect output.
 
+{% include simple_next_nav.html %}

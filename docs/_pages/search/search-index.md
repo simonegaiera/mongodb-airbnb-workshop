@@ -73,3 +73,5 @@ Autocomplete, faceted navigation, and instant results will be just a query away�
 
 With this step, you’re not just configuring fields—you’re building the backbone of a world-class search experience.  
 **Ready to make your data discoverable? Let’s get started!**
+
+{% include simple_next_nav.html %}

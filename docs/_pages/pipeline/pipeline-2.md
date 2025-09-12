@@ -78,3 +78,5 @@ This exercise showcases MongoDB's natural ability to work with complex, nested d
 **Ready to unlock the power of nested documents? Let's dive in!**
 
 ![pipeline-2-lab](../../assets/images/pipeline-2-lab.png)
+
+{% include simple_next_nav.html %}

@@ -57,3 +57,5 @@ Choose your favorite tool and get indexing:
 Go to the app and check if the exercise toggle shows green, indicating your implementation is correct.
 
 ![crud-index](../../assets/images/crud-index.png)
+
+{% include simple_next_nav.html %}

@@ -48,3 +48,5 @@ Craft custom search experiences with flexible analyzers, smart field mappings, a
 ```
 
 💡 Mix and match field types, analyzers, and facets to create search that feels magical!
+
+{% include simple_next_nav.html %}

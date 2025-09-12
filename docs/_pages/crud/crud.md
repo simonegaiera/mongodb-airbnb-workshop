@@ -22,3 +22,5 @@ Here’s what you’ll tackle:
 
 Ready to roll up your sleeves and start building the backbone of your rental empire?  
 Complete the code snippets below and watch your MongoDB skills—and your company—level up!
+
+{% include simple_next_nav.html %}

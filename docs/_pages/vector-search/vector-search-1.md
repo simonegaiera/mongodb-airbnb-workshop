@@ -55,3 +55,5 @@ With this step, you’re not just building a feature—you’re enabling a new e
 **Ready to wow your guests with semantic search? Let’s get started!**
 
 ![vector-search-1-lab](../../assets/images/vector-search-1-lab.png)
+
+{% include simple_next_nav.html %}

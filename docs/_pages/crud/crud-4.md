@@ -58,3 +58,5 @@ With this step, you’re not just filtering data—you’re helping every guest 
 **Ready to make your platform truly dynamic? Let’s get started!**
 
 ![crud-4-lab](../../assets/images/crud-4-lab.png)
+
+{% include simple_next_nav.html %}

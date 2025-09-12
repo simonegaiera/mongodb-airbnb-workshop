@@ -75,3 +75,5 @@ This exercise introduces core aggregation concepts you'll need for advanced anal
 **Ready to unlock market insights through data aggregation? Let's dive in!**
 
 ![pipeline-1-lab](../../assets/images/pipeline-1-lab.png)
+
+{% include simple_next_nav.html %}

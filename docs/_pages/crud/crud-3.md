@@ -52,3 +52,5 @@ With this step, you’re not just fetching data—you’re empowering your users
 **Ready to make your platform smarter and more interactive? Let’s get started!**
 
 ![crud-3-lab](../../assets/images/crud-3-lab.png)
+
+{% include simple_next_nav.html %}

@@ -58,3 +58,5 @@ With your vector index live, your platform will be ready for:
 
 You’re not just indexing data—you’re enabling the next generation of search and AI for your platform.  
 **Ready to unlock semantic search? Let’s get started!**
+
+{% include simple_next_nav.html %}

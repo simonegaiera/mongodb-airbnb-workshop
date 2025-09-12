@@ -55,3 +55,5 @@ With this step, you’re not just building a feature—you’re making your user
 **Ready to wow your guests with instant search? Let’s get started!**
 
 ![search-1-lab](../../assets/images/search-1-lab.png)
+
+{% include simple_next_nav.html %}

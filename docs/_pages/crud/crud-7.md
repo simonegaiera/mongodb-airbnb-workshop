@@ -55,3 +55,5 @@ With this step, you’re not just updating arrays—you’re capturing the stori
 **Ready to let your users’ voices be heard? Let’s get started!**
 
 ![crud-7-lab](../../assets/images/crud-7-lab.png)
+
+{% include simple_next_nav.html %}

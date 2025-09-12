@@ -57,3 +57,5 @@ We’ll use **Cline** and the **MongoDB MCP** to quickly describe the structure 
 
 **Tip:**  
 Exploring your collection’s structure now will save you time and help you write better queries later. Knowing your data well is key to unlocking its value!
+
+{% include simple_next_nav.html %}

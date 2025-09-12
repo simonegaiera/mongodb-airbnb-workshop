@@ -56,3 +56,5 @@ With this step, you’re not just updating data—you’re keeping your platform
 **Ready to give your data a makeover? Let’s get started!**
 
 ![crud-6-lab](../../assets/images/crud-6-lab.png)
+
+{% include simple_next_nav.html %}

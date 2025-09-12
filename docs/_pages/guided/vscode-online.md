@@ -110,3 +110,5 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 
 **Tip:**  
 If you don’t get a response, double-check your API settings or ask your SA for help!
+
+{% include simple_next_nav.html %}

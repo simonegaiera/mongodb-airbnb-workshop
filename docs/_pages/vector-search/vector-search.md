@@ -28,3 +28,4 @@ Once you’ve implemented Atlas Vector Search, users will enjoy:
 With this step, you’re not just adding search—you’re enabling the future of discovery and conversational AI on your platform.  
 **Ready to level up with vector search? Dive in, complete the code snippets, and build the foundation for your own AI-powered discovery experience!**
 
+{% include simple_next_nav.html %}

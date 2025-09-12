@@ -51,3 +51,5 @@ With this step, you’re not just removing data—you’re building trust and ke
 **Ready to keep your data clean? Let’s get started!**
 
 ![crud-8-lab](../../assets/images/crud-8-lab.png)
+
+{% include simple_next_nav.html %}

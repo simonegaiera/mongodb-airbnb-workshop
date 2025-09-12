@@ -28,3 +28,4 @@ Once you’ve implemented Atlas Search, users will enjoy:
 With this step, you’re not just adding search—you’re making your users happy and your platform unforgettable.  
 **Ready to level up your search game? Dive in, complete the code snippets, and make your data searchable like never before!**
 
+{% include simple_next_nav.html %}

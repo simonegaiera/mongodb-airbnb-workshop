@@ -35,3 +35,5 @@ Automatically embed your text fields and filter results for smarter, more releva
 ```
 
 💡 Use vector fields for semantic search and filter fields to narrow down results by specific criteria.
+
+{% include simple_next_nav.html %}

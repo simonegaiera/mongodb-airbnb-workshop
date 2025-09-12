@@ -28,3 +28,4 @@ Throughout Arena, you’ll tackle these core challenges:
 Are you ready to level up your MongoDB skills and help your company succeed in the rental market?  
 **Let’s get started and make some data magic happen!** 🚀
 
+{% include simple_next_nav.html %}
