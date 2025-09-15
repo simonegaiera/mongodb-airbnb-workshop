@@ -4,7 +4,7 @@ locals {
   # Base Nginx configuration
   portal_base_nginx_config = templatefile("${path.module}/nginx-conf-files/nginx-base-config.conf.tpl", {})
   portal_frontend_nginx_config = templatefile("${path.module}/nginx-conf-files/doc-nginx-main.conf.tpl", {
-    server_name = "${local.aws_route53_record_name}",
+    server_name = "${local.aws_route53_record_name} www.${local.aws_route53_record_name}",
     index_path = "/usr/share/nginx/html/portal"
   })
 
@@ -104,7 +104,7 @@ resource "helm_release" "portal_nginx" {
   name       = "portal-nginx"
   repository = "local"
   chart      = "./portal-nginx"
-  version    = "0.1.2"
+  version    = "0.1.3"
 
   values = [
     file("${path.module}/portal-nginx/values.yaml"),

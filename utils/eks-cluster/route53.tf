@@ -88,6 +88,24 @@ resource "aws_route53_record" "nginx-record" {
   ]
 }
 
+resource "aws_route53_record" "nginx-record-www" {
+  zone_id = data.aws_route53_zone.hosted_zone.zone_id
+  name    = "www.${local.aws_route53_record_name}"
+  type    = "A"
+
+  alias {
+    name                   = data.kubernetes_service.portal_nginx_service.status[0].load_balancer[0].ingress[0].hostname
+    zone_id                = data.aws_lb.portal_nginx_lb.zone_id
+    evaluate_target_health = true
+  }
+
+  depends_on = [
+    data.kubernetes_service.portal_nginx_service,
+    data.aws_route53_zone.hosted_zone,
+    data.aws_lb.portal_nginx_lb
+  ]
+}
+
 resource "aws_route53_record" "nginx-record-wildcard" {
   zone_id = data.aws_route53_zone.hosted_zone.zone_id
   name    = "*.${local.aws_route53_record_name}"
