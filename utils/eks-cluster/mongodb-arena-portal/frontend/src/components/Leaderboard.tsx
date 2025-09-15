@@ -331,17 +331,17 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                 </div>
                 <button 
                   onClick={() => {
-                    navigator.clipboard.writeText('arena@mongodb.com').then(() => {
+                    navigator.clipboard.writeText('ai-arena@mongodb.com').then(() => {
                       // Could add a toast notification here if desired
                       console.log('Email copied to clipboard');
                     }).catch(() => {
                       // Fallback: try to open mailto as backup
-                      window.location.href = 'mailto:arena@mongodb.com';
+                      window.location.href = 'mailto:ai-arena@mongodb.com';
                     });
                   }}
                   className="inline-flex items-center px-4 py-2 bg-mongodb-green text-white font-medium rounded-md hover:bg-mongodb-dark transition-colors duration-200 shadow-sm"
                 >
-                  arena@mongodb.com
+                  ai-arena@mongodb.com
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
