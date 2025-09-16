@@ -68,59 +68,6 @@ export default function Home() {
     }
   }
 
-  // Show password protection banner if not authenticated
-  if (isPasswordProtected && !isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto">
-          <div className="bg-white shadow-lg rounded-lg p-8">
-            <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-mongodb-dark mb-2">
-                MongoDB Arena Portal
-              </h1>
-              <p className="text-gray-600">
-                Access to the portal has been temporarily disabled due to too many requests. Please try again later.
-              </p>
-            </div>
-            
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Enter Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:border-mongodb-green"
-                  placeholder="Password"
-                  required
-                />
-              </div>
-              
-              {passwordError && (
-                <div className="text-red-600 text-sm">
-                  {passwordError}
-                </div>
-              )}
-              
-              <button
-                type="submit"
-                className="w-full bg-mongodb-green text-white py-2 px-4 rounded-md hover:bg-mongodb-green-dark focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:ring-offset-2 transition-colors"
-              >
-                Access Portal
-              </button>
-            </form>
-            
-            <div className="mt-6 text-center text-xs text-gray-500">
-              Protected by environment variable authentication
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -155,11 +102,52 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* New to Arena Form - Takes 3/4 width */}
             <div className="lg:col-span-3">
-              <TakeParticipantForm
-                onSuccess={handleSuccess}
-                onError={handleError}
-                onLoading={setFormLoading}
-              />
+              {isPasswordProtected && !isAuthenticated ? (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      New to Arena?
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Access to the form has been temporarily disabled due to too many requests. Please try again later.
+                    </p>
+                  </div>
+                  
+                  <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                    <div>
+                      <div className="flex gap-2">
+                        <input
+                          type="password"
+                          id="password"
+                          value={passwordInput}
+                          onChange={(e) => setPasswordInput(e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:border-mongodb-green"
+                          placeholder="Password"
+                          required
+                        />
+                        <button
+                          type="submit"
+                          className="bg-mongodb-green text-white py-2 px-4 rounded-md hover:bg-mongodb-green-dark focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:ring-offset-2 transition-colors whitespace-nowrap"
+                        >
+                          Access Form
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {passwordError && (
+                      <div className="text-red-600 text-sm">
+                        {passwordError}
+                      </div>
+                    )}
+                  </form>
+                </div>
+              ) : (
+                <TakeParticipantForm
+                  onSuccess={handleSuccess}
+                  onError={handleError}
+                  onLoading={setFormLoading}
+                />
+              )}
             </div>
             
             {/* Active Participants Count - Takes 1/4 width */}

@@ -104,7 +104,7 @@ resource "helm_release" "portal_nginx" {
   name       = "portal-nginx"
   repository = "local"
   chart      = "./portal-nginx"
-  version    = "0.1.3"
+  version    = "0.1.4"
 
   values = [
     file("${path.module}/portal-nginx/values.yaml"),
@@ -121,6 +121,10 @@ resource "helm_release" "portal_nginx" {
         {
           name  = "NEXT_PUBLIC_SERVER_PATH"
           value = tostring(var.scenario_config.backend)
+        },
+        {
+          name  = "NEXT_PUBLIC_ACCESS_PASSWORD"
+          value = ""
         }
       ],
       volumeMounts = [

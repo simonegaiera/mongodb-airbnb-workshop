@@ -21,7 +21,6 @@
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
 - 🟠 **MEDIUM:** Change the left menu to make it less engineer and more business reason oriented (e.g. instead of search, etc talk about rental discovery)
-- 🔴 **HIGH:** Replace the correct email for Arena in the Portal
 - 🟢 **MINOR:** Exercise with RankFusion
 
 ---
@@ -49,6 +48,10 @@
 - ❄️ **FROZEN:** Can I filter the Load Sample Dataset to the single database
 
 ### EKS Cluster
+
+- 🟢 **MINOR:** LiteLLM: Tracking spending in error
+{"message": "Could not identify azure model. Set azure 'base_model' for accurate max tokens, cost tracking, etc.- https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models", "level": "ERROR", "timestamp": "2025-09-16T19:56:18.709403"} 
+https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models
 
 *No current items.*
 
