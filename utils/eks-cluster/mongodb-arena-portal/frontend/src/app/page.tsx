@@ -79,7 +79,7 @@ export default function Home() {
                 MongoDB Arena Portal
               </h1>
               <p className="text-gray-600">
-                This site is password protected
+                Access to the portal has been temporarily disabled due to too many requests. Please try again later.
               </p>
             </div>
             
