@@ -4,4 +4,4 @@ _site/
 vendor/
 .DS_Store
 .env
-.jenkill-cache
+.jekyll-cache
