@@ -27,6 +27,9 @@ We’ll use **Cline** and the **MongoDB MCP** to quickly describe the structure 
 
 > Use the MongoDB MCP to describe the structure and main fields of the `listingsAndReviews` collection in my database.
 
+If you encounter any issues, try refreshing the MCP.
+![cline-mcp-refresh](../../assets/images/cline-mcp-refresh.png)
+
 #### 3. Review the Response
 
 - Cline will analyze your collection and return a summary of the main fields, their types, and example values.
