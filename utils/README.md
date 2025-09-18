@@ -53,7 +53,7 @@
 {"message": "Could not identify azure model. Set azure 'base_model' for accurate max tokens, cost tracking, etc.- https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models", "level": "ERROR", "timestamp": "2025-09-16T19:56:18.709403"} 
 https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models
 
-*No current items.*
+- 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
 
 ### AWS
 - ❄️ **FROZEN:** OIDC: Ask if it is possible to have OIDC (current SA profile does not allow).
