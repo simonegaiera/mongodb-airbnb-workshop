@@ -9,5 +9,33 @@
     "typescript.tsserver.maxTsServerMemory": 1024,
     "typescript.preferences.maxInlayHintLength": 30,
     "typescript.disableAutomaticTypeAcquisition": true,
-    "typescript.suggest.autoImports": "off"
+    "typescript.suggest.autoImports": "off",
+    
+    // Aggressive memory management (based on openvscode-server OOM issues)
+    "editor.minimap.enabled": false,
+    "editor.suggest.filterGraceful": false,
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.value": 5,
+    "workbench.editor.limit.perEditorGroup": true,
+    "workbench.editor.closeEmptyGroups": true,
+    
+    // Minimal file watching (essential for memory)
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/out/**": true,
+        "**/.git/**": true,
+        "**/target/**": true,
+        "**/vendor/**": true
+    },
+    
+    // Disable memory-intensive features (learned from build OOM patterns)
+    "extensions.autoUpdate": true,
+    "extensions.autoCheckUpdates": true,
+    "workbench.enableExperiments": false,
+    "telemetry.telemetryLevel": "off",
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    
+    // V8 garbage collection hints (from the OOM stack trace)
+    "typescript.preferences.reduceProjectAnalysis": true,
+    "javascript.preferences.reduceProjectAnalysis": true
 }
