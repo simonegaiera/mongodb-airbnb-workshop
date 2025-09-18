@@ -63,19 +63,3 @@ https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai
 
 ### Deploy
 - ❄️ **FROZEN:** Deploy on Kanopy
-
-
----
-
-## Sizing Expectation
-
-- **VSCode:** 100 users will require 20 nodes (limits were changed, will be more)
-    - 14 × c6a.xlarge
-    - 3 × c6a.2xlarge
-    - 3 × c6a.4xlarge
-
-- **LLM:** $60 per scenario for 25 people  
-
-## Workshop Stats
-
-- 10 out of 25 completed all the exercises in 2.5 hours.
