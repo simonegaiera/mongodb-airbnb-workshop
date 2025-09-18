@@ -9,12 +9,11 @@
 - 🟡 **LOW:** Low priority
 - 🟢 **MINOR:** Minor / nice to have
 - ❄️ **FROZEN:** Frozen / blocked / on hold
+- *No urgent items.*
 
 ---
 
 ## Docs
-
-*No urgent items.*
 
 ### Navigation
 - ❄️ **FROZEN:** Can we compress/expand the different sections?
