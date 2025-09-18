@@ -27,7 +27,7 @@
 
 ## App
 
-*No current items.*
+- 🟠 **MEDIUM:** Implement the skill badges into the Arena
 
 ---
 
