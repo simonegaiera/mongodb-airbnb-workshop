@@ -1,6 +1,6 @@
 ---
 title: "Atlas Search: Indexes"
-permalink: /search/search-index/
+permalink: /search/index/
 layout: single
 classes: wide
 categories: [search]

@@ -1,6 +1,6 @@
 ---
 title: "Atlas Search: Indexes Hint"
-permalink: /search/search-index-hint/
+permalink: /search/index-hint/
 layout: single
 classes: wide
 categories: [search, search-index]
