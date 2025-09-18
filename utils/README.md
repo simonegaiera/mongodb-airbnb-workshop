@@ -20,20 +20,21 @@
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 
 - 🟠 **MEDIUM:** Change the left menu to make it less engineer and more business reason oriented (e.g. instead of search, etc talk about rental discovery)
-- 🟢 **MINOR:** Exercise with RankFusion
+- 🔴 **HIGH:** Exercise with RankFusion
 
 ---
 
 ## App
 
 - 🟠 **MEDIUM:** Implement the skill badges into the Arena
+- 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
 
 ---
 
 ## Server
 
 ### Answers
-- 🟠 **MEDIUM:** Add to the guideline that it should use the mcp if not done before
+- 🔴 **HIGH:** Add to the guideline that it should use the mcp if not done before
 - 🟡 **LOW:** Add that Cline can copy the code from the prompt to the exercise file if asked
 - 🟢 **MINOR:** Can I use 2 folders when deciding the scenario (lab and answer)
 
