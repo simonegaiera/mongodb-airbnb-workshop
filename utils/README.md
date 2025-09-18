@@ -50,7 +50,6 @@
 ### EKS Cluster
 
 - 🟢 **MINOR:** LiteLLM: Tracking spending in error (do we want disable it or wait for it?)
-
 - 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
 
 ### AWS
