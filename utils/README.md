@@ -49,9 +49,7 @@
 
 ### EKS Cluster
 
-- 🟢 **MINOR:** LiteLLM: Tracking spending in error
-{"message": "Could not identify azure model. Set azure 'base_model' for accurate max tokens, cost tracking, etc.- https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models", "level": "ERROR", "timestamp": "2025-09-16T19:56:18.709403"} 
-https://docs.litellm.ai/docs/proxy/cost_tracking#spend-tracking-for-azure-openai-models
+- 🟢 **MINOR:** LiteLLM: Tracking spending in error (do we want disable it or wait for it?)
 
 - 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
 
