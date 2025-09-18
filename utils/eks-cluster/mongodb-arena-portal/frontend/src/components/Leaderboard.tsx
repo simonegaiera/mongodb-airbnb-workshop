@@ -371,7 +371,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                     </svg>
                     <span className="text-sm font-medium text-gray-600">WHERE</span>
                   </div>
-                  <p className="text-lg font-bold text-blue-800">Product Booth</p>
+                  <p className="text-lg font-bold text-blue-800">Happy Hour</p>
                 </div>
                 
                 <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
