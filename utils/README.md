@@ -52,7 +52,11 @@
 - 🟢 **MINOR:** LiteLLM: Tracking spending in error (do we want disable it or wait for it?)
 - 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
 
+- 🔴 **HIGH:** CRUD: Exercise 6: The test seems to run successfully, but it doesn't actually update the document with _id: 20000000. When I checked with Cline, that document doesn't seem to exist.
+- 🔴 **HIGH:** CRUD: Exercise 7: The test runs successfully but also fails to insert a review for the document with _id: 20000000, likely for the same reason.
+
 ### AWS
+- 🔴 **HIGH:** Covert to ALB and Cert in AWS
 - ❄️ **FROZEN:** OIDC: Ask if it is possible to have OIDC (current SA profile does not allow).
 
 
