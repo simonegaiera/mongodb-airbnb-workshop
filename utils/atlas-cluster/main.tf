@@ -4,6 +4,7 @@ terraform {
   required_providers {
     mongodbatlas = {
       source = "mongodb/mongodbatlas"
+      version = "~> 2.0"
     }
   }
 }
@@ -41,29 +42,33 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   pit_enabled = true
   mongo_db_major_version = var.mongo_db_major_version
   
-  replication_specs {
-    region_configs {
-      provider_name = var.atlas_provider_name
-      priority      = 7
-      region_name   = var.cluster_region
+  replication_specs = [
+    {
+      region_configs = [
+        {
+          provider_name = var.atlas_provider_name
+          priority      = 7
+          region_name   = var.cluster_region
 
-      electable_specs {
-        instance_size = var.atlas_provider_instance_size_name
-        node_count    = 3
-        # disk_size_gb = var.disk_size_gb
-      }
+          electable_specs = {
+            instance_size = var.atlas_provider_instance_size_name
+            node_count    = 3
+            # disk_size_gb = var.disk_size_gb
+          }
 
-      auto_scaling {
-        disk_gb_enabled = true
-        compute_enabled = true
-        compute_scale_down_enabled = true
-        compute_min_instance_size = var.atlas_provider_instance_size_name
-        compute_max_instance_size = "M60"
-      }
+          auto_scaling = {
+            disk_gb_enabled = true
+            compute_enabled = true
+            compute_scale_down_enabled = true
+            compute_min_instance_size = var.atlas_provider_instance_size_name
+            compute_max_instance_size = "M60"
+          }
+        }
+      ]
     }
-  }
+  ]
 
-  advanced_configuration {
+  advanced_configuration = {
     oplog_min_retention_hours = 6
   }
 
@@ -295,7 +300,7 @@ output "admin_password" {
 }
 
 output "standard_srv" {
-    value = mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv
+    value = mongodbatlas_advanced_cluster.cluster.connection_strings.standard_srv
 }
 
 # Send email invitations to the users
@@ -316,7 +321,7 @@ resource "null_resource" "install_requirements" {
 }
 
 locals {
-  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(local.mongodb_atlas_database_username)}:${urlencode(var.database_admin_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(local.mongodb_atlas_database_username)}:${urlencode(var.database_admin_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings.standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
 }
 
 # Define another null resource to execute the Python script
