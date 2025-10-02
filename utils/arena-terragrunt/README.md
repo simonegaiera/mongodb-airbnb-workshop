@@ -66,10 +66,11 @@
 ## Deployment and Management
 
 1. **Login to AWS SSO**  
+   Follow the documentation [here](https://wiki.corp.mongodb.com/pages/viewpage.action?pageId=109642642&spaceKey=10GEN&title=SA%2BAWS%2BAccess%2B-%2BUpdated%2BNov%2B2020) for detailed steps on logging into AWS SSO.  
+   Once you have completed the steps, use the following command:
    ```bash
    aws sso login --profile Solution-Architects.User-979559056307
    ```
-
 2. **Initialize**  
    ```bash
    terragrunt init --all --upgrade
