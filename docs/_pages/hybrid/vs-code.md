@@ -5,7 +5,7 @@ layout: single
 classes: wide
 ---
 
-## 💻✨ Codespace/VSCode Setup
+## 💻✨ Cursor/VSCode Setup
 
 Ready to dive into the [mongodb-airbnb-workshop](https://github.com/simonegaiera/mongodb-airbnb-workshop)?  
 Let’s get your environment up and running—fast, smooth, and with style!
@@ -72,7 +72,7 @@ Supercharge your workflow with these extensions:
    WORKSHOP_USER=
    BACKEND_URL=http://localhost:5000
    ```
-2. Open a new terminal and run:
+2. Open a **new** terminal (not the one used in the previous step) and run:
    ```bash
    cd app
    npm install
