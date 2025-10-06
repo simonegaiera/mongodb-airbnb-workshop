@@ -9,7 +9,7 @@ Your company has just made a bold move—diving into the fast-paced world of sho
 
 All the instructions you'll need can be found in this guide:  
 
-👉 **[mongodb-airbnb-ai-arena](https://mongoarena.com)**  
+👉 **[mongodb-airbnb-arena](https://mongoarena.com)**  
 
 > **Note for Participants:** The environment has already been prepared for you! Simply follow the instructions to dive into hands-on activities.
 
