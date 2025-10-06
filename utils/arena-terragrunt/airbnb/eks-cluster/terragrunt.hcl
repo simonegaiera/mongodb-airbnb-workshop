@@ -35,6 +35,6 @@ inputs = {
   customer_name = "airbnb"
   aws_region = "us-east-2"
   domain_email = "arena@mongodb.com"
-  anthropic_api_key = "api-key-here"
-  azure_openai_api_key = "api-key-here"
+  # anthropic_api_key = "api-key-here (Optional)"
+  # azure_openai_api_key = "api-key-here (Optional)"
 }

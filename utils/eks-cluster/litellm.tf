@@ -1,6 +1,18 @@
 # LiteLLM Helm Chart Configuration for EKS Cluster
 
+# Retrieve API keys from AWS Secrets Manager
+data "aws_secretsmanager_secret" "arena_secrets" {
+  name = "arena/secrets"
+}
+
+data "aws_secretsmanager_secret_version" "arena_secrets" {
+  secret_id = data.aws_secretsmanager_secret.arena_secrets.id
+}
+
 locals {
+  # Parse the secret JSON to extract individual keys
+  arena_secrets = jsondecode(data.aws_secretsmanager_secret_version.arena_secrets.secret_string)
+
   # LLM configuration with defaults
   llm_config = merge({
     enabled = false
@@ -21,7 +33,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
-  version    = "0.1.13"
+  version    = "0.1.14"
   
   wait          = true
   wait_for_jobs = true
@@ -47,10 +59,16 @@ resource "helm_release" "litellm" {
         
         secrets = merge(
           local.llm_config.provider == "anthropic" ? {
-            anthropicApiKey = var.anthropic_api_key
+            anthropicApiKey = coalesce(
+              var.anthropic_api_key,
+              try(local.arena_secrets.anthropic_api_key, null)
+            )
           } : {},
           local.llm_config.provider == "openai" ? {
-            azureOpenaiApiKey = var.azure_openai_api_key
+            azureOpenaiApiKey = coalesce(
+              var.azure_openai_api_key,
+              try(local.arena_secrets.azure_openai_api_key, null)
+            )
           } : {}
         )
       }, {

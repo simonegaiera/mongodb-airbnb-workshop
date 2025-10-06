@@ -260,6 +260,23 @@ resource "aws_iam_role_policy_attachment" "node_s3_mongodb_arena_policy" {
   ]
 }
 
+# Add Secrets Manager policy for the node role to read mongodb-arena bucket
+resource "aws_iam_policy" "secrets_mongodb_arena_policy" {
+  name        = "${local.cluster_name}-secrets-mongodb-arena-policy"
+  description = "Policy for reading mongodb-arena secrets"
+  policy     = file("${path.module}/aws_policies/secrets.json")
+}
+
+resource "aws_iam_role_policy_attachment" "node_secrets_mongodb_arena_policy" {
+  policy_arn = aws_iam_policy.secrets_mongodb_arena_policy.arn
+  role       = aws_iam_role.node.name
+
+  depends_on = [
+    aws_iam_role.node,
+    aws_iam_policy.secrets_mongodb_arena_policy
+  ]
+}
+
 # Add this after the existing cluster policies
 resource "aws_iam_policy" "eks_auto_mode_policy" {
   name        = "${local.cluster_name}-eks-auto-mode-policy"

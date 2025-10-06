@@ -64,17 +64,17 @@ variable "atlas_admin_password" {
 }
 
 variable "anthropic_api_key" {
-  description = "Anthropic API key for LiteLLM"
+  description = "Anthropic API key for LiteLLM (optional - will fallback to AWS Secrets Manager if null)"
   type        = string
   sensitive   = true
-  default     = ""
+  default     = null
 }
 
 variable "azure_openai_api_key" {
-  description = "Azure OpenAI API key for LiteLLM"
+  description = "Azure OpenAI API key for LiteLLM (optional - will fallback to AWS Secrets Manager if null)"
   type        = string
   sensitive   = true
-  default     = ""
+  default     = null
 }
 
 variable "scenario_config" {
