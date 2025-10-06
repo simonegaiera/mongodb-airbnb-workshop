@@ -12,7 +12,7 @@ Let’s get your environment up and running—fast, smooth, and with style!
 
 ---
 
-## 🛠️ Step 0: Clone the Repository
+## 🛠️ Step 1: Clone the Repository
 
 1. Open your terminal.
 2. Clone the repository:
