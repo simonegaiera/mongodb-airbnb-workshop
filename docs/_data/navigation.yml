@@ -98,7 +98,7 @@ docs:
     children:
       - title: "Atlas Cluster"
         url: /environment/atlas/
-      - title: "IDE: Codespace/VSCode"
-        url: /environment/codespace/
+      - title: "IDE: Personal VSCode"
+        url: /environment/personal-vs-code/
       - title: "Validate Your Results"
         url: /test/
