@@ -101,6 +101,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      - **API Key:** `noop`
      - **Model:** `gpt-5-mini`
      - Select **Use Prompt Caching (GA)**
+     - Unselect **Enable Thinking** if it is enabled
    - Click **Let's go!**  
      ![cline-welcome](../../assets/images/cline-welcome.png)
 

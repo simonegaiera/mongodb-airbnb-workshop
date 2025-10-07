@@ -26,7 +26,8 @@ Let’s get you connected, coding, and exploring MongoDB in style.
      - **Base URL:** `http://litellm-service:4000`
      - **API Key:** `noop`
      - **Model:** `gpt-5-mini`
-     - Select **Use Prompt Caching:**
+     - Select **Use Prompt Caching (GA)**
+     - Unselect **Enable Thinking** if it is enabled
    - Click **Let's go!**  
      ![cline-welcome](../../assets/images/cline-welcome.png)
 
