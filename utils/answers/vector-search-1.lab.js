@@ -2,7 +2,7 @@ import { db } from "../utils/database.js";
 import { collectionName } from '../config/config.js';
 
 /**
- * Performs a semantic search on the 'description' field using MongoDB's $vectorSearch using the index 'vector_search'.
+ * Performs a semantic search on the 'description' field using MongoDB's $vectorSearch using the index 'vector_index'.
  * The search uses the provided query string and requires a property type filter.
  * The pipeline considers 100 candidates and returns up to 10 results.
  *
