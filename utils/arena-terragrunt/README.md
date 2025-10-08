@@ -1,5 +1,7 @@
 # MongoDB AI Arena Environment Setup Guide
 
+💡 **Tip:** Reminder that this process is automating the creating of a number of cloud resources; please remember to destroy this (details below) when your work is complete!
+
 ## Prerequisites
 
 ### Python 3
@@ -40,15 +42,17 @@
 
 1. **Copy Files**  
    - Duplicate the `airbinb` folder and rename it with your `customer` name.
+      > 💡 **Tip:** Do not use capital letters or special characters in the customer name
    - For a fully managed solution, keep all folders.  
    - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
-   - Open the `root.hcl` and change `customer` with your customer name in `config.key`.
+   - Open the `root.hcl` and change the text `"customer"` with your `customer` name from above in the `remote_state.config.key` value.
 
 2. **MongoDB Atlas Configuration**  
    - Navigate to `customer/atlas-cluster`.  
    - Update `user_list.csv` with the list of attendees.  
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).
-   - Modify the `project_name` with your customer name.
+      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from 0.0.0.0 to supported both the Kubernetes cluster and the eventual end users. 
+   - Modify the `project_name` with your Atlas cluster project name.
    - Modify the other variables, if necessary.
    - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying. Alternatively, the code to use a `data` instead of a `resource` is available in terraform.
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
@@ -56,8 +60,9 @@
 3. **EKS Configuration (Skip for Hybrid)**  
    - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
    - **Choose Workshop Scenario:**  
-     - Edit the `scenario.json` file in the `eks-cluster` folder to select or customize your workshop scenario.  
-     - Example scenarios include `"vibe-coding"` and `"guided-exercises"`.  
+     - Create a `scenario.json` file in the `eks-cluster` folder to select or customize your workshop scenario.  
+     - Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
+     > 💡 **Tip:** If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
      - The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
      - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
      - **Note:** For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
@@ -71,6 +76,7 @@
    ```bash
    aws sso login --profile Solution-Architects.User-979559056307
    ```
+
 2. **Initialize**  
    ```bash
    terragrunt init --all --upgrade
