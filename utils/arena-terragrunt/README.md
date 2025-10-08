@@ -41,32 +41,31 @@
 ## Environment Configuration
 
 1. **Copy Files**  
+   - Navigate to `utils/arena-terragrunt`
    - Duplicate the `airbinb` folder and rename it with your `customer` name.
-      > 💡 **Tip:** Do not use capital letters or special characters in the customer name
-   - For a fully managed solution, keep all folders.  
-   - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
-   - Open the `root.hcl` and change the text `"customer"` with your `customer` name from above in the `remote_state.config.key` value.
+      > Do not use capital letters or special characters in the customer name
+      > For a fully managed solution, keep all folders.  
+      > For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
+   - Open the `root.hcl` and update the `remote_state.config.key` value and replace the `"customer"` portion with your `customer` name.
 
 2. **MongoDB Atlas Configuration**  
-   - Navigate to `customer/atlas-cluster`.  
+   - Navigate to the new `customer` director and then go in the `atlas-cluster` directory.
    - Update `user_list.csv` with the list of attendees.  
-   - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API keys (requires `Organization Project Creator` privileges).
+   - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API key and modify the `project_name` with your Atlas cluster project name.
       > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from 0.0.0.0 to supported both the Kubernetes cluster and the eventual end users. 
-   - Modify the `project_name` with your Atlas cluster project name.
-   - Modify the other variables, if necessary.
-   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying. Alternatively, the code to use a `data` instead of a `resource` is available in terraform.
+      > Other variables can be modified if necessary, but are not required
+   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying (see Terragrunt command below)
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
 3. **EKS Configuration (Skip for Hybrid)**  
    - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
-   - **Choose Workshop Scenario:**  
-     - Create a `scenario.json` file in the `eks-cluster` folder to select or customize your workshop scenario.  
-     - Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
-     > 💡 **Tip:** If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
-     - The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
-     - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
-     - **Note:** For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
-   - Note that the cluster expires after one week by default.
+   - Choose the workshop scenario by creating a `scenario.json` file in the `eks-cluster` folder.  
+      > Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
+      > If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
+      > The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
+      > For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
+   - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
+   💡 **Tip:** Note that the cluster expires after one week by default.
 
 ## Deployment and Management
 
@@ -93,35 +92,31 @@
    ```
 
 4. **Apply**  
-   Before you run the apply step, make sure your Python virtual environment is active.
+   ```bash
+   terragrunt apply --all
+   ```
 
-   - **To deploy all modules at once (default):**
-     ```bash
-     terragrunt apply --all
-     ```
+   - **NOTE:** In most cases, you only need to run the default apply command below to deploy all modules.  The following commands are for advanced or specific scenarios.
 
-   In most cases, you only need to run the default apply command below to deploy all modules.  
-   The following commands are for advanced or specific scenarios.
+      - **To apply a specific module:**  
+      Replace `<module-directory>` with the desired module folder:
+      ```bash
+      terragrunt apply --working-dir=<module-directory>
+      ```
 
-   - **To apply a specific module:**  
-     Replace `<module-directory>` with the desired module folder:
-     ```bash
-     terragrunt apply --working-dir=<module-directory>
-     ```
+      - **To taint (mark for recreation) a specific resource in the EKS module:**
+      ```bash
+      terragrunt run --working-dir=eks-cluster -- taint '<resource.name>'
+      ```
 
-   - **To taint (mark for recreation) a specific resource in the EKS module:**
-     ```bash
-     terragrunt run --working-dir=eks-cluster -- taint '<resource.name>'
-     ```
+         > 💡 **Tip:** Always run `terragrunt plan --all` before applying to review the changes that will be made.
 
-   > 💡 **Tip:** Always run `terragrunt plan --all` before applying to review the changes that will be made.
-
-   - **To remove a resource from the Terraform state using Terragrunt:**  
-     This is useful if you need to "forget" a resource without destroying it.  
-     Replace `<module-directory>` with the relevant module folder and `<resource_address>` with the resource to remove:
-     ```bash
-     terragrunt run --working-dir=<module-directory> -- state rm '<resource_address>'
-     ```
+      - **To remove a resource from the Terraform state using Terragrunt:**  
+      This is useful if you need to "forget" a resource without destroying it.  
+      Replace `<module-directory>` with the relevant module folder and `<resource_address>` with the resource to remove:
+      ```bash
+      terragrunt run --working-dir=<module-directory> -- state rm '<resource_address>'
+      ```
 
 5. **Destroy**  
    - **To destroy all modules:**  
@@ -134,7 +129,7 @@
      terragrunt destroy --working-dir=<module-directory>
      ```
 
-Always review any plan before applying changes. Destroy resources only when they are no longer needed.
+**Destroy resources only when they are no longer needed.**
 
 ## Additional Notes
 
