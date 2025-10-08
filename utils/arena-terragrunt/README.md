@@ -49,10 +49,11 @@
    - Open the `root.hcl` and update the `remote_state.config.key` value and replace the `"customer"` portion with your `customer` name.
 
 2. **MongoDB Atlas Configuration**  
-   - Navigate to the new `customer` director and then go in the `atlas-cluster` directory.
+   - Navigate to the new `customer` directory and then go in the `atlas-cluster` directory.
    - Update `user_list.csv` with the list of attendees.  
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API key and modify the `project_name` with your Atlas cluster project name.
-      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from 0.0.0.0 to supported both the Kubernetes cluster and the eventual end users. 
+      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from 0.0.0.0 to supported both the Kubernetes cluster and the eventual end users.
+
       > Other variables can be modified if necessary, but are not required
    - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying (see Terragrunt command below)
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
@@ -61,8 +62,11 @@
    - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
    - Choose the workshop scenario by creating a `scenario.json` file in the `eks-cluster` folder.  
       > Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
+      
       > If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
+      
       > The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
+      
       > For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
    - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
    💡 **Tip:** Note that the cluster expires after one week by default.
