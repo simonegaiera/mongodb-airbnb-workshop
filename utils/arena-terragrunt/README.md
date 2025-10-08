@@ -44,7 +44,9 @@
    - Navigate to `utils/arena-terragrunt`
    - Duplicate the `airbinb` folder and rename it with your `customer` name.
       > Do not use capital letters or special characters in the customer name
+
       > For a fully managed solution, keep all folders.  
+      
       > For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
    - Open the `root.hcl` and update the `remote_state.config.key` value and replace the `"customer"` portion with your `customer` name.
 
@@ -52,14 +54,15 @@
    - Navigate to the new `customer` directory and then go in the `atlas-cluster` directory.
    - Update `user_list.csv` with the list of attendees.  
    - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API key and modify the `project_name` with your Atlas cluster project name.
-      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from 0.0.0.0 to supported both the Kubernetes cluster and the eventual end users.
+      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from the Kubernetes external IP address and 0.0.0.0 to support access from the Kubernetes cluster and the eventual end users.
 
       > Other variables can be modified if necessary, but are not required
    - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying (see Terragrunt command below)
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
 3. **EKS Configuration (Skip for Hybrid)**  
-   - In the `eks-cluster` folder, update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
+   - Navigate back to the `customer` directory and go into the `eks-cluster` directory
+   - Update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
    - Choose the workshop scenario by creating a `scenario.json` file in the `eks-cluster` folder.  
       > Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
       
@@ -69,7 +72,7 @@
       
       > For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
    - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
-   💡 **Tip:** Note that the cluster expires after one week by default.
+   > 💡 **Tip:** Note that the cluster expires after one week by default.
 
 ## Deployment and Management
 
@@ -99,6 +102,9 @@
    ```bash
    terragrunt apply --all
    ```
+   > It is common that this process errors partway through due to the timing of resource creation, if this happens, just re-run the command and it will continue properly.
+
+   > Even after this process completes, it may take a few minutes for the arena website to become available.
 
    - **NOTE:** In most cases, you only need to run the default apply command below to deploy all modules.  The following commands are for advanced or specific scenarios.
 
@@ -132,6 +138,7 @@
      ```bash
      terragrunt destroy --working-dir=<module-directory>
      ```
+     > 💡 **Tip:** If destroying fails, you may need to re-authenticate to AWS via step 1 above.
 
 **Destroy resources only when they are no longer needed.**
 
