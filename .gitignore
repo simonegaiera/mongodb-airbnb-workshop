@@ -29,3 +29,7 @@ package-lock.json
 # System files
 .DS_Store
 Thumbs.db
+
+# Configuration files with sensitive data
+**/config.yaml
+**/scenario.json
