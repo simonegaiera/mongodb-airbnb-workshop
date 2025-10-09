@@ -1,6 +1,6 @@
 # MongoDB AI Arena Environment Setup Guide
 
-💡 **Tip:** Reminder that this process is automating the creating of a number of cloud resources; please remember to destroy this (details below) when your work is complete!
+💡 **Tip:** Reminder that this process is automating the creating of a number of cloud resources and so clusters will be cleaned up after one week by default; please remember to destroy this (details below) when your work is complete!
 
 ## Prerequisites
 
@@ -42,37 +42,25 @@
 
 1. **Copy Files**  
    - Navigate to `utils/arena-terragrunt`
-   - Duplicate the `airbinb` folder and rename it with your `customer` name.
+   - Duplicate the `airbinb` directory and rename it with your `customer` name.
       > Do not use capital letters or special characters in the customer name
 
-      > For a fully managed solution, keep all folders.  
+      > For a fully managed solution, keep all directories.  
       
-      > For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
-   - Open the `root.hcl` and update the `remote_state.config.key` value and replace the `"customer"` portion with your `customer` name.
+      > For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` directory.
+   - Within the new `customer` directory:
+      - Open the `config.yaml` and update the values, ensuring the customer name matches the directory created above.
+         > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from the Kubernetes external IP address and 0.0.0.0 to support access from the Kubernetes cluster and the eventual end users.
+      - Update `atlas-cluster/user_list.csv` to define attendees
+      - Create a `scenario.json` file in the `eks-cluster` directory
+         > Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
+      
+         > If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
+         
+         > For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
 
-2. **MongoDB Atlas Configuration**  
-   - Navigate to the new `customer` directory and then go in the `atlas-cluster` directory.
-   - Update `user_list.csv` with the list of attendees.  
-   - In `terragrunt.hcl`, replace placeholders `public_key` and `private_key` with your MongoDB Atlas API key and modify the `project_name` with your Atlas cluster project name.
-      > 💡 **Tip:** Now is a good time to make sure both the database and the API key allow access from the Kubernetes external IP address and 0.0.0.0 to support access from the Kubernetes cluster and the eventual end users.
+         > The leaderboard can be either `"timed"` (default) or `"score"` based; set this in your scenario configuration as needed.
 
-      > Other variables can be modified if necessary, but are not required
-   - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying (see Terragrunt command below)
-   - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
-
-3. **EKS Configuration (Skip for Hybrid)**  
-   - Navigate back to the `customer` directory and go into the `eks-cluster` directory
-   - Update `terragrunt.hcl` with your `customer` name, `aws_region`, and `domain_email`.  
-   - Choose the workshop scenario by creating a `scenario.json` file in the `eks-cluster` folder.  
-      > Example templates include `"vibe-coding"` and `"guided-exercises"`, which can be copied to `scenario.json` as a starter
-      
-      > If you do not remove the core airbnb folder, make sure to create a `scenario.json` file there, too!
-      
-      > The scenario configuration is now loaded from this JSON file via the `scenario_config` input in `terragrunt.hcl`.
-      
-      > For any scenario, you can leave the `sections` in the `instructions` field as empty arrays (`[]`) if you do not want to include specific content for those sections.
-   - **Leaderboard Type:** The leaderboard can be either **timed** (default) or **score** based. Set this in your scenario configuration as needed.
-   > 💡 **Tip:** Note that the cluster expires after one week by default.
 
 ## Deployment and Management
 
@@ -143,6 +131,9 @@
 **Destroy resources only when they are no longer needed.**
 
 ## Additional Notes
+
+- **Advanced Configuration**
+   Advanced configuration can be done directly in the related `hcl` files, effectively bypassing the `config.yaml`.  Feel free to review `<customer>/root.hcl`, `<customer>/atlas-cluster/terragrunt.hcl`, and `<customer>/eks-cluster/terragrunt.hcl` to review additional configuration options.
 
 - **SSL Verification:**  
   SSL configuration has already been ensured and the environment is rated **A+**.
