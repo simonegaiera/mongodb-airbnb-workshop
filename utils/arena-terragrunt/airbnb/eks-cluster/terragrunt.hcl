@@ -22,6 +22,10 @@ terraform {
   ]
 }
 
+locals {
+  config = yamldecode(file("../config.yaml"))
+}
+
 inputs = {
   atlas_standard_srv  = dependency.atlas.outputs.standard_srv
   atlas_user_list     = dependency.atlas.outputs.user_list
@@ -32,9 +36,9 @@ inputs = {
   # varibales to change
   scenario_config = jsondecode(file("${get_terragrunt_dir()}/scenario.json"))
   aws_profile = "Solution-Architects.User-979559056307"
-  customer_name = "airbnb"
+  customer_name = local.config.customer.name
   aws_region = "us-east-2"
-  domain_email = "arena@mongodb.com"
+  domain_email = local.config.domain.email
   # anthropic_api_key = "api-key-here (Optional)"
   # azure_openai_api_key = "api-key-here (Optional)"
 }

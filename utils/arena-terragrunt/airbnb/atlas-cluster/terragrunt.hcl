@@ -8,16 +8,17 @@ terraform {
 
 locals {
     user_list_path = "${get_terragrunt_dir()}/user_list.csv"
+    config = yamldecode(file("../config.yaml"))
 }
 
 inputs = {
-    public_key                              = "public_key"
-    private_key                             = "private_key"
-    project_name                            = "arena-customer"
-    cluster_name                            = "arena-cluster"
+    public_key                              = local.config.mongodb.public_key
+    private_key                             = local.config.mongodb.private_key
+    project_name                            = local.config.mongodb.project_name
+    cluster_name                            = local.config.mongodb.cluster_name
     sample_database_name                    = "sample_airbnb"
     common_database_name                    = "arena_shared"
-    cluster_region                          = "US_EAST_2"
+    cluster_region                          = local.config.mongodb.cluster_region
     cluster_type                            = "REPLICASET"
     atlas_provider_name                     = "AWS"
     atlas_provider_instance_size_name       = "M30"

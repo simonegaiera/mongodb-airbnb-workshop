@@ -1,0 +1,12 @@
+customer:
+  name: "customer"
+  
+mongodb:
+  public_key: "abc"
+  private_key: "def"
+  project_name: "ghi"
+  cluster_name: "arena-cluster"
+  cluster_region: "US_EAST_2"
+  
+domain:
+  email: "jane.doe@mongodb.com"
