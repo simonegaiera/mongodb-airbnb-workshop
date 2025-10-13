@@ -2,32 +2,25 @@
 
 ## Overview
 
-The validation component in the MongoDB AI Arena is a comprehensive testing system that validates participant implementations through **dual validation approaches**: local Node.js/Mocha testing and centralized Java-based validation. The system ensures participants complete MongoDB exercises correctly while providing immediate feedback and progress tracking.
+The validation component in the MongoDB AI Arena is a comprehensive testing system that validates participant implementations through centralized Java-based validation. The system ensures participants complete MongoDB exercises correctly while providing detailed feedback and progress tracking.
 
 ## Architecture Components
 
-### 1. Local Testing (Node.js/Mocha)
-- **File**: `server/src/saveTestResults.js`
-- **Framework**: Mocha with BDD-style tests
-- **Purpose**: Immediate local feedback for participants
-- **Execution**: Participants run `npm test` in their VSCode environment
-- **Storage**: Results saved to MongoDB `arena_shared.results` collection
-
-### 2. Centralized Validation (Java Results Processor)
+### 1. Centralized Validation (Java Results Processor)
 - **Location**: `utils/eks-cluster/results-processor/`
 - **Framework**: Java Spring Boot application
 - **Purpose**: Comprehensive validation and scoring
 - **Execution**: Runs as Kubernetes service in EKS cluster
 - **Validation**: Compares API responses with direct MongoDB queries
 
-### 3. MongoDB Storage
+### 2. MongoDB Storage
 - **Database**: `arena_shared`
 - **Collections**:
   - `results` - Stores completed exercise results
   - `results_health` - Tracks validation service health and status
   - `scenario_config` - Dynamic exercise configuration
 
-### 4. Frontend Integration
+### 3. Frontend Integration
 - Real-time leaderboard updates
 - Progress tracking and visualization
 - Participant feedback and guidance
@@ -37,20 +30,14 @@ The validation component in the MongoDB AI Arena is a comprehensive testing syst
 ```mermaid
 sequenceDiagram
     participant P as Participant
-    participant VS as VSCode Environment
     participant API as API Server
     participant RP as Results Processor
     participant DB as MongoDB Atlas
     participant LB as Leaderboard
 
-    P->>VS: Edits lab file (e.g., crud-1.lab.js)
-    P->>VS: Runs npm test
-    VS->>API: Tests API endpoints
+    P->>API: Implements exercise (e.g., crud-1.lab.js)
     API->>DB: Queries MongoDB
     DB-->>API: Returns data
-    API-->>VS: Returns API response
-    VS->>VS: Validates against expected output
-    VS->>DB: Posts test results to arena_shared.results
     
     Note over RP: Centralized validation (hourly or signal-triggered)
     RP->>API: Executes comprehensive validation tests
@@ -60,17 +47,9 @@ sequenceDiagram
     LB-->>P: Shows updated status
 ```
 
-## Dual Validation Approach
+## Centralized Validation Approach
 
-### Local Testing (Node.js/Mocha)
-- **Execution**: `npm test` in VSCode environment
-- **Test Files**: Located in `server/src/test/` directory
-- **Framework**: Mocha with BDD-style tests
-- **Validation**: Tests API responses against expected MongoDB operations
-- **Storage**: Results immediately saved to `arena_shared.results`
-- **Feedback**: Real-time console output with pass/fail status
-
-### Centralized Validation (Java Results Processor)
+### Java Results Processor
 - **Execution**: Runs as Kubernetes service in EKS cluster
 - **Test Classes**: Individual test classes for each exercise type
 - **Framework**: Java with MongoDB Java Driver
@@ -79,20 +58,6 @@ sequenceDiagram
 - **Modes**: Signal-triggered or hourly polling
 
 ## Test Execution Framework
-
-### Local Testing Structure
-```
-server/src/
-├── saveTestResults.js          # Main test runner
-├── test/                       # Mocha test files
-│   ├── crud-1.test.js
-│   ├── crud-2.test.js
-│   └── ...
-└── lab/                        # Lab exercise files
-    ├── crud-1.lab.js
-    ├── crud-2.lab.js
-    └── ...
-```
 
 ### Centralized Testing Structure
 ```
@@ -204,6 +169,298 @@ public static class TestResult {
 4. **Comparison**: Compare API response with MongoDB results
 5. **Result Storage**: Store results in appropriate collections
 
+## Creating New Tests for Additional Exercises
+
+### Overview
+When adding new exercises to the MongoDB AI Arena, you need to create corresponding test classes that extend `BaseTest` and implement the validation logic. This section provides a comprehensive guide for creating robust test implementations.
+
+### Test Class Structure
+Every test class must extend `BaseTest` and implement two required methods:
+- `getTestName()`: Returns the exercise identifier
+- `execute()`: Contains the validation logic
+
+### Example: Simple CRUD Test (Crud2Test)
+Here's a complete example of a simple test for finding a single document:
+
+```java
+package com.mongodb.workshop.tests;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import java.net.http.HttpResponse;
+import org.bson.Document;
+import org.json.JSONObject;
+
+/**
+ * Test for: crud-2 (CRUD Exercise 2)
+ * Tests the crudOneDocument function implementation
+ * Expected: Function should find a single document by _id
+ */
+public class Crud2Test extends BaseTest {
+    
+    public Crud2Test(MongoDatabase database, String serviceName, String endpoint) {
+        super(database, serviceName, endpoint);
+    }
+    
+    @Override
+    public String getTestName() {
+        return "crud-2";
+    }
+    
+    @Override
+    public TestResult execute() {
+        logger.info("Executing CRUD-2 test - Testing crudOneDocument function");
+        
+        try {
+            // 1. Get test data from MongoDB
+            MongoCollection<Document> collection = getListingsAndReviewsCollection();
+            Document item = collection.aggregate(
+                java.util.Arrays.asList(new Document("$sample", new Document("size", 1)))
+            ).first();
+            
+            if (item == null || !item.containsKey("_id")) {
+                return TestResult.failure("No documents found in collection");
+            }
+            
+            // 2. Make HTTP request to participant's API
+            String itemId = item.get("_id").toString();
+            String urlWithId = String.format("%s/%s", endpoint, itemId);
+            HttpResponse<String> response = makeLabRequest(urlWithId);
+            
+            // 3. Validate HTTP response
+            if (response.statusCode() != 200) {
+                return TestResult.failure("HTTP request failed with status " + response.statusCode());
+            }
+            
+            // 4. Parse and validate response content
+            JSONObject result = parseJsonResponse(response.body());
+            if (!result.has("_id") || !itemId.equals(result.getString("_id"))) {
+                return TestResult.failure("Document ID mismatch");
+            }
+            
+            // 5. Return success
+            logger.info("CRUD-2 test passed: Found document with _id '{}'", itemId);
+            return TestResult.success();
+            
+        } catch (Exception e) {
+            return TestResult.failure("Test execution failed: " + e.getMessage());
+        }
+    }
+}
+```
+
+### Key Components for Building Valid Tests
+
+#### 1. Constructor and Setup
+```java
+public YourTest(MongoDatabase database, String serviceName, String endpoint) {
+    super(database, serviceName, endpoint);
+}
+```
+- **Purpose**: Initialize the test with database connection and API endpoint
+- **Parameters**: Provided by the `ResultsProcessor` when creating test instances
+
+#### 2. Test Name Implementation
+```java
+@Override
+public String getTestName() {
+    return "your-exercise-name";
+}
+```
+- **Purpose**: Unique identifier for the exercise
+- **Format**: Use kebab-case (e.g., "crud-3", "pipeline-1", "search-2")
+- **Usage**: Must match the exercise name in `EXERCISE_TESTS` array
+
+#### 3. Test Data Preparation
+```java
+// Get random document for testing
+Document item = collection.aggregate(
+    java.util.Arrays.asList(new Document("$sample", new Document("size", 1)))
+).first();
+
+// Or get specific test data
+List<Document> pipeline = Arrays.asList(
+    new Document("$match", new Document("price", new Document("$gt", 100))),
+    new Document("$limit", 1)
+);
+Document item = collection.aggregate(pipeline).first();
+```
+- **Purpose**: Prepare test data from MongoDB
+- **Best Practice**: Use `$sample` for random data or specific queries for deterministic results
+- **Validation**: Always check if data exists before proceeding
+
+#### 4. HTTP Request Handling
+```java
+// GET request
+HttpResponse<String> response = makeLabRequest(url);
+
+// POST request with body
+Map<String, Object> requestBody = createRequestBody();
+requestBody.put("query", "search term");
+HttpResponse<String> response = makeLabRequest(endpoint, requestBody);
+
+// Custom HTTP method
+HttpResponse<String> response = makeLabRequest(endpoint, requestBody, "PUT");
+```
+- **Purpose**: Make HTTP requests to participant's API
+- **Methods**: `makeLabRequest()` handles GET, POST, PUT, PATCH, DELETE
+- **SSL**: Automatically configured with trust-all SSL context
+
+#### 5. Response Validation
+```java
+// Check HTTP status
+if (response.statusCode() != 200) {
+    return TestResult.failure("Expected status 200, got " + response.statusCode());
+}
+
+// Parse JSON response
+JSONObject result = parseJsonResponse(response.body());
+JSONArray results = parseJsonArrayResponse(response.body());
+
+// Validate response structure
+if (!result.has("requiredField")) {
+    return TestResult.failure("Missing required field 'requiredField'");
+}
+```
+- **Purpose**: Validate HTTP response and JSON structure
+- **Status Codes**: Check appropriate status codes (200, 201, etc.)
+- **JSON Parsing**: Use `parseJsonResponse()` or `parseJsonArrayResponse()`
+- **Field Validation**: Check for required fields and data types
+
+#### 6. Data Comparison
+```java
+// Compare with MongoDB results
+Document mongoResult = collection.find(query).first();
+JSONObject apiResult = parseJsonResponse(response.body());
+
+if (!mongoResult.getString("field").equals(apiResult.getString("field"))) {
+    return TestResult.failure("Field mismatch between API and MongoDB");
+}
+```
+- **Purpose**: Compare API response with expected MongoDB results
+- **Accuracy**: Ensure API implementation matches MongoDB behavior
+- **Tolerance**: Use appropriate tolerance for numeric comparisons
+
+#### 7. Error Handling and Logging
+```java
+try {
+    // Test logic here
+    return TestResult.success();
+} catch (Exception e) {
+    logger.error("Test failed: {}", e.getMessage());
+    return TestResult.failure("Test execution failed: " + e.getMessage());
+}
+```
+- **Purpose**: Handle exceptions gracefully and provide meaningful error messages
+- **Logging**: Use `logger.info()`, `logger.warn()`, `logger.error()` for different levels
+- **Error Messages**: Provide specific guidance on what went wrong
+
+### Test Categories and Patterns
+
+#### CRUD Operations
+- **Pattern**: Simple HTTP requests with MongoDB data comparison
+- **Examples**: `Crud1Test`, `Crud2Test`
+- **Key Points**: Validate HTTP status, response format, and data accuracy
+
+#### Aggregation Pipelines
+- **Pattern**: Complex data processing with detailed result validation
+- **Examples**: `Pipeline1Test`, `Pipeline2Test`
+- **Key Points**: Validate aggregation results, field presence, and data types
+
+#### Search Operations
+- **Pattern**: POST requests with search parameters and result validation
+- **Examples**: `Search1Test`, `Search2Test`
+- **Key Points**: Validate search results, field projections, and result limits
+
+#### Index Operations
+- **Pattern**: Validation of index creation and existence
+- **Examples**: `IndexTest`, `SearchIndexTest`
+- **Key Points**: Check index existence, configuration, and performance
+
+### Best Practices
+
+#### 1. Test Data Management
+- Use `$sample` for random data selection
+- Validate data existence before testing
+- Use appropriate data filters for specific test scenarios
+
+#### 2. Error Message Quality
+- Provide specific, actionable error messages
+- Include expected vs actual values in error messages
+- Guide participants toward the correct implementation
+
+#### 3. Response Validation
+- Check HTTP status codes first
+- Validate JSON structure before content
+- Use appropriate data type validations
+
+#### 4. Logging and Debugging
+- Log test execution steps
+- Include relevant data in log messages
+- Use appropriate log levels (INFO, WARN, ERROR)
+
+#### 5. Performance Considerations
+- Use appropriate timeouts for HTTP requests
+- Limit result sets for large data operations
+- Handle large responses efficiently
+
+### Integration with ResultsProcessor
+
+#### Adding New Test to EXERCISE_TESTS
+```java
+private static final List<String> EXERCISE_TESTS = Arrays.asList(
+    "crud-1", "crud-2", "crud-3", "crud-4",
+    "crud-5", "crud-6", "crud-7", "crud-8",
+    "pipeline-1", "pipeline-2",
+    "search-1", "search-2",
+    "vector-search-1",
+    "your-new-exercise"  // Add here
+);
+```
+
+#### Adding Test Case to createTest()
+```java
+private BaseTest createTest(String testName, String user) {
+    // ... existing cases ...
+    case "your-new-exercise":
+        return new YourNewTest(database, serviceName, endpoint);
+    default:
+        return null;
+}
+```
+
+### Testing Your New Test
+
+#### Local Testing
+```bash
+# Compile the project
+mvn clean compile
+
+# Run specific test
+mvn exec:java -Dexec.mainClass="com.mongodb.workshop.ResultsProcessor"
+```
+
+#### Validation Checklist
+- [ ] Test extends `BaseTest`
+- [ ] Implements `getTestName()` and `execute()`
+- [ ] Handles HTTP errors gracefully
+- [ ] Validates response structure
+- [ ] Compares with MongoDB results
+- [ ] Provides meaningful error messages
+- [ ] Logs execution steps
+- [ ] Added to `EXERCISE_TESTS` array
+- [ ] Added to `createTest()` method
+
+### Common Pitfalls to Avoid
+
+1. **Missing Error Handling**: Always wrap test logic in try-catch
+2. **Inadequate Validation**: Check both structure and content of responses
+3. **Poor Error Messages**: Provide specific guidance on what went wrong
+4. **Hardcoded Values**: Use dynamic test data from MongoDB
+5. **Missing Logging**: Include relevant information in log messages
+6. **Incorrect HTTP Methods**: Use appropriate HTTP methods for the operation
+7. **Missing Integration**: Ensure test is added to ResultsProcessor configuration
+
 ## Scoring and Tracking
 
 ### Results Storage
@@ -258,7 +515,6 @@ public static class TestResult {
 - **Performance Monitoring**: Tracks response times and success rates
 
 ### Real-time Feedback
-- **Immediate Results**: Local testing provides instant feedback
 - **Detailed Error Messages**: Specific guidance on what needs to be fixed
 - **Progress Tracking**: Visual indicators of completion status
 - **Leaderboard Updates**: Real-time ranking and progress display
@@ -276,18 +532,6 @@ public static class TestResult {
 - **Integration Points**: Easy integration with external systems
 
 ## Usage Examples
-
-### Running Local Tests
-```bash
-# Run all tests
-npm test
-
-# Run specific test
-npm test -- --grep "CRUD-1"
-
-# Run with test filter
-node src/saveTestResults.js --test="crud-1"
-```
 
 ### Java Results Processor
 ```bash
@@ -332,18 +576,6 @@ mvn exec:java -Dexec.mainClass="com.mongodb.workshop.ResultsProcessor"
 ## File Structure
 
 ```
-server/
-├── src/
-│   ├── saveTestResults.js          # Node.js test runner
-│   ├── test/                       # Mocha test files
-│   │   ├── crud-1.test.js
-│   │   ├── crud-2.test.js
-│   │   └── ...
-│   └── lab/                        # Lab exercise files
-│       ├── crud-1.lab.js
-│       ├── crud-2.lab.js
-│       └── ...
-
 utils/eks-cluster/results-processor/
 ├── src/main/java/com/mongodb/workshop/
 │   ├── ResultsProcessor.java       # Main validation service
@@ -358,6 +590,6 @@ utils/eks-cluster/results-processor/
 
 ## Conclusion
 
-The validation component provides a robust, scalable, and user-friendly testing experience that ensures participants learn MongoDB effectively while maintaining high standards of code quality and accuracy. The dual validation approach combines immediate local feedback with comprehensive centralized validation to provide the best learning experience possible.
+The validation component provides a robust, scalable, and user-friendly testing experience that ensures participants learn MongoDB effectively while maintaining high standards of code quality and accuracy. The centralized validation approach provides comprehensive testing and detailed feedback to support effective learning.
 
 The system is designed to handle multiple participants simultaneously, provide detailed feedback on failures, and maintain comprehensive health monitoring for reliable operation in production environments.
