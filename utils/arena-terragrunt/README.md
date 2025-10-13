@@ -1,5 +1,7 @@
 # MongoDB AI Arena Environment Setup Guide
 
+> Updated for AirBnB Workshop Configuration
+
 💡 **Tip:** Reminder that this process is automating the creating of a number of cloud resources and so clusters will be cleaned up after one week by default; please remember to destroy this (details below) when your work is complete!
 
 ## Prerequisites

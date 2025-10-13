@@ -1,12 +1,12 @@
 customer:
-  name: "customer"
+  name: "airbnb"
   
 mongodb:
-  public_key: "abc"
-  private_key: "def"
-  project_name: "ghi"
+  public_key: "dfihmbgy"
+  private_key: "83cbaca3-b2f4-4c9e-85b9-6a1b88d4d297"
+  project_name: "Kipnis"
   cluster_name: "arena-cluster"
   cluster_region: "US_EAST_2"
   
 domain:
-  email: "jane.doe@mongodb.com"
+  email: "ben.kipnis@mongodb.com"

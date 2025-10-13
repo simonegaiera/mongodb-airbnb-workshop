@@ -1,3 +1,4 @@
+# AirBnB Workshop Configuration
 locals {
   config = yamldecode(file("./config.yaml"))
 }

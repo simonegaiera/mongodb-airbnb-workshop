@@ -1,3 +1,4 @@
+# AirBnB Workshop Atlas Cluster Configuration
 include {
   path = find_in_parent_folders("root.hcl")
 }

@@ -1,3 +1,4 @@
+# AirBnB Workshop EKS Cluster Configuration
 include {
   path = find_in_parent_folders("root.hcl")
 }
