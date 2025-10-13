@@ -2,29 +2,34 @@
 
 ## Overview
 
-The validation component in the MongoDB AI Arena is a sophisticated, multi-layered system that combines **real-time testing**, **automated validation**, and **scoring mechanisms** to ensure participants complete MongoDB exercises correctly. The system operates across multiple components to provide comprehensive validation and immediate feedback.
+The validation component in the MongoDB AI Arena is a comprehensive testing system that validates participant implementations through **dual validation approaches**: local Node.js/Mocha testing and centralized Java-based validation. The system ensures participants complete MongoDB exercises correctly while providing immediate feedback and progress tracking.
 
 ## Architecture Components
 
-### 1. Node.js Test Runner (`saveTestResults.js`)
-- Executes Mocha tests locally in the participant's VSCode environment
-- Provides immediate feedback on code implementation
-- Saves test results to MongoDB for tracking
+### 1. Local Testing (Node.js/Mocha)
+- **File**: `server/src/saveTestResults.js`
+- **Framework**: Mocha with BDD-style tests
+- **Purpose**: Immediate local feedback for participants
+- **Execution**: Participants run `npm test` in their VSCode environment
+- **Storage**: Results saved to MongoDB `arena_shared.results` collection
 
-### 2. Java Results Processor
-- Centralized validation service running in Kubernetes
-- Executes comprehensive validation tests against participant APIs
-- Compares API responses with direct MongoDB queries
-- Provides detailed failure analysis and scoring
+### 2. Centralized Validation (Java Results Processor)
+- **Location**: `utils/eks-cluster/results-processor/`
+- **Framework**: Java Spring Boot application
+- **Purpose**: Comprehensive validation and scoring
+- **Execution**: Runs as Kubernetes service in EKS cluster
+- **Validation**: Compares API responses with direct MongoDB queries
 
 ### 3. MongoDB Storage
-- Persistent storage for results and health monitoring
-- Tracks participant progress and completion status
-- Stores detailed test results and failure reasons
+- **Database**: `arena_shared`
+- **Collections**:
+  - `results` - Stores completed exercise results
+  - `results_health` - Tracks validation service health and status
+  - `scenario_config` - Dynamic exercise configuration
 
 ### 4. Frontend Integration
-- Real-time status updates and leaderboard
-- Visual progress indicators
+- Real-time leaderboard updates
+- Progress tracking and visualization
 - Participant feedback and guidance
 
 ## Validation Flow
@@ -45,11 +50,12 @@ sequenceDiagram
     DB-->>API: Returns data
     API-->>VS: Returns API response
     VS->>VS: Validates against expected output
-    VS->>DB: Posts test results
+    VS->>DB: Posts test results to arena_shared.results
     
-    RP->>API: Executes comprehensive validation
-    RP->>DB: Compares with answer key
-    RP->>DB: Updates participant score
+    Note over RP: Centralized validation (hourly or signal-triggered)
+    RP->>API: Executes comprehensive validation tests
+    RP->>DB: Compares with direct MongoDB queries
+    RP->>DB: Updates results_health collection
     RP->>LB: Updates leaderboard
     LB-->>P: Shows updated status
 ```
@@ -57,98 +63,188 @@ sequenceDiagram
 ## Dual Validation Approach
 
 ### Local Testing (Node.js/Mocha)
-- Participants run `npm test` in their VSCode environment
-- Mocha executes test files against their API implementations
-- Tests validate API responses against expected MongoDB operations
-- Results are immediately saved to MongoDB for tracking
+- **Execution**: `npm test` in VSCode environment
+- **Test Files**: Located in `server/src/test/` directory
+- **Framework**: Mocha with BDD-style tests
+- **Validation**: Tests API responses against expected MongoDB operations
+- **Storage**: Results immediately saved to `arena_shared.results`
+- **Feedback**: Real-time console output with pass/fail status
 
 ### Centralized Validation (Java Results Processor)
-- Runs as a Kubernetes service in the EKS cluster
-- Executes comprehensive validation tests against participant APIs
-- Compares API responses with direct MongoDB queries
-- Provides detailed failure analysis and scoring
+- **Execution**: Runs as Kubernetes service in EKS cluster
+- **Test Classes**: Individual test classes for each exercise type
+- **Framework**: Java with MongoDB Java Driver
+- **Validation**: Comprehensive comparison of API responses with direct MongoDB queries
+- **Storage**: Updates `arena_shared.results_health` collection
+- **Modes**: Signal-triggered or hourly polling
 
 ## Test Execution Framework
 
-### Local Testing (Mocha-based)
-- Uses Mocha test framework with BDD-style tests
-- Tests are defined in `.test.js` files
-- Validates API responses against expected MongoDB operations
-- Provides immediate feedback to participants
+### Local Testing Structure
+```
+server/src/
+├── saveTestResults.js          # Main test runner
+├── test/                       # Mocha test files
+│   ├── crud-1.test.js
+│   ├── crud-2.test.js
+│   └── ...
+└── lab/                        # Lab exercise files
+    ├── crud-1.lab.js
+    ├── crud-2.lab.js
+    └── ...
+```
 
-### Centralized Testing (Java-based)
-- Uses specialized test classes for each exercise type
-- Implements `BaseTest` abstract class with common functionality
-- Each exercise has a dedicated test class (e.g., `Crud1Test`, `Pipeline1Test`)
-- Performs comprehensive validation including:
-  - HTTP endpoint availability
-  - Response format validation
-  - Data accuracy comparison
-  - Error handling verification
+### Centralized Testing Structure
+```
+utils/eks-cluster/results-processor/
+├── src/main/java/com/mongodb/workshop/
+│   ├── ResultsProcessor.java   # Main validation service
+│   └── tests/                  # Java test classes
+│       ├── BaseTest.java       # Abstract base class
+│       ├── Crud1Test.java      # CRUD Exercise 1
+│       ├── Pipeline1Test.java  # Aggregation Exercise 1
+│       └── ...
+└── pom.xml                     # Maven configuration
+```
 
 ## Exercise Types and Validation
 
-The system validates multiple types of MongoDB exercises:
+The system validates 16 different MongoDB exercises:
 
-- **CRUD Operations** (8 exercises): Basic create, read, update, delete operations
-- **Aggregation Pipelines** (2 exercises): Complex data analysis and grouping
-- **Search Operations** (2 exercises): Text search and faceted search
-- **Vector Search** (1 exercise): AI-powered semantic search
-- **Index Management** (3 exercises): Database optimization
+### CRUD Operations (8 exercises)
+- **crud-1**: Basic find with query, sort, skip, limit
+- **crud-2**: FindOne operations
+- **crud-3**: Distinct operations
+- **crud-4**: Filter operations
+- **crud-5**: Insert operations
+- **crud-6**: Update operations
+- **crud-7**: Reviews aggregation
+- **crud-8**: Delete operations
+
+### Aggregation Pipelines (2 exercises)
+- **pipeline-1**: Property investment market analysis
+- **pipeline-2**: Host analytics aggregation
+
+### Search Operations (2 exercises)
+- **search-1**: Autocomplete search
+- **search-2**: Faceted search
+
+### Vector Search (1 exercise)
+- **vector-search-1**: AI-powered semantic search
+
+### Index Management (3 exercises)
+- **crud-index**: CRUD operation indexes
+- **search-index**: Search operation indexes
+- **vector-search-index**: Vector search indexes
 
 ## Configuration and Setup
 
-### Environment Configuration
+### Environment Variables
 
-#### Scenario Configuration (`scenario.json`)
-```json
-{
-    "version": "1.0",
-    "database": { "mongodb": true },
-    "llm": {
-        "enabled": true,
-        "proxy": { "enabled": true, "type": "litellm" }
-    },
-    "frontend": "app",
-    "backend": "server",
-    "leaderboard": "timed"
+#### Required Variables
+- `MONGODB_URI`: MongoDB connection string
+- `SERVICE_NAME`: API endpoint to validate
+- `ENVIRONMENT`: Deployment environment (prod/test)
+
+#### Optional Variables
+- `SIGNAL_FILE_PATH`: File path for signal-triggered execution
+- `LOG_LEVEL`: Logging level (INFO/DEBUG/WARN/ERROR)
+- `LOG_PATH`: Path for log files
+
+### Signal Mode Configuration
+- **Signal File**: `server_restart_signal.txt`
+- **Last Processed**: `last_processed_signal.txt`
+- **Trigger**: File creation/modification triggers validation
+- **Fallback**: Hourly polling if file watching fails
+
+### Exercise Configuration
+- **Dynamic**: Exercise list from `scenario_config` collection
+- **Fallback**: Hardcoded `EXERCISE_TESTS` array
+- **Override**: Can be configured per deployment
+
+## Validation Modes
+
+### Signal Mode (Production)
+- **Trigger**: File watching for `server_restart_signal.txt`
+- **Execution**: Immediate validation when signal detected
+- **Polling**: Hourly fallback if file watching fails
+- **Concurrency**: Prevents duplicate executions
+
+### One-off Mode (Development)
+- **Trigger**: Manual execution
+- **Execution**: Single validation cycle
+- **Usage**: Development and debugging
+
+## Test Implementation Details
+
+### BaseTest Class
+- **Purpose**: Common functionality for all test classes
+- **Features**:
+  - HTTP client with SSL trust-all configuration
+  - MongoDB database access
+  - JSON response parsing
+  - Request body creation
+  - Test result encapsulation
+
+### Test Result Structure
+```java
+public static class TestResult {
+    private final boolean success;
+    private final String errorMessage;
+    
+    public static TestResult success()
+    public static TestResult failure(String errorMessage)
 }
 ```
 
-#### Kubernetes Configuration
-- Results Processor runs as a Java Spring Boot application
-- Configured via environment variables:
-  - `MONGODB_URI`: Database connection string
-  - `SERVICE_NAME`: API endpoint to validate
-  - `ENVIRONMENT`: Deployment environment
-  - `SIGNAL_FILE_PATH`: File watching for triggers
+### Validation Process
+1. **HTTP Request**: Make request to participant's API endpoint
+2. **Response Validation**: Check HTTP status and response format
+3. **MongoDB Query**: Execute equivalent query directly on MongoDB
+4. **Comparison**: Compare API response with MongoDB results
+5. **Result Storage**: Store results in appropriate collections
 
-#### Exercise Configuration
-- Exercise list defined in `EXERCISE_TESTS` array
-- Can be overridden via `scenario_config` MongoDB collection
-- Supports dynamic exercise configuration per deployment
+## Scoring and Tracking
 
-### Validation Modes
+### Results Storage
+- **Collection**: `arena_shared.results`
+- **Document Structure**:
+  ```json
+  {
+    "name": "crud-1",
+    "username": "participant_name",
+    "timestamp": "2025-01-11T11:42:00.123Z",
+    "checksum": "abc123def456"
+  }
+  ```
 
-#### Signal Mode (Production)
-- Continuous operation with file watching
-- Triggers validation when server restarts
-- Polls every hour for new exercises
-- Handles concurrency and prevents duplicate executions
+### Health Monitoring
+- **Collection**: `arena_shared.results_health`
+- **Document Structure**:
+  ```json
+  {
+    "_id": "participant_name",
+    "version": "1.1.0",
+    "environment_info": {
+      "environment": "prod",
+      "log_level": "INFO",
+      "service_name": "api.example.com"
+    },
+    "exercise_results": [
+      {
+        "exercise_name": "crud-1",
+        "passed": true,
+        "failure_reason": null
+      }
+    ],
+    "execution_status": "completed",
+    "last_updated": "2025-01-11T11:42:00.123Z",
+    "total_exercises": 16,
+    "passed_exercises": 12
+  }
+  ```
 
-#### One-off Mode (Development)
-- Single execution for testing
-- Immediate validation of all exercises
-- Used for development and debugging
-
-### Scoring and Tracking
-
-#### Results Storage
-- Results stored in `arena_shared.results` collection
-- Health monitoring in `arena_shared.results_health` collection
-- Tracks completion status, timestamps, and failure reasons
-
-#### Leaderboard Integration
+### Leaderboard Integration
 - Real-time updates via MongoDB queries
 - Timed leaderboard with completion tracking
 - Participant progress visualization
@@ -179,44 +275,11 @@ The system validates multiple types of MongoDB exercises:
 - **Custom Validation Rules**: Extensible test framework
 - **Integration Points**: Easy integration with external systems
 
-## Configuration Best Practices
-
-1. **Environment Variables**: Ensure all required environment variables are set
-2. **MongoDB Connectivity**: Verify database access and permissions
-3. **Service Discovery**: Configure proper service names and endpoints
-4. **Monitoring**: Set up health checks and logging
-5. **Security**: Use proper authentication and network policies
-
-## File Structure
-
-```
-server/
-├── src/
-│   ├── saveTestResults.js          # Node.js test runner
-│   ├── lab/                        # Lab exercise files
-│   │   ├── crud-1.lab.js
-│   │   ├── crud-2.lab.js
-│   │   └── ...
-│   └── test/                       # Mocha test files
-│       ├── crud-1.test.js
-│       ├── crud-2.test.js
-│       └── ...
-
-utils/eks-cluster/results-processor/
-├── src/main/java/com/mongodb/workshop/
-│   ├── ResultsProcessor.java       # Main validation service
-│   └── tests/                      # Java test classes
-│       ├── BaseTest.java
-│       ├── Crud1Test.java
-│       ├── Pipeline1Test.java
-│       └── ...
-```
-
 ## Usage Examples
 
 ### Running Local Tests
 ```bash
-# In the server directory
+# Run all tests
 npm test
 
 # Run specific test
@@ -232,8 +295,20 @@ node src/saveTestResults.js --test="crud-1"
 java -jar results-processor-1.0.0.jar
 
 # Signal mode (production)
-# Set SIGNAL_FILE_PATH environment variable
+export SIGNAL_FILE_PATH="/path/to/signals"
 java -jar results-processor-1.0.0.jar
+```
+
+### Maven Build
+```bash
+# Compile
+mvn clean compile
+
+# Package
+mvn clean package
+
+# Run with Maven
+mvn exec:java -Dexec.mainClass="com.mongodb.workshop.ResultsProcessor"
 ```
 
 ## Monitoring and Debugging
@@ -244,15 +319,45 @@ java -jar results-processor-1.0.0.jar
 - Provides detailed error messages for troubleshooting
 
 ### Logging
-- Comprehensive logging at INFO, WARN, and ERROR levels
-- Structured logging with participant identification
-- Execution tracking and performance metrics
+- **Framework**: SLF4J with Logback
+- **Levels**: INFO, WARN, ERROR with configurable levels
+- **Structured Logging**: Participant identification and execution tracking
+- **Performance Metrics**: Response times and success rates
 
 ### Error Handling
 - Graceful failure handling with detailed error messages
 - Retry mechanisms for transient failures
 - Comprehensive validation of all system components
 
+## File Structure
+
+```
+server/
+├── src/
+│   ├── saveTestResults.js          # Node.js test runner
+│   ├── test/                       # Mocha test files
+│   │   ├── crud-1.test.js
+│   │   ├── crud-2.test.js
+│   │   └── ...
+│   └── lab/                        # Lab exercise files
+│       ├── crud-1.lab.js
+│       ├── crud-2.lab.js
+│       └── ...
+
+utils/eks-cluster/results-processor/
+├── src/main/java/com/mongodb/workshop/
+│   ├── ResultsProcessor.java       # Main validation service
+│   └── tests/                      # Java test classes
+│       ├── BaseTest.java
+│       ├── Crud1Test.java
+│       ├── Pipeline1Test.java
+│       └── ...
+├── pom.xml                         # Maven configuration
+└── README.md                       # Project documentation
+```
+
 ## Conclusion
 
-The validation component is designed to provide a robust, scalable, and user-friendly testing experience that ensures participants learn MongoDB effectively while maintaining high standards of code quality and accuracy. The dual validation approach combines immediate local feedback with comprehensive centralized validation to provide the best learning experience possible.
+The validation component provides a robust, scalable, and user-friendly testing experience that ensures participants learn MongoDB effectively while maintaining high standards of code quality and accuracy. The dual validation approach combines immediate local feedback with comprehensive centralized validation to provide the best learning experience possible.
+
+The system is designed to handle multiple participants simultaneously, provide detailed feedback on failures, and maintain comprehensive health monitoring for reliable operation in production environments.
