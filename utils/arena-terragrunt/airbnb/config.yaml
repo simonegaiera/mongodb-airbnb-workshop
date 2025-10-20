@@ -1,0 +1,57 @@
+customer:
+  name: "customer"
+
+mongodb:
+  public_key: "PUBLIC_KEY"
+  private_key: "PRIVATE_KEY"
+  project_name: "PROJECT_NAME"
+  cluster_name: "arena-cluster"
+  cluster_region: "US_EAST_2"
+  instance_size: "M30"
+  additional_users_count: 0
+
+aws:
+  region: "us-east-2"
+
+domain:
+  email: "arena@mongodb.com"
+
+scenario:
+  version: "1.0"
+  repository: "https://github.com/simonegaiera/mongodb-airbnb-workshop"
+  branch: "main"
+  database:
+    mongodb: true
+    postgres: false
+  llm:
+    enabled: true
+    proxy:
+      enabled: true
+      type: "litellm"
+      service-name: "litellm-service"
+      port: 4000
+      cache: true
+      redis:
+        enabled: true
+        service:
+          name: "redis-master"
+          port: 6379
+    mcp: true
+    provider: "anthropic|openai"
+    model: "claude-3-haiku|gpt-5-chat"
+    bedrock: false
+    region: "us-east-2"
+  frontend: "app"
+  backend: "server"
+  leaderboard: "timed"
+  instructions:
+    base: "navigation-guided.yml"
+    sections:
+      - title: "Workshop Introduction"
+      - title: "Workshop Onboarding"
+      - title: "CRUD Operations"
+        content:
+          - "/crud/1/"
+          - "/crud/2/"
+      - title: "Vector Search"
+        content: []

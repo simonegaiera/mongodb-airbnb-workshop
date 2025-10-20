@@ -6,6 +6,10 @@ terraform {
       source = "mongodb/mongodbatlas"
       version = "~> 2.0"
     }
+    time = {
+      source = "hashicorp/time"
+      version = "~> 0.13.1"
+    }
   }
 }
 
@@ -73,6 +77,12 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   }
 
   depends_on = [ data.mongodbatlas_project.project ]
+}
+
+# Wait 30 seconds after cluster creation before running the script
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [mongodbatlas_advanced_cluster.cluster]
+  create_duration = "30s"
 }
 
 resource "mongodbatlas_cloud_backup_schedule" "test" {
@@ -336,6 +346,7 @@ resource "null_resource" "run_script" {
 
   depends_on = [
     mongodbatlas_advanced_cluster.cluster,
+    time_sleep.wait_30_seconds,
     null_resource.install_requirements,
     data.mongodbatlas_project.project,
     mongodbatlas_database_user.user-main,

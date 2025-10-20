@@ -1,5 +1,6 @@
-include {
+include "root" {
   path = find_in_parent_folders("root.hcl")
+  expose = true
 }
 
 dependency "atlas" {
@@ -22,6 +23,10 @@ terraform {
   ]
 }
 
+locals {
+  config = include.root.locals.config
+}
+
 inputs = {
   atlas_standard_srv  = dependency.atlas.outputs.standard_srv
   atlas_user_list     = dependency.atlas.outputs.user_list
@@ -29,12 +34,13 @@ inputs = {
   atlas_admin_user = dependency.atlas.outputs.admin_user
   atlas_admin_password = dependency.atlas.outputs.admin_password
 
+  customer_name = local.config.customer.name
+  domain_email = local.config.domain.email
+  aws_region = local.config.aws.region
+  scenario_config = local.config.scenario
+
   # varibales to change
-  scenario_config = jsondecode(file("${get_terragrunt_dir()}/scenario.json"))
   aws_profile = "Solution-Architects.User-979559056307"
-  customer_name = "airbnb"
-  aws_region = "us-east-2"
-  domain_email = "arena@mongodb.com"
   # anthropic_api_key = "api-key-here (Optional)"
   # azure_openai_api_key = "api-key-here (Optional)"
 }

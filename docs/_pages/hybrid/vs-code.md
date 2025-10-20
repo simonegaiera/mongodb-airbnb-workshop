@@ -8,7 +8,14 @@ classes: wide
 ## 💻✨ Cursor/VSCode Setup
 
 Ready to dive into the [mongodb-airbnb-workshop](https://github.com/simonegaiera/mongodb-airbnb-workshop)?  
-Let’s get your environment up and running—fast, smooth, and with style!
+Let's get your environment up and running—fast, smooth, and with style!
+
+---
+
+## 📋 Prerequisites
+
+Before you begin, make sure you have:
+- **Node.js LTS** installed on your system ([Download here](https://nodejs.org/))
 
 ---
 

@@ -119,7 +119,7 @@ resource "helm_release" "user_openvscode" {
         },
         {
           name  = "LLM_PROXY_SERVICE"
-          value = tostring(try(var.scenario_config.llm.proxy.service, ""))
+          value = tostring(try(var.scenario_config.llm.proxy.service-name, ""))
         },
         {
           name  = "LLM_PROXY_PORT"
