@@ -37,8 +37,8 @@ scenario:
           name: "redis-master"
           port: 6379
     mcp: true
-    provider: "anthropic|openai"
-    model: "claude-3-haiku|gpt-5-chat"
+    provider: "openai"
+    model: "gpt-5-chat"
     bedrock: false
     region: "us-east-2"
   frontend: "app"
@@ -48,10 +48,18 @@ scenario:
     base: "navigation-guided.yml"
     sections:
       - title: "Workshop Introduction"
+        content: []
       - title: "Workshop Onboarding"
-      - title: "CRUD Operations"
         content:
-          - "/crud/1/"
-          - "/crud/2/"
+          - "/guided/"
+          - "/guided/vscode/"
+          - "/guided/collection/"
+          - "/guided/leaderboard/"
+      - title: "CRUD Operations"
+        content: []
+      - title: "Aggregations"
+        content: []
+      - title: "Search"
+        content: []
       - title: "Vector Search"
         content: []

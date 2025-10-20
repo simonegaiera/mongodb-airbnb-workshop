@@ -67,15 +67,17 @@
    - If you need to invite users, uncomment `mongodbatlas_project_invitation`. By default, no invitations are sent.
 
 4. **EKS Configuration (Skip for Hybrid)**  
-   - **Workshop Scenario Configuration:**  
-     - The scenario configuration is now part of the central `config.yaml` file under the `scenario` section.
-     - Customize the workshop by editing the `scenario` section in `config.yaml`:
-       - **`repository`** and **`branch`**: GitHub repository and branch to use for the workshop
-       - **`database`**: Enable MongoDB and/or PostgreSQL
-       - **`llm`**: LLM configuration including provider, model, and proxy settings
-       - **`leaderboard`**: Set to `"timed"` or `"score"` based
-       - **`instructions.sections`**: Define workshop sections with titles and content paths
-     - **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
+  - **Workshop Scenario Configuration:**  
+    - The scenario configuration is now part of the central `config.yaml` file under the `scenario` section.
+    - Customize the workshop by editing the `scenario` section in `config.yaml`:
+      - **`repository`** and **`branch`**: GitHub repository and branch to use for the workshop
+      - **`database`**: Enable MongoDB and/or PostgreSQL
+      - **`llm`**: LLM configuration including provider, model, and proxy settings
+        - **`provider`**: Options are `"anthropic"` or `"openai"` (default: `"openai"`)
+        - **`model`**: Options are `"claude-3-haiku"` or `"gpt-5-chat"` (default: `"gpt-5-chat"`)
+      - **`leaderboard`**: Set to `"timed"` or `"score"` based
+      - **`instructions.sections`**: Define workshop sections with titles and content paths
+    - **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
    - Note that the cluster expires after one week by default.
 
 ## Deployment and Management
