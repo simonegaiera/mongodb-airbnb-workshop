@@ -23,11 +23,12 @@ We’ll use **Cline** and the **MongoDB MCP** to quickly describe the structure 
 
 #### 2. Paste This Prompt
 
-**⬇️ Copy and paste this prompt into Cline:**
+**📋 Prompt:** Copy and paste this into Cline:
 
 > Use the MongoDB MCP to describe the structure and main fields of the `listingsAndReviews` collection in my database.
 
-If you encounter any issues, try refreshing the MCP.
+**⚠️ Note:** If you encounter any issues, try refreshing the MCP.
+
 ![cline-mcp-refresh](../../assets/images/cline-mcp-refresh.png)
 
 #### 3. Review the Response
@@ -45,16 +46,6 @@ If you encounter any issues, try refreshing the MCP.
 ### 📚 Learn More
 
 - [MongoDB MCP Documentation](https://www.mongodb.com/docs/mcp-server/overview/?client=claude&deployment-type=atlas)
-
----
-
-### 📝 What to Do Next
-
-- **Take Notes:** Jot down interesting fields or structures you might want to use.
-- **Ask Follow-ups:** Try prompts like:
-  - “Show me a sample document from `listingsAndReviews`.”
-  - “What are the most common values for the `property_type` field?”
-  - “List all array fields in this collection.”
 
 ---
 
