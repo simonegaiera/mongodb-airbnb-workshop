@@ -384,6 +384,57 @@ def create_views(client, common_database):
             print("timed_leaderboard view already exists, skipping creation.", flush=True)
         else:
             print(f"Error creating timed_leaderboard view: {e}", flush=True)
+    
+    # Pipeline for user_leaderboard view - combines user_details with exercise counts
+    user_leaderboard_pipeline = [
+        {
+            '$group': {
+                '_id': '$username',
+                'exercisesSolved': {
+                    '$sum': 1
+                }
+            }
+        },
+        {
+            '$lookup': {
+                'from': 'user_details',
+                'localField': '_id',
+                'foreignField': '_id',
+                'as': 'user_info'
+            }
+        },
+        {
+            '$unwind': {
+                'path': '$user_info',
+                'preserveNullAndEmptyArrays': True
+            }
+        },
+        {
+            '$project': {
+                '_id': 1,
+                'name': {
+                    '$ifNull': ['$user_info.name', '$_id']
+                },
+                'email': '$user_info.email',
+                'exercisesSolved': 1
+            }
+        },
+        {
+            '$sort': {
+                '_id': 1
+            }
+        }
+    ]
+    
+    try:
+        # Create the user_leaderboard view
+        db.create_collection('user_leaderboard', viewOn='results', pipeline=user_leaderboard_pipeline)
+        print("Created user_leaderboard view successfully!", flush=True)
+    except Exception as e:
+        if "already exists" in str(e):
+            print("user_leaderboard view already exists, skipping creation.", flush=True)
+        else:
+            print(f"Error creating user_leaderboard view: {e}", flush=True)
 
 def ensure_results_index(db):
     """Ensure compound indexes exist on results collection."""
