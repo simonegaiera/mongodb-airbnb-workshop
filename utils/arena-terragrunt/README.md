@@ -76,6 +76,10 @@
         - **`provider`**: Options are `"anthropic"` or `"openai"` (default: `"openai"`)
         - **`model`**: Options are `"claude-3-haiku"` or `"gpt-5-chat"` (default: `"gpt-5-chat"`)
       - **`leaderboard`**: Set to `"timed"` or `"score"` based
+      - **`prices`**: Configure pricing promotions for the workshop
+        - **`enabled`**: Set to `true` to enable pricing features
+        - **`where`**: Location or context for the pricing (e.g., `"Happy Hour"`)
+        - **`when`**: Time for the pricing (e.g., `"4:30 PM"`)
       - **`instructions.sections`**: Define workshop sections with titles and content paths
     - **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
    - Note that the cluster expires after one week by default.

@@ -58,6 +58,11 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
   // State for collapsible leaderboard (default collapsed based on screen size)
   const [leaderboardExpanded, setLeaderboardExpanded] = useState(false)
 
+  // Read prices configuration from environment variables
+  const pricesEnabled = process.env.NEXT_PUBLIC_PRICES_ENABLED === 'true'
+  const pricesWhere = process.env.NEXT_PUBLIC_PRICES_WHERE || ''
+  const pricesWhen = process.env.NEXT_PUBLIC_PRICES_WHEN || ''
+
   const toggleLeaderboard = () => {
     setLeaderboardExpanded(prev => !prev)
   }
@@ -306,7 +311,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${leaderboardExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
         <div>
         {/* More Scenarios Section & Winners Announcement - Side by Side */}
-        <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className={`mb-6 grid grid-cols-1 ${pricesEnabled ? 'lg:grid-cols-2' : ''} gap-4`}>
           {/* More Scenarios Section */}
           <div className="p-6 bg-gradient-to-r from-mongodb-light to-green-50 rounded-lg border border-mongodb-green/20">
             <div className="text-center">
@@ -350,42 +355,44 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
             </div>
           </div>
 
-          {/* Winners & Prizes Announcement */}
-          <div className="p-6 bg-gradient-to-r from-blue-100 to-indigo-50 rounded-lg border border-blue-200">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-3">
-                <svg className="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Winners & Prizes Announcement
-                </h3>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
-                  <div className="flex items-center justify-center mb-2">
-                    <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-600">WHERE</span>
-                  </div>
-                  <p className="text-lg font-bold text-blue-800">Happy Hour</p>
+          {/* Winners & Prizes Announcement - Only show if enabled */}
+          {pricesEnabled && (
+            <div className="p-6 bg-gradient-to-r from-blue-100 to-indigo-50 rounded-lg border border-blue-200">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-3">
+                  <svg className="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    Winners & Prizes Announcement
+                  </h3>
                 </div>
                 
-                <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
-                  <div className="flex items-center justify-center mb-2">
-                    <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-600">WHEN</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                  <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-600">WHERE</span>
+                    </div>
+                    <p className="text-lg font-bold text-blue-800">{pricesWhere || 'TBD'}</p>
                   </div>
-                  <p className="text-lg font-bold text-blue-800">5:15 PM</p>
+                  
+                  <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-600">WHEN</span>
+                    </div>
+                    <p className="text-lg font-bold text-blue-800">{pricesWhen || 'TBD'}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
         </div>
 

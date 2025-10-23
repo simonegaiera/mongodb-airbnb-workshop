@@ -44,6 +44,10 @@ scenario:
   frontend: "app"
   backend: "server"
   leaderboard: "timed"
+  prices:
+    enabled: true
+    where: "Happy Hour"
+    when: "4:30 PM"
   instructions:
     base: "navigation-guided.yml"
     sections:
