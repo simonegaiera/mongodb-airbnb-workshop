@@ -79,12 +79,6 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   depends_on = [ data.mongodbatlas_project.project ]
 }
 
-# Wait 30 seconds after cluster creation before running the script
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [mongodbatlas_advanced_cluster.cluster]
-  create_duration = "30s"
-}
-
 resource "mongodbatlas_cloud_backup_schedule" "test" {
   project_id   = mongodbatlas_advanced_cluster.cluster.project_id
   cluster_name = mongodbatlas_advanced_cluster.cluster.name
@@ -322,6 +316,14 @@ output "standard_srv" {
 #   roles       = [ "GROUP_READ_ONLY", "GROUP_DATA_ACCESS_READ_ONLY", "GROUP_SEARCH_INDEX_EDITOR" ]
 # }
 
+# Wait 30 seconds after cluster creation before running the script
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [
+    mongodbatlas_advanced_cluster.cluster,
+    mongodbatlas_database_user.user-main
+  ]
+  create_duration = "30s"
+}
 
 # Define a null resource to install the requirements
 resource "null_resource" "install_requirements" {
