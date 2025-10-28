@@ -54,6 +54,7 @@
 - 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
 
 - 🔴 **HIGH:** Leaderboard might not be necessary in some cases
+- 🔴 **HIGH:** Partecipant can be excluded with leaderboard false, should we add a toggle in the portal to show also the excluded one?
 
 - 🔴 **HIGH:** CRUD: Exercise 6: The test seems to run successfully, but it doesn't actually update the document with _id: 20000000. When I checked with Cline, that document doesn't seem to exist.
 - 🔴 **HIGH:** CRUD: Exercise 7: The test runs successfully but also fails to insert a review for the document with _id: 20000000, likely for the same reason.
