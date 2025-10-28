@@ -153,8 +153,11 @@ Always review any plan before applying changes. Destroy resources only when they
 
 ## Additional Notes
 
+- **Leaderboard Exclusion:**  
+      If you do not want a user to appear in the leaderboard, you can manually add the field `leaderboard: false` (as a boolean value) to their document in the participant collection.
+
 - **SSL Verification:**  
-  SSL configuration has already been ensured and the environment is rated **A+**.
+   SSL configuration has already been ensured and the environment is rated **A+**.
   - You can verify your domain with [SSL Labs SSL Test](https://www.ssllabs.com/ssltest/analyze.html).
   - You can also check with [Zscaler Zulu URL Risk Analyzer](https://zulu.zscaler.com/).
   - Additional reputation and security checks can be performed using:

@@ -290,6 +290,12 @@ def create_views(client, common_database):
                 'as': 'participants_info'
             }
         },
+        # Filter out participants with leaderboard: false
+        {
+            '$match': {
+                'participants_info.leaderboard': { '$ne': False }
+            }
+        },
         # Add the participant name as the field "user" on the users object
         {
             '$addFields': {
@@ -334,6 +340,10 @@ def create_views(client, common_database):
                 'as': 'participants_info'
             }
         }, {
+            '$match': {
+                'participants_info.leaderboard': { '$ne': False }
+            }
+        }, {
             '$addFields': {
                 'delta': {
                     '$subtract': [
@@ -365,25 +375,25 @@ def create_views(client, common_database):
         }
     ]
     
+    # Drop and recreate score_leaderboard view to ensure it has the latest pipeline
     try:
-        # Create the score_leaderboard view
+        if 'score_leaderboard' in db.list_collection_names():
+            db.drop_collection('score_leaderboard')
+            print("Dropped existing score_leaderboard view.", flush=True)
         db.create_collection('score_leaderboard', viewOn='results', pipeline=score_leaderboard_pipeline)
         print("Created score_leaderboard view successfully!", flush=True)
     except Exception as e:
-        if "already exists" in str(e):
-            print("score_leaderboard view already exists, skipping creation.", flush=True)
-        else:
-            print(f"Error creating score_leaderboard view: {e}", flush=True)
+        print(f"Error creating score_leaderboard view: {e}", flush=True)
 
+    # Drop and recreate timed_leaderboard view to ensure it has the latest pipeline
     try:
-        # Create the timed_leaderboard view
+        if 'timed_leaderboard' in db.list_collection_names():
+            db.drop_collection('timed_leaderboard')
+            print("Dropped existing timed_leaderboard view.", flush=True)
         db.create_collection('timed_leaderboard', viewOn='results', pipeline=timed_leaderboard_pipeline)
         print("Created timed_leaderboard view successfully!", flush=True)
     except Exception as e:
-        if "already exists" in str(e):
-            print("timed_leaderboard view already exists, skipping creation.", flush=True)
-        else:
-            print(f"Error creating timed_leaderboard view: {e}", flush=True)
+        print(f"Error creating timed_leaderboard view: {e}", flush=True)
     
     # Pipeline for user_leaderboard view - combines user_details with exercise counts
     user_leaderboard_pipeline = [
@@ -410,6 +420,11 @@ def create_views(client, common_database):
             }
         },
         {
+            '$match': {
+                'user_info.leaderboard': { '$ne': False }
+            }
+        },
+        {
             '$project': {
                 '_id': 1,
                 'name': {
@@ -426,15 +441,15 @@ def create_views(client, common_database):
         }
     ]
     
+    # Drop and recreate user_leaderboard view to ensure it has the latest pipeline
     try:
-        # Create the user_leaderboard view
+        if 'user_leaderboard' in db.list_collection_names():
+            db.drop_collection('user_leaderboard')
+            print("Dropped existing user_leaderboard view.", flush=True)
         db.create_collection('user_leaderboard', viewOn='results', pipeline=user_leaderboard_pipeline)
         print("Created user_leaderboard view successfully!", flush=True)
     except Exception as e:
-        if "already exists" in str(e):
-            print("user_leaderboard view already exists, skipping creation.", flush=True)
-        else:
-            print(f"Error creating user_leaderboard view: {e}", flush=True)
+        print(f"Error creating user_leaderboard view: {e}", flush=True)
 
 def ensure_results_index(db):
     """Ensure compound indexes exist on results collection."""
