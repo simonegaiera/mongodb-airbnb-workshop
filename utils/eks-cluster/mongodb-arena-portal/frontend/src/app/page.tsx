@@ -71,6 +71,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
+      <div className="w-full absolute t-0">
+        <img 
+          src="/dallas-banner.jpg" 
+          alt=".local Dallas" 
+          className="mx-auto object-contain object-top"
+        />
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-6">
