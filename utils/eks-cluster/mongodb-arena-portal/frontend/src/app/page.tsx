@@ -70,15 +70,15 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="w-full absolute t-0">
+    <div className="min-h-screen bg-gray-50 pb-8">
+      <div className='mx-auto h-16 w-full'>
         <img 
           src="/dallas-banner.jpg" 
           alt=".local Dallas" 
-          className="mx-auto object-contain object-top"
+          className="mx-auto object-fit"
         />
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-mongodb-dark mb-4">
