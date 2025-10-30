@@ -16,7 +16,6 @@
 ## Docs
 
 ### Navigation
-- ❄️ **FROZEN:** Can we compress/expand the different sections?
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
 - ❄️ **FROZEN:** Exercise with RankFusion
 

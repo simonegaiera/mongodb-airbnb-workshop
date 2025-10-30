@@ -4,4 +4,140 @@
   <!-- Favicon -->
   <link rel="shortcut icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
 </head>
+
+<!-- Custom Collapsible Sidebar Navigation -->
+<style>
+  /* Make navigation sub-titles clickable */
+  .nav__sub-title {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-left: 38px !important;
+  }
+  
+  /* Add collapse/expand arrow indicator first */
+  .nav__sub-title::before {
+    content: '▼';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.25s ease;
+    font-size: 0.7em;
+    opacity: 0.6;
+  }
+  
+  /* Rotate arrow when collapsed */
+  .nav__sub-title.collapsed::before {
+    transform: translateY(-50%) rotate(-90deg);
+  }
+  
+  /* Add logo image after the arrow */
+  .nav__sub-title::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-image: url('/assets/images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+    transition: opacity 0.25s ease;
+  }
+  
+  /* Smooth collapse/expand transition */
+  .nav__list li > ul {
+    max-height: 3000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+    opacity: 1;
+  }
+  
+  /* Collapsed state - hide the list */
+  .nav__list li > ul.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Subtle hover effect */
+  .nav__sub-title:hover::before {
+    opacity: 1;
+  }
+  
+  .nav__sub-title:hover::after {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all navigation sub-titles that have children
+    const navSubTitles = document.querySelectorAll('.sidebar .nav__sub-title');
+    
+    // Load saved state from localStorage
+    const savedState = JSON.parse(localStorage.getItem('navCollapsedState') || '{}');
+    
+    navSubTitles.forEach(function(title, index) {
+      const items = title.nextElementSibling;
+      
+      // Only make it collapsible if it has a sibling ul
+      if (items && items.tagName === 'UL') {
+        // Create unique ID for this section based on title text
+        const sectionId = 'nav-section-' + title.textContent.trim().replace(/\s+/g, '-');
+        title.setAttribute('data-section-id', sectionId);
+        
+        // Check if this section should be collapsed based on saved state
+        // Default: first section (Setup) is expanded, others are collapsed
+        const shouldBeCollapsed = savedState[sectionId] !== undefined 
+          ? savedState[sectionId] 
+          : index > 0; // Keep first section open, collapse others
+        
+        if (shouldBeCollapsed) {
+          title.classList.add('collapsed');
+          items.classList.add('collapsed');
+        }
+        
+        // Add click handler
+        title.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Toggle collapsed state
+          title.classList.toggle('collapsed');
+          items.classList.toggle('collapsed');
+          
+          // Save state to localStorage
+          const currentState = JSON.parse(localStorage.getItem('navCollapsedState') || '{}');
+          currentState[sectionId] = items.classList.contains('collapsed');
+          localStorage.setItem('navCollapsedState', JSON.stringify(currentState));
+        });
+      }
+    });
+    
+    // Keep the current page's section expanded
+    const currentPageLink = document.querySelector('.sidebar .nav__list .active');
+    if (currentPageLink) {
+      const parentUl = currentPageLink.closest('ul');
+      const parentTitle = parentUl?.previousElementSibling;
+      
+      if (parentTitle && parentTitle.classList.contains('nav__sub-title')) {
+        parentTitle.classList.remove('collapsed');
+        parentUl.classList.remove('collapsed');
+        
+        // Update localStorage
+        const sectionId = parentTitle.getAttribute('data-section-id');
+        if (sectionId) {
+          const currentState = JSON.parse(localStorage.getItem('navCollapsedState') || '{}');
+          currentState[sectionId] = false;
+          localStorage.setItem('navCollapsedState', JSON.stringify(currentState));
+        }
+      }
+    }
+  });
+</script>
   
