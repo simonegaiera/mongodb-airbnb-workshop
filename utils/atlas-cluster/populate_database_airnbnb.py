@@ -11,10 +11,14 @@ from datetime import datetime, timezone
 import json
 import os
 
+# Global verbose flag - read from environment variable
+VERBOSE = os.environ.get('VERBOSE', 'false').lower() == 'true'
+
 def get_params():
     if len(sys.argv) != 12:
         print("Usage: python3 populate_database_airnbnb.py MONGO_CONNECTION_STRING MONGO_DATABASE_NAME PUBLIC_KEY PRIVATE_KEY PROJECT_ID CLUSTER_NAME CSV_FILE COMMON_DATABASE ADDITIONAL_USERS_COUNT CREATE_INDEXES USER_START_INDEX", file=sys.stderr)
         sys.exit(1)
+    
     return {
         'MONGO_CONNECTION_STRING': sys.argv[1],
         'MONGO_DATABASE_NAME': sys.argv[2],
@@ -92,7 +96,8 @@ def delete_user_databases(user_ids, client):
                 deleted_databases.append(user_id)
                 print(f"Successfully deleted database for user: {user_id}", flush=True)
             else:
-                print(f"Database for user {user_id} does not exist, skipping deletion.", flush=True)
+                if VERBOSE:
+                    print(f"Database for user {user_id} does not exist, skipping deletion.", flush=True)
         except Exception as e:
             error_msg = f"Error deleting database for user {user_id}: {e}"
             errors.append(error_msg)
@@ -469,7 +474,7 @@ def ensure_results_index(db):
     if not index_2_exists:
         db["results"].create_index(index_spec_2)
         print("Created compound index on results: name, username.", flush=True)
-    else:
+    elif VERBOSE:
         print("Compound index on results (name, username) already exists.", flush=True)
 
 def ensure_participants_indexes(db):
@@ -480,10 +485,11 @@ def ensure_participants_indexes(db):
     indexes = participants.index_information()
     for idx in indexes.values():
         if idx.get("key") == index_spec:
-            print("Compound index on participants (taken, decommissioned, name) already exists.", flush=True)
+            if VERBOSE:
+                print("Compound index on participants (taken, taken_timestamp, name) already exists.", flush=True)
             return
     participants.create_index(index_spec)
-    print("Created compound index on participants: taken, decommissioned, name.", flush=True)
+    print("Created compound index on participants: taken, taken_timestamp, name.", flush=True)
 
 def create_results_health_collection(db):
     """Create results_health collection."""
@@ -495,7 +501,7 @@ def create_results_health_collection(db):
         # Explicitly create the collection
         db.create_collection(collection_name)
         print(f"Created collection '{collection_name}'.", flush=True)
-    else:
+    elif VERBOSE:
         print(f"Collection '{collection_name}' already exists.", flush=True)
 
 def load_index_definitions():
@@ -580,7 +586,8 @@ def create_regular_index(collection, index_name, index_definition):
         # Check if index already exists
         existing_indexes = collection.index_information()
         if index_name in existing_indexes:
-            print(f"Regular index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+            if VERBOSE:
+                print(f"Regular index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
             return
         
         # Create the index
@@ -598,7 +605,8 @@ def create_search_index(collection, index_name, index_definition):
             existing_indexes = list(collection.list_search_indexes())
             for idx in existing_indexes:
                 if idx.get('name') == index_name:
-                    print(f"Search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+                    if VERBOSE:
+                        print(f"Search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
                     return
         except Exception:
             # If list_search_indexes fails, continue to create the index
@@ -623,7 +631,8 @@ def create_vector_search_index(collection, index_name, index_definition):
             existing_indexes = list(collection.list_search_indexes())
             for idx in existing_indexes:
                 if idx.get('name') == index_name and idx.get('type') == 'vectorSearch':
-                    print(f"Vector search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
+                    if VERBOSE:
+                        print(f"Vector search index '{index_name}' already exists in {collection.database.name}.{collection.name}", flush=True)
                     return
         except Exception:
             # If list_search_indexes fails, continue to create the index
@@ -647,7 +656,8 @@ def main():
     client = get_client(params)
     databases = client.list_database_names()
     if common_database in databases:
-        print(f"Database '{common_database}' exists.", flush=True)
+        if VERBOSE:
+            print(f"Database '{common_database}' exists.", flush=True)
     else:
         print(f"Database '{common_database}' does not exist. Creating.", flush=True)
         load_sample_dataset(params)
@@ -680,14 +690,16 @@ def main():
     
     for database in users:
         if database in databases:
-            print(f"Database '{database}' exists.", flush=True)
+            if VERBOSE:
+                print(f"Database '{database}' exists.", flush=True)
         else:
             print(f"Database '{database}' does not exist. Creating.", flush=True)
             create_user_collection(database, client, common_database, collections_list)
         
         # Create indexes for this user database if CREATE_INDEXES is True
         if params['CREATE_INDEXES'] and index_definitions:
-            print(f"Creating indexes for user database '{database}'...", flush=True)
+            if VERBOSE:
+                print(f"Creating indexes for user database '{database}'...", flush=True)
             create_user_indexes(client, database, index_definitions)
 
 if __name__ == "__main__":

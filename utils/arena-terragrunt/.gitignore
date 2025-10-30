@@ -23,3 +23,5 @@ trashme
 
 .venv/
 .env
+
+arena-terragrunt-usage.csv

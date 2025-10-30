@@ -21,6 +21,8 @@ docs:
         url: /sa/atlas-cluster/
       - title: "Reference: EKS Cluster Module"
         url: /sa/eks-cluster/
+      - title: "Reference: Config Backup Module"
+        url: /sa/config-backup/
 
   - title: "Workshop Introduction"
     children:
