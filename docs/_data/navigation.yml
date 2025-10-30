@@ -3,14 +3,7 @@ main:
     url: https://github.com/simonegaiera/mongodb-airbnb-workshop
 
 docs:
-  - title: "Workshop Introduction"
-    children:
-      - title: "Introduction"
-        url: /
-      - title: "Resources"
-        url: /resources/
-
-  - title: "Setup (MongoDB SA only)"
+  - title: "Setup (MongoDB SA)"
     children:
       - title: "Getting Started"
         url: /sa/overview/
@@ -24,6 +17,13 @@ docs:
         url: /sa/vs-code/
       - title: "Development: Validate Your Results"
         url: /sa/test/
+
+  - title: "Workshop Introduction"
+    children:
+      - title: "Introduction"
+        url: /
+      - title: "Resources"
+        url: /resources/
 
   - title: "Vibe Coding (Scenario 1)"
     children:
