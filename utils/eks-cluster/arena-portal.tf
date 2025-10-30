@@ -127,16 +127,16 @@ resource "helm_release" "portal_nginx" {
           value = ""
         },
         {
-          name  = "NEXT_PUBLIC_PRICES_ENABLED"
-          value = tostring(try(var.scenario_config.prices.enabled, false))
+          name  = "NEXT_PUBLIC_PRIZES_ENABLED"
+          value = tostring(try(var.scenario_config.prizes.enabled, false))
         },
         {
-          name  = "NEXT_PUBLIC_PRICES_WHERE"
-          value = tostring(try(var.scenario_config.prices.where, ""))
+          name  = "NEXT_PUBLIC_PRIZES_WHERE"
+          value = tostring(try(var.scenario_config.prizes.where, ""))
         },
         {
-          name  = "NEXT_PUBLIC_PRICES_WHEN"
-          value = tostring(try(var.scenario_config.prices.when, ""))
+          name  = "NEXT_PUBLIC_PRIZES_WHEN"
+          value = tostring(try(var.scenario_config.prizes.when, ""))
         }
       ],
       volumeMounts = [

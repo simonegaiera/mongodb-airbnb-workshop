@@ -21,7 +21,6 @@ All the instructions you'll need can be found in this guide:
 
 - **Set up the Environment**: ➡️ **[arena-terragrunt](https://github.com/simonegaiera/mongodb-airbnb-workshop/tree/main/utils/arena-terragrunt)**  
 - **Slack Channel**: 💬 **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)**
-- **AI Arena Presentation**: 📎 **[slides](https://docs.google.com/presentation/d/1sDx7GytCwkENuoJsc-OIFsyV_tJ6rvwI9KOwoIGDHy0)**
 - **Set up your laptop for development**: ➡️ **[arena-for-sa](https://mongoarena.com/environment/personal-vs-code/)**  
 
 ---

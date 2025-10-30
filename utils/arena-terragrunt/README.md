@@ -76,10 +76,10 @@
         - **`provider`**: Options are `"anthropic"` or `"openai"` (default: `"openai"`)
         - **`model`**: Options are `"claude-3-haiku"` or `"gpt-5-chat"` (default: `"gpt-5-chat"`)
       - **`leaderboard`**: Set to `"timed"` or `"score"` based
-      - **`prices`**: Configure pricing promotions for the workshop
-        - **`enabled`**: Set to `true` to enable pricing features
-        - **`where`**: Location or context for the pricing (e.g., `"Happy Hour"`)
-        - **`when`**: Time for the pricing (e.g., `"4:30 PM"`)
+      - **`prizes`**: Configure prizes promotions for the workshop
+        - **`enabled`**: Set to `true` to enable prizes features
+        - **`where`**: Location or context for the prizes (e.g., `"Happy Hour"`)
+        - **`when`**: Time for the prizes (e.g., `"4:30 PM"`)
       - **`instructions.sections`**: Define workshop sections with titles and content paths
     - **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
    - Note that the cluster expires after one week by default.
@@ -93,9 +93,14 @@
    aws sso login --profile Solution-Architects.User-979559056307
    ```
 2. **Initialize**  
+   To initialize Terragrunt, run the following command in your `customer` folder inside `arena-terragrunt`. This ensures all modules and dependencies are set up correctly for your environment:
+
    ```bash
+   cd ./utils/arena-terragrunt/your-customer
    terragrunt init --all --upgrade
    ```
+
+   Replace `your-customer` with the actual name of your customer folder. Running `terragrunt init --all --upgrade` here helps avoid issues with module references and ensures a clean environment for deployment.
 
 3. **Plan**  
    ```bash
@@ -139,6 +144,8 @@
      ```
 
 5. **Destroy**  
+   > **Important:** Before destroying, download the content of the view `user_leaderboard` in the `arena_shared` database to obtain participants' names and emails.
+   
    - **To destroy all modules:**  
      ```bash
      terragrunt destroy --all

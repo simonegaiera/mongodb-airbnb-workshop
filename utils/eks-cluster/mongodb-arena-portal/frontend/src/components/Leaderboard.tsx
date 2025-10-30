@@ -58,10 +58,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
   // State for collapsible leaderboard (default collapsed based on screen size)
   const [leaderboardExpanded, setLeaderboardExpanded] = useState(false)
 
-  // Read prices configuration from environment variables
-  const pricesEnabled = process.env.NEXT_PUBLIC_PRICES_ENABLED === 'true'
-  const pricesWhere = process.env.NEXT_PUBLIC_PRICES_WHERE || ''
-  const pricesWhen = process.env.NEXT_PUBLIC_PRICES_WHEN || ''
+  // Read prizes configuration from environment variables
+  const prizesEnabled = process.env.NEXT_PUBLIC_PRIZES_ENABLED === 'true'
+  const prizesWhere = process.env.NEXT_PUBLIC_PRIZES_WHERE || ''
+  const prizesWhen = process.env.NEXT_PUBLIC_PRIZES_WHEN || ''
 
   const toggleLeaderboard = () => {
     setLeaderboardExpanded(prev => !prev)
@@ -311,7 +311,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${leaderboardExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
         <div>
         {/* More Scenarios Section & Winners Announcement - Side by Side */}
-        <div className={`mb-6 grid grid-cols-1 ${pricesEnabled ? 'lg:grid-cols-2' : ''} gap-4`}>
+        <div className={`mb-6 grid grid-cols-1 ${prizesEnabled ? 'lg:grid-cols-2' : ''} gap-4`}>
           {/* More Scenarios Section */}
           <div className="p-6 bg-gradient-to-r from-mongodb-light to-green-50 rounded-lg border border-mongodb-green/20">
             <div className="text-center">
@@ -356,7 +356,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
           </div>
 
           {/* Winners & Prizes Announcement - Only show if enabled */}
-          {pricesEnabled && (
+          {prizesEnabled && (
             <div className="p-6 bg-gradient-to-r from-blue-100 to-indigo-50 rounded-lg border border-blue-200">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-3">
@@ -377,7 +377,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                       </svg>
                       <span className="text-sm font-medium text-gray-600">WHERE</span>
                     </div>
-                    <p className="text-lg font-bold text-blue-800">{pricesWhere || 'TBD'}</p>
+                    <p className="text-lg font-bold text-blue-800">{prizesWhere || 'TBD'}</p>
                   </div>
                   
                   <div className="bg-white/60 rounded-lg p-4 border border-blue-200">
@@ -387,7 +387,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                       </svg>
                       <span className="text-sm font-medium text-gray-600">WHEN</span>
                     </div>
-                    <p className="text-lg font-bold text-blue-800">{pricesWhen || 'TBD'}</p>
+                    <p className="text-lg font-bold text-blue-800">{prizesWhen || 'TBD'}</p>
                   </div>
                 </div>
               </div>
