@@ -6,7 +6,7 @@ docs:
   - title: "Setup (MongoDB SA)"
     children:
       - title: "Getting Started"
-        url: /sa/overview/
+        url: /sa/
       - title: "Setup: Prerequisites"
         url: /sa/setup/
       - title: "Environment: Configuration"

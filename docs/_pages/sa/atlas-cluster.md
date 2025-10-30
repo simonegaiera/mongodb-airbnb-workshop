@@ -195,31 +195,55 @@ Only runs if `CREATE_INDEXES=true`:
 **Atlas Search Index** (`indexes/search/search_index.json`)
 ```json
 {
-  "name": "search_index",
+  "analyzer": "lucene.english",
+  "searchAnalyzer": "lucene.english",
   "mappings": {
-    "dynamic": true
+    "dynamic": false,
+    "fields": {
+      "amenities": [
+        { "type": "stringFacet" },
+        { "type": "token" }
+      ],
+      "beds": [
+        { "type": "numberFacet" },
+        { "type": "number" }
+      ],
+      "name": {
+        "type": "autocomplete",
+        "minGrams": 3,
+        "maxGrams": 7
+      },
+      "property_type": [
+        { "type": "stringFacet" },
+        { "type": "token" }
+      ]
+    }
   }
 }
 ```
-- Full-text search on property fields
-- Enables fuzzy search, autocomplete, faceting
+- English language text analysis with autocomplete on property names
+- Faceted search on amenities, beds, and property_type
 - Applied to `sample_airbnb.listingsAndReviews`
 
 **Vector Search Index** (`indexes/vector-search/vector_index.json`)
 ```json
 {
-  "name": "vector_index",
-  "type": "vectorSearch",
-  "fields": [{
-    "path": "embeddings",
-    "numDimensions": 1536,
-    "similarity": "cosine"
-  }]
+  "fields": [
+    {
+      "type": "text",
+      "path": "description",
+      "model": "voyage-3-large"
+    },
+    {
+      "type": "filter",
+      "path": "property_type"
+    }
+  ]
 }
 ```
-- Semantic search with OpenAI embeddings
-- 1536 dimensions (OpenAI text-embedding-ada-002)
-- Cosine similarity for relevance
+- Semantic search using Voyage AI's voyage-3-large embedding model
+- Embeddings generated from property description field
+- Filterable by property_type for refined search
 - Applied to `sample_airbnb.listingsAndReviews`
 
 **Index Creation Process:**
@@ -270,15 +294,18 @@ These outputs are automatically passed to the EKS module for seamless integratio
 
 ## 📁 Module Structure
 
+The Atlas cluster deployment consists of two parts:
+
+### Terraform Module (`utils/atlas-cluster/`)
 ```
 atlas-cluster/
 ├── main.tf                          # Core Terraform resources
 ├── variables.tf                     # Input variables
-├── terragrunt.hcl                   # Terragrunt configuration (in customer folder)
-├── user_list.csv                    # Participant email addresses
 ├── parse_users.py                   # User list processor
 ├── populate_database_airnbnb.py     # Database setup automation
 ├── requirements.txt                 # Python dependencies
+├── user_list.csv                    # Template user list
+├── README.md                        # Module documentation
 └── indexes/                         # Index definitions
     ├── crud/
     │   └── beds_1_price_1.json      # Standard index
@@ -286,6 +313,18 @@ atlas-cluster/
     │   └── search_index.json        # Atlas Search index
     └── vector-search/
         └── vector_index.json        # Vector Search index
+```
+
+### Customer Configuration (`utils/arena-terragrunt/<customer>/`)
+```
+<customer>/                          # e.g., airbnb, dallas, dk, sa
+├── config.yaml                      # Customer-specific configuration
+├── root.hcl                         # Root Terragrunt configuration
+├── atlas-cluster/
+│   ├── terragrunt.hcl              # Terragrunt wrapper for atlas-cluster
+│   └── user_list.csv               # Customer-specific participant list
+└── eks-cluster/
+    └── terragrunt.hcl              # Terragrunt wrapper for eks-cluster
 ```
 
 ## ⚙️ Configuration
@@ -310,17 +349,18 @@ mongodb:
 
 ### User List
 
-Edit `user_list.csv` to add participant email addresses:
+Edit `user_list.csv` in your customer folder to add participant information:
 ```csv
-email
-participant1@example.com
-participant2@example.com
-participant3@example.com
+name,surname,email
+john,doe,john.doe@example.com
+jane,smith,jane.smith@example.com
+bob,wilson,bob.wilson@example.com
 ```
 
 Each user will receive:
-- Individual database credentials
-- Access to the workshop database
+- Individual database credentials (username derived from email prefix)
+- Personal database with full listingsAndReviews dataset
+- Read-only access to the shared arena database
 - Entry in the participant tracking system
 
 ## ⏱️ Deployment Time

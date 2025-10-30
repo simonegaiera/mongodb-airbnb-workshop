@@ -11,44 +11,30 @@ The `eks-cluster` module deploys a complete Kubernetes-based workshop environmen
 
 ## 📦 What Gets Deployed
 
-When you run the eks-cluster module, it creates and configures:
+The eks-cluster module creates a complete workshop environment on AWS EKS:
 
-### AWS EKS Cluster
-- **Kubernetes Cluster** - Managed EKS cluster
-- **Worker Nodes** - EC2 instances for workload execution
-- **Auto-scaling** - Automatic scaling based on demand
-- **Networking** - VPC, subnets, and security groups
+### Core Infrastructure
+- **EKS Cluster** - Managed Kubernetes with auto-scaling nodes
+- **Networking** - VPC, subnets, security groups, DNS (Route53)
+- **Storage** - EFS for persistent user workspaces
+- **Security** - SSL/TLS certificates (Let's Encrypt), IAM roles
 
-### Workshop Portal Infrastructure
-- **Nginx Ingress** - Load balancing and routing
-- **SSL/TLS Certificates** - Automatic certificate management via Let's Encrypt
-- **DNS Configuration** - Route53 domain setup
-- **EFS Storage** - Persistent file storage for user workspaces
+### User Environment (Per Participant)
+- **VSCode Online** - Browser-based IDE with pre-installed extensions
+- **MongoDB Database** - Isolated database per user
+- **PostgreSQL Database** - Optional, isolated per user
+- **Workspace Files** - Workshop repo cloned and ready
 
-### VSCode Online Instances
-- **Per-User Environments** - Individual VSCode instances for each participant
-- **Pre-configured Workspace** - Workshop repository cloned and ready
-- **MongoDB Extensions** - MongoDB for VS Code pre-installed
-- **Isolated Resources** - Separate namespaces per user
-
-### Workshop Components
-- **Frontend Portal** - Next.js application with workshop interface
-- **Backend API Server** - Node.js Express server
+### Workshop Portal
+- **Frontend** - Next.js application with leaderboard and instructions
+- **Backend API** - Python Flask server for user management
+- **Documentation** - Jekyll-built workshop instructions
 - **Results Processor** - Automated exercise validation
-- **Leaderboard Service** - Real-time progress tracking
-- **Scenario Definition** - Workshop content and instructions
 
-### LLM Integration (Optional)
-- **LiteLLM Proxy** - Unified API for multiple LLM providers
-- **OpenAI Support** - GPT models
-- **Anthropic Support** - Claude models
-- **AI Chatbot** - Interactive AI assistance for participants
+### Optional Components
+- **LiteLLM Proxy** - Unified LLM API (OpenAI/Anthropic) with caching
+- **Redis Cache** - LLM response caching to reduce API costs
 
-### Monitoring & Management
-- **Redis Cache** - Session management and caching
-- **PostgreSQL Database** - Arena portal data (optional)
-- **Logging** - Centralized application logs
-- **Health Checks** - Automated service monitoring
 
 ## ⚙️ Configuration
 
@@ -95,59 +81,85 @@ scenario:
         content: ["/crud/", "/crud/1/"]
 ```
 
-## 🌐 Domain & DNS
-
-The EKS module automatically configures:
-- **Domain Registration** - Arena domain for the workshop
-- **SSL Certificates** - A+ rated SSL configuration
-- **DNS Records** - Route53 automatic updates
-- **Subdomains** - Per-user VSCode access URLs
-
 ## ⏱️ Deployment Time
 
-- **Initial deployment**: 30-40 minutes (EKS cluster + infrastructure)
-- **VSCode instances**: Provisioned on-demand per user (~7 minutes per 10 users)
-- **DNS propagation**: 5-10 minutes additional
-- **Total workshop ready**: ~45-55 minutes for typical workshop setup
-
-## 🔒 Security Features
-
-### Network Security
-- **Private Subnets** - Worker nodes in private network
-- **Security Groups** - Fine-grained access control
-- **IAM Roles** - Least privilege access policies
-
-### Application Security
-- **TLS Encryption** - All traffic encrypted (A+ rating)
-- **Namespace Isolation** - Kubernetes namespaces per user
-- **Resource Quotas** - Prevent resource exhaustion
-- **Network Policies** - Pod-to-pod communication controls
-
-### SSL Verification
-- Tested with [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html) - **A+ rating**
+- **EKS cluster + infrastructure**: 30-40 minutes
+- **User environments**: 5-7 minutes (for ~10 users)
+- **Total**: ~45-75 minutes depending on configuration
 
 ## 💡 Key Features
 
-### Fully Managed Experience
-- **Zero Setup for Participants** - Everything pre-configured
-- **Browser-Based IDE** - No local installation required
-- **Consistent Environment** - Same setup for all participants
-- **Real-time Sync** - Changes saved automatically
-
-### Workshop Management
-- **Automated Onboarding** - Users created from Atlas user list
-- **Progress Tracking** - Real-time leaderboard updates
-- **Exercise Validation** - Automated result verification
-- **Flexible Scenarios** - Vibe Coding or Guided Workshop modes
-
-### Scalability
-- **Auto-scaling Workers** - Handles variable participant load
-- **On-demand Resources** - VSCode instances created as needed
-- **Efficient Resource Usage** - Namespaces and quotas
+- **🌐 Domain & DNS** - Automatic Route53 configuration with per-user subdomains and A+ rated SSL
+- **🔒 Security** - TLS encryption, IAM roles, namespace isolation, security groups
+- **👤 Per-User Isolation** - Dedicated VSCode instance, database, and workspace per participant
+- **📊 Progress Tracking** - Real-time leaderboard with automated exercise validation
+- **🤖 AI Integration** - Optional LLM support (OpenAI/Anthropic) with response caching
+- **⚡ Scalability** - Auto-scaling nodes, on-demand resource provisioning
 
 ## 📁 Module Structure & Components
 
-The eks-cluster module consists of multiple interconnected Terraform files, each managing a specific part of the infrastructure:
+The eks-cluster module is organized by **folders**, where each folder represents a deployable component with its own Helm chart. Each component has a corresponding `.tf` file that orchestrates its deployment.
+
+### 🏗️ Folder-Based Architecture
+
+```
+utils/eks-cluster/
+├── Core Infrastructure (.tf files)
+│   ├── main.tf              # Providers & backend
+│   ├── variables.tf         # Input variables
+│   ├── infra.tf            # VPC & networking
+│   ├── eks.tf              # EKS cluster
+│   ├── efs.tf              # Persistent storage
+│   └── route53.tf          # DNS & SSL
+│
+├── Component Folders (Helm Charts)
+│   ├── mdb-openvscode/     → openvscode.tf
+│   ├── mdb-nginx/          → nginx.tf
+│   ├── portal-server/      → arena-portal.tf
+│   ├── portal-nginx/       → arena-portal.tf
+│   ├── docs-nginx/         → docs-nginx.tf
+│   ├── scenario-definition/→ scenario-definition.tf
+│   ├── litellm/            → litellm.tf (optional)
+│   ├── redis/              → redis.tf (optional)
+│   └── results-processor/  (mounted in VSCode)
+│
+└── Supporting Folders
+    ├── aws_policies/       # IAM policy documents
+    ├── nginx-conf-files/   # Nginx templates
+    ├── nginx-html-files/   # Static HTML pages
+    └── mongodb-arena-portal/ # Portal source code
+```
+
+### 📦 How It Works: Folder = Deployable Component
+
+**Key Concept**: Each folder with a Helm chart represents one deployable service. The corresponding `.tf` file orchestrates its deployment with environment-specific configuration.
+
+**Example**:
+- `mdb-openvscode/` folder contains the complete Helm chart for VSCode
+- `openvscode.tf` file deploys it with dynamic configuration (user list, MongoDB URIs, etc.)
+
+**Benefits**:
+- ✅ **Self-contained**: Each component has all its manifests, scripts, and config in one place
+- ✅ **Reusable**: Helm charts can be versioned and reused across different customers
+- ✅ **Clear ownership**: Easy to identify what each folder deploys
+- ✅ **Modular**: Add/remove components by adding/removing folders
+
+### 📦 Component Folder Structure
+
+Each component folder contains a complete Helm chart:
+```
+component-name/
+├── Chart.yaml              # Helm chart metadata
+├── values.yaml            # Default configuration values
+├── templates/             # Kubernetes manifests
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── configmap.yaml
+│   └── ...
+└── files/                 # Scripts and assets
+    ├── startup.sh
+    └── ...
+```
 
 ### Core Infrastructure Files
 
@@ -261,8 +273,10 @@ All records use Route53 Alias records pointing to AWS Load Balancers with health
 
 ### Application Components
 
-#### `openvscode.tf` - Per-User VSCode Instances
-Deploys isolated browser-based IDEs for each participant:
+Each application component is deployed from its own folder containing a complete Helm chart. The corresponding `.tf` file orchestrates the deployment with dynamic configuration.
+
+#### 1️⃣ `mdb-openvscode/` → `openvscode.tf`
+**Per-User VSCode Instances** - Deploys isolated browser-based IDEs for each participant:
 
 **Helm Chart Deployment** (one per user):
 - **Chart**: `./mdb-openvscode` v0.1.3
@@ -302,8 +316,8 @@ Deploys isolated browser-based IDEs for each participant:
 - Each deployment exposes service: `vscode-{username}-svc`
 - Services discovered by Nginx for routing
 
-#### `nginx.tf` - User VSCode Reverse Proxy
-Routes traffic to individual VSCode instances:
+#### 2️⃣ `mdb-nginx/` → `nginx.tf`
+**User VSCode Reverse Proxy** - Routes traffic to individual VSCode instances:
 
 **Dynamic Configuration Generation:**
 - **Base Config**: Common Nginx settings (gzip, caching, SSL)
@@ -331,8 +345,8 @@ Routes traffic to individual VSCode instances:
 - HSTS headers
 - A+ SSL Labs rating
 
-#### `arena-portal.tf` - Workshop Portal (Frontend + Backend)
-Deploys the main workshop interface:
+#### 3️⃣ `portal-server/` + `portal-nginx/` → `arena-portal.tf`
+**Workshop Portal** - Deploys the main workshop interface (frontend + backend):
 
 **Portal Backend Server** (`helm_release.portal_server`):
 - **Technology**: Python Flask application
@@ -377,8 +391,8 @@ Deploys the main workshop interface:
 - **Service**: LoadBalancer (separate from VSCode Nginx)
 - **DNS**: Points to `customer.mongoarena.com` and `portal.customer.mongoarena.com`
 
-#### `docs-nginx.tf` - Workshop Instructions
-Serves workshop documentation:
+#### 4️⃣ `docs-nginx/` → `docs-nginx.tf`
+**Workshop Instructions** - Serves workshop documentation:
 
 **Documentation Builder**:
 - **Technology**: Jekyll static site generator
@@ -405,8 +419,8 @@ Serves workshop documentation:
 - Custom 404 and 50x error pages
 - Service: LoadBalancer (shared by both subdomains)
 
-#### `scenario-definition.tf` - Workshop Configuration
-Centralizes workshop scenario settings:
+#### 5️⃣ `scenario-definition/` → `scenario-definition.tf`
+**Workshop Configuration** - Centralizes workshop scenario settings:
 
 **Kubernetes Job** (`helm_release.scenario_definition`):
 - **Chart**: `./scenario-definition` v0.1.7
@@ -439,8 +453,8 @@ Centralizes workshop scenario settings:
 
 ### Optional Components
 
-#### `litellm.tf` - LLM Proxy (Optional)
-Provides unified API for multiple LLM providers:
+#### 6️⃣ `litellm/` → `litellm.tf` *(Optional)*
+**LLM Proxy** - Provides unified API for multiple LLM providers:
 
 **Conditional Deployment**:
 - Only deploys if `scenario_config.llm.enabled == true` and `scenario_config.llm.proxy.enabled == true`
@@ -479,8 +493,8 @@ Provides unified API for multiple LLM providers:
 
 **Integration**: VSCode Cline extension connects to `http://litellm-service:4000`
 
-#### `redis.tf` - Redis Cache (Optional)
-Provides caching for LiteLLM:
+#### 7️⃣ `redis/` → `redis.tf` *(Optional)*
+**Redis Cache** - Provides caching for LiteLLM:
 
 **Conditional Deployment**:
 - Only deploys if `scenario_config.llm.proxy.redis.enabled == true`
@@ -503,8 +517,8 @@ Provides caching for LiteLLM:
 
 **Connection String**: `redis://redis-service:6379` (internal cluster DNS)
 
-#### `aurora.tf` - PostgreSQL Database (Optional)
-Provides PostgreSQL for multi-database workshops:
+#### 8️⃣ `aurora.tf` *(Optional, no folder)*
+**PostgreSQL Database** - Provides PostgreSQL for multi-database workshops:
 
 **Conditional Deployment**:
 - Only deploys if `scenario_config.database.postgres == true`
@@ -562,8 +576,10 @@ For each Atlas user:
 
 ### Supporting Directories
 
-#### `aws_policies/` - IAM Policy Documents
-JSON policy files for granular permissions:
+These folders provide configuration, templates, and utilities used by the component folders:
+
+#### `aws_policies/` 
+**IAM Policy Documents** - JSON policy files for granular permissions:
 - `node_policy.json` - Node role trust policy
 - `cluster_policy.json` - Cluster role trust policy
 - `efs_csi_node_policy.json` - EFS CSI driver permissions
@@ -572,43 +588,29 @@ JSON policy files for granular permissions:
 - `secrets.json` - Secrets Manager read access
 - `eks_auto_mode_policy.json` - EC2 instance tagging for EKS Auto Mode
 
-#### `nginx-conf-files/` - Nginx Configuration Templates
-Templatefiles for dynamic Nginx configs:
+Used by: `eks.tf`
+
+#### `nginx-conf-files/` 
+**Nginx Configuration Templates** - Templatefiles for dynamic Nginx configs:
 - `nginx-base-config.conf.tpl` - Common settings (gzip, caching, timeouts)
 - `mdb-nginx-openvscode.conf.tpl` - Per-user VSCode server block
 - `doc-nginx-main.conf.tpl` - Documentation server block
 - `portal-nginx-server.conf.tpl` - Portal server block
 - `nginx.conf` - Main Nginx configuration file
 
-#### `nginx-html-files/` - Static HTML Templates
-Templated HTML pages:
+Used by: `nginx.tf`, `docs-nginx.tf`, `arena-portal.tf`
+
+#### `nginx-html-files/` 
+**Static HTML Templates** - Templated HTML pages:
 - `index.html.tpl` - Landing page with user links
 - `404.html.tpl` - Custom 404 error page
 - `50x.html.tpl` - Server error page
 - `favicon.ico` - Website icon
 
-#### `mdb-openvscode/` - VSCode Helm Chart
-Helm chart for VSCode Online instances:
-- `Chart.yaml` - Chart metadata (v0.1.3)
-- `values.yaml` - Default values
-- `templates/` - Kubernetes manifests:
-  - `deployment.yaml` - VSCode pod specification
-  - `service.yaml` - ClusterIP service
-  - `persistent-volume-claim.yaml` - EFS volume claim
-  - `configmap.yaml` - User-specific scripts
-  - `configmap-vscode.yaml` - VSCode settings.json
-  - `configmap-cline.yaml` - Cline extension settings
-  - `ingress.yaml` - Optional ingress rules
-  - `hpa.yaml` - Horizontal Pod Autoscaler
-- `files/` - Startup and utility scripts:
-  - `startup.sh` - Initializes workspace, clones repo
-  - `setup_lab_exercises.sh` - Prepares exercise files
-  - `openvscode_extensions.sh` - Installs VSCode extensions
-  - `user_operations.sh` - User management utilities
-  - `settings.json` - VSCode configuration
+Used by: `nginx.tf`, `docs-nginx.tf`
 
-#### `mongodb-arena-portal/` - Portal Application Source
-Next.js application for workshop portal:
+#### `mongodb-arena-portal/` 
+**Portal Application Source** - Next.js + Flask application source code:
 - `frontend/` - Next.js application:
   - `src/app/` - Next.js pages (App Router)
   - `src/components/` - React components
@@ -619,22 +621,10 @@ Next.js application for workshop portal:
   - `app.py` - Flask application
   - `requirements.txt` - Python dependencies
 
-#### `scenario-definition/` - Scenario Config Helm Chart
-Helm chart for deploying scenario configuration:
-- `Chart.yaml` - Chart metadata (v0.1.7)
-- `templates/` - Kubernetes manifests:
-  - `configmap-config.yaml` - Scenario YAML config
-  - `configmap-enhanced-config.yaml` - Enhanced with runtime values
-  - `configmap-script.yaml` - Python upload script
-  - `job.yaml` - Kubernetes job to upload config
-- `files/` - Scripts:
-  - `define-scenario.py` - Uploads config to MongoDB
-  - `startup.sh` - Job initialization
-  - `requirements.txt` - Python dependencies
-  - `test-scenario-config.json` - Test configuration
+Used by: `arena-portal.tf` (cloned and built during deployment)
 
-#### `results-processor/` - Exercise Validation
-Java application for validating workshop exercises:
+#### `results-processor/` 
+**Exercise Validation** - Java application for validating workshop exercises:
 - **Technology**: Java 21 + MongoDB Java Driver
 - **Purpose**: Validates student exercise solutions
 - **Structure**:
@@ -645,149 +635,131 @@ Java application for validating workshop exercises:
   - `logs/` - Validation results
 - **Integration**: Mounted into VSCode containers at `/home/workspace/utils`
 
-#### `litellm/` - LiteLLM Helm Chart
-Helm chart for LiteLLM proxy:
-- `Chart.yaml` - Chart metadata (v0.1.14)
-- `templates/` - Kubernetes manifests:
-  - `deployment.yaml` - LiteLLM pod
-  - `service.yaml` - ClusterIP service on port 4000
-  - `configmap.yaml` - LiteLLM configuration
-  - `secret.yaml` - API keys
-  - `hpa.yaml` - Horizontal Pod Autoscaler
-
-#### `redis/` - Redis Helm Chart
-Helm chart for Redis cache:
-- `Chart.yaml` - Chart metadata (v0.1.1)
-- `templates/` - Kubernetes manifests:
-  - `deployment.yaml` - Redis pod
-  - `service.yaml` - ClusterIP service on port 6379
-  - `configmap.yaml` - Redis configuration
-  - `pvc.yaml` - Optional persistence
-
-#### `portal-server/` - Portal Backend Helm Chart
-Helm chart for Flask backend:
-- `Chart.yaml` - Chart metadata (v0.1.0)
-- `templates/` - Kubernetes manifests
-- `files/startup.sh` - Initialization script
-
-#### `portal-nginx/` - Portal Frontend Helm Chart
-Helm chart for Next.js frontend:
-- `Chart.yaml` - Chart metadata (v0.1.5)
-- `templates/` - Kubernetes manifests
-- `files/startup.sh` - Builds Next.js app
-
-#### `docs-nginx/` - Documentation Helm Chart
-Helm chart for Jekyll documentation:
-- `Chart.yaml` - Chart metadata (v0.1.4)
-- `templates/` - Kubernetes manifests
-- `files/startup.sh` - Builds Jekyll site
+Used by: `openvscode.tf` (mounted as volume)
 
 ## 🔄 Deployment Flow
 
-Understanding how these components deploy in sequence:
+Understanding how these components deploy in sequence (aligned with the 5-tier architecture):
 
-1. **Infrastructure Layer** (main.tf, infra.tf, efs.tf):
-   - VPC, subnets, security groups
-   - EFS file system with mount targets
-   - IAM roles and policies
+### Tier 1: Network Foundation
+**Files**: `main.tf`, `infra.tf`
+- VPC creation with public subnets
+- Internet Gateway and route tables
+- Security groups for EKS
+- Availability zone configuration
+- **Time**: ~2-3 minutes
 
-2. **Kubernetes Layer** (eks.tf):
-   - EKS cluster creation (30-40 minutes)
-   - EKS add-ons (VPC CNI, metrics server, CloudWatch, EFS CSI driver)
-   - Storage class configuration
+### Tier 2: Storage & Kubernetes
+**Files**: `efs.tf`, `eks.tf`
+- **EFS Storage**: File system creation, mount targets, security group
+- **EKS Cluster**: Cluster creation, IAM roles, node pools, add-ons
+- **Storage Classes**: EFS CSI driver configuration
+- **Time**: ~30-40 minutes (EKS cluster is the longest component)
 
-3. **SSL/DNS Layer** (route53.tf):
-   - ACME account registration
-   - SSL certificate generation via Let's Encrypt
-   - DNS validation via Route53
-   - Kubernetes TLS secret creation
+### Tier 3: Supporting Services
+**Files**: `route53.tf`, `scenario-definition/`, `aurora.tf`
+- **SSL Certificates**: Let's Encrypt certificate via ACME, DNS validation
+- **Scenario Config**: Kubernetes job uploads workshop config to MongoDB
+- **PostgreSQL** *(optional)*: Aurora Serverless v2, pgvector, per-user databases
+- **Time**: ~5-10 minutes (15-20 if Aurora enabled)
 
-4. **Configuration Layer** (scenario-definition.tf):
-   - ConfigMap creation with scenario config
-   - Kubernetes job uploads config to MongoDB
-   - Makes config available to all services
+### Tier 4: User Workspaces
+**Folders**: `mdb-openvscode/`, `redis/`
+- **VSCode Instances**: Per-user deployments with PVCs, ConfigMaps, services
+- **Redis Cache** *(optional)*: In-memory cache for LiteLLM
+- Deployments happen in parallel per user
+- **Time**: ~3-5 minutes for 10 users
 
-5. **Optional Database Layer** (aurora.tf):
-   - Aurora PostgreSQL cluster creation (if enabled)
-   - pgvector extension installation
-   - Per-user database and role creation
-   - Data restoration from S3 backup
+### Tier 5: User-Facing Services
+**Folders**: `mdb-nginx/`, `portal-server/`, `portal-nginx/`, `docs-nginx/`, `litellm/`
+- **VSCode Nginx**: Reverse proxy with per-user configs, load balancer
+- **Portal Backend**: Flask API server for leaderboard and user management
+- **Portal Frontend**: Next.js build and deployment
+- **Documentation**: Jekyll site build and deployment
+- **LiteLLM Proxy** *(optional)*: Unified LLM API with caching
+- **Time**: ~5-10 minutes
 
-6. **User Workspaces Layer** (openvscode.tf):
-   - Per-user VSCode deployments (parallel)
-   - PVC creation for each user
-   - ConfigMap with user-specific settings
-   - Service exposure
-
-7. **Proxy Layer** (nginx.tf):
-   - Nginx deployment with dynamic config
-   - Load balancer provisioning
-   - Wildcard DNS record creation
-   - Routes traffic to user VSCode instances
-
-8. **Portal Layer** (arena-portal.tf, docs-nginx.tf):
-   - Backend API server deployment
-   - Frontend build and deployment
-   - Documentation build and deployment
-   - Separate load balancer provisioning
-   - DNS records for portal and instructions
-
-9. **LLM Layer** (redis.tf, litellm.tf):
-   - Redis cache deployment (if enabled)
-   - LiteLLM proxy deployment (if enabled)
-   - API key configuration
-   - Model configuration
+### Total Deployment Time
+- **Minimum** (no optional components): ~45-55 minutes
+- **Full deployment** (with PostgreSQL + LLM): ~60-75 minutes
+- **Note**: Most time spent waiting for EKS cluster (Tier 2)
 
 ## 🎭 Component Dependencies
 
+This diagram shows the deployment dependencies. Components are deployed in order based on what they depend on:
+
 ```
-┌─────────────┐
-│   VPC/EFS   │
-└─────┬───────┘
-      │
-      ▼
-┌─────────────┐
-│ EKS Cluster │
-└─────┬───────┘
-      │
-      ├─────────────────────────────────┐
-      │                                 │
-      ▼                                 ▼
-┌──────────────┐                  ┌────────────┐
-│ SSL Cert     │                  │ Scenario   │
-│ (Route53)    │                  │ Definition │
-└─────┬────────┘                  └─────┬──────┘
-      │                                 │
-      │         ┌───────────────────────┤
-      │         │                       │
-      ▼         ▼                       ▼
-┌──────────────────┐          ┌─────────────────┐
-│ Aurora Postgres  │          │ VSCode          │
-│ (optional)       │          │ Instances       │
-└──────────────────┘          └────────┬────────┘
-                                       │
-                              ┌────────┴────────┐
-                              │                 │
-                              ▼                 ▼
-                      ┌───────────┐     ┌────────────┐
-                      │ VSCode    │     │ Portal     │
-                      │ Nginx     │     │ Components │
-                      └───────────┘     └────────────┘
-                                              │
-                                    ┌─────────┴──────────┐
-                                    │                    │
-                                    ▼                    ▼
-                            ┌────────────┐      ┌─────────────┐
-                            │ Redis      │      │ Docs Nginx  │
-                            │ (optional) │      └─────────────┘
-                            └─────┬──────┘
-                                  │
-                                  ▼
-                            ┌────────────┐
-                            │ LiteLLM    │
-                            │ (optional) │
-                            └────────────┘
+                    ┌─────────────────────┐
+                    │  1. infra.tf        │
+                    │  VPC + Subnets      │
+                    └──────────┬──────────┘
+                               │
+                    ┌──────────┴──────────┐
+                    │                     │
+                    ▼                     ▼
+        ┌──────────────────┐    ┌─────────────────┐
+        │  2. efs.tf       │    │  2. eks.tf      │
+        │  EFS Storage     │    │  EKS Cluster    │
+        └──────────────────┘    └────────┬────────┘
+                                         │
+                    ┌────────────────────┼────────────────────┐
+                    │                    │                    │
+                    ▼                    ▼                    ▼
+        ┌──────────────────┐  ┌────────────────┐  ┌──────────────────┐
+        │  3. route53.tf   │  │ 3. scenario-   │  │ 3. aurora.tf     │
+        │  SSL/TLS Cert    │  │ definition/    │  │ PostgreSQL       │
+        └────────┬─────────┘  └───────┬────────┘  │ (optional)       │
+                 │                    │            └──────────────────┘
+                 │                    │
+         ┌───────┴────────────────────┴───────┐
+         │                                    │
+         ▼                                    ▼
+┌─────────────────┐                  ┌─────────────────┐
+│ 4. redis/       │                  │ 4. mdb-         │
+│ Redis Cache     │                  │ openvscode/     │
+│ (optional)      │                  │ VSCode Users    │
+└────────┬────────┘                  └────────┬────────┘
+         │                                    │
+         │            ┌───────────────────────┼──────────────┐
+         │            │                       │              │
+         ▼            ▼                       ▼              ▼
+┌─────────────┐  ┌──────────┐     ┌─────────────┐  ┌──────────────┐
+│ 5. litellm/ │  │ 5. mdb-  │     │ 5. portal-  │  │ 5. docs-     │
+│ LLM Proxy   │  │ nginx/   │     │ server/ +   │  │ nginx/       │
+│ (optional)  │  │ VSCode   │     │ portal-     │  │ Workshop     │
+└─────────────┘  │ Proxy    │     │ nginx/      │  │ Docs         │
+                 └──────────┘     │ Portal      │  └──────────────┘
+                                  └─────────────┘
+
+Legend:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tier 1: infra.tf          → Network foundation
+  Tier 2: efs.tf, eks.tf    → Storage + Kubernetes
+  Tier 3: SSL, Config, DB   → Supporting services
+  Tier 4: User workspaces   → Per-user resources
+  Tier 5: Proxies & Portal  → User-facing services
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Folder-to-Tier Mapping:
+├── Tier 1-3: Core .tf files (no folders)
+├── Tier 4-5: Component folders
+│   ├── mdb-openvscode/    → openvscode.tf
+│   ├── mdb-nginx/         → nginx.tf  
+│   ├── portal-server/     → arena-portal.tf
+│   ├── portal-nginx/      → arena-portal.tf
+│   ├── docs-nginx/        → docs-nginx.tf
+│   ├── scenario-definition/→ scenario-definition.tf
+│   ├── redis/             → redis.tf (optional)
+│   └── litellm/           → litellm.tf (optional)
 ```
+
+**Key Dependencies**:
+- **SSL Certificate** (route53.tf) → Required by all Nginx components for HTTPS
+- **Scenario Config** (scenario-definition/) → Required by VSCode and Portal for workshop settings
+- **EFS Storage** (efs.tf) → Required by VSCode instances for persistent workspaces
+- **Redis** (redis/) → Required by LiteLLM for caching (if enabled)
+- **VSCode Instances** (mdb-openvscode/) → Must exist before VSCode Nginx can proxy to them
+- **Aurora** (aurora.tf) → Independent, only needs VPC (if PostgreSQL enabled)
 
 ## 🔍 Key Design Patterns
 

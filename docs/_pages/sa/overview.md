@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-permalink: /sa/overview/
+permalink: /sa/
 layout: single
 classes: wide
 ---
