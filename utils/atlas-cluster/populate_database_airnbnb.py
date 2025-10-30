@@ -403,39 +403,31 @@ def create_views(client, common_database):
     # Pipeline for user_leaderboard view - combines user_details with exercise counts
     user_leaderboard_pipeline = [
         {
-            '$group': {
-                '_id': '$username',
-                'exercisesSolved': {
-                    '$sum': 1
-                }
+            '$match': {
+                'leaderboard': { '$ne': False },
+                'email': { '$exists': True }
             }
         },
         {
             '$lookup': {
-                'from': 'user_details',
+                'from': 'results',
                 'localField': '_id',
-                'foreignField': '_id',
-                'as': 'user_info'
+                'foreignField': 'username',
+                'as': 'results'
             }
         },
         {
-            '$unwind': {
-                'path': '$user_info',
-                'preserveNullAndEmptyArrays': True
-            }
-        },
-        {
-            '$match': {
-                'user_info.leaderboard': { '$ne': False }
+            '$addFields': {
+                'exercisesSolved': { '$size': '$results' }
             }
         },
         {
             '$project': {
                 '_id': 1,
                 'name': {
-                    '$ifNull': ['$user_info.name', '$_id']
+                    '$ifNull': ['$name', '$_id']
                 },
-                'email': '$user_info.email',
+                'email': '$email',
                 'exercisesSolved': 1
             }
         },
@@ -451,7 +443,7 @@ def create_views(client, common_database):
         if 'user_leaderboard' in db.list_collection_names():
             db.drop_collection('user_leaderboard')
             print("Dropped existing user_leaderboard view.", flush=True)
-        db.create_collection('user_leaderboard', viewOn='results', pipeline=user_leaderboard_pipeline)
+        db.create_collection('user_leaderboard', viewOn='user_details', pipeline=user_leaderboard_pipeline)
         print("Created user_leaderboard view successfully!", flush=True)
     except Exception as e:
         print(f"Error creating user_leaderboard view: {e}", flush=True)
