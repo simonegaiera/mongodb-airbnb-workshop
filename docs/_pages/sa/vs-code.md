@@ -63,11 +63,6 @@ Supercharge your workflow with these extensions:
    npm install
    npm start
    ```
-{% comment %}
-4. **Codespace Only:**  
-   In the `PORTS` panel, set your port to **public** for easy access!  
-   ![vscode-port-visibility](../../assets/images/vscode_port_visibility.png)
-{% endcomment %}
 
 ---
 
@@ -84,12 +79,6 @@ Supercharge your workflow with these extensions:
    npm install
    npm run dev
    ```
-{% comment %}
-3. **Codespace Only:**  
-   - When prompted, click **Open in browser**.
-   - Set the port to **public** in the `PORTS` panel.  
-   ![vscode-port-visibility](../../assets/images/vscode_port_visibility.png)
-{% endcomment %}
 ---
 
 ## 🎉 You’re Ready!

@@ -96,7 +96,6 @@ If you encounter any issues during setup:
 4. Review Terragrunt error messages for specific guidance
 5. **Join the Slack channel** - Ask questions and get support from the team
 
-💬 **Slack Support:** Join the MongoDB Solutions Architects Slack channel for real-time assistance and to connect with other SAs setting up workshop environments.
+💬 **Slack Support:** Join the **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)** Slack channel for real-time assistance and to connect with other SAs setting up workshop environments.
 
 Ready to get started? Head to [Setup: Prerequisites](/sa/setup/) to begin!
-

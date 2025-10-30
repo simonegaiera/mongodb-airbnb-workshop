@@ -91,3 +91,7 @@ Follow the documentation [here](https://wiki.corp.mongodb.com/pages/viewpage.act
    - Duplicate the `airbnb` folder and rename it with your `customer` name.
    - For a fully managed solution, keep all folders.  
    - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
+
+---
+
+✅ **Prerequisites complete?** Head to [Environment: Configuration](/sa/config/) to configure your deployment!

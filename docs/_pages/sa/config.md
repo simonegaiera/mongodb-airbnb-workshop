@@ -59,3 +59,7 @@ Customize the workshop by editing the `scenario` section in `config.yaml`:
 > **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
 
 Note that the cluster expires after one week by default.
+
+---
+
+✅ **Configuration complete?** Head to [Deployment: Deploy and Run](/sa/deployment/) to deploy your environment!
