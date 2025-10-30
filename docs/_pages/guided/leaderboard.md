@@ -14,3 +14,5 @@ The **Leaderboard** tracks your progress as you and your team build the next big
 Keep an eye on the rankings, celebrate your milestones, and let a little friendly competition push your skills even further.
 
 ![leaderboard](../../assets/images/leaderboard.png)
+
+{% include simple_next_nav.html %}

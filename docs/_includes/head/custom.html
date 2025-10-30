@@ -80,6 +80,15 @@
     // Get all navigation sub-titles that have children
     const navSubTitles = document.querySelectorAll('.sidebar .nav__sub-title');
     
+    // Version check - reset state if version changed
+    const currentVersion = '2.0';
+    const savedVersion = localStorage.getItem('navStateVersion');
+    
+    if (savedVersion !== currentVersion) {
+      localStorage.removeItem('navCollapsedState');
+      localStorage.setItem('navStateVersion', currentVersion);
+    }
+    
     // Load saved state from localStorage
     const savedState = JSON.parse(localStorage.getItem('navCollapsedState') || '{}');
     
@@ -93,10 +102,10 @@
         title.setAttribute('data-section-id', sectionId);
         
         // Check if this section should be collapsed based on saved state
-        // Default: first section (Setup) is expanded, others are collapsed
+        // Default: all sections are collapsed
         const shouldBeCollapsed = savedState[sectionId] !== undefined 
           ? savedState[sectionId] 
-          : index > 0; // Keep first section open, collapse others
+          : true; // All sections start collapsed by default
         
         if (shouldBeCollapsed) {
           title.classList.add('collapsed');
