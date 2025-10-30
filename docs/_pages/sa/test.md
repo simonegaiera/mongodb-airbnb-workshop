@@ -1,6 +1,6 @@
 ---
 title: "Validate Your Results"
-permalink: /test/
+permalink: /sa/test/
 layout: single
 classes: wide
 ---

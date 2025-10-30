@@ -8,7 +8,7 @@ remote_state {
     bucket  = "mongodb-arena"
     key     = "terragrunt/${local.config.customer.name}/${path_relative_to_include()}/terraform.tfstate"
     region  = "us-east-1"
-    profile = "Solution-Architects.User-979559056307"
+    profile = local.config.aws.profile
     encrypt = true
   }
 }

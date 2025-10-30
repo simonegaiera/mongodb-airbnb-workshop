@@ -9,9 +9,13 @@ mongodb:
   cluster_region: "US_EAST_2"
   instance_size: "M30"
   additional_users_count: 0
+  create_indexes: false
+  database_admin_password: "MongoArenaAdminDummy"
+  customer_user_password: "MongoArenaDummy"
 
 aws:
   region: "us-east-2"
+  profile: "Solution-Architects.User-979559056307"
 
 domain:
   email: "arena@mongodb.com"

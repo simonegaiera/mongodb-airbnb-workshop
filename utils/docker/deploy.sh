@@ -18,10 +18,8 @@ DOCKERFILE="mdb-openvscode.dockerfile"
 ACCOUNT_ID=$(aws sts get-caller-identity --profile $PROFILE --query Account --output text)
 ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
 
-# Generate version tag (you can customize this logic)
-VERSION_TAG=$(date +%Y%m%d-%H%M%S)
-# Alternative: use git commit hash if in a git repo
-# VERSION_TAG=$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d-%H%M%S)
+# Generate version tag
+VERSION_TAG=$(date +%Y%m%d)
 
 echo "Using AWS Account ID: $ACCOUNT_ID"
 echo "Version tag: $VERSION_TAG"

@@ -27,10 +27,10 @@ inputs = {
     atlas_provider_name                     = "AWS"
     auto_scaling_disk_gb_enabled            = true
     mongo_db_major_version                  = "8.0"
-    database_admin_password                 = "MongoArenaAdminDummy"
-    customer_user_password                  = "MongoArenaDummy"
+    database_admin_password                 = local.config.mongodb.database_admin_password
+    customer_user_password                  = local.config.mongodb.customer_user_password
     # Set user_list_path to null if you only want to have unassigned users (no CSV file will be used)
     user_list_path                          = local.user_list_path
     user_start_index                        = 0
-    create_indexes                          = false
+    create_indexes                          = local.config.mongodb.create_indexes
 }

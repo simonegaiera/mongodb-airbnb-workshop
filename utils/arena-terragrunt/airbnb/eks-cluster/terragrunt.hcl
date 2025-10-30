@@ -37,10 +37,8 @@ inputs = {
   customer_name = local.config.customer.name
   domain_email = local.config.domain.email
   aws_region = local.config.aws.region
+  aws_profile = local.config.aws.profile
   scenario_config = local.config.scenario
-
-  # varibales to change
-  aws_profile = "Solution-Architects.User-979559056307"
   # anthropic_api_key = "api-key-here (Optional)"
   # azure_openai_api_key = "api-key-here (Optional)"
 }

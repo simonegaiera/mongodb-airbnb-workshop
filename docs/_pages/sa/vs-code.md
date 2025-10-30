@@ -1,6 +1,6 @@
 ---
 title: "Environment: VSCode"
-permalink: /environment/personal-vs-code/
+permalink: /sa/vs-code/
 layout: single
 classes: wide
 ---

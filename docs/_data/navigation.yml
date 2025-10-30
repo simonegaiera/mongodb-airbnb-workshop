@@ -94,11 +94,15 @@ docs:
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
 
-  - title: "Hybrid Instructions"
+  - title: "Environment Setup (For MongoDB SAs Only)"
     children:
-      - title: "Atlas Cluster"
-        url: /environment/atlas/
-      - title: "IDE: Personal VSCode"
-        url: /environment/personal-vs-code/
-      - title: "Validate Your Results"
-        url: /test/
+      - title: "Environment Setup"
+        url: /sa/setup/
+      - title: "Configuration"
+        url: /sa/config/
+      - title: "Deployment"
+        url: /sa/deployment/
+      - title: "Development: Personal VSCode"
+        url: /sa/vs-code/
+      - title: "Development: Validate Your Results"
+        url: /sa/test/
