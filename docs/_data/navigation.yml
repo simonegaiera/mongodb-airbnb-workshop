@@ -10,7 +10,7 @@ docs:
       - title: "Resources"
         url: /resources/
 
-  - title: "Setup (MongoDB SAs only)"
+  - title: "Setup (MongoDB SA only)"
     children:
       - title: "Getting Started"
         url: /sa/overview/

@@ -1,28 +1,25 @@
-# MongoDB Airbnb AI Arena 🌐  
+# MongoDB Airbnb AI Arena 🌐
 
-Welcome to the **MongoDB Airbnb AI Arena**!  
-
----
-
-## 🔗 MongoDB AI Arena Instructions  
-
-All the instructions you'll need can be found in this guide:  
-
-👉 **[mongodb-airbnb-arena](https://mongoarena.com)**  
-
-> **Note for Participants:** The environment has already been prepared for you! Simply follow the instructions to dive into hands-on activities.
+An interactive workshop where you'll build a rental platform powered by MongoDB.
 
 ---
 
-## 🛠️ Environment Setup (For MongoDB SAs Only)  
+## 🚀 For Workshop Participants
 
-**MongoDB SAs** managing the environment can follow these setup guides to prepare the infrastructure:   
+All instructions and exercises:  
+👉 **[mongoarena.com](https://mongoarena.com)**
 
-- **Set up the Environment**: ➡️ **[arena-setup](https://mongoarena.com/sa/overview/)**  
+> **Note:** Your environment is pre-configured. Just follow the portal instructions!
 
 ---
 
-Prepare to unleash the full potential of MongoDB! 🚀  
-Explore, collaborate, and build something amazing as you bring your company’s rental platform to life.
+## 🛠️ For MongoDB Solutions Architects
 
-Happy learning! 💻✨
+Setting up a workshop environment?  
+📖 **[Setup Guide](https://mongoarena.com/sa/overview/)**
+
+💬 Need help? Join **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)** on Slack
+
+---
+
+Happy coding! 💻✨

@@ -7,7 +7,6 @@ classes: wide
 
 ## 💻✨ Cursor/VSCode Setup
 
-Ready to dive into the [mongodb-airbnb-workshop](https://github.com/simonegaiera/mongodb-airbnb-workshop)?  
 Let's get your environment up and running—fast, smooth, and with style!
 
 ---
