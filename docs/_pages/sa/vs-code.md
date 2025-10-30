@@ -1,5 +1,5 @@
 ---
-title: "Environment: VSCode"
+title: "Development: VSCode"
 permalink: /sa/vs-code/
 layout: single
 classes: wide

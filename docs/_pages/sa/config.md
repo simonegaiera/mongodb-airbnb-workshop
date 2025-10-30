@@ -1,5 +1,5 @@
 ---
-title: "Configuration"
+title: "Environment: Configuration"
 permalink: /sa/config/
 layout: single
 classes: wide

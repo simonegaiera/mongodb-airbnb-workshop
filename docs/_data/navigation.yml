@@ -10,6 +10,21 @@ docs:
       - title: "Resources"
         url: /resources/
 
+  - title: "Setup (MongoDB SAs only)"
+    children:
+      - title: "Getting Started"
+        url: /sa/overview/
+      - title: "Setup: Prerequisites"
+        url: /sa/setup/
+      - title: "Environment: Configuration"
+        url: /sa/config/
+      - title: "Deployment: Deploy and Run"
+        url: /sa/deployment/
+      - title: "Development: VSCode"
+        url: /sa/vs-code/
+      - title: "Development: Validate Your Results"
+        url: /sa/test/
+
   - title: "Vibe Coding (Scenario 1)"
     children:
       - title: "Vibe Coding: Instructions"
@@ -93,16 +108,3 @@ docs:
         url: /vector-search/index-hint/
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
-
-  - title: "Environment Setup (For MongoDB SAs Only)"
-    children:
-      - title: "Environment Setup"
-        url: /sa/setup/
-      - title: "Configuration"
-        url: /sa/config/
-      - title: "Deployment"
-        url: /sa/deployment/
-      - title: "Development: Personal VSCode"
-        url: /sa/vs-code/
-      - title: "Development: Validate Your Results"
-        url: /sa/test/

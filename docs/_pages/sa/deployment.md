@@ -1,5 +1,5 @@
 ---
-title: "Deployment"
+title: "Deployment: Deploy and Run"
 permalink: /sa/deployment/
 layout: single
 classes: wide
