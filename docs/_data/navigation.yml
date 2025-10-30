@@ -17,6 +17,10 @@ docs:
         url: /sa/vs-code/
       - title: "Development: Validate Your Results"
         url: /sa/test/
+      - title: "Reference: Atlas Cluster Module"
+        url: /sa/atlas-cluster/
+      - title: "Reference: EKS Cluster Module"
+        url: /sa/eks-cluster/
 
   - title: "Workshop Introduction"
     children:
