@@ -25,6 +25,13 @@ const Header = () => {
 
   return (
     <header className="bg-white">
+      <div className="w-full t-0">
+        <img 
+          src={`${process.env.BASE_PATH}/dallas-banner.jpg`}
+          alt=".local Dallas" 
+          className="mx-auto object-top"
+        />
+      </div>
       {/* Top section with logo and user info */}
       <div className="container mx-auto px-4 py-4 motion-preset-fade motion-duration-2000 motion-delay-[1000ms]">
         <div className="flex items-center justify-center space-x-4">
