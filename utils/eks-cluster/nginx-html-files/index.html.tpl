@@ -85,43 +85,6 @@
         MongoDB AI Arena
       </a>
     </p>
-    
-    %{ if length(user_ids) > 0 }
-      <table>
-        <thead>
-          <tr>
-            <th>Attendees</th>
-            <th>VSCode Workspace</th>
-            <th>App Frontend</th>
-          </tr>
-        </thead>
-        <tbody>
-          %{ for uid in user_ids }
-            <tr>
-              <td>${uid}</td>
-              <td>
-                <a 
-                  href="https://${uid}.${server_name}/?folder=${folder}"
-                  target="_blank" rel="noopener noreferrer"
-                >
-                  Workspace
-                </a>
-              </td>
-              <td>
-                <a 
-                  href="https://${uid}.${server_name}/app"
-                  target="_blank" rel="noopener noreferrer"
-                >
-                  App
-                </a>
-              </td>
-            </tr>
-          %{ endfor }
-        </tbody>
-      </table>
-    %{ else }
-      <p><em>No users found.</em></p>
-    %{ endif }
 
   </div>
   <div class="footer">

@@ -1,16 +1,17 @@
 # Define version variables at the top
-ARG OPENVSCODE_VERSION=1.103.1
+ARG OPENVSCODE_VERSION=1.105.1
 
 FROM gitpod/openvscode-server:${OPENVSCODE_VERSION}
 
 USER root
 
 # Declare ARG variables after FROM to make them available in build stages
+ARG NODE_VERSION=24
+ARG NPM_VERSION=11.6.1
 ARG PYTHON_VERSION=3.12
 ARG JAVA_VERSION=21
-ARG NPM_VERSION=latest
-ARG MONGODB_MCP_VERSION=1.1.0
-ARG MONGOSH_VERSION=2.5.8
+ARG MONGODB_MCP_VERSION=1.2.0
+ARG MONGOSH_VERSION=2.5.9
 
 # Set environment variable to avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,8 +36,8 @@ RUN apt-get update -qq && apt-get install -y -qq \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js (LTS version)
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && apt-get install -y -qq nodejs \
     && rm -rf /var/lib/apt/lists/*
 

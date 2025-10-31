@@ -19,9 +19,7 @@ locals {
 
   index_nginx_html = templatefile("${path.module}/nginx-html-files/index.html.tpl", {
     customer_name = var.customer_name,
-    server_name = local.aws_route53_record_name,
-    user_ids = local.atlas_user_list,
-    folder = "/home/workspace/${basename(tostring(var.scenario_config.repository))}/${tostring(var.scenario_config.backend)}"
+    server_name = local.aws_route53_record_name
   })
 
   notfound_nginx_html = templatefile("${path.module}/nginx-html-files/404.html.tpl", {
