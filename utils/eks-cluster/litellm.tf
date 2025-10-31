@@ -81,6 +81,7 @@ resource "helm_release" "litellm" {
                 api_key = "os.environ/AZURE_OPENAI_API_KEY"
                 api_base = "https://solutionsconsultingopenai.openai.azure.com"
                 api_version = "2025-04-01-preview"
+                base_model = "gpt-5-mini"
                 max_tokens = 4096
                 temperature = 0.7
                 cache_control_injection_points = [
@@ -98,6 +99,7 @@ resource "helm_release" "litellm" {
                 api_key = "os.environ/AZURE_OPENAI_API_KEY"
                 api_base = "https://solutionsconsultingopenai.openai.azure.com"
                 api_version = "2025-04-01-preview"
+                base_model = "gpt-5"
                 max_tokens = 4096
                 temperature = 0.7
                 cache_control_injection_points = [
@@ -116,6 +118,7 @@ resource "helm_release" "litellm" {
                 api_key = "os.environ/ANTHROPIC_API_KEY"
                 api_base = null
                 api_version = null
+                base_model = "claude-3-haiku-20240307"
                 max_tokens = 4096
                 temperature = 0.7
                 cache_control_injection_points = [
@@ -133,6 +136,7 @@ resource "helm_release" "litellm" {
                 api_key = "os.environ/ANTHROPIC_API_KEY"
                 api_base = null
                 api_version = null
+                base_model = "claude-sonnet-4-20250514"
                 max_tokens = 4096
                 temperature = 0.7
                 cache_control_injection_points = [
