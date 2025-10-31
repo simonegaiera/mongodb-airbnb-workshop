@@ -82,7 +82,7 @@ export default function AvailableCount({ refreshTrigger }: AvailableCountProps) 
   return (
     <div className="card-arena rounded-lg shadow-lg p-6 card-arena-hover">
       <div className="text-center">
-        <h3 className="text-lg font-semibold text-arena-neon-green mb-2">
+        <h3 className="text-2xl font-semibold text-arena-neon-green mb-2">
           Active Participants
         </h3>
         <div className="flex items-center justify-center space-x-2">

@@ -141,7 +141,7 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
     <div className="card-arena rounded-lg shadow-lg p-6 card-arena-hover">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-arena-neon-green mb-2">
+          <h3 className="text-2xl font-semibold text-arena-neon-green mb-2">
             Join the Challenge
           </h3>
         </div>
