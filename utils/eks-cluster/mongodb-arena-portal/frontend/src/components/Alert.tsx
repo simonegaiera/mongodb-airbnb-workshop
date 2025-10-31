@@ -9,10 +9,10 @@ export default function Alert({ type, message, onClose }: AlertProps) {
   
   return (
     <div className={`mb-6 rounded-lg p-4 ${
-      isError ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'
+      isError ? 'bg-red-900/30 border border-red-500/50' : 'bg-arena-teal/30 border border-arena-neon-green/50'
     }`}>
       <div className="flex">
-        <div className={isError ? 'text-red-400' : 'text-green-400'}>
+        <div className={isError ? 'text-red-400' : 'text-arena-neon-green'}>
           {isError ? (
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -25,7 +25,7 @@ export default function Alert({ type, message, onClose }: AlertProps) {
         </div>
         <div className="ml-3 flex-1">
           <p className={`text-sm font-medium ${
-            isError ? 'text-red-800' : 'text-green-800'
+            isError ? 'text-red-300' : 'text-arena-neon-green'
           }`}>
             {message}
           </p>
@@ -36,10 +36,10 @@ export default function Alert({ type, message, onClose }: AlertProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className={`inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                className={`inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-arena-dark transition-colors ${
                   isError 
-                    ? 'text-red-500 hover:bg-red-100 focus:ring-red-600' 
-                    : 'text-green-500 hover:bg-green-100 focus:ring-green-600'
+                    ? 'text-red-400 hover:bg-red-900/50 focus:ring-red-500' 
+                    : 'text-arena-neon-green hover:bg-arena-teal/50 focus:ring-arena-neon-green'
                 }`}
               >
                 <span className="sr-only">Dismiss</span>

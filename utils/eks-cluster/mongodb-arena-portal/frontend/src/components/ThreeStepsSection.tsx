@@ -63,21 +63,21 @@ const ThreeStepsSection: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="card-arena rounded-lg shadow-lg p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Step 1: Read Instructions */}
-        <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
+        <div className="p-4 tile-arena tile-arena-hover rounded-lg border-2 flex flex-col">
           <div 
             className="flex items-center justify-center mb-4 cursor-pointer"
             onClick={toggleSteps}
           >
-            <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+            <div className="w-12 h-12 bg-arena-neon-green text-arena-dark rounded-full flex items-center justify-center text-lg font-bold mr-3">
               1
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-white">
               Open the Instructions
             </h3>
-            <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
+            <div className="ml-2 p-1 text-arena-neon-green hover:text-arena-bright-green transition-colors">
               <svg 
                 className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                 fill="none" 
@@ -107,7 +107,7 @@ const ThreeStepsSection: React.FC = () => {
               href={getInstructionsUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 bg-mongodb-green text-white text-sm font-medium rounded-md hover:bg-mongodb-dark transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-arena-neon-green text-arena-dark text-sm font-bold rounded-md hover:bg-arena-bright-green transition-colors shadow-lg hover:shadow-arena-neon-green/50"
             >
               Instructions
               <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,18 +118,18 @@ const ThreeStepsSection: React.FC = () => {
         </div>
 
         {/* Step 2: Open the Workload */}
-        <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
+        <div className="p-4 tile-arena tile-arena-hover rounded-lg border-2 flex flex-col">
           <div 
             className="flex items-center justify-center mb-4 cursor-pointer"
             onClick={toggleSteps}
           >
-            <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+            <div className="w-12 h-12 bg-arena-neon-green text-arena-dark rounded-full flex items-center justify-center text-lg font-bold mr-3">
               2
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-white">
               Open the Workspace
             </h3>
-            <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
+            <div className="ml-2 p-1 text-arena-neon-green hover:text-arena-bright-green transition-colors">
               <svg 
                 className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                 fill="none" 
@@ -151,15 +151,15 @@ const ThreeStepsSection: React.FC = () => {
                   className="h-30 mx-auto object-contain object-top"
                 />
               </div>
-              <div className="text-gray-600 text-sm mt-2">
+              <div className="text-gray-300 text-sm mt-2">
                 <ul className="text-left space-y-2 mb-3">
-                  <li className="font-medium text-gray-800">- Open a new terminal:
-                    <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                  <li className="font-medium text-gray-200">- Open a new terminal:
+                    <code className="bg-arena-dark text-arena-neon-green px-2 py-1 rounded text-xs font-mono block mt-1 border border-arena-teal">
                       ☰ {'>'} Terminal {'>'} New Terminal
                     </code>
                   </li>
-                  <li className="font-medium text-gray-800">- Start the server:
-                    <code className="bg-gray-800 text-green-400 px-2 py-1 rounded text-xs font-mono block mt-1">
+                  <li className="font-medium text-gray-200">- Start the server:
+                    <code className="bg-arena-dark text-arena-neon-green px-2 py-1 rounded text-xs font-mono block mt-1 border border-arena-teal">
                       npm start
                     </code>
                   </li>
@@ -169,7 +169,7 @@ const ThreeStepsSection: React.FC = () => {
           </div>
           
           <div className="text-center mt-auto">
-            <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
+            <div className="inline-flex items-center px-4 py-2 bg-arena-teal text-gray-300 text-sm font-medium rounded-md cursor-not-allowed">
               Find Your Name Below
               <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -179,18 +179,18 @@ const ThreeStepsSection: React.FC = () => {
         </div>
 
         {/* Step 3: Open the App */}
-        <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 hover:border-mongodb-green transition-colors flex flex-col">
+        <div className="p-4 tile-arena tile-arena-hover rounded-lg border-2 flex flex-col">
           <div 
             className="flex items-center justify-center mb-4 cursor-pointer"
             onClick={toggleSteps}
           >
-            <div className="w-12 h-12 bg-mongodb-green text-white rounded-full flex items-center justify-center text-lg font-bold mr-3">
+            <div className="w-12 h-12 bg-arena-neon-green text-arena-dark rounded-full flex items-center justify-center text-lg font-bold mr-3">
               3
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-white">
               Open the App
             </h3>
-            <div className="ml-2 p-1 text-mongodb-green hover:text-mongodb-dark transition-colors">
+            <div className="ml-2 p-1 text-arena-neon-green hover:text-arena-bright-green transition-colors">
               <svg 
                 className={`w-4 h-4 transition-transform duration-200 ${stepsExpanded ? 'rotate-180' : ''}`}
                 fill="none" 
@@ -212,9 +212,9 @@ const ThreeStepsSection: React.FC = () => {
                   className="h-30 mx-auto object-contain object-top"
                 />
               </div>
-              <div className="text-gray-600 text-sm mt-2">
+              <div className="text-gray-300 text-sm mt-2">
                 <div className="text-center">
-                  <p className="text-gray-800 font-medium">
+                  <p className="text-gray-200 font-medium">
                     See your name on the homepage?<br />
                     ✅ You're in!
                   </p>
@@ -224,7 +224,7 @@ const ThreeStepsSection: React.FC = () => {
           </div>
           
           <div className="text-center mt-auto">
-            <div className="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-600 text-sm font-medium rounded-md cursor-not-allowed">
+            <div className="inline-flex items-center px-4 py-2 bg-arena-teal text-gray-300 text-sm font-medium rounded-md cursor-not-allowed">
               Find Your Name Below
               <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />

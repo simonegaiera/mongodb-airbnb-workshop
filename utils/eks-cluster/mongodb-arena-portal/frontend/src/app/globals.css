@@ -1,3 +1,68 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-arena-dark;
+  }
+}
+
+@layer utilities {
+  .circuit-bg {
+    background-color: #0A1F1C;
+    background-image: 
+      linear-gradient(90deg, rgba(0,255,107,0.03) 1px, transparent 1px),
+      linear-gradient(rgba(0,255,107,0.03) 1px, transparent 1px),
+      radial-gradient(circle at 20% 80%, rgba(19, 78, 74, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(19, 78, 74, 0.3) 0%, transparent 50%);
+    background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%;
+  }
+  
+  .neon-glow {
+    text-shadow: 0 0 10px rgba(0, 255, 107, 0.5),
+                 0 0 20px rgba(0, 255, 107, 0.3),
+                 0 0 30px rgba(0, 255, 107, 0.2);
+  }
+  
+  .card-arena {
+    background: linear-gradient(135deg, rgba(15, 41, 37, 0.95) 0%, rgba(19, 78, 74, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 107, 0.3);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 0 rgba(0, 255, 107, 0.1);
+  }
+  
+  .card-arena-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .card-arena-hover:hover {
+    border-color: rgba(0, 255, 107, 0.6);
+    box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.4),
+                0 4px 8px -2px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 255, 107, 0.25),
+                inset 0 1px 0 0 rgba(0, 255, 107, 0.2);
+  }
+  
+  .tile-arena {
+    background: linear-gradient(135deg, rgba(21, 51, 46, 0.9) 0%, rgba(26, 95, 88, 0.7) 100%);
+    border: 1px solid rgba(0, 255, 107, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 0 rgba(0, 255, 107, 0.15);
+  }
+  
+  .tile-arena-hover {
+    transition: all 0.2s ease;
+  }
+  
+  .tile-arena-hover:hover {
+    background: linear-gradient(135deg, rgba(26, 95, 88, 0.85) 0%, rgba(19, 78, 74, 0.95) 100%);
+    border-color: rgba(0, 255, 107, 0.6);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(0, 255, 107, 0.2),
+                inset 0 1px 0 0 rgba(0, 255, 107, 0.25);
+    transform: translateY(-2px);
+  }
+}

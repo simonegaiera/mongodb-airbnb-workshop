@@ -49,12 +49,12 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
   // Don't render anything until client-side hydration is complete
   if (!isClient) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="card-arena rounded-lg shadow-lg p-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded mb-4 w-1/3"></div>
+          <div className="h-6 bg-arena-dark-light rounded mb-4 w-1/3"></div>
           <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-10 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-arena-dark-light rounded w-1/4"></div>
+            <div className="h-10 bg-arena-dark-light rounded"></div>
           </div>
         </div>
       </div>
@@ -64,11 +64,11 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
   // Show mobile restriction message if user is on mobile
   if (isMobile) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6">
+      <div className="card-arena rounded-lg shadow-lg border-red-400 p-6">
         <div className="text-center">
           <div className="mb-4">
             <svg
-              className="mx-auto h-12 w-12 text-red-500"
+              className="mx-auto h-12 w-12 text-red-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -82,11 +82,11 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-arena-neon-green mb-2">
             Laptop Required
           </h3>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-            <p className="text-sm text-yellow-800">
+          <div className="bg-yellow-900/30 border border-yellow-500/50 rounded-md p-3">
+            <p className="text-sm text-yellow-300">
               💻 Please switch to a laptop or desktop computer to join the MongoDB Arena challenge.
             </p>
           </div>
@@ -138,16 +138,16 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="card-arena rounded-lg shadow-lg p-6 card-arena-hover">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            New to Arena?
+          <h3 className="text-lg font-semibold text-arena-neon-green mb-2">
+            Join the Challenge
           </h3>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex-1">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
               Name
             </label>
             <input
@@ -158,12 +158,12 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
               onChange={handleInputChange}
               placeholder="Enter your name"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-mongodb-green focus:border-mongodb-green"
+              className="w-full px-3 py-2 bg-arena-dark-light border border-arena-teal rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:border-arena-neon-green transition-all"
             />
           </div>
           
           <div className="flex-1">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
               Email
             </label>
             <input
@@ -174,14 +174,14 @@ export default function TakeParticipantForm({ onSuccess, onError, onLoading }: T
               onChange={handleInputChange}
               placeholder="Enter your email"
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-mongodb-green focus:border-mongodb-green"
+              className="w-full px-3 py-2 bg-arena-dark-light border border-arena-teal rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:border-arena-neon-green transition-all"
             />
           </div>
 
           <div className="flex-shrink-0">
             <button 
               type="submit" 
-              className="bg-mongodb-green text-mongodb-light font-semibold py-2 px-6 rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-mongodb-green transition-colors duration-200 whitespace-nowrap"
+              className="bg-arena-neon-green text-arena-dark font-bold py-2 px-6 rounded-md hover:bg-arena-bright-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-arena-neon-green focus:ring-offset-arena-dark transition-all duration-200 whitespace-nowrap shadow-lg hover:shadow-arena-neon-green/50"
             >
               Start Challenge
             </button>

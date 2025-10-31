@@ -70,13 +70,16 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen circuit-bg py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-mongodb-dark mb-4">
-            MongoDB Arena Portal
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold text-arena-neon-green mb-2 neon-glow">
+            Step Into the AI Arena
           </h1>
+          <p className="text-white text-xl font-light">
+            MongoDB Arena Portal
+          </p>
         </div>
 
         {/* Alerts */}
@@ -103,12 +106,12 @@ export default function Home() {
             {/* New to Arena Form - Takes 3/4 width */}
             <div className="lg:col-span-3">
               {isPasswordProtected && !isAuthenticated ? (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="card-arena rounded-lg shadow-lg p-6">
                   <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-lg font-semibold text-arena-neon-green mb-2">
                       New to Arena?
                     </h3>
-                    <p className="text-gray-600 text-sm mb-4">
+                    <p className="text-gray-300 text-sm mb-4">
                       Access to the form has been temporarily disabled due to too many requests. Please try again later.
                     </p>
                   </div>
@@ -121,13 +124,13 @@ export default function Home() {
                           id="password"
                           value={passwordInput}
                           onChange={(e) => setPasswordInput(e.target.value)}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:border-mongodb-green"
+                          className="flex-1 px-3 py-2 bg-arena-dark-light border border-arena-teal rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:border-arena-neon-green"
                           placeholder="Password"
                           required
                         />
                         <button
                           type="submit"
-                          className="bg-mongodb-green text-white py-2 px-4 rounded-md hover:bg-mongodb-green-dark focus:outline-none focus:ring-2 focus:ring-mongodb-green focus:ring-offset-2 transition-colors whitespace-nowrap"
+                          className="bg-arena-neon-green text-arena-dark py-2 px-4 rounded-md hover:bg-arena-bright-green focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:ring-offset-2 focus:ring-offset-arena-dark transition-colors whitespace-nowrap font-semibold"
                         >
                           Access Form
                         </button>
@@ -135,7 +138,7 @@ export default function Home() {
                     </div>
                     
                     {passwordError && (
-                      <div className="text-red-600 text-sm">
+                      <div className="text-red-400 text-sm">
                         {passwordError}
                       </div>
                     )}
