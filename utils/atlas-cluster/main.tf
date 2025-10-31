@@ -333,7 +333,7 @@ resource "null_resource" "install_requirements" {
 }
 
 locals {
-  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(local.mongodb_atlas_database_username)}:${urlencode(var.database_admin_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings.standard_srv, "mongodb+srv://", "")}?retryWrites=true&w=majority"
+  mongodb_atlas_connection_string = "mongodb+srv://${urlencode(local.mongodb_atlas_database_username)}:${urlencode(var.database_admin_password)}@${replace(mongodbatlas_advanced_cluster.cluster.connection_strings.standard_srv, "mongodb+srv://", "")}/?retryWrites=true&w=majority"
 }
 
 # Define another null resource to execute the Python script
