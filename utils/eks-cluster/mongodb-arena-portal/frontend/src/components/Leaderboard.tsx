@@ -495,38 +495,38 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
                 {currentResults.map((row, index) => {
                   const actualRank = row.originalRank
                   return (
-                    <tr key={row.user} className={actualRank <= 3 ? 'bg-yellow-900/20' : 'hover:bg-arena-dark-light'}>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-white">
-                        <div className="flex items-center">
+                    <tr key={row.user} className={actualRank <= 3 ? 'bg-gradient-to-r from-slate-600/30 to-gray-500/25 hover:from-slate-500/40 hover:to-gray-400/35' : 'hover:bg-arena-dark-light'}>
+                      <td className={`px-4 py-2 whitespace-nowrap text-sm font-medium text-white ${actualRank <= 3 ? 'rounded-l-xl' : ''}`}>
+                        <div className="flex items-center justify-start min-w-[2.5rem]">
                           {actualRank <= 3 ? (
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                              actualRank === 1 ? 'bg-yellow-500' : 
-                              actualRank === 2 ? 'bg-gray-400' : 
-                              'bg-orange-600'
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shadow-lg ${
+                              actualRank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' : 
+                              actualRank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500' : 
+                              'bg-gradient-to-br from-orange-400 to-orange-700'
                             }`}>
                               {actualRank}
                             </div>
                           ) : (
-                            <div className="w-8 h-8 rounded-full bg-arena-neon-green text-arena-dark flex items-center justify-center text-sm font-bold">
+                            <div className="w-10 h-10 rounded-full bg-arena-neon-green text-arena-dark flex items-center justify-center text-sm font-bold">
                               {actualRank}
                             </div>
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-white">
+                      <td className="px-4 py-2 whitespace-nowrap text-sm text-white">
                         {row.user}
                       </td>
                       {leaderboardType === 'timed' ? (
                         <>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-white text-right">
+                          <td className="px-4 py-2 whitespace-nowrap text-sm text-white text-right">
                             {row.count || 0}
                           </td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-white text-right">
+                          <td className={`px-4 py-2 whitespace-nowrap text-sm text-white text-right ${actualRank <= 3 ? 'rounded-r-xl' : ''}`}>
                             {formatTime(row.delta || 0)}
                           </td>
                         </>
                       ) : (
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-white text-right">
+                        <td className={`px-4 py-2 whitespace-nowrap text-sm text-white text-right ${actualRank <= 3 ? 'rounded-r-xl' : ''}`}>
                           {row.points || 0}
                         </td>
                       )}
