@@ -12,6 +12,22 @@ Need help? Join **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08J
 
 ---
 
+## Prerequisites
+
+Before deploying, ensure you have the following installed and configured:
+
+- **Terragrunt** and **Terraform** installed
+- **AWS CLI** configured with appropriate access
+- **Python 3.x** with venv enabled (required for database population scripts)
+
+To set up Python virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
 ## Quick Start
 
 ### 1. Setup Your Customer Folder

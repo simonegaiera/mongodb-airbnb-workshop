@@ -122,6 +122,13 @@ instructions:
 ### Example 2: Targeted Instructions Configuration
 This includes specific workshop content paths for a curated experience:
 
+> ⚠️ **Important:** If your workshop includes Search or Vector Search sections (like this example), you **must** enable index creation in your `config.yaml`:
+> ```yaml
+> mongodb:
+>   create_indexes: true
+> ```
+> This ensures that the necessary search indexes and vector search indexes are created during deployment.
+
 ```yaml
 instructions:
   base: "navigation-guided.yml"
