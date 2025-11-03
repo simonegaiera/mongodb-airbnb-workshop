@@ -195,7 +195,7 @@ export default function LeaderboardDownload() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-arena-teal mr-2">•</span>
-                    <span>Points/scores or completion times (formatted as "25m" or "1h 30m")</span>
+                    <span>Points/scores or completion times</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-arena-teal mr-2">•</span>
