@@ -56,6 +56,14 @@ resource "helm_release" "user_openvscode" {
   values = [
     file("${path.module}/mdb-openvscode/values.yaml"),
     yamlencode(merge({
+      podAnnotations = {
+        "scenario-checksum" = sha256(jsonencode({
+          version      = var.scenario_config.version
+          repository   = var.scenario_config.repository
+          branch       = var.scenario_config.branch
+          instructions = var.scenario_config.instructions
+        }))
+      },
       env = [
         {
           name  = "MONGODB_URI"
