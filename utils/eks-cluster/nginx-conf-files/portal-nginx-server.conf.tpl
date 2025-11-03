@@ -64,7 +64,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-
-        rewrite ^/backend/(.*)$ /$1$is_args$args break;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        # Enable CORS for CSV downloads
+        proxy_hide_header 'Access-Control-Allow-Origin';
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Expose-Headers' 'Content-Disposition' always;
     }
 }

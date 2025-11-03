@@ -91,7 +91,7 @@ resource "helm_release" "user_openvscode" {
         },
         {
           name  = "LEADERBOARD"
-          value = tostring(var.scenario_config.leaderboard.type)
+          value = tostring(try(var.scenario_config.leaderboard.type, "timed"))
         },
         {
           name  = "BACKEND_URL"

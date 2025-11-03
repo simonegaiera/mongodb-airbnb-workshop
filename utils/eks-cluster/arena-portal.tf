@@ -25,7 +25,7 @@ resource "helm_release" "portal_server" {
   name       = "portal-server"
   repository = "local"
   chart      = "./portal-server"
-  version    = "0.1.0"
+  version    = "0.1.1"
 
   values = [
     file("${path.module}/portal-server/values.yaml"),
@@ -49,7 +49,7 @@ resource "helm_release" "portal_server" {
         },
         {
           name  = "LEADERBOARD"
-          value = tostring(var.scenario_config.leaderboard.type)
+          value = tostring(try(var.scenario_config.leaderboard.type, "timed"))
         }
       ],
       volumeMounts = [
