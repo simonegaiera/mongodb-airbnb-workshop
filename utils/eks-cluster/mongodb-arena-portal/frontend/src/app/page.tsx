@@ -73,13 +73,25 @@ export default function Home() {
     <div className="min-h-screen circuit-bg py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-arena-neon-green mb-2 neon-glow">
-            Step Into the AI Arena
-          </h1>
-          <p className="text-white text-xl font-light">
-            MongoDB Arena Portal
-          </p>
+        <div className="flex justify-between items-start mb-8">
+          <div className="flex-1"></div>
+          <div className="flex-1 text-center">
+            <h1 className="text-5xl font-bold text-arena-neon-green mb-2 neon-glow">
+              Step Into the AI Arena
+            </h1>
+            <p className="text-white text-xl font-light">
+              MongoDB Arena Portal
+            </p>
+          </div>
+          <div className="flex-1 flex justify-end">
+            {/* Admin Button */}
+            <a
+              href="/admin"
+              className="bg-arena-teal text-white py-2 px-4 rounded-md hover:bg-opacity-80 transition-colors font-semibold"
+            >
+              Admin Portal
+            </a>
+          </div>
         </div>
 
         {/* Alerts */}

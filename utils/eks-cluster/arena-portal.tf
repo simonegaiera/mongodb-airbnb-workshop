@@ -127,6 +127,10 @@ resource "helm_release" "portal_nginx" {
           value = ""
         },
         {
+          name  = "NEXT_PUBLIC_ADMIN_PASSWORD"
+          value = tostring(try(var.scenario_config.portal.admin_password, ""))
+        },
+        {
           name  = "NEXT_PUBLIC_PRIZES_ENABLED"
           value = tostring(try(var.scenario_config.prizes.enabled, false))
         },

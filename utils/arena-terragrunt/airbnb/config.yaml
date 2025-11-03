@@ -24,6 +24,8 @@ scenario:
   version: "1.0"
   repository: "https://github.com/simonegaiera/mongodb-airbnb-workshop"
   branch: "main"
+  portal:
+    admin_password: "ArenaAdminPassword123!"
   database:
     mongodb: true
     postgres: false

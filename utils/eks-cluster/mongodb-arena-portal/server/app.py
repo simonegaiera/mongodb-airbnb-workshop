@@ -1,10 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from pymongo import MongoClient
 from datetime import datetime, timezone
 import os
 from dotenv import load_dotenv
 import logging
+import csv
+from io import StringIO
+import math
 
 # Load environment variables
 load_dotenv()
@@ -13,7 +16,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure CORS to allow requests from your React frontend
-CORS(app, origins=['*'])  # In production, specify your React app's domain
+# Expose Content-Disposition header so frontend can read filenames
+CORS(app, origins=['*'], expose_headers=['Content-Disposition'])  # In production, specify your React app's domain
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +34,30 @@ client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
 participants_collection = db[PARTICIPANTS_COLLECTION]
 user_details_collection = db[USER_DETAILS_COLLECTION]
+
+# Helper function to format milliseconds to human-readable duration
+def format_time(milliseconds):
+    """
+    Convert milliseconds to hours and minutes format like the frontend.
+    Examples: "25m", "1h 30m", "45s"
+    """
+    if milliseconds == 0:
+        return '0m'
+    
+    seconds = math.floor(milliseconds / 1000)
+    hours = math.floor(seconds / 3600)
+    minutes = math.floor((seconds % 3600) / 60)
+    remaining_seconds = seconds % 60
+    
+    result = ''
+    if hours > 0:
+        result += f'{hours}h '
+    if minutes > 0:
+        result += f'{minutes}m'
+    elif hours == 0 and remaining_seconds > 0:
+        result += f'{remaining_seconds}s'
+    
+    return result.strip()
 
 @app.route('/api/health')
 def health_check():
@@ -199,14 +227,21 @@ def get_results():
     Return leaderboard results based on LEADERBOARD env variable.
     If LEADERBOARD == 'score', return score_leaderboard view with aggregated points.
     If LEADERBOARD == 'timed', return timed_leaderboard view.
+    Supports ?format=csv query parameter to download as CSV.
     """
     try:
         leaderboard = os.getenv('LEADERBOARD', 'timed')
+        format_type = request.args.get('format', 'json').strip().lower()
+        logger.info(f"[getResults] Request received with format={format_type}, leaderboard={leaderboard}")
         
         # Use different views based on leaderboard type
         view_name = 'score_leaderboard' if leaderboard == 'score' else 'timed_leaderboard'
         leaderboard_collection = db[view_name]
-        data = list(leaderboard_collection.find({}, {'_id': 0}))
+        
+        # For timed leaderboard, include _id (it's the username/user_id)
+        # For score leaderboard, exclude _id (not needed for aggregation)
+        projection = {'_id': 0} if leaderboard == 'score' else {}
+        data = list(leaderboard_collection.find({}, projection))
         
 
         if leaderboard == 'score':
@@ -223,21 +258,83 @@ def get_results():
                     else:
                         points_by_username[display_name] = points
             
-            # Convert to sorted array and back to dict (sorted by points descending)
+            # Convert to sorted array (sorted by points descending)
             sorted_points_array = sorted(points_by_username.items(), key=lambda x: x[1], reverse=True)
-            sorted_points_by_username = dict(sorted_points_array)
             
-            items = {
-                'results': sorted_points_by_username,
-                'data': data,
-                'leaderboardType': 'score'
-            }
+            if format_type == 'csv':
+                # Return CSV format
+                output = StringIO()
+                fieldnames = ['rank', 'name', 'total_points']
+                writer = csv.DictWriter(output, fieldnames=fieldnames)
+                writer.writeheader()
+                
+                for rank, (name, points) in enumerate(sorted_points_array, start=1):
+                    writer.writerow({
+                        'rank': rank,
+                        'name': name,
+                        'total_points': points
+                    })
+                
+                output.seek(0)
+                timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
+                filename = f'competition_results_{timestamp}.csv'
+                
+                logger.info(f"[getResults] SUCCESS: score leaderboard CSV with {len(sorted_points_array)} results")
+                
+                return Response(
+                    output.getvalue(),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': f'attachment; filename={filename}'}
+                )
+            else:
+                # Return JSON format
+                sorted_points_by_username = dict(sorted_points_array)
+                items = {
+                    'results': sorted_points_by_username,
+                    'data': data,
+                    'leaderboardType': 'score'
+                }
         else:
-            # For timed leaderboard, return results as data
-            items = {
-                'results': data,
-                'leaderboardType': 'timed'
-            }
+            # For timed leaderboard
+            if format_type == 'csv':
+                # Return CSV format
+                output = StringIO()
+                fieldnames = ['rank', 'user_id', 'username', 'name', 'exercises_completed', 'duration', 'duration_ms', 'first_timestamp', 'last_timestamp']
+                writer = csv.DictWriter(output, fieldnames=fieldnames)
+                writer.writeheader()
+                
+                for rank, item in enumerate(data, start=1):
+                    delta_ms = item.get('delta', 0)
+                    user_id = item.get('_id', '')
+                    writer.writerow({
+                        'rank': rank,
+                        'user_id': user_id,
+                        'username': user_id,  # _id is the username in timed_leaderboard view
+                        'name': item.get('name', user_id),
+                        'exercises_completed': item.get('count', 0),
+                        'duration': format_time(delta_ms),
+                        'duration_ms': delta_ms,
+                        'first_timestamp': item.get('firstTimestamp', ''),
+                        'last_timestamp': item.get('lastTimestamp', '')
+                    })
+                
+                output.seek(0)
+                timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
+                filename = f'competition_results_{timestamp}.csv'
+                
+                logger.info(f"[getResults] SUCCESS: timed leaderboard CSV with {len(data)} results")
+                
+                return Response(
+                    output.getvalue(),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': f'attachment; filename={filename}'}
+                )
+            else:
+                # Return JSON format
+                items = {
+                    'results': data,
+                    'leaderboardType': 'timed'
+                }
         
         # Calculate result count for logging
         result_count = len(items['results']) if isinstance(items['results'], list) else len(items['results'])
@@ -248,7 +345,57 @@ def get_results():
     except Exception as e:
         logger.error(f"[getResults] ERROR: Failed to process {os.getenv('LEADERBOARD', 'timed')} leaderboard request: {str(e)}")
         return jsonify({'message': str(e)}), 500
-    
+
+@app.route('/api/admin/leaderboard/download', methods=['GET'])
+def download_user_leaderboard_csv():
+    """
+    Download user_leaderboard view as CSV.
+    Simple export of the user_leaderboard view data.
+    """
+    try:
+        # Get data from user_leaderboard view
+        user_leaderboard_collection = db['user_leaderboard']
+        user_data = list(user_leaderboard_collection.find({}))
+        
+        # Create CSV in memory
+        output = StringIO()
+        
+        # Define CSV headers based on user_leaderboard view structure
+        fieldnames = ['user_id', 'name', 'email', 'exercises_solved']
+        
+        writer = csv.DictWriter(output, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        # Write user data
+        for user in user_data:
+            row = {
+                'user_id': user.get('_id', ''),
+                'name': user.get('name', ''),
+                'email': user.get('email', ''),
+                'exercises_solved': user.get('exercisesSolved', 0)
+            }
+            writer.writerow(row)
+        
+        # Prepare the response
+        output.seek(0)
+        timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
+        filename = f'user_list_{timestamp}.csv'
+        
+        logger.info(f"Generating user list CSV with {len(user_data)} users")
+        
+        return Response(
+            output.getvalue(),
+            mimetype='text/csv',
+            headers={'Content-Disposition': f'attachment; filename={filename}'}
+        )
+        
+    except Exception as e:
+        logger.error(f"Error generating user_leaderboard CSV: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'

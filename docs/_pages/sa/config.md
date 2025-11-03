@@ -69,6 +69,8 @@ The `scenario` section in `config.yaml` controls your workshop setup:
   - **`provider`**: Options are `"anthropic"` or `"openai"` (default: `"openai"`)
   - **`model`**: Options are `"claude-3-haiku"` or `"gpt-5-chat"` (default: `"gpt-5-chat"`)
 - **`leaderboard`**: Set to `"timed"` or `"score"` based
+- **`portal`**: Portal configuration settings
+  - **`admin_password`**: Password to access the admin portal (e.g., `"ArenaAdminPassword123!"`)
 - **`prizes`**: Configure prizes promotions for the workshop
   - **`enabled`**: Set to `true` to enable prizes features
   - **`where`**: Location or context for the prizes (e.g., `"Happy Hour"`)
