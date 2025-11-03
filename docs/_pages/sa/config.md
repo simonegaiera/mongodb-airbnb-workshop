@@ -121,6 +121,8 @@ instructions:
       content: []
 ```
 
+> ⚠️ **Indentation Alert:** YAML is indentation-sensitive. Make sure to maintain the exact indentation shown above (2 spaces per level). Incorrect indentation will cause deployment errors.
+
 ### Example 2: Targeted Instructions Configuration
 This includes specific workshop content paths for a curated experience:
 
@@ -160,6 +162,8 @@ instructions:
       content:
         - "/vector-search/1/"
 ```
+
+> ⚠️ **Indentation Alert:** YAML is indentation-sensitive. Make sure to maintain the exact indentation shown above (2 spaces per level). Incorrect indentation will cause deployment errors.
 
 > 💡 **Key Differences:**
 > - **Full version** has empty content arrays (`[]`) for sections, giving you flexibility to customize all sections

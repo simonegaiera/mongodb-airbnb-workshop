@@ -13,6 +13,8 @@ docs:
         url: /sa/config/
       - title: "Deployment: Deploy and Run"
         url: /sa/deployment/
+      - title: "Troubleshooting: Common Errors"
+        url: /sa/troubleshooting/
       - title: "Development: VSCode"
         url: /sa/vs-code/
       - title: "Development: Validate Your Results"
