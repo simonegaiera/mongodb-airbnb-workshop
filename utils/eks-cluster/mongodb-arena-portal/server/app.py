@@ -550,7 +550,7 @@ def get_leaderboard_status():
 def get_prize_close_date():
     """
     Get the current prize close date from scenario_config.
-    Returns the close_on field from prizes if it exists.
+    Returns the close_on field from leaderboard if it exists.
     MongoDB stores close_on as ISODate (UTC), we convert it to ISO string for JSON.
     """
     try:
@@ -564,15 +564,20 @@ def get_prize_close_date():
             }), 404
         
         leaderboard = config.get('leaderboard', {})
-        prizes = leaderboard.get('prizes', {})
-        close_on_date = prizes.get('close_on')
+        close_on_date = leaderboard.get('close_on')
         
         # Convert MongoDB Date object to ISO string if it exists
         close_on_iso = None
         if close_on_date:
             if isinstance(close_on_date, datetime):
-                # MongoDB Date object - convert to ISO string
-                close_on_iso = close_on_date.isoformat() + 'Z' if close_on_date.tzinfo is None else close_on_date.isoformat()
+                # MongoDB Date object - convert to ISO string with Z suffix for UTC
+                if close_on_date.tzinfo is None:
+                    # Naive datetime, assume UTC and add Z
+                    close_on_iso = close_on_date.isoformat() + 'Z'
+                else:
+                    # Aware datetime, convert to UTC if needed
+                    utc_date = close_on_date.astimezone(timezone.utc)
+                    close_on_iso = utc_date.isoformat().replace('+00:00', 'Z')
             else:
                 # Already a string (for backwards compatibility)
                 close_on_iso = close_on_date
@@ -632,7 +637,7 @@ def set_prize_close_date():
         update_result = scenario_config_collection.update_one(
             {},
             {'$set': {
-                'leaderboard.prizes.close_on': close_date  # Store as MongoDB ISODate (UTC)
+                'leaderboard.close_on': close_date  # Store as MongoDB ISODate (UTC)
             }},
             upsert=False
         )

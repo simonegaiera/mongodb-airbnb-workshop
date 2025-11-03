@@ -41,7 +41,7 @@
 - 🟡 **LOW:** Options to upload custom banners, titles, and logos to match an event or sponsoring company's branding
 
 ### Admin
-- 🔴 **HIGH:** Freeze time for the leaderboard
+- 🔴 **HIGH:** Freeze time for the leaderboard (in progress...)
 - 🔴 **HIGH:** User status progress and errors. We want to understand where they are stuck.
 
 ---

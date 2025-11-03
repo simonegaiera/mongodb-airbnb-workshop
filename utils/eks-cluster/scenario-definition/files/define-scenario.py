@@ -425,6 +425,18 @@ def store_config_in_mongodb(config, navigation_content=None):
         from datetime import datetime, timezone
         config['created_at'] = datetime.now(timezone.utc).isoformat()
         
+        # Convert close_on field to datetime if present
+        if 'leaderboard' in config and 'close_on' in config['leaderboard']:
+            close_on_str = config['leaderboard']['close_on']
+            if isinstance(close_on_str, str):
+                try:
+                    # Parse ISO 8601 datetime string and convert to datetime object
+                    close_on_dt = datetime.fromisoformat(close_on_str.replace('Z', '+00:00'))
+                    config['leaderboard']['close_on'] = close_on_dt
+                    print(f"Converted close_on to datetime: {close_on_dt}")
+                except ValueError as e:
+                    print(f"Warning: Could not parse close_on date '{close_on_str}': {e}")
+        
         # Add navigation content if available
         if navigation_content:
             config['navigation'] = navigation_content
@@ -480,6 +492,20 @@ def main():
     
     # Create enhanced configuration with all processed data
     enhanced_config = config.copy()
+    
+    # Convert close_on field to datetime if present
+    from datetime import datetime, timezone
+    if 'leaderboard' in enhanced_config and 'close_on' in enhanced_config['leaderboard']:
+        close_on_str = enhanced_config['leaderboard']['close_on']
+        if isinstance(close_on_str, str):
+            try:
+                # Parse ISO 8601 datetime string and convert to datetime object
+                close_on_dt = datetime.fromisoformat(close_on_str.replace('Z', '+00:00'))
+                enhanced_config['leaderboard']['close_on'] = close_on_dt
+                print(f"Converted close_on to datetime: {close_on_dt}")
+            except ValueError as e:
+                print(f"Warning: Could not parse close_on date '{close_on_str}': {e}")
+    
     if navigation_content:
         enhanced_config['navigation'] = navigation_content
         # Identify needed answer files based on navigation
@@ -487,7 +513,6 @@ def main():
         enhanced_config['needed_answer_files'] = answer_files_analysis
     
     # Add processing timestamp
-    from datetime import datetime, timezone
     enhanced_config['processed_at'] = datetime.now(timezone.utc).isoformat()
     
     # Store configuration and navigation in MongoDB
