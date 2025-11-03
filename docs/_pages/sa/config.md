@@ -136,6 +136,7 @@ instructions:
     - title: "Workshop Introduction"
       content:
         - "/"
+        - "/resources/"
     - title: "Workshop Onboarding"
       content:
         - "/guided/vscode-nop/"
