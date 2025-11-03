@@ -240,6 +240,39 @@ def create_views(client, common_database):
     
     # Pipeline for score_leaderboard view
     score_leaderboard_pipeline = [
+        # Lookup scenario_config to get close_on date
+        {
+            '$lookup': {
+                'from': 'scenario_config',
+                'pipeline': [],
+                'as': 'scenario_config'
+            }
+        },
+        # Add scenario_config fields to each result document
+        {
+            '$addFields': {
+                'close_on': {
+                    '$arrayElemAt': ['$scenario_config.leaderboard.close_on', 0]
+                }
+            }
+        },
+        # Filter out results after close_on date (if close_on exists)
+        {
+            '$match': {
+                '$or': [
+                    # Include if close_on doesn't exist (no freeze)
+                    { 'close_on': { '$exists': False } },
+                    # Include if close_on is null (no freeze)
+                    { 'close_on': None },
+                    # Include if timestamp is before close_on
+                    { '$expr': { '$lte': ['$timestamp', '$close_on'] } }
+                ]
+            }
+        },
+        # Remove the temporary close_on and scenario_config fields
+        {
+            '$unset': ['close_on', 'scenario_config']
+        },
         {
             '$sort': { 'timestamp': 1 }
         },
@@ -324,6 +357,39 @@ def create_views(client, common_database):
     
     # Pipeline for timed_leaderboard view
     timed_leaderboard_pipeline = [
+        # Lookup scenario_config to get close_on date
+        {
+            '$lookup': {
+                'from': 'scenario_config',
+                'pipeline': [],
+                'as': 'scenario_config'
+            }
+        },
+        # Add scenario_config fields to each result document
+        {
+            '$addFields': {
+                'close_on': {
+                    '$arrayElemAt': ['$scenario_config.leaderboard.close_on', 0]
+                }
+            }
+        },
+        # Filter out results after close_on date (if close_on exists)
+        {
+            '$match': {
+                '$or': [
+                    # Include if close_on doesn't exist (no freeze)
+                    { 'close_on': { '$exists': False } },
+                    # Include if close_on is null (no freeze)
+                    { 'close_on': None },
+                    # Include if timestamp is before close_on
+                    { '$expr': { '$lte': ['$timestamp', '$close_on'] } }
+                ]
+            }
+        },
+        # Remove the temporary close_on and scenario_config fields
+        {
+            '$unset': ['close_on', 'scenario_config']
+        },
         {
             '$group': {
                 '_id': '$username', 
