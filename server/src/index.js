@@ -7,6 +7,7 @@ import listingsAndReviews from './routes/listingsAndReviews.js';
 import results from './routes/results.js';
 import chat from './routes/chat.js';
 import { logDebug, logError } from './utils/logger.js';
+import { client } from './utils/database.js';
 
 const app = express();
 
@@ -17,6 +18,29 @@ app.use(cors({
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
 }));
 app.use(json());
+
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  try {
+    // Check database connection
+    await client.db().admin().ping();
+    
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      database: 'connected'
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      database: 'disconnected',
+      error: error.message
+    });
+  }
+});
 
 // Define your routes here
 app.use('/api/listingsAndReviews', listingsAndReviews);

@@ -12,6 +12,11 @@ interface Participant {
   decommissioned_timestamp?: string
 }
 
+interface HealthStatus {
+  status: 'checking' | 'healthy' | 'unhealthy' | 'unknown'
+  lastChecked?: string
+}
+
 export default function ParticipantsGrid({ participants, onRefresh }: {
   participants: Participant[]
   onRefresh: () => void
@@ -19,6 +24,7 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10) // Show 10 participants per page by default
+  const [healthStatuses, setHealthStatuses] = useState<Record<string, HealthStatus>>({})
 
   // Get base domain for workspace URLs
   const getBaseDomain = () => {
@@ -59,7 +65,61 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
 
     return {
       app: `https://${participantId}.${baseDomain}/app`,
-      server: `https://${participantId}.${baseDomain}/?folder=/home/workspace/${repoName}/${serverPath}`
+      server: `https://${participantId}.${baseDomain}/?folder=/home/workspace/${repoName}/${serverPath}`,
+      health: `https://${participantId}.${baseDomain}/backend/health`
+    }
+  }
+
+  // Check health for a single participant
+  const checkHealth = async (participantId: string) => {
+    const baseDomain = getBaseDomain()
+    const healthUrl = `https://${participantId}.${baseDomain}/backend/health`
+    
+    setHealthStatuses(prev => ({
+      ...prev,
+      [participantId]: { status: 'checking' }
+    }))
+
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+      
+      const response = await fetch(healthUrl, {
+        method: 'GET',
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      
+      clearTimeout(timeoutId)
+      
+      if (response.ok) {
+        const data = await response.json()
+        setHealthStatuses(prev => ({
+          ...prev,
+          [participantId]: {
+            status: data.status === 'healthy' ? 'healthy' : 'unhealthy',
+            lastChecked: new Date().toISOString()
+          }
+        }))
+      } else {
+        setHealthStatuses(prev => ({
+          ...prev,
+          [participantId]: {
+            status: 'unhealthy',
+            lastChecked: new Date().toISOString()
+          }
+        }))
+      }
+    } catch (error) {
+      setHealthStatuses(prev => ({
+        ...prev,
+        [participantId]: {
+          status: 'unhealthy',
+          lastChecked: new Date().toISOString()
+        }
+      }))
     }
   }
 
@@ -80,6 +140,28 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const currentParticipants = filteredParticipants.slice(startIndex, endIndex)
+
+  // Check health for all visible participants
+  const checkAllHealth = () => {
+    currentParticipants.forEach(participant => {
+      if (!participant.decommissioned) {
+        checkHealth(participant._id)
+      }
+    })
+  }
+
+  // Check health when participants change or page changes
+  useEffect(() => {
+    if (currentParticipants.length > 0) {
+      // Only check health for non-decommissioned participants
+      currentParticipants.forEach(participant => {
+        if (!participant.decommissioned && !healthStatuses[participant._id]) {
+          checkHealth(participant._id)
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentParticipants.map(p => p._id).join(',')])
 
   // Reset to first page when search changes or participants change
   useEffect(() => {
@@ -134,30 +216,42 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
 
   return (
     <div className="space-y-4">
-      {/* Search Bar */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        <input
-          type="text"
-          placeholder="Search participants..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 border border-arena-teal rounded-md leading-5 bg-arena-dark-light text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:border-arena-neon-green"
-        />
-        {searchTerm && (
-          <button
-            onClick={() => setSearchTerm('')}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
-          >
-            <svg className="h-5 w-5 text-gray-400 hover:text-arena-neon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      {/* Search Bar and Health Check Button */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-          </button>
-        )}
+          </div>
+          <input
+            type="text"
+            placeholder="Search participants..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-10 pr-3 py-2 border border-arena-teal rounded-md leading-5 bg-arena-dark-light text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-arena-neon-green focus:border-arena-neon-green"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg className="h-5 w-5 text-gray-400 hover:text-arena-neon-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <button
+          onClick={checkAllHealth}
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-arena-teal/40 border border-arena-teal rounded-md hover:bg-arena-teal transition-colors whitespace-nowrap"
+          title="Check health status for all visible participants"
+        >
+          <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Check Health
+        </button>
       </div>
 
       {/* Search Results Info */}
@@ -204,6 +298,8 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {currentParticipants.map((participant, index) => {
             const workspaceUrls = getWorkspaceUrls(participant, index)
+            const health = healthStatuses[participant._id] || { status: 'unknown' }
+            
             return (
               <div 
                 key={participant._id || index} 
@@ -215,11 +311,41 @@ export default function ParticipantsGrid({ participants, onRefresh }: {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <h3 className={`text-lg font-medium truncate ${
-                      participant.decommissioned ? 'text-gray-500' : 'text-white'
-                    }`}>
-                      {participant.name || 'Unnamed Participant'}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className={`text-lg font-medium truncate ${
+                        participant.decommissioned ? 'text-gray-500' : 'text-white'
+                      }`}>
+                        {participant.name || 'Unnamed Participant'}
+                      </h3>
+                      {!participant.decommissioned && (
+                        <button
+                          onClick={() => checkHealth(participant._id)}
+                          className="flex items-center gap-1 group"
+                          title={`Backend Health: ${health.status}${health.lastChecked ? '\nLast checked: ' + new Date(health.lastChecked).toLocaleString() : ''}`}
+                        >
+                          <div className="relative">
+                            {health.status === 'checking' && (
+                              <svg className="animate-spin h-4 w-4 text-yellow-400" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                            )}
+                            {health.status === 'healthy' && (
+                              <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50"></div>
+                            )}
+                            {health.status === 'unhealthy' && (
+                              <div className="h-3 w-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50"></div>
+                            )}
+                            {health.status === 'unknown' && (
+                              <div className="h-3 w-3 rounded-full bg-gray-500"></div>
+                            )}
+                          </div>
+                          <svg className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                     
                     {/* Show workspace links for all participants but dim for decommissioned */}
                     <div className={`mt-2 flex items-center space-x-4 ${

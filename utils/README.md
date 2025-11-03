@@ -25,14 +25,13 @@
 
 - 🟠 **MEDIUM:** Implement the skill badges into the Arena
 - 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
-- 🔴 **HIGH:** Show in the portal if the webserver is running on server
 
 ---
 
 ## Server
 
-### Answers
-- 🔴 **HIGH:** Add to the guideline that it should use the mcp if not done before
+### Cline
+- 🔴 **HIGH:** Fix: I have the file open and can either implement the full function (modify code) or provide a guided hint only — the repository's .clinerules prefer mentoring over providing full exercise solutions. Ask the user which they want so I proceed correctly. 
 
 ---
 
@@ -45,15 +44,13 @@
 
 ### EKS Cluster
 
-- 🟢 **MINOR:** LiteLLM: Tracking spending in error (do we want disable it or wait for it?)
-- 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled with no apparent reason
+- 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled. Monitor it to evaluate increasing available memory to the pod.
 
 - 🔴 **HIGH:** CRUD: Exercise 6: The test seems to run successfully, but it doesn't actually update the document with _id: 20000000. When I checked with Cline, that document doesn't seem to exist.
 - 🔴 **HIGH:** CRUD: Exercise 7: The test runs successfully but also fails to insert a review for the document with _id: 20000000, likely for the same reason.
 
 ### AWS
 - 🔴 **HIGH:** Covert to ALB and Cert in AWS
-- ❄️ **FROZEN:** OIDC: Ask if it is possible to have OIDC (current SA profile does not allow).
 
 
 ## Kanopy
