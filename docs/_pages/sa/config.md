@@ -75,6 +75,7 @@ The `scenario` section in `config.yaml` controls your workshop setup:
   - **`enabled`**: Set to `true` to enable prizes features
   - **`where`**: Location or context for the prizes (e.g., `"Happy Hour"`)
   - **`when`**: Time for the prizes (e.g., `"4:30 PM"`)
+  - **`close_on`**: (Optional) ISO 8601 date when leaderboard freezes in UTC (e.g., `"2025-11-04T16:03:00.000Z"`). When set, submissions after this time will not count. Can be managed via the Admin Portal.
 - **`instructions.sections`**: Define workshop sections with titles and content paths
 
 > **Note:** You can leave the `content` arrays empty (`[]`) for sections if you don't want to include specific content.
