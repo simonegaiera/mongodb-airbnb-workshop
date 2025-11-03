@@ -46,9 +46,6 @@
 
 - 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled. Monitor it to evaluate increasing available memory to the pod.
 
-- 🔴 **HIGH:** CRUD: Exercise 6: The test seems to run successfully, but it doesn't actually update the document with _id: 20000000. When I checked with Cline, that document doesn't seem to exist.
-- 🔴 **HIGH:** CRUD: Exercise 7: The test runs successfully but also fails to insert a review for the document with _id: 20000000, likely for the same reason.
-
 ### AWS
 - 🔴 **HIGH:** Covert to ALB and Cert in AWS
 
