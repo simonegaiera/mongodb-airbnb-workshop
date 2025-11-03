@@ -28,12 +28,18 @@ MONGODB_URI = os.getenv('MONGODB_URI')
 DB_NAME = os.getenv('DB_NAME')
 PARTICIPANTS_COLLECTION = os.getenv('PARTICIPANTS')
 USER_DETAILS_COLLECTION = os.getenv('USER_DETAILS', 'user_details')
+ARENA_SHARED_DB = os.getenv('ARENA_SHARED_DB', 'arena_shared')
+SCENARIO_CONFIG_COLLECTION = os.getenv('SCENARIO_CONFIG_COLLECTION', 'scenario_config')
 
 # MongoDB client
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
 participants_collection = db[PARTICIPANTS_COLLECTION]
 user_details_collection = db[USER_DETAILS_COLLECTION]
+
+# Arena shared database for scenario_config
+arena_shared_db = client[ARENA_SHARED_DB]
+scenario_config_collection = arena_shared_db[SCENARIO_CONFIG_COLLECTION]
 
 # Helper function to format milliseconds to human-readable duration
 def format_time(milliseconds):
@@ -523,6 +529,116 @@ def get_leaderboard_status():
         
     except Exception as e:
         logger.error(f"Error retrieving leaderboard status: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/admin/prizes/close-date', methods=['GET'])
+def get_prize_close_date():
+    """
+    Get the current prize close date from scenario_config.
+    Returns the close_on field from prizes if it exists.
+    MongoDB stores close_on as ISODate (UTC), we convert it to ISO string for JSON.
+    """
+    try:
+        # Find the scenario config document
+        config = scenario_config_collection.find_one({})
+        
+        if not config:
+            return jsonify({
+                'success': False,
+                'error': 'No scenario config found'
+            }), 404
+        
+        prizes = config.get('prizes', {})
+        close_on_date = prizes.get('close_on')
+        
+        # Convert MongoDB Date object to ISO string if it exists
+        close_on_iso = None
+        if close_on_date:
+            if isinstance(close_on_date, datetime):
+                # MongoDB Date object - convert to ISO string
+                close_on_iso = close_on_date.isoformat() + 'Z' if close_on_date.tzinfo is None else close_on_date.isoformat()
+            else:
+                # Already a string (for backwards compatibility)
+                close_on_iso = close_on_date
+        
+        logger.info(f"Retrieved prize close date: {close_on_iso}")
+        return jsonify({
+            'success': True,
+            'close_on': close_on_iso
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Error retrieving prize close date: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/admin/prizes/close-date', methods=['POST'])
+def set_prize_close_date():
+    """
+    Set or update the prize close date in scenario_config.
+    Expected JSON payload:
+    {
+        "close_on": "ISO 8601 datetime string"
+    }
+    The timezone parameter is accepted but not stored (used only for conversion to UTC).
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No JSON data provided'
+            }), 400
+        
+        close_on = data.get('close_on')
+        
+        if not close_on:
+            return jsonify({
+                'success': False,
+                'error': 'close_on field is required'
+            }), 400
+        
+        # Validate and parse the date format
+        try:
+            # Parse ISO string to Python datetime (UTC)
+            close_date = datetime.fromisoformat(close_on.replace('Z', '+00:00'))
+        except ValueError:
+            return jsonify({
+                'success': False,
+                'error': 'Invalid date format. Use ISO 8601 format.'
+            }), 400
+        
+        # Update the scenario config with the new close_on date as MongoDB Date object
+        # MongoDB will automatically store the datetime as ISODate (UTC)
+        update_result = scenario_config_collection.update_one(
+            {},
+            {'$set': {
+                'prizes.close_on': close_date  # Store as MongoDB ISODate (UTC)
+            }},
+            upsert=False
+        )
+        
+        if update_result.matched_count == 0:
+            return jsonify({
+                'success': False,
+                'error': 'No scenario config found to update'
+            }), 404
+        
+        logger.info(f"Updated prize close date to: {close_date.isoformat()}")
+        return jsonify({
+            'success': True,
+            'message': f'Prize close date updated successfully',
+            'close_on': close_date.isoformat()
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Error updating prize close date: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)

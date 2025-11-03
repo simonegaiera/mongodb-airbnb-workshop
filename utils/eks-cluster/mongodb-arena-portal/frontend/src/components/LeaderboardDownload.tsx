@@ -6,7 +6,6 @@ export default function LeaderboardDownload() {
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState('')
   const [downloadSuccess, setDownloadSuccess] = useState('')
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false)
 
   const downloadFile = async (url: string) => {
     const response = await fetch(url)
@@ -94,30 +93,13 @@ export default function LeaderboardDownload() {
 
       {/* Header with Button */}
       <div className="flex justify-between items-start mb-6">
-        <div className="flex-1 flex items-center gap-3">
-          <button
-            onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
-            className="flex-shrink-0 text-arena-neon-green hover:text-arena-bright-green transition-colors"
-            title={isDescriptionOpen ? 'Hide details' : 'Show details'}
-          >
-            <svg 
-              className={`h-7 w-7 transition-transform ${isDescriptionOpen ? 'rotate-90' : ''}`}
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1">
-              Leaderboard Data Export
-            </h2>
-            <p className="text-gray-200 text-base">
-              Download workshop participant and competition data
-            </p>
-          </div>
+        <div>
+          <h2 className="text-2xl font-bold text-arena-neon-green mb-1">
+            Leaderboard Data Export
+          </h2>
+          <p className="text-gray-300 text-base">
+            Download workshop participant and competition data
+          </p>
         </div>
         
         <div className="flex-shrink-0 ml-4">
@@ -153,60 +135,56 @@ export default function LeaderboardDownload() {
         </div>
       </div>
 
-      {/* Collapsible Description */}
-      {isDescriptionOpen && (
-        <div className="border-t border-gray-700 pt-6 mb-4">
-          <div className="bg-arena-dark-light/30 rounded-lg p-6 border border-gray-700/50">
-            <p className="text-gray-200 mb-6">
-              Click the button above to download <strong className="text-white">two CSV files</strong> containing complete workshop data:
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-arena-dark-light/50 rounded-md p-4 border-l-4 border-blue-500">
-                <h4 className="text-white font-semibold text-base mb-3 flex items-center gap-2">
-                  <span className="text-2xl">📊</span>
-                  File 1: User List
-                </h4>
-                <ul className="text-gray-300 space-y-2 list-none ml-8">
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>User ID and display name</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>Email addresses (admin-only)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>Number of exercises solved</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-arena-dark-light/50 rounded-md p-4 border-l-4 border-yellow-500">
-                <h4 className="text-white font-semibold text-base mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🏆</span>
-                  File 2: Competition Results
-                </h4>
-                <ul className="text-gray-300 space-y-2 list-none ml-8">
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>Rankings with user IDs and participant names</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>Points/scores or completion times</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-arena-teal mr-2">•</span>
-                    <span>Exercise counts and timestamps</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+      {/* Description */}
+      <div className="border-t border-gray-700 pt-6">
+        <p className="text-gray-300 mb-6">
+          Click the button above to download <strong className="text-white">two CSV files</strong> containing complete workshop data:
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-arena-dark-light/50 rounded-md p-4 border-l-4 border-blue-500">
+            <h4 className="text-white font-semibold text-base mb-3 flex items-center gap-2">
+              <span className="text-2xl">📊</span>
+              File 1: User List
+            </h4>
+            <ul className="text-gray-300 space-y-2 list-none ml-8">
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>User ID and display name</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>Email addresses (admin-only)</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>Number of exercises solved</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="bg-arena-dark-light/50 rounded-md p-4 border-l-4 border-yellow-500">
+            <h4 className="text-white font-semibold text-base mb-3 flex items-center gap-2">
+              <span className="text-2xl">🏆</span>
+              File 2: Competition Results
+            </h4>
+            <ul className="text-gray-300 space-y-2 list-none ml-8">
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>Rankings with user IDs and participant names</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>Points/scores or completion times</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-arena-teal mr-2">•</span>
+                <span>Exercise counts and timestamps</span>
+              </li>
+            </ul>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

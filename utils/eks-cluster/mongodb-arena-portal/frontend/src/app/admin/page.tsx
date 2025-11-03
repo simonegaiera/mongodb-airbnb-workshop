@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import LeaderboardDownload from '@/components/LeaderboardDownload'
 import LeaderboardExclusion from '@/components/LeaderboardExclusion'
+import PrizeCloseDate from '@/components/PrizeCloseDate'
+
+type AdminSection = 'exclusion' | 'freeze' | 'download'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -11,6 +14,7 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [activeSection, setActiveSection] = useState<AdminSection>('exclusion')
 
   // Check authentication on mount
   useEffect(() => {
@@ -50,6 +54,25 @@ export default function AdminPage() {
     sessionStorage.removeItem('admin_authenticated')
     setIsAuthenticated(false)
     setPasswordInput('')
+  }
+
+  const menuItems = [
+    { id: 'exclusion' as AdminSection, label: 'Leaderboard Exclusion', icon: '🚫' },
+    { id: 'freeze' as AdminSection, label: 'Leaderboard Freeze', icon: '🕐' },
+    { id: 'download' as AdminSection, label: 'Download Data', icon: '📥' }
+  ]
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'exclusion':
+        return <LeaderboardExclusion />
+      case 'freeze':
+        return <PrizeCloseDate />
+      case 'download':
+        return <LeaderboardDownload />
+      default:
+        return <LeaderboardExclusion />
+    }
   }
 
   if (isLoading) {
@@ -152,10 +175,37 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          <LeaderboardExclusion />
-          <LeaderboardDownload />
+        {/* Main Content with Sidebar */}
+        <div className="flex gap-6">
+          {/* Sidebar Navigation */}
+          <div className="w-64 flex-shrink-0">
+            <div className="card-arena rounded-lg shadow-lg p-4 sticky top-8">
+              <h3 className="text-lg font-bold text-arena-neon-green mb-4">
+                Management
+              </h3>
+              <nav className="space-y-2">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveSection(item.id)}
+                    className={`w-full text-left px-4 py-3 rounded-md transition-all flex items-center gap-3 ${
+                      activeSection === item.id
+                        ? 'bg-arena-neon-green text-arena-dark font-semibold'
+                        : 'text-gray-300 hover:bg-arena-dark-light hover:text-arena-neon-green'
+                    }`}
+                  >
+                    <span className="text-xl">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
+
+          {/* Active Section Content */}
+          <div className="flex-1">
+            {renderActiveSection()}
+          </div>
         </div>
       </div>
     </div>

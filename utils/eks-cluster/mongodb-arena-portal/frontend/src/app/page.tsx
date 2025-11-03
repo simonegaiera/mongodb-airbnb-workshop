@@ -19,6 +19,9 @@ export default function Home() {
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [isPasswordProtected, setIsPasswordProtected] = useState(false)
+  
+  // Leaderboard freeze date
+  const [closeDate, setCloseDate] = useState<string | null>(null)
 
   // Check if password protection is enabled and validate stored auth
   useEffect(() => {
@@ -37,6 +40,25 @@ export default function Home() {
       setIsAuthenticated(true)
       setIsPasswordProtected(false)
     }
+  }, [])
+
+  // Fetch prize close date
+  useEffect(() => {
+    const fetchCloseDate = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+        const response = await fetch(`${apiUrl}/api/admin/prizes/close-date`)
+        const data = await response.json()
+        
+        if (data.success && data.close_on) {
+          setCloseDate(data.close_on)
+        }
+      } catch (err) {
+        console.error('Error fetching close date:', err)
+      }
+    }
+    
+    fetchCloseDate()
   }, [])
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -76,7 +98,7 @@ export default function Home() {
         <div className="flex justify-between items-start mb-8">
           <div className="flex-1"></div>
           <div className="flex-1 text-center">
-            <h1 className="text-5xl font-bold text-arena-neon-green mb-2 neon-glow">
+            <h1 className="text-5xl font-bold text-arena-neon-green mb-2 neon-glow whitespace-nowrap">
               Step Into the AI Arena
             </h1>
             <p className="text-white text-xl font-light">
@@ -178,7 +200,7 @@ export default function Home() {
 
           {/* Leaderboard Section - Full Width */}
           <div className="w-full">
-            <Leaderboard refreshTrigger={refreshKey} />
+            <Leaderboard refreshTrigger={refreshKey} closeDate={closeDate} />
           </div>
 
           {/* Bottom Row: Participants Section - Full Width */}

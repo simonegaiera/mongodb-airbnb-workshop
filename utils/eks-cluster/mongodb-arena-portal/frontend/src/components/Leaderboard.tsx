@@ -45,9 +45,10 @@ interface LeaderboardData {
 
 interface LeaderboardProps {
   refreshTrigger?: number;
+  closeDate?: string | null;
 }
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate = null }) => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -306,6 +307,55 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0 }) => {
           </button>
         </div>
       </div>
+
+      {/* Close Date Notice */}
+      {closeDate && (() => {
+        const closeDateObj = new Date(closeDate)
+        const now = new Date()
+        const isClosed = now > closeDateObj
+        
+        return (
+          <div className={`mb-6 p-4 rounded-lg ${
+            isClosed 
+              ? 'bg-red-900/30 border border-red-500/50' 
+              : 'bg-blue-900/30 border border-blue-500/50'
+          }`}>
+            <p className={`text-center ${isClosed ? 'text-red-200' : 'text-blue-200'}`}>
+              {isClosed ? (
+                <>
+                  🔒 <strong>Leaderboard Closed:</strong> This leaderboard was frozen on{' '}
+                  <span className="font-semibold">
+                    {closeDateObj.toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      timeZoneName: 'short'
+                    })}
+                  </span>
+                  . Submissions after this time are not counted.
+                </>
+              ) : (
+                <>
+                  ⏰ <strong>Leaderboard Will Close:</strong> This leaderboard will freeze on{' '}
+                  <span className="font-semibold">
+                    {closeDateObj.toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      timeZoneName: 'short'
+                    })}
+                  </span>
+                  . Submissions after this time will not count.
+                </>
+              )}
+            </p>
+          </div>
+        )
+      })()}
 
       {/* Collapsible Content */}
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${leaderboardExpanded ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>

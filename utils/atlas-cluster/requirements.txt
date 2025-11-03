@@ -1,4 +1,4 @@
-pymongo[srv]
+pymongo[srv]==4.15
 python-dotenv
 requests
 urllib3==1.26.16
