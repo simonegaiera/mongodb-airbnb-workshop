@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import LeaderboardDownload from '@/components/LeaderboardDownload'
+import LeaderboardExclusion from '@/components/LeaderboardExclusion'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -152,7 +153,10 @@ export default function AdminPage() {
         </div>
 
         {/* Main Content */}
-        <LeaderboardDownload />
+        <div className="space-y-8">
+          <LeaderboardExclusion />
+          <LeaderboardDownload />
+        </div>
       </div>
     </div>
   )

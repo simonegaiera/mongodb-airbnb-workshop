@@ -396,6 +396,138 @@ def download_user_leaderboard_csv():
             'error': str(e)
         }), 500
 
+@app.route('/api/admin/leaderboard/exclude', methods=['POST'])
+def exclude_from_leaderboard():
+    """
+    Exclude or include a participant from/to the leaderboard.
+    Expected JSON payload:
+    {
+        "identifier": "user_id or name",
+        "exclude": true/false  # true to exclude (leaderboard: false), false to include (remove leaderboard field or set to true)
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No JSON data provided'
+            }), 400
+        
+        identifier = data.get('identifier', '').strip()
+        exclude = data.get('exclude', True)
+        
+        if not identifier:
+            return jsonify({
+                'success': False,
+                'error': 'Identifier (user ID or name) is required'
+            }), 400
+        
+        # Try to find participant by _id first, then by name
+        participant = participants_collection.find_one({'_id': identifier})
+        
+        if not participant:
+            # Try to find by name (case-insensitive)
+            participant = participants_collection.find_one({'name': {'$regex': f'^{identifier}$', '$options': 'i'}})
+        
+        if not participant:
+            return jsonify({
+                'success': False,
+                'error': f'No participant found with identifier: {identifier}'
+            }), 404
+        
+        participant_id = participant['_id']
+        participant_name = participant.get('name', participant_id)
+        
+        # Update the leaderboard field
+        if exclude:
+            # Set leaderboard: false to exclude from leaderboard
+            update_result = participants_collection.update_one(
+                {'_id': participant_id},
+                {'$set': {'leaderboard': False}}
+            )
+            action = 'excluded from'
+        else:
+            # Remove leaderboard field or set to true to include in leaderboard
+            update_result = participants_collection.update_one(
+                {'_id': participant_id},
+                {'$unset': {'leaderboard': ''}}
+            )
+            action = 'included in'
+        
+        if update_result.modified_count > 0:
+            logger.info(f"Participant {participant_id} ({participant_name}) {action} leaderboard")
+            return jsonify({
+                'success': True,
+                'message': f'Participant "{participant_name}" (ID: {participant_id}) has been {action} the leaderboard',
+                'participant': {
+                    '_id': participant_id,
+                    'name': participant_name,
+                    'leaderboard': not exclude
+                }
+            }), 200
+        else:
+            # No modification means the field was already in the desired state
+            return jsonify({
+                'success': True,
+                'message': f'Participant "{participant_name}" (ID: {participant_id}) is already {action} the leaderboard',
+                'participant': {
+                    '_id': participant_id,
+                    'name': participant_name,
+                    'leaderboard': not exclude
+                }
+            }), 200
+        
+    except Exception as e:
+        logger.error(f"Error updating leaderboard exclusion: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/admin/leaderboard/status', methods=['GET'])
+def get_leaderboard_status():
+    """
+    Get all participants and their leaderboard status.
+    Returns list of participants with their current leaderboard inclusion status.
+    """
+    try:
+        # Get all participants (including decommissioned ones for admin management)
+        participants = list(participants_collection.find(
+            {},
+            {'_id': 1, 'name': 1, 'leaderboard': 1, 'taken': 1, 'decommissioned': 1}
+        ).sort('name', 1))
+        
+        # Process participants to determine leaderboard status
+        result = []
+        for participant in participants:
+            # If leaderboard field is explicitly False, participant is excluded
+            # Otherwise, participant is included (default behavior)
+            is_excluded = participant.get('leaderboard') == False
+            
+            result.append({
+                '_id': participant['_id'],
+                'name': participant.get('name', participant['_id']),
+                'excluded': is_excluded,
+                'taken': participant.get('taken'),  # Don't default to False - None means CSV user
+                'decommissioned': participant.get('decommissioned', False)
+            })
+        
+        logger.info(f"Retrieved leaderboard status for {len(result)} participants")
+        return jsonify({
+            'success': True,
+            'data': result,
+            'count': len(result)
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Error retrieving leaderboard status: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'
