@@ -240,6 +240,11 @@ def get_results():
         format_type = request.args.get('format', 'json').strip().lower()
         logger.info(f"[getResults] Request received with format={format_type}, leaderboard={leaderboard}")
         
+        # Validate leaderboard type
+        if leaderboard not in ['score', 'timed']:
+            logger.warning(f"[getResults] Invalid LEADERBOARD env value '{leaderboard}', defaulting to 'timed'")
+            leaderboard = 'timed'
+        
         # Use different views based on leaderboard type
         view_name = 'score_leaderboard' if leaderboard == 'score' else 'timed_leaderboard'
         leaderboard_collection = db[view_name]
@@ -349,8 +354,15 @@ def get_results():
         return jsonify(items), 200
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
         logger.error(f"[getResults] ERROR: Failed to process {os.getenv('LEADERBOARD', 'timed')} leaderboard request: {str(e)}")
-        return jsonify({'message': str(e)}), 500
+        logger.error(f"[getResults] ERROR DETAILS: {error_details}")
+        return jsonify({
+            'success': False,
+            'message': str(e),
+            'error': str(e)
+        }), 500
 
 @app.route('/api/admin/leaderboard/download', methods=['GET'])
 def download_user_leaderboard_csv():
@@ -551,7 +563,8 @@ def get_prize_close_date():
                 'error': 'No scenario config found'
             }), 404
         
-        prizes = config.get('prizes', {})
+        leaderboard = config.get('leaderboard', {})
+        prizes = leaderboard.get('prizes', {})
         close_on_date = prizes.get('close_on')
         
         # Convert MongoDB Date object to ISO string if it exists
@@ -619,7 +632,7 @@ def set_prize_close_date():
         update_result = scenario_config_collection.update_one(
             {},
             {'$set': {
-                'prizes.close_on': close_date  # Store as MongoDB ISODate (UTC)
+                'leaderboard.prizes.close_on': close_date  # Store as MongoDB ISODate (UTC)
             }},
             upsert=False
         )

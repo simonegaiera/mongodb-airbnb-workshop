@@ -49,12 +49,13 @@ scenario:
     region: "us-east-2"
   frontend: "app"
   backend: "server"
-  leaderboard: "timed"
-  prizes:
-    enabled: true
-    where: "Happy Hour"
-    when: "4:30 PM"
-    # close_on: "2025-11-04T16:03:00.000Z"  # Optional: ISO 8601 date when leaderboard freezes (UTC)
+  leaderboard:
+    type: "timed"
+    prizes:
+      enabled: true
+      where: "Happy Hour"
+      when: "4:30 PM"
+      # close_on: "2025-11-04T16:03:00.000Z"  # Optional: ISO 8601 date when leaderboard freezes (UTC)
   instructions:
     base: "navigation-guided.yml"
     sections:

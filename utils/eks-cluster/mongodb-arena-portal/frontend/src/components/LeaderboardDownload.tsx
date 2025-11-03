@@ -11,7 +11,18 @@ export default function LeaderboardDownload() {
     const response = await fetch(url)
 
     if (!response.ok) {
-      throw new Error(`Failed to download from ${url}`)
+      // Try to get error message from response
+      let errorMessage = `Failed to download from ${url}`
+      try {
+        const errorData = await response.json()
+        if (errorData.message || errorData.error) {
+          errorMessage = `${errorMessage}: ${errorData.message || errorData.error}`
+        }
+      } catch {
+        // If response is not JSON, use status text
+        errorMessage = `${errorMessage} (Status: ${response.status} ${response.statusText})`
+      }
+      throw new Error(errorMessage)
     }
 
     // Get the blob from response

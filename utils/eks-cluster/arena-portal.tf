@@ -49,7 +49,7 @@ resource "helm_release" "portal_server" {
         },
         {
           name  = "LEADERBOARD"
-          value = tostring(var.scenario_config.leaderboard)
+          value = tostring(var.scenario_config.leaderboard.type)
         }
       ],
       volumeMounts = [
@@ -132,15 +132,15 @@ resource "helm_release" "portal_nginx" {
         },
         {
           name  = "NEXT_PUBLIC_PRIZES_ENABLED"
-          value = tostring(try(var.scenario_config.prizes.enabled, false))
+          value = tostring(try(var.scenario_config.leaderboard.prizes.enabled, false))
         },
         {
           name  = "NEXT_PUBLIC_PRIZES_WHERE"
-          value = tostring(try(var.scenario_config.prizes.where, ""))
+          value = tostring(try(var.scenario_config.leaderboard.prizes.where, ""))
         },
         {
           name  = "NEXT_PUBLIC_PRIZES_WHEN"
-          value = tostring(try(var.scenario_config.prizes.when, ""))
+          value = tostring(try(var.scenario_config.leaderboard.prizes.when, ""))
         }
       ],
       volumeMounts = [
