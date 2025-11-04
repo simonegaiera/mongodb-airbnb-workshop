@@ -323,7 +323,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
             <p className={`text-center ${isClosed ? 'text-red-200' : 'text-blue-200'}`}>
               {isClosed ? (
                 <>
-                  🔒 <strong>Leaderboard Closed:</strong> This leaderboard was frozen on{' '}
+                  🏁 <strong>Challenge Complete!</strong> Leaderboard closed on{' '}
                   <span className="font-semibold">
                     {closeDateObj.toLocaleString('en-US', {
                       year: 'numeric',
@@ -334,11 +334,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
                       timeZoneName: 'short'
                     })}
                   </span>
-                  . Submissions after this time are not counted.
                 </>
               ) : (
                 <>
-                  ⏰ <strong>Leaderboard Will Close:</strong> This leaderboard will freeze on{' '}
+                  🚀 <strong>Challenge Ends</strong>{' '}
                   <span className="font-semibold">
                     {closeDateObj.toLocaleString('en-US', {
                       year: 'numeric',
@@ -349,7 +348,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
                       timeZoneName: 'short'
                     })}
                   </span>
-                  . Submissions after this time will not count.
+                  {' '}— Race to the top and claim your spot!
                 </>
               )}
             </p>
