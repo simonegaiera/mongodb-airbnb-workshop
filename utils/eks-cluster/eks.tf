@@ -236,6 +236,7 @@ resource "kubernetes_storage_class" "efs" {
   volume_binding_mode = "Immediate"
 
   depends_on = [ 
+    aws_efs_file_system.efs,
     aws_eks_cluster.eks_cluster,
     aws_eks_addon.efs_csi_driver,
     null_resource.patch_efs_hostnetwork,

@@ -45,7 +45,7 @@ locals {
   atlas_admin_password = try(var.atlas_admin_password, "")
 
   cluster_name = "${var.customer_name}-arena-eks"
-  aws_route53_record_name = "${var.customer_name}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
+  aws_route53_record_name = "${lower(var.customer_name)}.${trimsuffix(var.aws_route53_hosted_zone, ".")}"
   current_timestamp = timestamp()
   expire_timestamp  = formatdate("YYYY-MM-DD", timeadd(local.current_timestamp, "168h"))
   domain_user = split("@", var.domain_email)[0]
