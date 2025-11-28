@@ -2,6 +2,7 @@
 
 # Retrieve API keys from AWS Secrets Manager
 data "aws_secretsmanager_secret" "arena_secrets" {
+  region = "us-east-2"
   name = "arena/secrets"
 }
 

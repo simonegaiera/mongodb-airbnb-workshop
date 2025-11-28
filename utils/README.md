@@ -30,6 +30,8 @@
 
 ## Server
 
+- 🟠 **MEDIUM:** Add java, not only Javascript
+
 ### Cline
 - 🔴 **HIGH:** Fix: I have the file open and can either implement the full function (modify code) or provide a guided hint only — the repository's .clinerules prefer mentoring over providing full exercise solutions. Ask the user which they want so I proceed correctly. 
 
