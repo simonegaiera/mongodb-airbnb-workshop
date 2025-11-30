@@ -2,7 +2,9 @@
     "workbench.startupEditor": "none",
     "security.workspace.trust.enabled": false,
     "mdb.confirmRunAll": false,
-    "github.copilot.editor.enableAutoCompletions": false,
+    "github.copilot.enable": {
+        "*": false
+    },
     "workbench.colorTheme": "Default Dark Modern",
 
     // Add these TypeScript memory limit settings:
