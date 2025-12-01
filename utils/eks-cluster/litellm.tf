@@ -7,6 +7,7 @@ data "aws_secretsmanager_secret" "arena_secrets" {
 }
 
 data "aws_secretsmanager_secret_version" "arena_secrets" {
+  region    = "us-east-2"
   secret_id = data.aws_secretsmanager_secret.arena_secrets.id
 }
 
