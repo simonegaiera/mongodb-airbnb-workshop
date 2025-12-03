@@ -5,6 +5,8 @@ layout: single
 classes: wide
 ---
 
+> ⚠️ **Vector Search Requirements:** To use the vector search exercises in this workshop, you need a MongoDB Atlas project with **auto-embedding enabled**. As of today, auto-embedding is still in **private preview**.
+
 ## Setup Your Customer Folder
 
 Before configuring, you need to create your customer-specific deployment folder:

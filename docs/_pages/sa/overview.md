@@ -19,6 +19,8 @@ Welcome to the MongoDB AI Arena environment setup guide for Solutions Architects
 1. Install prerequisites (Python, Terraform, AWS CLI)
 2. Configure your environment (edit `config.yaml` with customer details and MongoDB credentials)
 3. Deploy using Terragrunt (initialize, plan, apply)
+4. An EKS environment is created for each tenant with a dedicated workshop portal
+5. At the end of execution, you'll receive a URL to access the workshop portal
 
 **Time Required:** 30-45 minutes (excluding AWS infrastructure provisioning time)
 
