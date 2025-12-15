@@ -49,6 +49,7 @@
 
 ## Terraform
 
+- 🔴 **HIGH:** IP Access 0.0.0.0 was comment out
 - 🔴 **HIGH:** Customer need to be lowercase
 - 🔴 **HIGH:** Make sure that the settings are well indented
 

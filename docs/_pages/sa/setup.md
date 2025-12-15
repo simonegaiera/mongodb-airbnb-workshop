@@ -85,6 +85,39 @@ Follow the documentation [here](https://wiki.corp.mongodb.com/pages/viewpage.act
 
 > 💡 **Note:** You will need to configure an AWS profile that matches the `aws.profile` value in your `config.yaml` file (default: `"Solution-Architects.User-979559056307"`).
 
+## ☸️ Kubernetes
+
+### kubectl
+
+kubectl is required for managing Kubernetes clusters (EKS).
+
+1. **Install kubectl**
+
+   **macOS:**
+   ```bash
+   brew install kubectl
+   ```
+   
+   **Windows:**
+   ```bash
+   curl.exe -LO "https://dl.k8s.io/release/v1.28.0/bin/windows/amd64/kubectl.exe"
+   ```
+
+2. **Verify Installation**
+   ```bash
+   kubectl version --client
+   ```
+
+3. **Upgrade kubectl** (if needed)
+
+   **macOS:**
+   ```bash
+   brew upgrade kubectl
+   ```
+
+   **Linux/Windows:**
+   Follow the same installation steps above to upgrade to the latest version.
+
 ## Initial File Setup
 
 1. **Copy Files**  

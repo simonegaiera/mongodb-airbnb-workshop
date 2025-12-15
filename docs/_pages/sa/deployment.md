@@ -42,6 +42,8 @@ terragrunt import --working-dir=atlas-cluster mongodbatlas_project.project <proj
 
 Before you run the apply step, make sure your Python virtual environment is active.
 
+> **Note:** Keep your laptop unlocked while running terraform. Locking your laptop may interrupt the terraform process.
+
 - **To deploy all modules at once (default):**
   ```bash
   terragrunt apply --all

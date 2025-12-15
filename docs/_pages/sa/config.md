@@ -45,7 +45,7 @@ Open `config.yaml` in your customer folder and update these **required** values:
 
 ### Customer & Domain
 - **`customer.name`**: Replace `"customer"` with your customer name.
-- **`domain.email`**: Replace `"arena@mongodb.com"` with your domain contact email.
+- **`domain.email`**: Do not change the email address. Keep it as `"arena@mongodb.com"`.
 
 ### MongoDB Atlas (Required)
 - **`mongodb.public_key`**: Replace `"PUBLIC_KEY"` with your MongoDB Atlas public API key.
