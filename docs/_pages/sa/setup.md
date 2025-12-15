@@ -5,7 +5,16 @@ layout: single
 classes: wide
 ---
 
-## 🐍 Python
+## Initial File Setup
+
+1. **Copy Files**  
+   - Duplicate the `airbnb` folder and rename it with your `customer` name.
+   - For a fully managed solution, keep all folders.  
+   - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
+
+## Environment Setup
+
+### 🐍 Python
 
 1. **Verify Python 3 Installation**  
    Make sure Python 3 is installed on your machine.
@@ -18,7 +27,7 @@ classes: wide
    venv\Scripts\activate      # Windows
    ```
 
-## 🏗️ Terraform
+### 🏗️ Terraform
 
 1. **Install Terraform**  
    ```bash
@@ -41,9 +50,9 @@ classes: wide
    brew upgrade terragrunt
    ```
 
-## ☁️ AWS
+### ☁️ AWS
 
-### AWS CLI
+#### AWS CLI
 
 AWS CLI is required for AWS SSO authentication and managing AWS resources.
 
@@ -79,15 +88,15 @@ AWS CLI is required for AWS SSO authentication and managing AWS resources.
    **Linux/Windows:**
    Follow the same installation steps above to upgrade to the latest version.
 
-### AWS SSO Access
+#### AWS SSO Access
 
 Follow the documentation [here](https://wiki.corp.mongodb.com/pages/viewpage.action?pageId=109642642&spaceKey=10GEN&title=SA%2BAWS%2BAccess%2B-%2BUpdated%2BNov%2B2020) for detailed steps on setting up AWS SSO access.
 
 > 💡 **Note:** You will need to configure an AWS profile that matches the `aws.profile` value in your `config.yaml` file (default: `"Solution-Architects.User-979559056307"`).
 
-## ☸️ Kubernetes
+### ☸️ Kubernetes
 
-### kubectl
+#### kubectl
 
 kubectl is required for managing Kubernetes clusters (EKS).
 
@@ -117,13 +126,6 @@ kubectl is required for managing Kubernetes clusters (EKS).
 
    **Linux/Windows:**
    Follow the same installation steps above to upgrade to the latest version.
-
-## Initial File Setup
-
-1. **Copy Files**  
-   - Duplicate the `airbnb` folder and rename it with your `customer` name.
-   - For a fully managed solution, keep all folders.  
-   - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
 
 ---
 
