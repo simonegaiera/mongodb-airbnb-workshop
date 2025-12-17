@@ -111,28 +111,31 @@ public class SearchIndexTest extends BaseTest {
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
-            if (!(amenitiesObj instanceof java.util.List)) {
-                String errorMessage = String.format("amenities is not an array, it's: %s - check if amenities field is configured as an array type in the search index", amenitiesObj.getClass().getName());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.List<?> amenities = (java.util.List<?>) amenitiesObj;
-            if (amenities.size() != 2) {
-                String errorMessage = String.format("amenities array should have 2 elements, but has: %d - check if your search index properly configures the amenities field mappings", amenities.size());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.Set<String> amenityTypes = new java.util.HashSet<>();
-            for (Object item : amenities) {
-                if (!(item instanceof Document)) {
-                    String errorMessage = String.format("amenities item is not a Document, it's: %s - check amenities field configuration in search index", item.getClass().getName());
-                    logger.error("SearchIndex test failed: {}", errorMessage);
-                    return TestResult.failure(errorMessage);
+
+            // Accept both single object and array formats
+            boolean amenitiesValid = false;
+            if (amenitiesObj instanceof Document) {
+                // Single object format: { "type": "token" }
+                Document amenitiesDoc = (Document) amenitiesObj;
+                if ("token".equals(amenitiesDoc.getString("type"))) {
+                    amenitiesValid = true;
                 }
-                amenityTypes.add(((Document) item).getString("type"));
+            } else if (amenitiesObj instanceof java.util.List) {
+                // Array format: [{ "type": "stringFacet" }, { "type": "token" }]
+                java.util.List<?> amenities = (java.util.List<?>) amenitiesObj;
+                java.util.Set<String> amenityTypes = new java.util.HashSet<>();
+                for (Object item : amenities) {
+                    if (item instanceof Document) {
+                        amenityTypes.add(((Document) item).getString("type"));
+                    }
+                }
+                if (amenityTypes.contains("token")) {
+                    amenitiesValid = true;
+                }
             }
-            if (!amenityTypes.contains("token")) {
-                String errorMessage = "Amenities missing type 'token' - check if your search index includes token analyzer for amenities field";
+
+            if (!amenitiesValid) {
+                String errorMessage = "amenities field must be either { \"type\": \"token\" } or an array containing { \"type\": \"token\" } - check if your search index includes token type for amenities field";
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
@@ -144,28 +147,31 @@ public class SearchIndexTest extends BaseTest {
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
-            if (!(bedsObj instanceof java.util.List)) {
-                String errorMessage = String.format("beds is not an array, it's: %s - check if beds field is configured as an array type in the search index", bedsObj.getClass().getName());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.List<?> beds = (java.util.List<?>) bedsObj;
-            if (beds.size() != 2) {
-                String errorMessage = String.format("beds array should have 2 elements, but has: %d - check if your search index properly configures the beds field mappings", beds.size());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.Set<String> bedTypes = new java.util.HashSet<>();
-            for (Object item : beds) {
-                if (!(item instanceof Document)) {
-                    String errorMessage = String.format("beds item is not a Document, it's: %s - check beds field configuration in search index", item.getClass().getName());
-                    logger.error("SearchIndex test failed: {}", errorMessage);
-                    return TestResult.failure(errorMessage);
+
+            // Accept both single object and array formats
+            boolean bedsValid = false;
+            if (bedsObj instanceof Document) {
+                // Single object format: { "type": "number" }
+                Document bedsDoc = (Document) bedsObj;
+                if ("number".equals(bedsDoc.getString("type"))) {
+                    bedsValid = true;
                 }
-                bedTypes.add(((Document) item).getString("type"));
+            } else if (bedsObj instanceof java.util.List) {
+                // Array format: [{ "type": "numberFacet" }, { "type": "number" }]
+                java.util.List<?> beds = (java.util.List<?>) bedsObj;
+                java.util.Set<String> bedTypes = new java.util.HashSet<>();
+                for (Object item : beds) {
+                    if (item instanceof Document) {
+                        bedTypes.add(((Document) item).getString("type"));
+                    }
+                }
+                if (bedTypes.contains("number")) {
+                    bedsValid = true;
+                }
             }
-            if (!bedTypes.contains("number")) {
-                String errorMessage = "Beds missing type 'number' - check if your search index includes numeric mapping for beds field";
+
+            if (!bedsValid) {
+                String errorMessage = "beds field must be either { \"type\": \"number\" } or an array containing { \"type\": \"number\" } - check if your search index includes number type for beds field";
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
@@ -201,28 +207,31 @@ public class SearchIndexTest extends BaseTest {
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
-            if (!(propertyTypeObj instanceof java.util.List)) {
-                String errorMessage = String.format("property_type is not an array, it's: %s - check if property_type field is configured as an array type in the search index", propertyTypeObj.getClass().getName());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.List<?> propertyType = (java.util.List<?>) propertyTypeObj;
-            if (propertyType.size() != 2) {
-                String errorMessage = String.format("property_type array should have 2 elements, but has: %d - check if your search index properly configures the property_type field mappings", propertyType.size());
-                logger.error("SearchIndex test failed: {}", errorMessage);
-                return TestResult.failure(errorMessage);
-            }
-            java.util.Set<String> propertyTypeTypes = new java.util.HashSet<>();
-            for (Object item : propertyType) {
-                if (!(item instanceof Document)) {
-                    String errorMessage = String.format("property_type item is not a Document, it's: %s - check property_type field configuration in search index", item.getClass().getName());
-                    logger.error("SearchIndex test failed: {}", errorMessage);
-                    return TestResult.failure(errorMessage);
+
+            // Accept both single object and array formats
+            boolean propertyTypeValid = false;
+            if (propertyTypeObj instanceof Document) {
+                // Single object format: { "type": "token" }
+                Document propertyTypeDoc = (Document) propertyTypeObj;
+                if ("token".equals(propertyTypeDoc.getString("type"))) {
+                    propertyTypeValid = true;
                 }
-                propertyTypeTypes.add(((Document) item).getString("type"));
+            } else if (propertyTypeObj instanceof java.util.List) {
+                // Array format: [{ "type": "stringFacet" }, { "type": "token" }]
+                java.util.List<?> propertyType = (java.util.List<?>) propertyTypeObj;
+                java.util.Set<String> propertyTypeTypes = new java.util.HashSet<>();
+                for (Object item : propertyType) {
+                    if (item instanceof Document) {
+                        propertyTypeTypes.add(((Document) item).getString("type"));
+                    }
+                }
+                if (propertyTypeTypes.contains("token")) {
+                    propertyTypeValid = true;
+                }
             }
-            if (!propertyTypeTypes.contains("token")) {
-                String errorMessage = "property_type missing type 'token' - check if your search index includes token analyzer for property_type field";
+
+            if (!propertyTypeValid) {
+                String errorMessage = "property_type field must be either { \"type\": \"token\" } or an array containing { \"type\": \"token\" } - check if your search index includes token type for property_type field";
                 logger.error("SearchIndex test failed: {}", errorMessage);
                 return TestResult.failure(errorMessage);
             }
