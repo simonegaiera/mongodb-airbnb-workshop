@@ -59,11 +59,7 @@
 - ❄️ **FROZEN:** What if I want to use a different dataset? Add this capability
 
 ### EKS Cluster
-
-- 🟢 **MINOR:** OpenVSCode somethimes goes in OOMKilled. Monitor it to evaluate increasing available memory to the pod.
-
-### AWS
-- 🔴 **HIGH:** Covert to ALB and Cert in AWS
+- 🔴 **HIGH:** Check that the "app" is working for all, if 500 should be an error. Need to find a way to see if the workspace was created correctly.
 
 
 ## Kanopy

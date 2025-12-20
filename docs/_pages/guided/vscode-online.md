@@ -93,7 +93,7 @@ Let’s get you connected, coding, and exploring MongoDB in style.
 1. **Launch Cline:**  
    - Click the **Cline** icon in the VSCode toolbar to open the extension.
    - Choose **Use your own API key** when prompted.
-
+   ![cline-home](../../assets/images/cline-home.png)
 2. **Configure the API:**
    - Set **API Provider** to **LiteLLM**.
    - Enter the following LiteLLM settings:

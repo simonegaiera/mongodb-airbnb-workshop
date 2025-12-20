@@ -137,16 +137,38 @@ EOL
     if [ "$BACKEND_TYPE" = "server" ]; then
         echo_with_timestamp "Installing server dependencies"
         cd "$REPO_PATH/$BACKEND_TYPE"
-        
+
         # Validate package.json exists
         if [ ! -f "package.json" ]; then
             echo_with_timestamp "FATAL: package.json not found in $REPO_PATH/$BACKEND_TYPE"
             exit 1
         fi
-        
-        # Attempt npm install with better error handling
-        if ! npm install --legacy-peer-deps > /dev/null 2>&1; then
-            echo_with_timestamp "FATAL: npm install failed in $BACKEND_TYPE"
+
+        # Attempt npm install with retry logic and visible error output
+        MAX_RETRIES=3
+        RETRY_COUNT=0
+        NPM_SUCCESS=false
+
+        while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo_with_timestamp "Attempting npm install (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)..."
+
+            if npm install --legacy-peer-deps 2>&1 | tee /tmp/npm-install-server.log; then
+                NPM_SUCCESS=true
+                echo_with_timestamp "npm install succeeded in $BACKEND_TYPE"
+                break
+            else
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                    echo_with_timestamp "npm install failed, retrying in 5 seconds..."
+                    sleep 5
+                fi
+            fi
+        done
+
+        if [ "$NPM_SUCCESS" = false ]; then
+            echo_with_timestamp "FATAL: npm install failed in $BACKEND_TYPE after $MAX_RETRIES attempts"
+            echo_with_timestamp "Last error output:"
+            tail -50 /tmp/npm-install-server.log
             exit 1
         fi
     fi
@@ -170,14 +192,38 @@ if [ ! -f "package.json" ]; then
 fi
 
 echo_with_timestamp "Installing app dependencies..."
-if ! npm install --legacy-peer-deps > /dev/null 2>&1; then
-    echo_with_timestamp "FATAL: npm install failed in $FRONTEND_TYPE"
+MAX_RETRIES=3
+RETRY_COUNT=0
+NPM_SUCCESS=false
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    echo_with_timestamp "Attempting npm install for $FRONTEND_TYPE (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)..."
+
+    if npm install --legacy-peer-deps 2>&1 | tee /tmp/npm-install-frontend.log; then
+        NPM_SUCCESS=true
+        echo_with_timestamp "npm install succeeded in $FRONTEND_TYPE"
+        break
+    else
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+        if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+            echo_with_timestamp "npm install failed, retrying in 5 seconds..."
+            sleep 5
+        fi
+    fi
+done
+
+if [ "$NPM_SUCCESS" = false ]; then
+    echo_with_timestamp "FATAL: npm install failed in $FRONTEND_TYPE after $MAX_RETRIES attempts"
+    echo_with_timestamp "Last error output:"
+    tail -50 /tmp/npm-install-frontend.log
     exit 1
 fi
 
 echo_with_timestamp "Building the app..."
-if ! npm run build > /dev/null 2>&1; then
+if ! npm run build 2>&1 | tee /tmp/npm-build-frontend.log; then
     echo_with_timestamp "FATAL: npm build failed in $FRONTEND_TYPE"
+    echo_with_timestamp "Build error output:"
+    tail -50 /tmp/npm-build-frontend.log
     exit 1
 fi
 
