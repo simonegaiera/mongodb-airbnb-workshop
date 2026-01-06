@@ -662,6 +662,130 @@ def set_prize_close_date():
             'error': str(e)
         }), 500
 
+@app.route('/api/admin/database/restore', methods=['POST'])
+def restore_user_databases():
+    """
+    Restore databases for selected users by dropping and recreating them from the sample database.
+    Expected JSON payload:
+    {
+        "user_ids": ["user1", "user2", ...]
+    }
+    """
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No JSON data provided'
+            }), 400
+
+        user_ids = data.get('user_ids', [])
+
+        if not user_ids or not isinstance(user_ids, list):
+            return jsonify({
+                'success': False,
+                'error': 'user_ids field is required and must be a list'
+            }), 400
+
+        if len(user_ids) == 0:
+            return jsonify({
+                'success': False,
+                'error': 'At least one user ID must be provided'
+            }), 400
+
+        # Get the sample database name (default to sample_airbnb)
+        sample_database = os.getenv('SAMPLE_DATABASE', 'sample_airbnb')
+
+        # Verify that the sample database exists
+        databases = client.list_database_names()
+        if sample_database not in databases:
+            return jsonify({
+                'success': False,
+                'error': f'Sample database "{sample_database}" not found'
+            }), 404
+
+        # Get collections from the sample database
+        sample_db = client[sample_database]
+        collections_list = sample_db.list_collection_names()
+
+        # Filter out system collections
+        collections_to_copy = [col for col in collections_list if not col.startswith('system.')]
+
+        if not collections_to_copy:
+            return jsonify({
+                'success': False,
+                'error': f'No collections found in sample database "{sample_database}"'
+            }), 404
+
+        restored_databases = []
+        errors = []
+
+        for user_id in user_ids:
+            try:
+                # Verify the user exists in participants
+                participant = participants_collection.find_one({'_id': user_id})
+                if not participant:
+                    errors.append(f"User '{user_id}' not found in participants collection")
+                    continue
+
+                # Get the user's database
+                user_db = client[user_id]
+
+                # Check if database exists
+                if user_id in databases:
+                    # Delete all documents from each collection instead of dropping the database
+                    # This preserves indexes
+                    user_collections = user_db.list_collection_names()
+                    for collection_name in user_collections:
+                        if not collection_name.startswith('system.'):
+                            delete_result = user_db[collection_name].delete_many({})
+                            logger.info(f"Deleted {delete_result.deleted_count} documents from {user_id}.{collection_name}")
+                else:
+                    logger.info(f"Database '{user_id}' does not exist, will create new one")
+
+                # Restore the database by copying collections from sample database
+                for collection in collections_to_copy:
+                    # Use aggregation with $out to copy the collection
+                    # This will recreate the collection with data while preserving indexes
+                    sample_db[collection].aggregate([
+                        {'$out': {'db': user_id, 'coll': collection}}
+                    ])
+
+                restored_databases.append(user_id)
+                logger.info(f"Successfully restored database for user: {user_id}")
+
+            except Exception as e:
+                error_msg = f"Error restoring database for user {user_id}: {str(e)}"
+                errors.append(error_msg)
+                logger.error(error_msg)
+
+        # Prepare response message
+        if restored_databases:
+            message = f"Successfully restored {len(restored_databases)} database(s): {', '.join(restored_databases)}"
+            if errors:
+                message += f". {len(errors)} error(s) occurred."
+        else:
+            message = "No databases were restored"
+
+        logger.info(f"Database restore completed. Restored: {len(restored_databases)}, Errors: {len(errors)}")
+
+        return jsonify({
+            'success': len(restored_databases) > 0,
+            'message': message,
+            'restored': restored_databases,
+            'errors': errors,
+            'restored_count': len(restored_databases),
+            'error_count': len(errors)
+        }), 200 if len(restored_databases) > 0 else 500
+
+    except Exception as e:
+        logger.error(f"Error in database restore endpoint: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'

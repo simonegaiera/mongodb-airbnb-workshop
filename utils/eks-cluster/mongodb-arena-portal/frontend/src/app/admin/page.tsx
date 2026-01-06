@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 import LeaderboardDownload from '@/components/LeaderboardDownload'
 import LeaderboardExclusion from '@/components/LeaderboardExclusion'
 import PrizeCloseDate from '@/components/PrizeCloseDate'
+import DatabaseRestore from '@/components/DatabaseRestore'
 
-type AdminSection = 'exclusion' | 'freeze' | 'download'
+type AdminSection = 'exclusion' | 'freeze' | 'download' | 'restore'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -59,7 +60,8 @@ export default function AdminPage() {
   const menuItems = [
     { id: 'exclusion' as AdminSection, label: 'Leaderboard Exclusion', icon: '🚫' },
     { id: 'freeze' as AdminSection, label: 'Leaderboard Freeze', icon: '🕐' },
-    { id: 'download' as AdminSection, label: 'Download Data', icon: '📥' }
+    { id: 'download' as AdminSection, label: 'Download Data', icon: '📥' },
+    { id: 'restore' as AdminSection, label: 'Database Restore', icon: '🔄' }
   ]
 
   const renderActiveSection = () => {
@@ -70,6 +72,8 @@ export default function AdminPage() {
         return <PrizeCloseDate />
       case 'download':
         return <LeaderboardDownload />
+      case 'restore':
+        return <DatabaseRestore />
       default:
         return <LeaderboardExclusion />
     }
