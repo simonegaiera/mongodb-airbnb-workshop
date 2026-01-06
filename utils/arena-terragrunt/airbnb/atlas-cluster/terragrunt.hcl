@@ -33,4 +33,5 @@ inputs = {
     user_list_path                          = local.user_list_path
     user_start_index                        = 0
     create_indexes                          = local.config.mongodb.create_indexes
+    dedicated_project                       = local.config.mongodb.dedicated_project
 }

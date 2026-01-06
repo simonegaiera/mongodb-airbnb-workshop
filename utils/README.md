@@ -49,9 +49,7 @@
 
 ## Terraform
 
-- 🔴 **HIGH:** IP Access 0.0.0.0 was comment out
-- 🔴 **HIGH:** Customer need to be lowercase
-- 🔴 **HIGH:** Make sure that the settings are well indented
+- 🟠 **MEDIUM:** How to restore a single database for a user
 
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!

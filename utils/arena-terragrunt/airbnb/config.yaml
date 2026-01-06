@@ -10,6 +10,7 @@ mongodb:
   instance_size: "M30"
   additional_users_count: 0
   create_indexes: false
+  dedicated_project: false  # Set to true for dedicated projects (enables: maintenance window, backup schedule, 0.0.0.0/0 IP access, Cloudflare IP access)
   database_admin_password: "MongoArenaAdminDummy"
   customer_user_password: "MongoArenaDummy"
 

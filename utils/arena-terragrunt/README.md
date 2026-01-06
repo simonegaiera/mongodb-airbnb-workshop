@@ -42,6 +42,14 @@ cd your-customer-name
 
 Edit `config.yaml` with your customer details, MongoDB Atlas credentials, and AWS settings.
 
+**✅ Validate Your Configuration (Optional)**
+
+Before deploying, validate your `config.yaml` to ensure it's properly formatted:
+
+```bash
+python3 validate_config.py config.yaml
+```
+
 ### 3. Deploy
 
 ```bash

@@ -2,18 +2,33 @@ variable "public_key" {
   description = "The public API key for MongoDB Atlas"
   type        = string
   default     = "public_key"
+
+  validation {
+    condition     = var.public_key != "public_key" && var.public_key != "PUBLIC_KEY" && length(var.public_key) > 0
+    error_message = "❌ MongoDB Atlas public_key must be set in config.yaml. Replace 'PUBLIC_KEY' with your actual Atlas public API key."
+  }
 }
 
 variable "private_key" {
   description = "The private API key for MongoDB Atlas"
   type        = string
   default     = "private_key"
+
+  validation {
+    condition     = var.private_key != "private_key" && var.private_key != "PRIVATE_KEY" && length(var.private_key) > 0
+    error_message = "❌ MongoDB Atlas private_key must be set in config.yaml. Replace 'PRIVATE_KEY' with your actual Atlas private API key."
+  }
 }
 
 variable "project_name" {
   description = "The Atlas Project ID used to create the cluster"
   type        = string
   default     = "arena-customer"
+
+  validation {
+    condition     = var.project_name != "arena-customer" && var.project_name != "PROJECT_NAME" && length(var.project_name) > 0
+    error_message = "❌ MongoDB Atlas project_name must be set in config.yaml. Replace 'PROJECT_NAME' with your actual Atlas project name."
+  }
 }
 
 variable "cluster_name" {
@@ -103,6 +118,12 @@ variable "additional_users_count" {
 
 variable "create_indexes" {
   description = "Whether to create indexes"
+  type        = bool
+  default     = false
+}
+
+variable "dedicated_project" {
+  description = "Whether this is a dedicated MongoDB Atlas project (enables maintenance window and open IP access)"
   type        = bool
   default     = false
 }

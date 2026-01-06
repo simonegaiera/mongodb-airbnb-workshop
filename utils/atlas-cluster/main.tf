@@ -80,6 +80,8 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
 }
 
 resource "mongodbatlas_cloud_backup_schedule" "test" {
+  count = var.dedicated_project ? 1 : 0
+
   project_id   = mongodbatlas_advanced_cluster.cluster.project_id
   cluster_name = mongodbatlas_advanced_cluster.cluster.name
 
@@ -100,39 +102,49 @@ resource "mongodbatlas_cloud_backup_schedule" "test" {
     retention_value    = 5
   }
 
-  depends_on = [ 
+  depends_on = [
     mongodbatlas_advanced_cluster.cluster
   ]
 }
 
-# resource "mongodbatlas_maintenance_window" "maintenance" {
-#   project_id  = data.mongodbatlas_project.project.id
-#   day_of_week = 1
-#   hour_of_day = 4
+resource "mongodbatlas_maintenance_window" "maintenance" {
+  count = var.dedicated_project ? 1 : 0
 
-#   protected_hours {
-#     start_hour_of_day = 10
-#     end_hour_of_day   = 20
-#   }
-# }
+  project_id  = data.mongodbatlas_project.project.id
+  day_of_week = 1
+  hour_of_day = 4
 
-# resource "mongodbatlas_project_ip_access_list" "all" {
-#   project_id = data.mongodbatlas_project.project.id
-#   cidr_block = "0.0.0.0/0"
-#   comment    = "accept all"
+  protected_hours {
+    start_hour_of_day = 10
+    end_hour_of_day   = 20
+  }
 
-#   depends_on = [ 
-#     data.mongodbatlas_project.project 
-#   ]
-# }
+  depends_on = [
+    data.mongodbatlas_project.project
+  ]
+}
 
-resource "mongodbatlas_project_ip_access_list" "cloudflare" {
+resource "mongodbatlas_project_ip_access_list" "all" {
+  count = var.dedicated_project ? 1 : 0
+
   project_id = data.mongodbatlas_project.project.id
-  cidr_block = "104.30.164.0/28"
+  cidr_block = "0.0.0.0/0"
   comment    = "accept all"
 
-  depends_on = [ 
-    data.mongodbatlas_project.project 
+  depends_on = [
+    data.mongodbatlas_project.project
+  ]
+}
+
+resource "mongodbatlas_project_ip_access_list" "cloudflare" {
+  count = var.dedicated_project ? 1 : 0
+
+  project_id = data.mongodbatlas_project.project.id
+  cidr_block = "104.30.164.0/28"
+  comment    = "Cloudflare IP range"
+
+  depends_on = [
+    data.mongodbatlas_project.project
   ]
 }
 
@@ -352,7 +364,6 @@ resource "null_resource" "run_script" {
     null_resource.install_requirements,
     data.mongodbatlas_project.project,
     mongodbatlas_database_user.user-main,
-    mongodbatlas_database_user.users,
-    # mongodbatlas_project_ip_access_list.all
+    mongodbatlas_database_user.users
   ]
 }

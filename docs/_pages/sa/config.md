@@ -56,6 +56,10 @@ Open `config.yaml` in your customer folder and update these **required** values:
 - **`mongodb.instance_size`**: Modify if needed (default: `"M30"`).
 - **`mongodb.additional_users_count`**: Number of additional unassigned users to create beyond those in `user_list.csv` (default: `0`).
 - **`mongodb.create_indexes`**: Set to `true` to create indexes during deployment, or `false` to skip index creation (default: `false`).
+- **`mongodb.dedicated_project`**: Set to `true` if using a dedicated MongoDB Atlas project (default: `false`).
+  - When `true`: Enables maintenance window configuration and adds `0.0.0.0/0` IP access list entry for unrestricted access
+  - When `false`: Skips maintenance window and relies on existing IP access configuration (recommended for shared projects)
+  - **⚠️ Important**: Only set to `true` if you have a dedicated Atlas project for this workshop. For shared projects (like `GLOBAL_SHARED`), keep this as `false` to avoid conflicts with existing project settings.
 - **`mongodb.database_admin_password`**: Password for the database admin user (default: `"MongoArenaAdminDummy"`).
 - **`mongodb.customer_user_password`**: Password for customer users (default: `"MongoArenaDummy"`).
 
