@@ -23,4 +23,5 @@
 .vscode/
 # Terragrunt
 .terragrunt*
-templates/tests/.terragrunt*
+templates/.terragrunt*
+templates/**/.terragrunt*

@@ -16,11 +16,21 @@ dependency "atlas" {
 }
 
 terraform {
-  source = "../../../eks-cluster" 
+  source = "../../../eks-cluster"
   include_in_copy = [
     "**/.helmignore",
     ".helmignore",
   ]
+  exclude_from_copy = [
+    ".terragrunt-source-manifest",
+    "**/.terragrunt-source-manifest",
+  ]
+
+  # Clean up .terragrunt-source-manifest files that break Helm
+  before_hook "cleanup_terragrunt_manifest" {
+    commands = ["apply", "plan"]
+    execute  = ["bash", "-c", "find . -name '.terragrunt-source-manifest' -type f -delete 2>/dev/null || true"]
+  }
 }
 
 locals {
