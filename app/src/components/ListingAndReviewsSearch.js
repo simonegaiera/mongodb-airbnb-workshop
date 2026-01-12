@@ -87,7 +87,15 @@ const ListingsAndReviewsSearch = ({
   };
 
   useEffect(() => {
-    fetchData(page, limit, facetsQuery, searchQuery);
+    // Only fetch data if there's a search query
+    if (searchQuery && searchQuery.trim()) {
+      fetchData(page, limit, facetsQuery, searchQuery);
+    } else {
+      // Clear data when search query is empty
+      setData([]);
+      setLoading(false);
+      setHasMore(false);
+    }
   }, [page, limit, facetsQuery, searchQuery]);
 
   // Add this useEffect to reset the page and data when facetsQuery or searchQuery changes
@@ -150,33 +158,37 @@ const ListingsAndReviewsSearch = ({
               if (data.length === index + 1) {
                 return (
                   <div ref={lastElementRef} key={index}>
-                    <ListingTile 
-                      sequence={index} 
-                      item={item} 
-                      index={index} 
-                      handleClick={handleClick} 
-                      isValidURL={isValidURL} 
-                      stockImageUrl={stockImageUrl} 
+                    <ListingTile
+                      sequence={index}
+                      item={item}
+                      index={index}
+                      handleClick={handleClick}
+                      isValidURL={isValidURL}
+                      stockImageUrl={stockImageUrl}
                     />
                   </div>
                 );
               } else {
                 return (
-                  <ListingTile 
-                    key={index} 
-                    sequence={index} 
-                    item={item} 
-                    index={index} 
-                    handleClick={handleClick} 
-                    isValidURL={isValidURL} 
-                    stockImageUrl={stockImageUrl} 
+                  <ListingTile
+                    key={index}
+                    sequence={index}
+                    item={item}
+                    index={index}
+                    handleClick={handleClick}
+                    isValidURL={isValidURL}
+                    stockImageUrl={stockImageUrl}
                   />
                 );
               }
             })}
           </div>
         ) : (
-          <p className="text-center text-gray-500">No listings found.</p>
+          !searchQuery || !searchQuery.trim() ? (
+            <p className="text-center text-gray-500">Start typing to search for listings...</p>
+          ) : (
+            <p className="text-center text-gray-500">No listings found.</p>
+          )
         )}
         {loading && page > 1 && (
           <div className="flex justify-center mt-4">
