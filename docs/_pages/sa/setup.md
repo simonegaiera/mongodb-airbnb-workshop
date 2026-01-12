@@ -127,6 +127,27 @@ kubectl is required for managing Kubernetes clusters (EKS).
    **Linux/Windows:**
    Follow the same installation steps above to upgrade to the latest version.
 
+#### Helm (Recommended for Debugging)
+
+Helm is recommended for debugging Kubernetes deployments and Terraform/Helm chart issues.
+
+1. **Install Helm**
+
+   **macOS:**
+   ```bash
+   brew install helm
+   ```
+
+   **Windows:**
+   ```bash
+   choco install kubernetes-helm
+   ```
+
+2. **Verify Installation**
+   ```bash
+   helm version
+   ```
+
 ---
 
 ✅ **Prerequisites complete?** Head to [Environment: Configuration](/sa/config/) to configure your deployment!
