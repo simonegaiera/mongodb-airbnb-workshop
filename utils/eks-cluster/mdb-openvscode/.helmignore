@@ -24,4 +24,4 @@
 # Terragrunt
 .terragrunt*
 templates/.terragrunt*
-templates/**/.terragrunt*
+templates/tests/.terragrunt*
