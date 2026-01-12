@@ -25,8 +25,10 @@ export default function Home() {
     const propertyIdRegex = /Property\s+ID:?\s*([a-zA-Z0-9\-_\.]+)/giu;
     const basePath = process.env.BASE_PATH || '';
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-    const fullBaseUrl = basePath ? `${baseUrl}/${basePath}` : baseUrl;
-    
+    // Ensure basePath starts with / and avoid double slashes
+    const normalizedBasePath = basePath && !basePath.startsWith('/') ? `/${basePath}` : basePath;
+    const fullBaseUrl = normalizedBasePath ? `${baseUrl}${normalizedBasePath}` : baseUrl;
+
     return text.replace(propertyIdRegex, (match, id) => {
       return `Property ID: [${id}](${fullBaseUrl}/rooms?id=${id})`;
     });

@@ -167,7 +167,9 @@ function RoomDetail() {
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
   const startIndex = (currentReviewPage - 1) * reviewsPerPage;
   const endIndex = startIndex + reviewsPerPage;
-  const currentReviews = reviews.slice(startIndex, endIndex);
+  // Sort reviews by date (newest first) before slicing for pagination
+  const sortedReviews = [...reviews].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const currentReviews = sortedReviews.slice(startIndex, endIndex);
 
   const handlePreviousPage = () => {
     setCurrentReviewPage(prev => Math.max(prev - 1, 1));
@@ -412,21 +414,20 @@ function RoomDetail() {
                 )}
               </div> 
               {currentReviews
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .map((review) => (
                 <div key={review._id} className="bg-gray-50 rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                       <span className="text-lg font-semibold text-gray-600">
-                        {review.reviewer_name[0]}
+                        {review.reviewer_name ? review.reviewer_name[0] : '?'}
                       </span>
                     </div>
                     <div>
-                      <h4 className="font-semibold">{review.reviewer_name}</h4>
+                      <h4 className="font-semibold">{review.reviewer_name || 'Anonymous'}</h4>
                       <div className="text-sm text-gray-500">
                         {new Date(review.date).toLocaleDateString('en-US', {
                           year: 'numeric',
-                          month: 'long', 
+                          month: 'long',
                           day: 'numeric'
                         })}
                       </div>

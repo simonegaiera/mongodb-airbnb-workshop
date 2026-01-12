@@ -14,7 +14,7 @@ import { collectionName } from '../config/config.js';
 export async function aggregationPipeline() {
     const pipeline = []
 
-    const item = await db.collection(collectionName)
+    const result = await db.collection(collectionName)
 
-    return item.toArray()
+    return result.toArray()
 }
