@@ -9,6 +9,8 @@ function RoomDetail() {
   const [error, setError] = useState(null);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [reviewText, setReviewText] = useState('');
+  const [reviewError, setReviewError] = useState(null);
+  const [reviewSuccess, setReviewSuccess] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
@@ -103,42 +105,56 @@ function RoomDetail() {
     }
   };
 
-  const handleSubmitReview = () => {
-    // console.log('Review submitted:', reviewText);
-    setReviewText('');
-    setShowCommentBox(false);
-    fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}/reviews`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        params: {
-          id: id
+  const handleSubmitReview = async () => {
+    // Clear previous messages
+    setReviewError(null);
+    setReviewSuccess(false);
+
+    try {
+      const response = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        reviewer_name: "anonymous",
-        _id: Math.floor(1000000000 + Math.random() * 9000000000).toString(),
-        listing_id: id,
-        comments: reviewText,
-        date: new Date().toISOString()
-      }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      // console.log('Review submitted:', data);
+        body: JSON.stringify({
+          params: {
+            id: id
+          },
+          reviewer_name: "anonymous",
+          _id: Math.floor(1000000000 + Math.random() * 9000000000).toString(),
+          listing_id: id,
+          comments: reviewText,
+          date: new Date().toISOString()
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit review. Please check the server logs for details.`);
+      }
+
+      await response.json();
+
+      // Success! Clear the form and show success message
+      setReviewText('');
+      setShowCommentBox(false);
+      setReviewSuccess(true);
+      setCurrentReviewPage(1); // Go to page 1 to see the new review
+
       // Fetch updated room data to refresh reviews
-      fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}`)
-        .then(response => response.json())
-        .then(roomData => {
-          setRoom(roomData);
-        })
-        .catch(error => {
-          console.error('Error fetching updated room:', error);
-        });
-    })
-    .catch(error => {
+      const roomResponse = await fetch(`${process.env.BASE_URL}/api/listingsAndReviews/${id}`);
+      if (roomResponse.ok) {
+        const roomData = await roomResponse.json();
+        setRoom(roomData);
+      }
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setReviewSuccess(false), 3000);
+
+    } catch (error) {
       console.error('Error submitting review:', error);
-    });
+      setReviewError('Failed to submit review. Please check the server logs for details.');
+      // Keep the form open and text intact so user can retry
+    }
   };
 
   const handleDelete = async () => {
@@ -398,21 +414,40 @@ function RoomDetail() {
                     <h4 className="font-semibold">Add a review</h4>
                   </div>
                 </div>
+
+                {/* Success Message */}
+                {reviewSuccess && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+                    ✓ Review submitted successfully!
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {reviewError && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                    ✗ {reviewError}
+                  </div>
+                )}
+
                 {showCommentBox && (
                   <div className="mt-4">
-                    <textarea 
-                      className="w-full p-2 border rounded-lg" 
+                    <textarea
+                      className="w-full p-2 border rounded-lg"
                       placeholder="Write your review here..."
                       rows="4"
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                     />
-                    <button className="mt-2 bg-[#FF385C] text-white px-4 py-2 rounded-lg" onClick={handleSubmitReview}>
+                    <button
+                      className="mt-2 bg-[#FF385C] text-white px-4 py-2 rounded-lg hover:bg-[#FF385C]/90 disabled:opacity-50"
+                      onClick={handleSubmitReview}
+                      disabled={!reviewText.trim()}
+                    >
                       Submit
                     </button>
                   </div>
                 )}
-              </div> 
+              </div>
               {currentReviews
                 .map((review) => (
                 <div key={review._id} className="bg-gray-50 rounded-lg p-4">

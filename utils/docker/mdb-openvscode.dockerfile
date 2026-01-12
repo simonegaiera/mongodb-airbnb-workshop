@@ -7,11 +7,11 @@ USER root
 
 # Declare ARG variables after FROM to make them available in build stages
 ARG NODE_VERSION=24
-ARG NPM_VERSION=11.6.1
+ARG NPM_VERSION=11.7.0
 ARG PYTHON_VERSION=3.12
 ARG JAVA_VERSION=21
-ARG MONGODB_MCP_VERSION=1.2.0
-ARG MONGOSH_VERSION=2.5.9
+ARG MONGODB_MCP_VERSION=1.4.0
+ARG MONGOSH_VERSION=2.5.10
 
 # Set environment variable to avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
