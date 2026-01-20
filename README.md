@@ -16,7 +16,7 @@ All instructions and exercises:
 ## 🛠️ For MongoDB Solutions Architects
 
 Setting up a workshop environment?  
-📖 **[Setup Guide](https://mongoarena.com/sa/overview/)**
+📖 **[Setup Guide](https://mongoarena.com/sa/)**
 
 💬 Need help? Join **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)** on Slack
 
