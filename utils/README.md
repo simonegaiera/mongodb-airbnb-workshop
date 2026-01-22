@@ -26,6 +26,7 @@
 - 🟠 **MEDIUM:** Implement the skill badges into the Arena
 - 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
 - 🟠 **MEDIUM:** Add a new exercise on Agentic
+- 🔴 **HIGH:** Cutomer was not able to check th status of the exercise, but leadboard was working. Change the GET to POST to avoid this and investigate more
 
 ---
 
