@@ -6,8 +6,9 @@ import LeaderboardDownload from '@/components/LeaderboardDownload'
 import LeaderboardExclusion from '@/components/LeaderboardExclusion'
 import PrizeCloseDate from '@/components/PrizeCloseDate'
 import DatabaseRestore from '@/components/DatabaseRestore'
+import UserProgress from '@/components/UserProgress'
 
-type AdminSection = 'exclusion' | 'freeze' | 'download' | 'restore'
+type AdminSection = 'exclusion' | 'freeze' | 'download' | 'restore' | 'progress'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState<AdminSection>('exclusion')
+  const [activeSection, setActiveSection] = useState<AdminSection>('progress')
 
   // Check authentication on mount
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function AdminPage() {
   }
 
   const menuItems = [
+    { id: 'progress' as AdminSection, label: 'User Progress Monitor', icon: '📊' },
     { id: 'exclusion' as AdminSection, label: 'Leaderboard Exclusion', icon: '🚫' },
     { id: 'freeze' as AdminSection, label: 'Leaderboard Freeze', icon: '🕐' },
     { id: 'download' as AdminSection, label: 'Download Data', icon: '📥' },
@@ -66,6 +68,8 @@ export default function AdminPage() {
 
   const renderActiveSection = () => {
     switch (activeSection) {
+      case 'progress':
+        return <UserProgress />
       case 'exclusion':
         return <LeaderboardExclusion />
       case 'freeze':
@@ -75,7 +79,7 @@ export default function AdminPage() {
       case 'restore':
         return <DatabaseRestore />
       default:
-        return <LeaderboardExclusion />
+        return <UserProgress />
     }
   }
 

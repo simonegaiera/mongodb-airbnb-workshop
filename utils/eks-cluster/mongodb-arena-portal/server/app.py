@@ -662,6 +662,118 @@ def set_prize_close_date():
             'error': str(e)
         }), 500
 
+@app.route('/api/users/progress', methods=['GET'])
+def get_users_progress():
+    """
+    Get progress for all active users, identifying those who are stuck or haven't started.
+    A user is considered stuck if they haven't completed an exercise in the last 10 minutes.
+    """
+    try:
+        # Get all active participants (not decommissioned, taken or CSV users)
+        active_participants = list(participants_collection.find(
+            {
+                '$or': [
+                    {'taken': True},
+                    {'taken': {'$exists': False}}
+                ],
+                '$or': [
+                    {'decommissioned': {'$ne': True}},
+                    {'decommissioned': {'$exists': False}}
+                ],
+                'leaderboard': {'$ne': False}
+            },
+            {'_id': 1, 'name': 1}
+        ))
+
+        results_collection = db['results']
+        current_time = datetime.now(timezone.utc)
+        stuck_threshold_minutes = 10
+
+        user_progress = []
+
+        for participant in active_participants:
+            username = participant['_id']
+            participant_name = participant.get('name', username)
+
+            # Get all results for this user, sorted by timestamp
+            user_results = list(results_collection.find(
+                {'username': username}
+            ).sort('timestamp', -1))
+
+            exercises_completed = len(user_results)
+            status = 'not_started'
+            last_activity = None
+            last_exercise = None
+            minutes_since_last = None
+
+            if exercises_completed > 0:
+                # Get the most recent result
+                latest_result = user_results[0]
+                last_activity = latest_result.get('timestamp')
+                last_exercise = latest_result.get('name')
+
+                # Calculate time since last activity
+                if last_activity:
+                    if isinstance(last_activity, str):
+                        last_activity_dt = datetime.fromisoformat(last_activity.replace('Z', '+00:00'))
+                    else:
+                        last_activity_dt = last_activity
+
+                    # Make sure both datetimes are timezone-aware for comparison
+                    if last_activity_dt.tzinfo is None:
+                        # If naive, assume UTC
+                        last_activity_dt = last_activity_dt.replace(tzinfo=timezone.utc)
+
+                    time_diff = current_time - last_activity_dt
+                    minutes_since_last = time_diff.total_seconds() / 60
+
+                    if minutes_since_last > stuck_threshold_minutes:
+                        status = 'stuck'
+                    else:
+                        status = 'active'
+
+            user_progress.append({
+                'username': username,
+                'name': participant_name,
+                'exercises_completed': exercises_completed,
+                'last_exercise': last_exercise,
+                'last_activity': last_activity.isoformat() if last_activity else None,
+                'minutes_since_last': round(minutes_since_last, 1) if minutes_since_last else None,
+                'status': status
+            })
+
+        # Sort by status priority (stuck first, then not_started, then active)
+        status_priority = {'stuck': 0, 'not_started': 1, 'active': 2}
+        user_progress.sort(key=lambda x: (status_priority.get(x['status'], 3), -x['exercises_completed']))
+
+        # Count by status
+        stuck_count = sum(1 for u in user_progress if u['status'] == 'stuck')
+        not_started_count = sum(1 for u in user_progress if u['status'] == 'not_started')
+        active_count = sum(1 for u in user_progress if u['status'] == 'active')
+
+        logger.info(f"Retrieved progress for {len(user_progress)} users: {stuck_count} stuck, {not_started_count} not started, {active_count} active")
+
+        return jsonify({
+            'success': True,
+            'users': user_progress,
+            'summary': {
+                'total': len(user_progress),
+                'stuck': stuck_count,
+                'not_started': not_started_count,
+                'active': active_count
+            }
+        }), 200
+
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        logger.error(f"Error retrieving user progress: {str(e)}")
+        logger.error(f"Error details: {error_details}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/results/user/<username>', methods=['GET'])
 def get_user_results(username):
     """

@@ -54,7 +54,7 @@
 - 🟡 **LOW:** Options to upload custom banners, titles, and logos to match an event or sponsoring company's branding
 
 ### Admin
-- 🔴 **HIGH:** User status progress and errors. We want to understand where they are stuck.
+- 🔴 **HIGH:** User status progress and errors. We want to understand where they are stuck. Now is incomplete. Add name and selecting an exercise it gets the error from the endpoint if available
 
 ---
 
