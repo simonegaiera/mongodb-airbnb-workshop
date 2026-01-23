@@ -667,20 +667,23 @@ def get_users_progress():
     """
     Get progress for all active users, identifying those who are stuck or haven't started.
     A user is considered stuck if they haven't completed an exercise in the last 10 minutes.
+    Excludes decommissioned users and users with leaderboard: false.
     """
     try:
-        # Get all active participants (not decommissioned, taken or CSV users)
+        # Get all active participants (taken, not decommissioned, leaderboard not false)
         active_participants = list(participants_collection.find(
             {
-                '$or': [
-                    {'taken': True},
-                    {'taken': {'$exists': False}}
-                ],
-                '$or': [
-                    {'decommissioned': {'$ne': True}},
-                    {'decommissioned': {'$exists': False}}
-                ],
-                'leaderboard': {'$ne': False}
+                'taken': True,
+                '$and': [
+                    {'$or': [
+                        {'decommissioned': {'$exists': False}},
+                        {'decommissioned': False}
+                    ]},
+                    {'$or': [
+                        {'leaderboard': {'$exists': False}},
+                        {'leaderboard': True}
+                    ]}
+                ]
             },
             {'_id': 1, 'name': 1}
         ))
