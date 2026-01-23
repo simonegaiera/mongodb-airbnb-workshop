@@ -13,20 +13,24 @@
 
 ---
 
+## New Exercises
+- 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
+- 🟠 **MEDIUM:** Add a new exercise on Agentic
+- ❄️ **FROZEN:** Exercise with RankFusion
+- ❄️ **FROZEN:** Add a Vector Search exercise w/o auto-embeddding. Terraform should be able to create API Keys for Voyage AI models, limit to a single/few models, and provide the API to EKS. Waiting for API to be exposed
+
+---
+
 ## Docs
 
 ### Navigation
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token
-- ❄️ **FROZEN:** Exercise with RankFusion
 
 ---
 
 ## App
 
-- 🟠 **MEDIUM:** Implement the skill badges into the Arena
-- 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
-- 🟠 **MEDIUM:** Add a new exercise on Agentic
-- 🔴 **HIGH:** Cutomer was not able to check th status of the exercise, but leadboard was working. Change the GET to POST to avoid this and investigate more. Maybe add a details page in the portal if it happens again.
+- 🔴 **HIGH:** Cutomer was not able to check the status of the exercise, but leadboard was working. Change the GET to POST to avoid this and investigate more. Maybe add a details page in the portal if it happens again.
 
 ---
 
@@ -40,6 +44,8 @@
 ---
 
 ## Arena Portal
+
+- 🟠 **MEDIUM:** Implement the skill badges into the Arena
 
 ### Portal
 - 🟡 **LOW:** Options to upload custom banners, titles, and logos to match an event or sponsoring company's branding
