@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/participants', getParticipants);
 router.get('/whoami', getParticipant);
-router.get('/filter', getResultsByNameAndUsername);
+router.post('/filter', getResultsByNameAndUsername);
 router.get('/', getSectionResults);
 
 export default router;

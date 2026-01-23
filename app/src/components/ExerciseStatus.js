@@ -12,16 +12,17 @@ const ExerciseStatus = ({ exerciseName }) => {
 
     const fetchExerciseStatus = async (name) => {
         if (!name) return;
-        
+
         setLoading(true);
         setError(null);
-        
+
         try {
-            const response = await fetch(`${process.env.BASE_URL}/api/results/filter?name=${encodeURIComponent(name)}`, {
-                method: 'GET',
+            const response = await fetch(`${process.env.BASE_URL}/api/results/filter`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ name })
             });
 
             if (!response.ok) {

@@ -33,7 +33,7 @@
 
 ## App
 
-- 🔴 **HIGH:** Cutomer was not able to check the status of the exercise, but leadboard was working. Change the GET to POST to avoid this and investigate more. Maybe add a details page in the portal if it happens again.
+- 🔴 **HIGH:** Add a details page in the portal if it happens again.
 
 ---
 

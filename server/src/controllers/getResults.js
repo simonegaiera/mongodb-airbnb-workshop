@@ -95,8 +95,8 @@ export async function getSectionResults(req, res) {
 
 export async function getResultsByNameAndUsername(req, res) {
     try {
-        const { name } = req.query;
-        
+        const { name } = req.body;
+
         if (!name) {
             return res.status(400).json({ message: 'Name parameter is required' });
         }
