@@ -15,9 +15,12 @@
 
 ## New Exercises
 - 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
+
 - 🟠 **MEDIUM:** Add a new exercise on Agentic
 - ❄️ **FROZEN:** Exercise with RankFusion
+
 - ❄️ **FROZEN:** Add a Vector Search exercise w/o auto-embeddding. Terraform should be able to create API Keys for Voyage AI models, limit to a single/few models, and provide the API to EKS. Waiting for API to be exposed
+- ❄️ **FROZEN:** Add a new exercise on Reranking
 
 ---
 
