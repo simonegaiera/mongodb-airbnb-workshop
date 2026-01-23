@@ -33,7 +33,7 @@
 
 ## App
 
-- 🔴 **HIGH:** Add a details page in the portal if it happens again.
+- *No urgent items.*
 
 ---
 

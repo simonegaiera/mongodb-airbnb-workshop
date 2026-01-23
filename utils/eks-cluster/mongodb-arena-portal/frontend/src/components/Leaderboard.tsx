@@ -55,9 +55,15 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5) // Show 10 results per page by default
-  
+
   // State for collapsible leaderboard (default collapsed based on screen size)
   const [leaderboardExpanded, setLeaderboardExpanded] = useState(false)
+
+  // State for user details modal
+  const [selectedUser, setSelectedUser] = useState<string | null>(null)
+  const [userResults, setUserResults] = useState<any>(null)
+  const [userResultsLoading, setUserResultsLoading] = useState(false)
+  const [userResultsError, setUserResultsError] = useState('')
 
   // Read prizes configuration from environment variables
   const prizesEnabled = process.env.NEXT_PUBLIC_PRIZES_ENABLED === 'true'
@@ -92,11 +98,11 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
       setLoading(true)
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
       const response = await fetch(`${apiUrl}/api/results`)
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const data = await response.json()
       setLeaderboardData(data)
       setError('')
@@ -106,6 +112,38 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchUserResults = async (username: string) => {
+    try {
+      setUserResultsLoading(true)
+      setUserResultsError('')
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${apiUrl}/api/results/user/${encodeURIComponent(username)}`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      setUserResults(data)
+    } catch (err) {
+      setUserResultsError('Failed to fetch user results: ' + (err as Error).message)
+      setUserResults(null)
+    } finally {
+      setUserResultsLoading(false)
+    }
+  }
+
+  const handleUserClick = (username: string) => {
+    setSelectedUser(username)
+    fetchUserResults(username)
+  }
+
+  const closeUserModal = () => {
+    setSelectedUser(null)
+    setUserResults(null)
+    setUserResultsError('')
   }
 
   useEffect(() => {
@@ -124,14 +162,15 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
       return []
     }
 
-    let sortedData: Array<{ user: string; count?: number; delta?: number; points?: number; originalRank: number }> = []
-    
+    let sortedData: Array<{ user: string; _id: string; count?: number; delta?: number; points?: number; originalRank: number }> = []
+
     if (leaderboardType === 'timed' && Array.isArray(results)) {
       sortedData = results.map((user: TimedResult) => ({
         user: user.name || user._id,
+        _id: user._id,
         count: user.count || 0,
-        delta: user.delta && typeof user.delta === 'object' && user.delta.$numberLong 
-          ? parseInt(user.delta.$numberLong) 
+        delta: user.delta && typeof user.delta === 'object' && user.delta.$numberLong
+          ? parseInt(user.delta.$numberLong)
           : (typeof user.delta === 'number' ? user.delta : 0),
         originalRank: 0 // Will be set below
       }))
@@ -144,7 +183,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
       .map((item, index) => ({ ...item, originalRank: index + 1 })) // Assign original ranks
     } else if (leaderboardType === 'score' && typeof results === 'object') {
       sortedData = Object.entries(results as ScoreResult)
-        .map(([user, points]) => ({ user, points, originalRank: 0 }))
+        .map(([user, points]) => ({ user, _id: user, points, originalRank: 0 }))
         .sort((a, b) => (b.points || 0) - (a.points || 0))
         .map((item, index) => ({ ...item, originalRank: index + 1 })) // Assign original ranks
     }
@@ -523,6 +562,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-arena-neon-green uppercase tracking-wider">
                     User
+                    <span className="ml-2 text-xs text-gray-400 normal-case">(click for details)</span>
                   </th>
                   {leaderboardType === 'timed' ? (
                     <>
@@ -563,7 +603,12 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
                         </div>
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-sm text-white">
-                        {row.user}
+                        <button
+                          onClick={() => handleUserClick(row._id || row.user)}
+                          className="text-arena-neon-green hover:text-arena-bright-green underline cursor-pointer transition-colors"
+                        >
+                          {row.user}
+                        </button>
                       </td>
                       {leaderboardType === 'timed' ? (
                         <>
@@ -660,6 +705,101 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ refreshTrigger = 0, closeDate
           </div>
         )}
       </div>
+
+      {/* User Results Modal */}
+      {selectedUser && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+          onClick={closeUserModal}
+        >
+          <div
+            className="bg-arena-dark border-2 border-arena-neon-green rounded-lg shadow-2xl p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-2xl font-semibold text-arena-neon-green">
+                  User Results
+                </h3>
+                {userResults && (
+                  <p className="text-gray-300 mt-1">
+                    {userResults.participant_name} ({userResults.username})
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={closeUserModal}
+                className="text-gray-400 hover:text-arena-neon-green text-3xl leading-none transition-colors"
+              >
+                ×
+              </button>
+            </div>
+
+            {userResultsLoading && (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-arena-neon-green border-t-transparent mx-auto"></div>
+                <p className="text-gray-300 mt-4">Loading results...</p>
+              </div>
+            )}
+
+            {userResultsError && (
+              <div className="bg-red-900/30 border border-red-500 text-red-300 px-4 py-3 rounded">
+                {userResultsError}
+              </div>
+            )}
+
+            {userResults && userResults.results && (
+              <div>
+                <div className="mb-4 text-gray-300">
+                  <strong>Total Exercises Completed:</strong> {userResults.count}
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead>
+                      <tr className="border-b border-arena-teal">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-arena-neon-green uppercase tracking-wider">
+                          #
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-arena-neon-green uppercase tracking-wider">
+                          Exercise Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-arena-neon-green uppercase tracking-wider">
+                          Timestamp
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-arena-teal/50">
+                      {userResults.results.map((result: any, index: number) => (
+                        <tr key={index} className="hover:bg-arena-dark-light">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-white">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-white">
+                            {result.name}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-white">
+                            {new Date(result.timestamp).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={closeUserModal}
+                className="px-6 py-2 bg-arena-neon-green text-arena-dark rounded-lg hover:bg-arena-bright-green transition-colors font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

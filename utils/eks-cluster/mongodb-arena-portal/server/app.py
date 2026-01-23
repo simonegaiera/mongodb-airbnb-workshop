@@ -662,6 +662,59 @@ def set_prize_close_date():
             'error': str(e)
         }), 500
 
+@app.route('/api/results/user/<username>', methods=['GET'])
+def get_user_results(username):
+    """
+    Get all results for a specific user directly from the results collection.
+    Returns exercises completed by the user with participant information.
+    """
+    try:
+        # Get results directly from results collection
+        results_collection = db['results']
+
+        # Find all results for this user
+        user_results = list(results_collection.find(
+            {'username': username},
+            {'_id': 0}  # Exclude MongoDB _id field
+        ).sort('timestamp', 1))  # Sort by timestamp ascending
+
+        if not user_results:
+            return jsonify({
+                'success': False,
+                'message': f'No results found for user: {username}'
+            }), 404
+
+        # Get participant info
+        participant = participants_collection.find_one(
+            {'_id': username},
+            {'_id': 1, 'name': 1, 'leaderboard': 1}
+        )
+
+        # Check if user should be excluded from leaderboard
+        if participant and participant.get('leaderboard') == False:
+            return jsonify({
+                'success': False,
+                'message': f'User {username} is excluded from leaderboard'
+            }), 403
+
+        participant_name = participant.get('name', username) if participant else username
+
+        logger.info(f"Retrieved {len(user_results)} results for user {username}")
+        return jsonify({
+            'success': True,
+            'username': username,
+            'participant_name': participant_name,
+            'results': user_results,
+            'count': len(user_results)
+        }), 200
+
+    except Exception as e:
+        logger.error(f"Error retrieving results for user {username}: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/admin/database/restore', methods=['POST'])
 def restore_user_databases():
     """
