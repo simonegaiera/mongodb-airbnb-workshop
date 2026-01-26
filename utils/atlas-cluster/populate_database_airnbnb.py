@@ -518,22 +518,33 @@ def ensure_results_index(db):
     """Ensure compound indexes exist on results collection."""
     # Compound index for name and username
     index_spec_2 = [("name", 1), ("username", 1)]
-    
+
+    # Compound index for username and timestamp (for user progress queries)
+    index_spec_3 = [("username", 1), ("timestamp", -1)]
+
     # Get indexes information
     indexes = db["results"].index_information()
-    
+
     # Check for existing name, username index
     index_2_exists = False
+    index_3_exists = False
     for idx in indexes.values():
         if idx.get("key") == index_spec_2:
             index_2_exists = True
-            break
-    
+        if idx.get("key") == index_spec_3:
+            index_3_exists = True
+
     if not index_2_exists:
         db["results"].create_index(index_spec_2)
         print("Created compound index on results: name, username.", flush=True)
     elif VERBOSE:
         print("Compound index on results (name, username) already exists.", flush=True)
+
+    if not index_3_exists:
+        db["results"].create_index(index_spec_3)
+        print("Created compound index on results: username, timestamp.", flush=True)
+    elif VERBOSE:
+        print("Compound index on results (username, timestamp) already exists.", flush=True)
 
 def ensure_participants_indexes(db):
     """Ensure indexes exist on participants collection for taken, decommissioned and name."""
