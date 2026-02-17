@@ -86,6 +86,9 @@ terragrunt apply --working-dir=atlas-cluster
 # Import existing Atlas project
 terragrunt import --working-dir=atlas-cluster mongodbatlas_project.project <project_id>
 
+# Taint specific module
+terragrunt taint 'helm_release.airbnb_arena_nginx' --working-dir=eks-cluster
+
 # Destroy specific module
 terragrunt destroy --working-dir=atlas-cluster
 ```
