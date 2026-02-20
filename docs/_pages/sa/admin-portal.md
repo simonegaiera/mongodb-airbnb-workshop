@@ -14,9 +14,7 @@ The MongoDB Arena Admin Portal provides comprehensive management tools for works
 The admin portal is accessible at `/admin` on your workshop portal URL (e.g., `https://your-workshop-url.com/admin`).
 
 **Authentication:**
-- The portal is protected by a password configured in the environment variable `NEXT_PUBLIC_ADMIN_PASSWORD`
-- Authentication persists for the browser session using `sessionStorage`
-- If no admin password is set, the portal redirects to the home page
+- The portal is protected by a password configured in the `config.yaml` file under the `portal` section.
 
 ---
 
