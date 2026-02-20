@@ -71,7 +71,7 @@ def validate_config(config_path):
         'domain': {
             'required': ['email'],
             'defaults': {
-                'email': ['arena@mongodb.com', 'youremail@mongodb.com']
+                'email': ['youremail@mongodb.com']
             }
         },
         'scenario': {
