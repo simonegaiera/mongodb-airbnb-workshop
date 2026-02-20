@@ -33,11 +33,6 @@ Replace `your-customer` with the actual name of your customer folder. Running `t
 terragrunt plan --all
 ```
 
-If you want to use an existing Atlas project (instead of creating a new one), import it before applying:
-```bash
-terragrunt import --working-dir=atlas-cluster mongodbatlas_project.project <project_id>
-```
-
 ### 4. Apply
 
 Before you run the apply step, make sure your Python virtual environment is active.
