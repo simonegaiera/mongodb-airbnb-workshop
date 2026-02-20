@@ -13,6 +13,8 @@ docs:
         url: /sa/config/
       - title: "Deployment: Deploy and Run"
         url: /sa/deployment/
+      - title: "Admin Portal"
+        url: /sa/admin-portal/
       - title: "Troubleshooting: Common Errors"
         url: /sa/troubleshooting/
       - title: "Development: VSCode"
