@@ -52,10 +52,14 @@ Open `config.yaml` in your customer folder and update these **required** values:
 - **`mongodb.private_key`**: Replace `"PRIVATE_KEY"` with your MongoDB Atlas private API key (requires `Organization Project Creator` privileges).
 - **`mongodb.project_name`**: Replace `"PROJECT_NAME"` with your desired Atlas project name.
 - **`mongodb.cluster_name`**: Modify if needed (default: `"arena-cluster"`).
+  - **💡 Best Practice:** Use the naming convention `arena-cluster-<customer-name>` (e.g., `"arena-cluster-acme-corp"`).
 - **`mongodb.cluster_region`**: Modify if needed (default: `"US_EAST_2"`).
 - **`mongodb.instance_size`**: Modify if needed (default: `"M30"`).
-- **`mongodb.additional_users_count`**: Number of additional unassigned users to create beyond those in `user_list.csv` (default: `0`).
-- **`mongodb.create_indexes`**: Set to `true` to create indexes during deployment, or `false` to skip index creation (default: `false`).
+- **`mongodb.additional_users_count`**: Number of additional unassigned users to create beyond those in `user_list.csv` (default: `5`).
+  - **💡 Best Practice:** Keep this value at `5` while testing the environment. The day before the event, increase it to the expected number of attendees plus some extra capacity (e.g., if expecting 50 attendees, set to `55-60`).
+- **`mongodb.create_indexes`**: Controls whether vector search and search indexes are created during deployment (default: `false`).
+  - Set to `true` if indexes should be created as part of the workshop exercises (participants will create them)
+  - Set to `false` if indexes are pre-created before the workshop (and should be excluded from exercises)
 - **`mongodb.dedicated_project`**: Set to `true` if using a dedicated MongoDB Atlas project (default: `false`).
   - When `true`: Enables maintenance window configuration and adds `0.0.0.0/0` IP access list entry for unrestricted access
   - When `false`: Skips maintenance window and relies on existing IP access configuration (recommended for shared projects)
@@ -70,14 +74,18 @@ Open `config.yaml` in your customer folder and update these **required** values:
 ### Workshop Scenario Configuration (for EKS deployments)
 The `scenario` section in `config.yaml` controls your workshop setup:
 - **`repository`** and **`branch`**: GitHub repository and branch to use for the workshop
+  - **💡 Best Practice:** Keep these values as-is unless you have a specific customization requirement
 - **`database`**: Enable MongoDB and/or PostgreSQL
+  - **💡 Best Practice:** Keep these values as-is unless you have a specific customization requirement
 - **`llm`**: LLM configuration including provider, model, and proxy settings
+  - **💡 Best Practice:** Keep these values as-is unless you have a specific customization requirement
   - **`provider`**: Options are `"anthropic"` or `"openai"` (default: `"openai"`)
   - **`model`**: Options are `"claude-3-haiku"` or `"gpt-5-chat"` (default: `"gpt-5-chat"`)
 - **`portal`**: Portal configuration settings
   - **`admin_password`**: Password to access the admin portal (e.g., `"ArenaAdminPassword123!"`)
 - **`leaderboard`**: Leaderboard configuration
   - **`type`**: Set to `"timed"` or `"score"` based (default: `"timed"`)
+    - **💡 Best Practice:** Keep this value as-is unless you have a specific customization requirement
   - **`close_on`**: (Optional) ISO 8601 date when leaderboard freezes in UTC (e.g., `"2025-11-04T16:03:00.000Z"`). When set, submissions after this time will not count. Can be managed via the Admin Portal.
   - **`prizes`**: Configure prizes promotions for the workshop
     - **`enabled`**: Set to `true` to enable prizes features
@@ -99,8 +107,6 @@ If you need more granular control over Atlas settings:
 - Modify variables in `terragrunt.hcl` if necessary (e.g., MongoDB version, auto-scaling settings).
 - By default, a new Atlas Project is created. To use an existing project instead, the project must be imported before applying.
 - If you need to invite users, uncomment `mongodbatlas_project_invitation` in the Terraform files. By default, no invitations are sent.
-
-> 🕐 **Note:** The EKS cluster expires after one week by default.
 
 ## Scenario Instructions Examples
 
@@ -180,3 +186,5 @@ instructions:
 ---
 
 ✅ **Configuration complete?** Head to [Deployment: Deploy and Run](/sa/deployment/) to deploy your environment!
+
+{% include simple_next_nav.html %}

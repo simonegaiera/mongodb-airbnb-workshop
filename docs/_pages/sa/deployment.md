@@ -105,3 +105,5 @@ SSL configuration has already been ensured and the environment is rated **A+**.
 ---
 
 ✅ **Deployment complete!** You're all set!
+
+{% include simple_next_nav.html %}

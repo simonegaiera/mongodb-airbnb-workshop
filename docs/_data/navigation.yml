@@ -17,6 +17,9 @@ docs:
         url: /sa/admin-portal/
       - title: "Troubleshooting: Common Errors"
         url: /sa/troubleshooting/
+
+  - title: "Arena Development (MongoDB SA)"
+    children:
       - title: "Development: VSCode"
         url: /sa/vs-code/
       - title: "Development: Validate Your Results"
@@ -35,22 +38,7 @@ docs:
       - title: "Resources"
         url: /resources/
 
-  - title: "Vibe Coding (Scenario 1)"
-    children:
-      - title: "Vibe Coding: Instructions"
-        url: /vibe/
-      - title: "Environment: VSCode"
-        url: /vibe/vscode-vibe/
-      - title: "Hint: Python Prompt"
-        url: /vibe/python-full/
-      - title: "Hint: Python Prompt (Beta)"
-        url: /vibe/python/
-      - title: "Hint: SpringBoot Prompt (Beta)"
-        url: /vibe/spring-boot/
-      - title: "Hint: Node Prompt (Beta)"
-        url: /vibe/node-express/
-
-  - title: "Welcome & Setup (Scenario 2)"
+  - title: "Welcome & Setup (Default)"
     children:
       - title: "AI Arena Overview"
         url: /guided/
@@ -118,3 +106,18 @@ docs:
         url: /vector-search/index-hint/
       - title: "Vector Search: Exercise 1"
         url: /vector-search/1/
+
+  - title: "Vibe Coding (Coming soon...)"
+    children:
+      - title: "Vibe Coding: Instructions"
+        url: /vibe/
+      - title: "Environment: VSCode"
+        url: /vibe/vscode-vibe/
+      - title: "Hint: Python Prompt"
+        url: /vibe/python-full/
+      - title: "Hint: Python Prompt (Beta)"
+        url: /vibe/python/
+      - title: "Hint: SpringBoot Prompt (Beta)"
+        url: /vibe/spring-boot/
+      - title: "Hint: Node Prompt (Beta)"
+        url: /vibe/node-express/

@@ -8,9 +8,10 @@ classes: wide
 ## Initial File Setup
 
 1. **Copy Files**  
-   - Duplicate the `airbnb` folder and rename it with your `customer` name.
-   - For a fully managed solution, keep all folders.  
-   - For a hybrid approach, which doesn't include VSCode Online, remove the `eks-cluster` folder.
+   - Clone the repository:
+     ```bash
+     git clone https://github.com/simonegaiera/mongodb-airbnb-workshop.git
+     ```
 
 ## Environment Setup
 
@@ -151,3 +152,5 @@ Helm is recommended for debugging Kubernetes deployments and Terraform/Helm char
 ---
 
 ✅ **Prerequisites complete?** Head to [Environment: Configuration](/sa/config/) to configure your deployment!
+
+{% include simple_next_nav.html %}
