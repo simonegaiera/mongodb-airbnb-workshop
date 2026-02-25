@@ -9,9 +9,9 @@ docs:
         url: /sa/
       - title: "Setup: Prerequisites"
         url: /sa/setup/
-      - title: "Environment: Configuration"
+      - title: "Setup: Configuration"
         url: /sa/config/
-      - title: "Deployment: Deploy and Run"
+      - title: "Setup: Deploy and Run"
         url: /sa/deployment/
       - title: "Admin Portal"
         url: /sa/admin-portal/
