@@ -15,6 +15,7 @@ const TIMEZONES = [
   { value: 'Europe/Istanbul', label: 'TRT (Istanbul)', offset: 3 },
   { value: 'Asia/Dubai', label: 'GST (Dubai)', offset: 4 },
   { value: 'Asia/Kolkata', label: 'IST (Mumbai, Delhi)', offset: 5.5 },
+  { value: 'Asia/Singapore', label: 'SGT (Singapore, Bangkok)', offset: 8 },
   { value: 'Asia/Shanghai', label: 'CST (Beijing, Shanghai, Hong Kong)', offset: 8 },
   { value: 'Asia/Tokyo', label: 'JST (Tokyo, Seoul)', offset: 9 },
   { value: 'Australia/Sydney', label: 'AEST/AEDT (Sydney, Melbourne)', offset: 10 },
