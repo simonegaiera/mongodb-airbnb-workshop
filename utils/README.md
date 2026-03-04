@@ -60,6 +60,8 @@
 
 ## Terraform
 
+- 🔴 **HIGH:** Validate config needs to force requirements installed
+
 ### Atlas cluster
 - ❄️ **FROZEN:** (When auto-embedding is GA) Bring back the Atlas resource for project! Now is using an already created project because of auto-embedding!
 - ❄️ **FROZEN:** When Lucene is unpinned need to change the search index definition removing facets and keeping only token

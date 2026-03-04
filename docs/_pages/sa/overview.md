@@ -101,3 +101,5 @@ If you encounter any issues during setup:
 💬 **Slack Support:** Join the **[#ai-arena](https://mongodb.enterprise.slack.com/archives/C08JJKV3T0A)** Slack channel for real-time assistance and to connect with other SAs setting up workshop environments.
 
 Ready to get started? Head to [Setup: Prerequisites](/sa/setup/) to begin!
+
+{% include simple_next_nav.html %}
