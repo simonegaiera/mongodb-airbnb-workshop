@@ -11,11 +11,19 @@
 - ❄️ **FROZEN:** Frozen / blocked / on hold
 - *No urgent items.*
 
+--
+
+## Needs discussion
+
+- 🔴 **HIGH:** Inbound lead on popup to do design review session
+- 🟠 **MEDIUM:** Multi language (spanish, german, portugese, french)
+
 ---
 
 ## New Exercises
 - 🔴 **HIGH:** Aligning Arena with badges (https://docs.google.com/spreadsheets/d/1O6sqz99ws4fIOKuVuGlCTt8ouf6F1f1CnryrXaI8b5I/edit?usp=drive_web&ouid=113368862675613286241)
 
+- 🟠 **MEDIUM:** Add new exercises on Querable Encryption
 - 🟠 **MEDIUM:** Add a new exercise on Agentic
 - ❄️ **FROZEN:** Exercise with RankFusion
 
