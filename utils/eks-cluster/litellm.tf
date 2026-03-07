@@ -18,7 +18,7 @@ locals {
   # LLM configuration with defaults
   llm_config = merge({
     enabled = false
-    provider = "openai"  # Default to openai, can be "openai" or "anthropic"
+    provider = "openai"
     proxy = {
       enabled = false
       cache = true
@@ -35,7 +35,7 @@ resource "helm_release" "litellm" {
   name       = "litellm"
   chart      = "./litellm"
   namespace  = "default"
-  version    = "0.1.14"
+  version    = "0.1.15"
   
   wait          = true
   wait_for_jobs = true
@@ -59,23 +59,15 @@ resource "helm_release" "litellm" {
           REDIS_PORT = tostring(local.redis_config.service.port)
         } : {})
         
-        secrets = merge(
-          local.llm_config.provider == "anthropic" ? {
-            anthropicApiKey = coalesce(
-              var.anthropic_api_key,
-              try(local.arena_secrets.anthropic_api_key, null)
-            )
-          } : {},
-          local.llm_config.provider == "openai" ? {
-            azureOpenaiApiKey = coalesce(
-              var.azure_openai_api_key,
-              try(local.arena_secrets.azure_openai_api_key, null)
-            )
-          } : {}
-        )
+        secrets = {
+          azureOpenaiApiKey = coalesce(
+            var.azure_openai_api_key,
+            try(local.arena_secrets.azure_openai_api_key, null)
+          )
+        }
       }, {
         config = {
-          model_list = local.llm_config.provider == "openai" ? [
+          model_list = [
             {
               model_name = "gpt-5-mini"
               litellm_params = {
@@ -102,43 +94,6 @@ resource "helm_release" "litellm" {
                 api_base = "https://solutionsconsultingopenai.openai.azure.com"
                 api_version = "2025-04-01-preview"
                 base_model = "gpt-5"
-                max_tokens = 4096
-                temperature = 0.7
-                cache_control_injection_points = [
-                  {
-                    location = "message"
-                    role = "system"
-                  }
-                ]
-              }
-            }
-          ] : [
-            {
-              model_name = "claude-3-haiku"
-              litellm_params = {
-                model = "anthropic/claude-3-haiku-20240307"
-                api_key = "os.environ/ANTHROPIC_API_KEY"
-                api_base = null
-                api_version = null
-                base_model = "claude-3-haiku-20240307"
-                max_tokens = 4096
-                temperature = 0.7
-                cache_control_injection_points = [
-                  {
-                    location = "message"
-                    role = "system"
-                  }
-                ]
-              }
-            },
-            {
-              model_name = "claude-4-sonnet"
-              litellm_params = {
-                model = "anthropic/claude-sonnet-4-20250514"
-                api_key = "os.environ/ANTHROPIC_API_KEY"
-                api_base = null
-                api_version = null
-                base_model = "claude-sonnet-4-20250514"
                 max_tokens = 4096
                 temperature = 0.7
                 cache_control_injection_points = [
